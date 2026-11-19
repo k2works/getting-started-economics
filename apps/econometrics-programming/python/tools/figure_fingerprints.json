@@ -1,3 +1,11 @@
 {
-  "ch01-densities": "c9f8ae96c9e591dd197be2c5db98bfe08c31e193f7e959a6f1c2f113ac682f0e"
+  "ch01-densities": "c9f8ae96c9e591dd197be2c5db98bfe08c31e193f7e959a6f1c2f113ac682f0e",
+  "ch02-regression-line": "86678707d891a3f784d500cf950fe2de79f3d11aea198f0c1c2f9791e5eb3145",
+  "ch02-slope-distribution": "fbb9a76dd8578d673216d990cca46cfdf989ce7b844343109bde332e81f887d4",
+  "ch03-collinearity": "232cf9df3eb243e6d1831b14cec8cc9354e8d2466aa402bcc07a79b5ce2f2b16",
+  "ch03-fwl": "4bc57c6abbdb4d635e61009e15d0410b6aa2147a7db35432ed53e0dc21a8227e",
+  "ch04-diagnostics": "b1e16f103fb8db541e0e292c574696d9019efdfa9faf086469700d92332751eb",
+  "ch04-same-summary": "aed5f3131ce9399fa4f0682f28b772f000ffa84b97205870c4f5a952f3f7bb12",
+  "ch05-confidence-intervals": "69dbceeaf5c73ebdc29e71f81356a88ad207b3393126dcb924df87fdbb693287",
+  "ch06-estimate-distributions": "2fcac1cc932e59f6025aa9015405c6fccf3aa6762209edee72d77bc9f9e2bfee"
 }
