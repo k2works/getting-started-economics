@@ -22,7 +22,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | [Ruff](https://docs.astral.sh/ruff/)・[mypy](https://mypy-lang.org/) | 静的解析 |
 | [tox](https://tox.wiki/) | タスクランナー |
 
-数値計算とデータ分析のライブラリは、初めて使う章で導入します（matplotlib は第 7 章、NumPy と SciPy は第 9・10 章、pandas は第 11 章）。
+数値計算とデータ分析のライブラリは、初めて使う章で導入します（matplotlib は第 7 章、NumPy と SciPy は第 9・10 章、pandas は第 11 章）。第 11・12 章のデータは、`apps/python/data/` にある架空の国の統計です。
 
 ## サンプルコード
 
@@ -58,7 +58,14 @@ uv run pytest
 | [第 9 章](09-numpy-arrays.md) | NumPy による配列計算 | 執筆済み |
 | [第 10 章](10-optimization-with-scipy.md) | SciPy による最適化 | 執筆済み |
 
-第 3 部以降は、[執筆計画アウトライン](outline.md) の章構成を参照してください。
+### 第 3 部: 経済データの分析
+
+| 章 | テーマ | 状況 |
+| :--- | :--- | :--- |
+| [第 11 章](11-data-analysis-with-pandas.md) | Pandas によるデータ分析 | 執筆済み |
+| [第 12 章](12-plotting-with-pandas.md) | Pandas による図示 | 執筆済み |
+
+第 4 部以降は、[執筆計画アウトライン](outline.md) の章構成を参照してください。
 
 ## 参照
 

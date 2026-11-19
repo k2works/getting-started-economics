@@ -98,6 +98,8 @@ nav:
           - 第 8 章 乱数とシミュレーション: article/economics-programming/08-random-numbers-and-simulation.md
           - 第 9 章 NumPy による配列計算: article/economics-programming/09-numpy-arrays.md
           - 第 10 章 SciPy による最適化: article/economics-programming/10-optimization-with-scipy.md
+          - 第 11 章 Pandas によるデータ分析: article/economics-programming/11-data-analysis-with-pandas.md
+          - 第 12 章 Pandas による図示: article/economics-programming/12-plotting-with-pandas.md
   - リファレンス:
       - 概要: reference/index.md
       - よいソフトウェアとは: reference/よいソフトウェアとは.md
