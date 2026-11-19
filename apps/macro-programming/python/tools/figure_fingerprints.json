@@ -3,5 +3,10 @@
   "ch01-income-and-tfp": "1e6db8028624f21635af39ee87194ca76d12553ca367d33db36100141e02bf2f",
   "ch02-growth-contributions": "69c1578396cfe376879fada7132654e8155165d3c5fddd2fd01094a1c63fb8a4",
   "ch02-tfp-growth": "e8a078d863a641a0b61f970395d2eb3a5a88e8e0d8a2d408c60d0ae45f889b41",
-  "ch03-regression": "4f9d624aba5035e750d503a40fcf232a2c0a6d23b9cb18d3ac3f524a6b7f5139"
+  "ch03-regression": "4f9d624aba5035e750d503a40fcf232a2c0a6d23b9cb18d3ac3f524a6b7f5139",
+  "ch04-cobweb-stable": "c46b66bd405ac30af093f33d59ef3fa8d4e9faf70a798889f26c420cf07b881a",
+  "ch04-cobweb-unstable": "145f42840a96a9095f5b8a208a39f8589797ab36480f82c08c869d7d0b11e7e6",
+  "ch04-difference-paths": "6d44cffaa5ddfb23405b399c5c90400c23f403a32f5141feac169b12bebc8a3d",
+  "ch05-solow-convergence": "7c47c09d9b62970d184bfbfb276a2526f9b88f232c1660ab26e0f6ee1836da5f",
+  "ch05-solow-diagram": "9b1fd10c7f8ae4e945ad27cf6fc195be3df920daead34130b03039ef7892aa01"
 }

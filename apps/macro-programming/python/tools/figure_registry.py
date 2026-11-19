@@ -25,6 +25,12 @@ from lib.chapter02.plot import (  # noqa: E402
     plot_tfp_growth,
 )
 from lib.chapter03.plot import plot_regression  # noqa: E402
+from lib.chapter04.difference import linear_path  # noqa: E402
+from lib.chapter04.plot import plot_cobweb, plot_paths  # noqa: E402
+from lib.chapter05.plot import (  # noqa: E402
+    plot_solow_convergence,
+    plot_solow_diagram,
+)
 
 # 記事に載せる図。名前が、画像のファイル名（名前.png）になる
 FIGURES: dict[str, Callable[[], Figure]] = {
@@ -37,6 +43,20 @@ FIGURES: dict[str, Callable[[], Figure]] = {
     ),
     "ch02-tfp-growth": lambda: plot_tfp_growth(
         growth_contribution(load_panel(), 1990, 2019, 1 / 3)
+    ),
+    "ch04-difference-paths": lambda: plot_paths(
+        {
+            "a = 0.5": linear_path(0.5, 1, 0, 12),
+            "a = -0.8": linear_path(-0.8, 3.6, 0, 12),
+            "a = 1.1": linear_path(1.1, -0.2, 0, 12),
+        },
+        steady_state=2,
+    ),
+    "ch04-cobweb-stable": lambda: plot_cobweb(100, 3, 0, 2, 10, 6),
+    "ch04-cobweb-unstable": lambda: plot_cobweb(100, 2, 0, 3, 19, 5),
+    "ch05-solow-diagram": lambda: plot_solow_diagram(0.2, 0.05, 0.5),
+    "ch05-solow-convergence": lambda: plot_solow_convergence(
+        [2, 25], 0.2, 0.05, 0.5, periods=150
     ),
     "ch03-regression": lambda: plot_regression(
         np.log(load_countries()["k"]),
