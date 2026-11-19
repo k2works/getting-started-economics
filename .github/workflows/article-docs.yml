@@ -1,0 +1,60 @@
+name: Article Docs CI
+
+# 記事（経済学のためのプログラミング入門）とマインドマップを、サイトとしてビルドして、
+# これらのページのリンク切れ・見つからないアンカーを検出する。
+# ほかのドキュメント（docs/template など）の既存の警告では失敗させない。
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - "docs/article/**"
+      - "mkdocs.yml"
+      - "ops/docker/mkdoc/**"
+      - "ops/scripts/mkdocs.js"
+      - ".github/workflows/article-docs.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "docs/article/**"
+      - "mkdocs.yml"
+      - "ops/docker/mkdoc/**"
+      - "ops/scripts/mkdocs.js"
+      - ".github/workflows/article-docs.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      # プロジェクト標準のタスク（Docker Compose 上の MkDocs）でビルドする
+      - name: Build documentation
+        shell: bash
+        run: |
+          set -o pipefail
+          npm run docs:build 2>&1 | tee docs-build.log
+
+      # 記事・マインドマップのページに関する、警告と、リンクの通知（WARNING / INFO）を検出する
+      - name: Check warnings of the article pages
+        shell: bash
+        run: |
+          if grep -E "^(WARNING|INFO) +-  .*article/" docs-build.log; then
+            echo "::error::記事のページに、警告またはリンクの問題があります。上の行を確認してください"
+            exit 1
+          fi
+          echo "記事のページに、警告とリンクの問題はありません"

@@ -5,11 +5,13 @@ on:
     branches: [main, develop]
     paths:
       - "apps/economics-programming/python/**"
+      - "docs/article/economics-programming/**"
       - ".github/workflows/python-ci.yml"
   pull_request:
     branches: [main]
     paths:
       - "apps/economics-programming/python/**"
+      - "docs/article/economics-programming/**"
       - ".github/workflows/python-ci.yml"
 
 permissions:
@@ -32,9 +34,11 @@ jobs:
           enable-cache: true
           cache-dependency-glob: apps/economics-programming/python/uv.lock
 
+      # uv.lock と pyproject.toml がずれていたら、黙って再ロックせずに失敗させる
       - name: Install dependencies
-        run: uv sync
+        run: uv sync --locked
 
+      # カバレッジが 100% を下回ると失敗する
       - name: Run tests
         run: uv run tox -e test
 
@@ -43,3 +47,7 @@ jobs:
 
       - name: Run type check
         run: uv run tox -e type
+
+      # 記事のコード例・実行結果の件数・解答のコードが、サンプル実装とずれていないかを確かめる
+      - name: Check articles against the sample code
+        run: uv run tox -e articles
