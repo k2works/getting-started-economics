@@ -89,6 +89,14 @@ from lib.chapter16.solow_stochastic import (  # noqa: E402
     log_deviations,
     stochastic_solow,
 )
+from lib.chapter17.loglinear import capital_paths  # noqa: E402
+from lib.chapter17.plot import plot_exact_vs_linear  # noqa: E402
+from lib.chapter18.plot import plot_rbc_responses  # noqa: E402
+from lib.chapter18.rbc import (
+    RbcParameters,  # noqa: E402
+    solve_rbc,  # noqa: E402
+)
+from lib.chapter18.rbc import impulse_response as rbc_impulse  # noqa: E402
 
 # 記事に載せる図。名前が、画像のファイル名（名前.png）になる
 FIGURES: dict[str, Callable[[], Figure]] = {
@@ -249,6 +257,15 @@ FIGURES: dict[str, Callable[[], Figure]] = {
             ),
             SolowParameters(rho=0.6, sigma=0.008),
         )
+    ),
+    "ch17-exact-vs-linear": lambda: plot_exact_vs_linear(
+        capital_paths(SolowParameters(), initial_deviation=0.5, periods=60)
+    ),
+    "ch18-irf-basic": lambda: plot_rbc_responses(
+        rbc_impulse(solve_rbc(RbcParameters()), shock=0.01)
+    ),
+    "ch18-irf-labour": lambda: plot_rbc_responses(
+        rbc_impulse(solve_rbc(RbcParameters(), True), shock=0.01)
     ),
     "ch03-regression": lambda: plot_regression(
         np.log(load_countries()["k"]),

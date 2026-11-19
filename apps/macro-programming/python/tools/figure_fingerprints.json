@@ -34,5 +34,8 @@
   "ch15-impulse-pc": "f4fc2c25dbe7a4e7d64f241c09a15057d7de1a8f224cbeff39975256110f3248",
   "ch15-policy-stance": "bdb5c94b64dec1b1adaef748ccfa61e101f2729397ca17e102ea951e8f4048cc",
   "ch16-decomposition": "20ce8f510a8744cca5d29c5993f0fa22d2b86411c7ce8c4240d93ad2024afda7",
-  "ch16-solow-simulation": "7408ac3a99e13d57b796da177a54b0abec60946be016c0b37455e3b4cddb8c3f"
+  "ch16-solow-simulation": "7408ac3a99e13d57b796da177a54b0abec60946be016c0b37455e3b4cddb8c3f",
+  "ch17-exact-vs-linear": "70921ac21ae3c5ea8a3c1bf241e4e79f2fd2b12feb94626f4508ecf9210eaed8",
+  "ch18-irf-basic": "d7df7a4e8564eaa2e2b5dbfaee29497d39a40009e495ff36b01aab0ccb701021",
+  "ch18-irf-labour": "0d14dfaabef5826e4969adb095cd26c56d3eb8ff9152f366aa50c87501db4d04"
 }
