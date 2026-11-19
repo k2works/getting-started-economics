@@ -33,6 +33,8 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 効用 U(x, y) | x^α · y^(1−α) | `cobb_douglas_utility(x, y, alpha=0.5)` |
 | 限界代替率 MRS | α ÷ (1−α) · y ÷ x | `marginal_rate_of_substitution(x, y, alpha=0.5)` |
 
+> **記号について**: この章の C は、総費用です。第 9 章と第 13 章の C は、消費を表します。一覧は、[記号について](how-to-read.md#symbols) を参照してください。
+
 ## 4.2 予想する
 
 固定費用が 10 のとき、生産量 q = 2 について、次の値を手計算で求めてください。
