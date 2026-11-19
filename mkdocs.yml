@@ -67,6 +67,7 @@ exclude_docs: |
   wiki
   # 執筆者向けの内部文書（読者向けのサイトには含めない）
   article/economics-programming/outline.md
+  article/macro-programming/outline.md
   # 参照用に取得した外部資料（.gitignore の対象。サイトには含めない）
   article/py4basics.github.io/
   article/py4etrics.github.io/
