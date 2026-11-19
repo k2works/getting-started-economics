@@ -343,7 +343,7 @@ def test_手作業の2段階は係数は同じだが標準誤差が合わない(
     assert errors["x"] > 3 * result.standard_errors["x"]
 
 
-def test_手作業の2段階の標準誤差は乱数の標本でも過大() -> None:
+def test_手作業の2段階の標準誤差は乱数の標本でも合わない() -> None:
     s = draw_iv_sample(500, 1.0, 0.5, np.random.default_rng(0))
     result = two_stage_least_squares(s["y"], s[["x"]], s[["z"]])
     _, errors = manual_second_stage(s["y"], s[["x"]], s[["z"]])

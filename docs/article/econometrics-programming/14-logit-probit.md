@@ -57,7 +57,7 @@ uv run pytest test/chapter14
 ```
 
 ```text
-33 passed
+34 passed
 ```
 
 自分でコードを書くときは、`practice/chapter14/` に、完成形と同じ名前（`discrete.py`・`test_discrete.py`）のファイルを作ります。
@@ -198,6 +198,8 @@ def fit_binary(
         raise ValueError(f"知らないリンク関数: {link}（logit か probit）")
     design, names = _design(x)
     target = np.asarray(y, dtype=float)
+    if np.linalg.matrix_rank(design) < design.shape[1]:
+        raise ValueError("多重共線性（説明変数の間に、完全な線形関係がある）")
     beta = np.zeros(design.shape[1])
     for iteration in range(1, max_iterations + 1):
         score, weights = _score_and_weights(link, target, design @ beta)
@@ -608,6 +610,14 @@ def test_系列の名前は係数名になり名前がなければ_x1() -> None:
     y = (x + rng.standard_normal(200) > 0).astype(float)
     assert list(fit_binary(y, x).coefficients.index) == ["const", "educ"]
     assert list(fit_binary(y, x.rename(None)).coefficients.index) == ["const", "x1"]
+
+
+def test_説明変数が完全に共線ならエラーにする() -> None:
+    rng = np.random.default_rng(0)
+    x1 = rng.standard_normal(100)
+    y = (x1 + rng.standard_normal(100) > 0).astype(float)
+    with pytest.raises(ValueError, match="多重共線性"):
+        fit_binary(y, np.column_stack([x1, x1]))
 ```
 
 ```python
@@ -718,7 +728,7 @@ uv run pytest test/chapter14
 ```
 
 ```text
-33 passed
+34 passed
 ```
 
 ## 14.6 規則で言うと

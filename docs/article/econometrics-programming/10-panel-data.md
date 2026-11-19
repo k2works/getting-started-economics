@@ -64,7 +64,7 @@ uv run pytest test/chapter10
 ```
 
 ```text
-28 passed
+30 passed
 ```
 
 自分でコードを書くときは、`practice/chapter10/` に、完成形と同じ名前（`panel.py`・`test_panel.py`）のファイルを作ります。
@@ -446,6 +446,8 @@ def hausman_test(fixed: PanelFit, random: PanelFit, names: list[str]) -> TestRes
     H = (b_fe − b_re)′ (V_fe − V_re)⁻¹ (b_fe − b_re) は、χ²(k) に従う。
     2 つの推定で誤差の分散の推定値が違うと、H が負になることがある。
     そこで、ランダム効果の共分散行列を、固定効果の σ² に、そろえて使う。
+    そろえても、V_fe − V_re が正定値になるとは限らない。H が負になる、または逆行列が
+    不安定になるときは、この検定を使わず、クラスター頑健な標準誤差で、係数を比べる。
     """
     diff = (fixed.coefficients[names] - random.coefficients[names]).to_numpy()
     scale = fixed.sigma2 / random.sigma2
@@ -635,6 +637,8 @@ def cluster_standard_errors(
     )
     meat = scores.to_numpy().T @ scores.to_numpy()
     g = len(scores)
+    if g < 2:
+        raise ValueError("クラスターが 1 つしかなく、標準誤差を計算できない")
     bread = np.linalg.inv(design.T @ design)
     variance = g / (g - 1) * (n - 1) / (n - k) * bread @ meat @ bread
     return pd.Series(np.sqrt(np.diag(variance)), index=result.coefficients.index)
@@ -682,6 +686,25 @@ def test_個人内で相関があると通常の標準誤差は過小でクラ�
     r = pooled_standard_errors(100, 5, 500, np.random.default_rng(0))
     assert r["classical"] < 0.75 * r["sd"]
     assert r["clustered"] == pytest.approx(r["sd"], rel=0.1)
+
+
+def test_クラスターが1つなら頑健な標準誤差は計算できない() -> None:
+    x = pd.DataFrame({"x": [1.0, 2.0, 3.0, 4.0, 6.0, 7.0]})
+    y = pd.Series([2.0, 3.0, 3.0, 5.0, 4.0, 8.0])
+    with pytest.raises(ValueError, match="クラスター"):
+        cluster_standard_errors(y, x, pd.Series([1, 1, 1, 1, 1, 1]))
+
+
+def test_期間の数がそろわないパネルでも固定効果はlinearmodelsと一致する() -> None:
+    panel = sample()
+    unbalanced = panel.drop(panel.index[::7]).reset_index(drop=True)
+    assert unbalanced.groupby("entity").size().nunique() > 1
+    fit = fixed_effects(unbalanced, "y", ["x"])
+    reference = PanelOLS.from_formula(
+        "y ~ x + EntityEffects", unbalanced.set_index(["entity", "time"])
+    ).fit()
+    assert fit.coefficients["x"] == pytest.approx(reference.params["x"])
+    assert fit.standard_errors["x"] == pytest.approx(reference.std_errors["x"])
 ```
 
 ```python
@@ -798,7 +821,7 @@ uv run pytest test/chapter10
 ```
 
 ```text
-28 passed
+30 passed
 ```
 
 ## 10.6 実際のデータで試す（賃金のパネル）

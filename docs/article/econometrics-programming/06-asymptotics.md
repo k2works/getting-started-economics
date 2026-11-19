@@ -52,7 +52,7 @@ uv run pytest test/chapter06
 ```
 
 ```text
-18 passed
+19 passed
 ```
 
 自分でコードを書くときは、`practice/chapter06/` に、完成形と同じ名前（`asymptotics.py`・`test_asymptotics.py`）のファイルを作ります。
@@ -147,6 +147,8 @@ def skewness(x: ArrayLike) -> float:
     """歪度 = 3 次の中心モーメント ÷ （2 次の中心モーメント）^(3/2)。"""
     values = np.asarray(x, dtype=float)
     d = values - values.mean()
+    if np.mean(d**2) == 0:
+        raise ValueError("ばらつきがないので、歪度は計算できない")
     return float(np.mean(d**3) / np.mean(d**2) ** 1.5)
 
 
@@ -154,6 +156,8 @@ def kurtosis(x: ArrayLike) -> float:
     """尖度 = 4 次の中心モーメント ÷ （2 次の中心モーメント）²。正規分布は 3。"""
     values = np.asarray(x, dtype=float)
     d = values - values.mean()
+    if np.mean(d**2) == 0:
+        raise ValueError("ばらつきがないので、尖度は計算できない")
     return float(np.mean(d**4) / np.mean(d**2) ** 2)
 
 
@@ -422,6 +426,12 @@ def test_JB検定は歪んだ誤差を棄却し正規の誤差をほとんど棄
     normal = jarque_bera_rejection_rate(100, 500, False, np.random.default_rng(2))
     assert skewed > 0.95
     assert normal < 0.08
+
+
+def test_ばらつきのない列では歪度も尖度も計算できない() -> None:
+    for function in (skewness, kurtosis):
+        with pytest.raises(ValueError, match="ばらつき"):
+            function([3.0, 3.0, 3.0])
 ```
 
 ```python
@@ -487,7 +497,7 @@ uv run pytest test/chapter06
 ```
 
 ```text
-18 passed
+19 passed
 ```
 
 ## 6.6 実際のデータで試す（賃金）

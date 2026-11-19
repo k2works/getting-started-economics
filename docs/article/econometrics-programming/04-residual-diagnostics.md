@@ -51,7 +51,7 @@ uv run pytest test/chapter04
 ```
 
 ```text
-16 passed
+17 passed
 ```
 
 自分でコードを書くときは、`practice/chapter04/` に、完成形と同じ名前（`diagnostics.py`・`test_diagnostics.py`）のファイルを作ります。
@@ -147,6 +147,8 @@ def studentized_residuals(
     result: OlsResult, leverage: NDArray[np.float64]
 ) -> NDArray[np.float64]:
     """スチューデント化残差 e ÷ (σ̂ · √(1 − てこ比))。"""
+    if np.any(leverage >= 1):
+        raise ValueError("てこ比が 1 の観測値があり、その観測値の残差は計算できない")
     return result.residuals / (_sigma_hat(result) * np.sqrt(1 - leverage))
 
 
@@ -327,6 +329,12 @@ def test_4組のデータは要約統計量が同じでもクックの距離が�
         maxima[name] = cooks_distance(result, leverage(x)).max()
     assert maxima["outlier"] > 5 * maxima["linear"]
     assert maxima["outlier"] > 1
+
+
+def test_てこ比が1の観測値があればスチューデント化残差は計算できない() -> None:
+    result = fit_ols([1.0, 2.0, 3.0, 5.0], [1.0, 2.0, 3.0, 4.0])
+    with pytest.raises(ValueError, match="てこ比"):
+        studentized_residuals(result, np.array([0.2, 0.3, 0.2, 1.0]))
 ```
 
 ![要約統計量が同じ 4 組のデータ。直線は、4 組とも同じ](images/ch04-same-summary.png)
@@ -476,7 +484,7 @@ uv run pytest test/chapter04
 ```
 
 ```text
-16 passed
+17 passed
 ```
 
 ## 4.6 規則で言うと

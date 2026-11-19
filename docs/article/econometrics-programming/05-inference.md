@@ -53,7 +53,7 @@ uv run pytest test/chapter05
 ```
 
 ```text
-22 passed
+23 passed
 ```
 
 自分でコードを書くときは、`practice/chapter05/` に、完成形と同じ名前（`inference.py`・`test_inference.py`）のファイルを作ります。
@@ -253,6 +253,8 @@ def f_test(y: ArrayLike, x: pd.DataFrame, zero: list[str]) -> TestResult:
     rss_full, df_full = _rss(y, x)
     rss_restricted, df_restricted = _rss(y, x.drop(columns=zero))
     q = df_restricted - df_full
+    if q == 0:
+        raise ValueError("検定する列がない（zero が空）")
     statistic = ((rss_restricted - rss_full) / q) / (rss_full / df_full)
     return TestResult(float(statistic), float(stats.f.sf(statistic, q, df_full)))
 ```
@@ -400,6 +402,12 @@ def test_帰無仮説が誤っているほど棄却率は高い() -> None:
     far = rejection_rate(30, 1000, 0.5, 0.0, 0.05, np.random.default_rng(0))
     assert far > near > 0.05
     assert far > 0.5
+
+
+def test_検定する列がなければF検定はできない() -> None:
+    x = pd.DataFrame({"a": [1.0, 2.0, 3.0, 4.0, 6.0, 7.0]})
+    with pytest.raises(ValueError, match="検定する列"):
+        f_test([1.0, 3.0, 2.0, 5.0, 4.0, 7.0], x, [])
 ```
 
 ```python
@@ -486,7 +494,7 @@ uv run pytest test/chapter05
 ```
 
 ```text
-22 passed
+23 passed
 ```
 
 ## 5.6 規則で言うと

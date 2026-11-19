@@ -54,7 +54,7 @@ uv run pytest test/chapter03
 ```
 
 ```text
-27 passed
+28 passed
 ```
 
 自分でコードを書くときは、`practice/chapter03/` に、完成形と同じ名前（`multiple.py`・`test_multiple.py`）のファイルを作ります。
@@ -171,6 +171,8 @@ def fit_ols(y: ArrayLike, x: ArrayLike, constant: bool = True) -> OlsResult:
     sigma2 = rss / (n - k)
     errors = np.sqrt(sigma2 * np.diag(np.linalg.inv(gram)))
     tss = float(np.sum((target - target.mean()) ** 2))
+    if tss == 0:
+        raise ValueError("被説明変数が定数なので、決定係数を計算できない")
     return OlsResult(
         coefficients=pd.Series(coefficients, index=names),
         standard_errors=pd.Series(errors, index=names),
@@ -489,6 +491,11 @@ def test_名前のある系列を渡すと係数名はその名前() -> None:
     x = pd.Series([1.0, 2.0, 3.0, 4.0, 6.0], name="educ")
     y = [2.0, 4.1, 5.9, 8.2, 12.1]
     assert list(fit_ols(y, x).coefficients.index) == ["const", "educ"]
+
+
+def test_被説明変数が定数なら決定係数は計算できない() -> None:
+    with pytest.raises(ValueError, match="定数"):
+        fit_ols([2.0, 2.0, 2.0, 2.0], [1.0, 2.0, 3.0, 5.0])
 ```
 
 係数 0.1 は 10.5171%、−0.1 は −9.5163% です。符号によって、近似の誤差の向きが違います。
@@ -553,7 +560,7 @@ uv run pytest test/chapter03
 ```
 
 ```text
-27 passed
+28 passed
 ```
 
 ## 3.6 規則で言うと
