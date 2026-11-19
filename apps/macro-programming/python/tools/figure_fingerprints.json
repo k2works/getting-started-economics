@@ -24,5 +24,10 @@
   "ch11-money-inflation": "6a303cd5b9e28097082cddab03b0d58dae438abcb8fda59cc3a3ef1526bf2580",
   "ch11-money-inflation-moderate": "db7ca6fada753b422c46ccdb60a97b104c3f82da93e2bc701f4152a92f2967b7",
   "ch12-exchange-rates": "608441a652142bcdb5594dcccb1b17da05bcfc9d5d7c20f7162cbc8d569eab4d",
-  "ch12-regime-volatility": "ebff5115df3068e8d32d0372778290449b823584875e586c27ac65d0e7dd8231"
+  "ch12-regime-volatility": "ebff5115df3068e8d32d0372778290449b823584875e586c27ac65d0e7dd8231",
+  "ch13-data-vs-model": "0d7ce3eafab909fa3b4681f56935371b17666f1a87aec159fffd42f5dc152c56",
+  "ch13-price-persistence": "da8424fb9c1f3340cf8fc648c51bd0ae118fc88d0700a3bf59f2ee15d79b5d78",
+  "ch14-impulse-demand": "ad0a4353ffff5555a4058dbaab33a9f59d832dc6a0709dbdf0f8094f5121b9af",
+  "ch14-impulse-supply": "04d1fe04ab6602a1293d2f22f275ba4ba818701381187b828854e10efc1c28cf",
+  "ch14-simulation": "2a47da30bd8075baade6f946beca542f88563dbef0a926f8ba490aeb40cc140a"
 }

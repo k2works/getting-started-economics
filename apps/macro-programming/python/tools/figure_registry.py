@@ -66,6 +66,17 @@ from lib.chapter12.plot import (  # noqa: E402
     plot_exchange_rates,
     plot_regime_volatility,
 )
+from lib.chapter13.adas import (  # noqa: E402
+    AdasParameters,
+    adas_cycles,
+    calibrate,
+    data_features,
+    load_adas_quarterly,
+    model_moments,
+)
+from lib.chapter13.plot import plot_moment_comparison  # noqa: E402
+from lib.chapter14.plot import plot_impulse_response, plot_simulation  # noqa: E402
+from lib.chapter14.simulation import impulse_response, simulate  # noqa: E402
 
 # 記事に載せる図。名前が、画像のファイル名（名前.png）になる
 FIGURES: dict[str, Callable[[], Figure]] = {
@@ -175,6 +186,34 @@ FIGURES: dict[str, Callable[[], Figure]] = {
     "ch12-exchange-rates": lambda: plot_exchange_rates(load_exchange(), "1973Q1"),
     "ch12-regime-volatility": lambda: plot_regime_volatility(
         regime_statistics(load_exchange(), "1973Q1")
+    ),
+    "ch13-price-persistence": lambda: plot_regression(
+        pd.Series(adas_cycles(load_adas_quarterly())["p"].shift().dropna()),
+        pd.Series(adas_cycles(load_adas_quarterly())["p"].iloc[1:]),
+        xlabel="Price deviation, previous quarter (%)",
+        ylabel="Price deviation (%)",
+        label="Quarters",
+    ),
+    "ch13-data-vs-model": lambda: plot_moment_comparison(
+        data_features(
+            adas_cycles(load_adas_quarterly())["y"],
+            adas_cycles(load_adas_quarterly())["p"],
+        ),
+        model_moments(
+            calibrate(
+                adas_cycles(load_adas_quarterly())["y"],
+                adas_cycles(load_adas_quarterly())["p"],
+            )
+        ),
+    ),
+    "ch14-impulse-demand": lambda: plot_impulse_response(
+        impulse_response(AdasParameters(0.8, 0.3, 1.5, 1.2), u=1.0)
+    ),
+    "ch14-impulse-supply": lambda: plot_impulse_response(
+        impulse_response(AdasParameters(0.8, 0.3, 1.5, 1.2), v=1.0)
+    ),
+    "ch14-simulation": lambda: plot_simulation(
+        simulate(AdasParameters(0.8, 0.3, 1.5, 1.2), 100, np.random.default_rng(0))
     ),
     "ch03-regression": lambda: plot_regression(
         np.log(load_countries()["k"]),
