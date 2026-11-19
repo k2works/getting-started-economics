@@ -210,3 +210,10 @@ def test_産出量を重視する政策では物価の乖離は大きく長く�
     assert case2["pi"].iloc[3] > case1["pi"].iloc[3]
     assert CASE_2.phi > DEFAULT.phi
     assert case2["pi"].iloc[10] > case1["pi"].iloc[10]
+
+
+def test_ショック前の期間の数を変えられる() -> None:
+    df = impulse_response(DEFAULT, shock_pc=1.0, periods_after=5, periods_before=6)
+    assert len(df) == 6 + 1 + 5
+    assert df.iloc[:6]["pi"].tolist() == [2.0] * 6
+    assert df["pi"].iloc[6] == pytest.approx(2.8)

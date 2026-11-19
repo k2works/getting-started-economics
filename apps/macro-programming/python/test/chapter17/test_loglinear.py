@@ -192,3 +192,12 @@ def test_絶対値がちょうど1の固有値は不安定とは数えない() -
 def test_状態変数の数が範囲外なら受け付けない(n_state: int) -> None:
     with pytest.raises(ValueError, match="状態変数"):
         solve_saddle_path(np.eye(2), -np.eye(2) * 0.5, n_state=n_state)
+
+
+def test_値が有限でなくなれば定常状態を探せない() -> None:
+    def f(x_next: NDArray[np.float64], x: NDArray[np.float64]) -> NDArray[np.float64]:
+        with np.errstate(invalid="ignore"):
+            return np.array([np.sqrt(x[0] - 10.0) - x_next[0]])
+
+    with pytest.raises(ValueError, match="有限"):
+        find_steady_state(f, np.array([1.0]))

@@ -21,8 +21,13 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: python-ci-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
+    timeout-minutes: 20
     # シリーズごとに、同じ手順を実行する
     strategy:
       fail-fast: false

@@ -146,7 +146,10 @@ def check_counts() -> list[str]:
     actual_counts = _actual_counts()
     problems = []
     for path in _article_files():
-        for chapter, reported in read_reported_counts(_read(path)):
+        reports = read_reported_counts(_read(path))
+        if path.name[:2].isdigit() and not reports:
+            problems.append(f"{path.name}: 実行結果の件数が見つからない")
+        for chapter, reported in reports:
             actual = actual_counts.get(chapter, 0)
             if actual != reported:
                 problems.append(
@@ -157,12 +160,15 @@ def check_counts() -> list[str]:
 
 def _answer_module(chapter: int, markdown: str) -> str | None:
     """解答のコードを、1 つのテストモジュールにまとめる。解答がなければ None。"""
+    blocks: list[str] = []
     start = markdown.find('??? note "解答')
     if start == -1:
         return None
-    end = markdown.find("\n## ", start)
-    section = markdown[start : end if end != -1 else len(markdown)]
-    blocks = extract_python_blocks(section)
+    while start != -1:
+        end = markdown.find("\n## ", start)
+        section = markdown[start : end if end != -1 else len(markdown)]
+        blocks.extend(extract_python_blocks(section))
+        start = markdown.find('??? note "解答', end) if end != -1 else -1
     imports = "\n".join(
         f"from lib.{f.parent.name}.{f.stem} import *"
         for f in sorted(APP_DIR.glob("lib/chapter*/*.py"))

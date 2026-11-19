@@ -9,7 +9,6 @@ x̂' = M·x̂（M = -A⁻¹B）。変数を、状態変数（前の期に決ま�
 """
 
 from collections.abc import Callable
-from typing import Any
 
 import numpy as np
 import pandas as pd
@@ -39,10 +38,16 @@ def find_steady_state(
     tol: float = 1e-10,
     max_iter: int = 100,
 ) -> Vector:
-    """f(x, x) = 0 の解を、ニュートン法で探す。"""
+    """f(x, x) = 0 の解を、ニュートン法で探す。
+
+    tol は、残差の絶対値の許容（変数の大きさに依存する）。途中で、値が負になって、
+    べき乗などが計算できなくなる（有限でない）ときは、初期値を見直すように、エラーにする。
+    """
     x = np.array(guess, dtype=float)
     for _ in range(max_iter):
         residual = equations(x, x)
+        if not np.all(np.isfinite(residual)):
+            raise ValueError("定常状態が収束しない（値が有限でない。初期値を見直す）")
         if np.max(np.abs(residual)) < tol:
             return x
         jacobian = numerical_jacobian(lambda v: equations(v, v), x)
@@ -69,7 +74,7 @@ def log_linearize(
 def linear_transition(
     a_matrix: NDArray[np.float64], b_matrix: NDArray[np.float64]
 ) -> NDArray[np.float64]:
-    """x̂' = M·x̂ の M = -A⁻¹B。"""
+    """x̂' = M·x̂ の M = -A⁻¹B（A が特異なら解けない。静学的な式は先に消す）。"""
     return -np.linalg.solve(a_matrix, b_matrix)
 
 
@@ -97,16 +102,15 @@ def solve_saddle_path(
         raise ValueError(
             "解が一意に決まらない（不安定な固有値が、ジャンプ変数より少ない）"
         )
-    w: Any = np.real_if_close(vectors[:, unstable].T, tol=1000)
-    if np.iscomplexobj(w):
+    left = np.real_if_close(vectors[:, unstable].T, tol=1000)
+    if np.iscomplexobj(left):
         raise ValueError("不安定な固有値が複素数の場合は扱わない")
-    policy: Any
-    if n_jump == 0:
-        policy = np.zeros((0, n_state))
-    else:
+    w = np.asarray(left, dtype=np.float64)
+    policy = np.zeros((0, n_state))
+    if n_jump > 0:
         policy = -np.linalg.solve(w[:, n_state:], w[:, :n_state])
     transition = m[:n_state, :n_state] + m[:n_state, n_state:] @ policy
-    return policy.real, transition.real
+    return policy, np.asarray(transition.real, dtype=np.float64)
 
 
 def solow_equations(params: SolowParameters) -> Equations:

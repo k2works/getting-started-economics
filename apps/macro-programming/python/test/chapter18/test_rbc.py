@@ -103,7 +103,7 @@ def test_ショックがなければ定常状態にとどまる() -> None:
 
 def test_基本モデルのインパクト効果は元の記事のlinearsolveの結果と一致する() -> None:
     df = impulse_response(solve_rbc(BASIC), shock=0.01)
-    impact = df.iloc[3] / 1.0
+    impact = df.iloc[3]
     assert impact["a"] == pytest.approx(1.0)
     assert impact["k"] == pytest.approx(0.0)
     assert impact["y"] == pytest.approx(1.0)
@@ -113,7 +113,7 @@ def test_基本モデルのインパクト効果は元の記事のlinearsolveの
     assert impact["i"] == pytest.approx(3.6466, abs=0.001)
 
 
-def test_列と長さ() -> None:
+def test_インパルス反応の列と長さ() -> None:
     basic = impulse_response(solve_rbc(BASIC), shock=0.01)
     assert list(basic.columns) == ["a", "k", "c", "y", "i", "r", "w"]
     assert len(basic) == 3 + 1 + 40
@@ -145,7 +145,7 @@ def test_モデルの均衡経路はすべての変数が定常状態に戻る()
     assert df.iloc[-1].abs().max() < 1e-2
 
 
-def test_ショックは比例し足し合わせられる() -> None:
+def test_ショックの大きさに反応は比例する() -> None:
     solution = solve_rbc(BASIC)
     one = impulse_response(solution, shock=0.01)
     three = impulse_response(solution, shock=0.03)
