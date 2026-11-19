@@ -145,6 +145,10 @@ nav:
           - 第 4 章 残差診断: article/econometrics-programming/04-residual-diagnostics.md
           - 第 5 章 推論（検定と信頼区間）: article/econometrics-programming/05-inference.md
           - 第 6 章 大標本特性: article/econometrics-programming/06-asymptotics.md
+          - 第 7 章 ダミー変数とカテゴリー変数: article/econometrics-programming/07-dummy-variables.md
+          - 第 8 章 不均一分散: article/econometrics-programming/08-heteroskedasticity.md
+          - 第 9 章 プーリング・データと差分の差分: article/econometrics-programming/09-pooling-and-did.md
+          - 第 10 章 パネル・データ分析: article/econometrics-programming/10-panel-data.md
   - リファレンス:
       - 概要: reference/index.md
       - よいソフトウェアとは: reference/よいソフトウェアとは.md
