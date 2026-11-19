@@ -8,6 +8,8 @@ on:
       - "docs/article/economics-programming/**"
       - "apps/macro-programming/python/**"
       - "docs/article/macro-programming/**"
+      - "apps/econometrics-programming/python/**"
+      - "docs/article/econometrics-programming/**"
       - ".github/workflows/python-ci.yml"
   pull_request:
     branches: [main]
@@ -16,6 +18,8 @@ on:
       - "docs/article/economics-programming/**"
       - "apps/macro-programming/python/**"
       - "docs/article/macro-programming/**"
+      - "apps/econometrics-programming/python/**"
+      - "docs/article/econometrics-programming/**"
       - ".github/workflows/python-ci.yml"
 
 permissions:
@@ -32,7 +36,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        series: [economics-programming, macro-programming]
+        series: [economics-programming, macro-programming, econometrics-programming]
     runs-on: ubuntu-latest
     defaults:
       run:
