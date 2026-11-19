@@ -71,6 +71,8 @@ def fit_binary(
         raise ValueError(f"知らないリンク関数: {link}（logit か probit）")
     design, names = _design(x)
     target = np.asarray(y, dtype=float)
+    if np.linalg.matrix_rank(design) < design.shape[1]:
+        raise ValueError("多重共線性（説明変数の間に、完全な線形関係がある）")
     beta = np.zeros(design.shape[1])
     for iteration in range(1, max_iterations + 1):
         score, weights = _score_and_weights(link, target, design @ beta)

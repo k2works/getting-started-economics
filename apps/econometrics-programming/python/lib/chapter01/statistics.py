@@ -8,6 +8,8 @@ import pandas as pd
 from numpy.typing import NDArray
 from scipy import stats
 
+# 1 次元の数列（第 1・2 章などの、1 つの変数）。説明変数の行列（DataFrame を含む）は、
+# 第 3 章以降の ArrayLike（numpy.typing）を使う
 Array = Sequence[float] | NDArray[np.float64] | pd.Series
 
 # 臨界値を求められる分布（名前 -> SciPy の分布）

@@ -233,3 +233,22 @@ def test_個人内で相関があると通常の標準誤差は過小でクラ�
 
 def test_プーリングの推定値は手計算と一致する() -> None:
     assert pooled_estimate(PANEL) == pytest.approx(3.2)
+
+
+def test_クラスターが1つなら頑健な標準誤差は計算できない() -> None:
+    x = pd.DataFrame({"x": [1.0, 2.0, 3.0, 4.0, 6.0, 7.0]})
+    y = pd.Series([2.0, 3.0, 3.0, 5.0, 4.0, 8.0])
+    with pytest.raises(ValueError, match="クラスター"):
+        cluster_standard_errors(y, x, pd.Series([1, 1, 1, 1, 1, 1]))
+
+
+def test_期間の数がそろわないパネルでも固定効果はlinearmodelsと一致する() -> None:
+    panel = sample()
+    unbalanced = panel.drop(panel.index[::7]).reset_index(drop=True)
+    assert unbalanced.groupby("entity").size().nunique() > 1
+    fit = fixed_effects(unbalanced, "y", ["x"])
+    reference = PanelOLS.from_formula(
+        "y ~ x + EntityEffects", unbalanced.set_index(["entity", "time"])
+    ).fit()
+    assert fit.coefficients["x"] == pytest.approx(reference.params["x"])
+    assert fit.standard_errors["x"] == pytest.approx(reference.std_errors["x"])

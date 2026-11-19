@@ -29,7 +29,7 @@ PARAMS = np.array([0.5, 1.0, 0.0])
 DESIGN = np.column_stack([np.ones(2), [0.0, 1.0]])
 
 
-def latent(n: int = 20000, seed: int = 0) -> tuple[np.ndarray, np.ndarray]:
+def latent_data(n: int = 20000, seed: int = 0) -> tuple[np.ndarray, np.ndarray]:
     return draw_latent_sample(n, np.random.default_rng(seed))
 
 
@@ -62,7 +62,7 @@ def numerical_gradient(
 
 
 def test_トービットの解析的な勾配は数値微分に一致する() -> None:
-    x, y = latent(400)
+    x, y = latent_data(400)
     observed = censor(y)
     design = np.column_stack([np.ones(400), x])
     for params in (np.array([0.5, 1.5, 0.3]), np.array([-1.0, 3.0, 1.0])):
@@ -75,7 +75,7 @@ def test_トービットの解析的な勾配は数値微分に一致する() ->
 
 
 def test_切断回帰の解析的な勾配は数値微分に一致する() -> None:
-    x, y = latent(400)
+    x, y = latent_data(400)
     kept_x, kept_y = truncate(x, y)
     design = np.column_stack([np.ones(len(kept_x)), kept_x])
     for params in (np.array([0.5, 1.5, 0.3]), np.array([1.0, 2.0, 0.7])):
@@ -88,7 +88,7 @@ def test_切断回帰の解析的な勾配は数値微分に一致する() -> No
 
 
 def test_yの単位を1000倍しても係数と標準偏差が1000倍になるだけ() -> None:
-    x, y = latent(3000)
+    x, y = latent_data(3000)
     observed = censor(y)
     small = fit_tobit(observed, x)
     large = fit_tobit(observed * 1000, x)
@@ -138,7 +138,7 @@ def test_打ち切りは下限未満を下限にし_切断は下限以下を除�
 
 
 def test_潜在変数の標本() -> None:
-    x, y = latent()
+    x, y = latent_data()
     assert x.shape == y.shape == (20000,)
     fit = fit_ols(y, x)
     assert fit.coefficients.to_numpy() == pytest.approx([1.0, 2.0], abs=0.1)
@@ -162,7 +162,7 @@ def test_打ち切りがなければトービットはOLSと一致する() -> No
 
 
 def test_係数の名前と標本の大きさ() -> None:
-    x, y = latent(2000)
+    x, y = latent_data(2000)
     fit = fit_tobit(censor(y), x)
     assert list(fit.coefficients.index) == ["const", "x1", "sigma"]
     assert list(fit.standard_errors.index) == ["const", "x1", "sigma"]
@@ -171,7 +171,7 @@ def test_係数の名前と標本の大きさ() -> None:
 
 
 def test_最適点では対数尤度の勾配がほぼ0で周りより大きい() -> None:
-    x, y = latent(3000)
+    x, y = latent_data(3000)
     observed = censor(y)
     fit = fit_tobit(observed, x)
     design = np.column_stack([np.ones(3000), x])
@@ -198,7 +198,7 @@ def test_最適点では対数尤度の勾配がほぼ0で周りより大きい(
 
 
 def test_トービットは真の値を復元しOLSは0の方向に偏る() -> None:
-    x, y = latent()
+    x, y = latent_data()
     observed = censor(y)
     tobit = fit_tobit(observed, x)
     truth = {"const": 1.0, "x1": 2.0, "sigma": 2.0}
@@ -210,20 +210,20 @@ def test_トービットは真の値を復元しOLSは0の方向に偏る() -> N
 
 
 def test_打ち切られていない観測値だけのOLSも偏る() -> None:
-    x, y = latent()
+    x, y = latent_data()
     keep = y > 0
     assert fit_ols(y[keep], x[keep]).coefficients["x1"] < 1.5
 
 
 def test_下限が0以外でもトービットは真の値を復元する() -> None:
-    x, y = latent()
+    x, y = latent_data()
     fit = fit_tobit(censor(y, 2.0), x, left=2.0)
     assert abs(fit.coefficients["x1"] - 2.0) < 4 * fit.standard_errors["x1"]
     assert abs(fit.coefficients["const"] - 1.0) < 4 * fit.standard_errors["const"]
 
 
 def test_切断回帰は真の値を復元しOLSは0の方向に偏る() -> None:
-    x, y = latent()
+    x, y = latent_data()
     kept_x, kept_y = truncate(x, y)
     fit = fit_truncreg(kept_y, kept_x)
     truth = {"const": 1.0, "x1": 2.0, "sigma": 2.0}
@@ -236,7 +236,7 @@ def test_切断回帰は真の値を復元しOLSは0の方向に偏る() -> None
 def test_標準誤差は推定値の実際のばらつきに近い() -> None:
     slopes, errors = [], []
     for seed in range(150):
-        x, y = latent(500, seed)
+        x, y = latent_data(500, seed)
         fit = fit_tobit(censor(y), x)
         slopes.append(fit.coefficients["x1"])
         errors.append(fit.standard_errors["x1"])
@@ -245,7 +245,7 @@ def test_標準誤差は推定値の実際のばらつきに近い() -> None:
 
 
 def test_期待値の平均は観測値の平均に近い() -> None:
-    x, y = latent()
+    x, y = latent_data()
     observed = censor(y)
     fit = fit_tobit(observed, x)
     expected = tobit_expected_value(fit, x)
@@ -254,7 +254,7 @@ def test_期待値の平均は観測値の平均に近い() -> None:
 
 
 def test_限界効果は期待値の数値微分の平均に一致する() -> None:
-    x, y = latent()
+    x, y = latent_data()
     fit = fit_tobit(censor(y), x)
     h = 1e-4
     numeric = np.mean(
@@ -280,6 +280,20 @@ def test_最適化が収束しなければエラー(monkeypatch: pytest.MonkeyPa
         return SimpleNamespace(success=False, jac=np.array([1.0, 1.0, 1.0]), x=None)
 
     monkeypatch.setattr(limited.optimize, "minimize", fake_minimize)
-    x, y = latent(200)
+    x, y = latent_data(200)
     with pytest.raises(ValueError, match="収束"):
         fit_tobit(censor(y), x)
+
+
+def test_下限が0でなくてもトービットは真の値を復元する() -> None:
+    x, latent = draw_latent_sample(20000, np.random.default_rng(0))
+    y = censor(latent, left=2.0)
+    assert (y == 2.0).mean() > 0.2
+    fit = fit_tobit(y, x, left=2.0)
+    assert fit.coefficients["x1"] == pytest.approx(2, abs=0.08)
+    assert fit.coefficients["const"] == pytest.approx(1, abs=0.08)
+    expected = tobit_expected_value(fit, x, left=2.0)
+    assert expected.mean() == pytest.approx(y.mean(), abs=0.03)
+    assert (expected >= 2.0).all()
+    effects = tobit_marginal_effects(fit, x, left=2.0)
+    assert 0 < effects["x1"] < fit.coefficients["x1"]

@@ -148,3 +148,9 @@ def test_JB検定は歪んだ誤差を棄却し正規の誤差をほとんど棄
     normal = jarque_bera_rejection_rate(100, 500, False, np.random.default_rng(2))
     assert skewed > 0.95
     assert normal < 0.08
+
+
+def test_ばらつきのない列では歪度も尖度も計算できない() -> None:
+    for function in (skewness, kurtosis):
+        with pytest.raises(ValueError, match="ばらつき"):
+            function([3.0, 3.0, 3.0])

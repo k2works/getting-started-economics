@@ -115,3 +115,9 @@ def test_4組のデータは要約統計量が同じでもクックの距離が�
         maxima[name] = cooks_distance(result, leverage(x)).max()
     assert maxima["outlier"] > 5 * maxima["linear"]
     assert maxima["outlier"] > 1
+
+
+def test_てこ比が1の観測値があればスチューデント化残差は計算できない() -> None:
+    result = fit_ols([1.0, 2.0, 3.0, 5.0], [1.0, 2.0, 3.0, 4.0])
+    with pytest.raises(ValueError, match="てこ比"):
+        studentized_residuals(result, np.array([0.2, 0.3, 0.2, 1.0]))

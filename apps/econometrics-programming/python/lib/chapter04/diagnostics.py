@@ -24,6 +24,8 @@ def studentized_residuals(
     result: OlsResult, leverage: NDArray[np.float64]
 ) -> NDArray[np.float64]:
     """スチューデント化残差 e ÷ (σ̂ · √(1 − てこ比))。"""
+    if np.any(leverage >= 1):
+        raise ValueError("てこ比が 1 の観測値があり、その観測値の残差は計算できない")
     return result.residuals / (_sigma_hat(result) * np.sqrt(1 - leverage))
 
 

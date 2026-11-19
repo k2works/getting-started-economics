@@ -202,3 +202,8 @@ def test_名前のある系列を渡すと係数名はその名前() -> None:
     x = pd.Series([1.0, 2.0, 3.0, 4.0, 6.0], name="educ")
     y = [2.0, 4.1, 5.9, 8.2, 12.1]
     assert list(fit_ols(y, x).coefficients.index) == ["const", "educ"]
+
+
+def test_被説明変数が定数なら決定係数は計算できない() -> None:
+    with pytest.raises(ValueError, match="定数"):
+        fit_ols([2.0, 2.0, 2.0, 2.0], [1.0, 2.0, 3.0, 5.0])

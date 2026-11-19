@@ -245,3 +245,11 @@ def test_系列の名前は係数名になり名前がなければ_x1() -> None:
     y = (x + rng.standard_normal(200) > 0).astype(float)
     assert list(fit_binary(y, x).coefficients.index) == ["const", "educ"]
     assert list(fit_binary(y, x.rename(None)).coefficients.index) == ["const", "x1"]
+
+
+def test_説明変数が完全に共線ならエラーにする() -> None:
+    rng = np.random.default_rng(0)
+    x1 = rng.standard_normal(100)
+    y = (x1 + rng.standard_normal(100) > 0).astype(float)
+    with pytest.raises(ValueError, match="多重共線性"):
+        fit_binary(y, np.column_stack([x1, x1]))

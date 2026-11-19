@@ -143,3 +143,9 @@ def test_帰無仮説が誤っているほど棄却率は高い() -> None:
     far = rejection_rate(30, 1000, 0.5, 0.0, 0.05, np.random.default_rng(0))
     assert far > near > 0.05
     assert far > 0.5
+
+
+def test_検定する列がなければF検定はできない() -> None:
+    x = pd.DataFrame({"a": [1.0, 2.0, 3.0, 4.0, 6.0, 7.0]})
+    with pytest.raises(ValueError, match="検定する列"):
+        f_test([1.0, 3.0, 2.0, 5.0, 4.0, 7.0], x, [])

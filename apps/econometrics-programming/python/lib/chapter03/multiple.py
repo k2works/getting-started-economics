@@ -56,6 +56,8 @@ def fit_ols(y: ArrayLike, x: ArrayLike, constant: bool = True) -> OlsResult:
     sigma2 = rss / (n - k)
     errors = np.sqrt(sigma2 * np.diag(np.linalg.inv(gram)))
     tss = float(np.sum((target - target.mean()) ** 2))
+    if tss == 0:
+        raise ValueError("被説明変数が定数なので、決定係数を計算できない")
     return OlsResult(
         coefficients=pd.Series(coefficients, index=names),
         standard_errors=pd.Series(errors, index=names),

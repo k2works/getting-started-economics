@@ -60,6 +60,8 @@ def f_test(y: ArrayLike, x: pd.DataFrame, zero: list[str]) -> TestResult:
     rss_full, df_full = _rss(y, x)
     rss_restricted, df_restricted = _rss(y, x.drop(columns=zero))
     q = df_restricted - df_full
+    if q == 0:
+        raise ValueError("検定する列がない（zero が空）")
     statistic = ((rss_restricted - rss_full) / q) / (rss_full / df_full)
     return TestResult(float(statistic), float(stats.f.sf(statistic, q, df_full)))
 

@@ -14,6 +14,8 @@ def skewness(x: ArrayLike) -> float:
     """歪度 = 3 次の中心モーメント ÷ （2 次の中心モーメント）^(3/2)。"""
     values = np.asarray(x, dtype=float)
     d = values - values.mean()
+    if np.mean(d**2) == 0:
+        raise ValueError("ばらつきがないので、歪度は計算できない")
     return float(np.mean(d**3) / np.mean(d**2) ** 1.5)
 
 
@@ -21,6 +23,8 @@ def kurtosis(x: ArrayLike) -> float:
     """尖度 = 4 次の中心モーメント ÷ （2 次の中心モーメント）²。正規分布は 3。"""
     values = np.asarray(x, dtype=float)
     d = values - values.mean()
+    if np.mean(d**2) == 0:
+        raise ValueError("ばらつきがないので、尖度は計算できない")
     return float(np.mean(d**4) / np.mean(d**2) ** 2)
 
 
