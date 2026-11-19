@@ -169,15 +169,6 @@ class BinaryFit:
     link: str
 
 
-def _design(x: ArrayLike) -> tuple[NDArray[np.float64], list[str]]:
-    """定数項を先頭に足した説明変数の行列と、係数の名前。"""
-    values = np.asarray(x, dtype=float)
-    if values.ndim == 1:
-        values = values.reshape(-1, 1)
-    names = regressor_names(x, values.shape[1])
-    return np.column_stack([np.ones(len(values)), values]), ["const", *names]
-
-
 def log_likelihood(
     link: str, y: ArrayLike, design: NDArray[np.float64], beta: NDArray[np.float64]
 ) -> float:
@@ -212,7 +203,7 @@ def fit_binary(
     """
     if link not in LINKS:
         raise ValueError(f"知らないリンク関数: {link}（logit か probit）")
-    design, names = _design(x)
+    design, names = design_matrix(x)
     target = np.asarray(y, dtype=float)
     if np.linalg.matrix_rank(design) < design.shape[1]:
         raise ValueError("多重共線性（説明変数の間に、完全な線形関係がある）")
@@ -309,7 +300,7 @@ probit {'const': -0.67449, 'x1': 1.34898} -44.9868 5
 ```python
 def predicted_probabilities(fit: BinaryFit, x: ArrayLike) -> NDArray[np.float64]:
     """P(y = 1 | x) = F(x′β)。"""
-    design, _ = _design(x)
+    design, _ = design_matrix(x)
     result: NDArray[np.float64] = LINKS[fit.link].cdf(
         design @ fit.coefficients.to_numpy()
     )
@@ -318,7 +309,7 @@ def predicted_probabilities(fit: BinaryFit, x: ArrayLike) -> NDArray[np.float64]
 
 def average_marginal_effects(fit: BinaryFit, x: ArrayLike) -> pd.Series:
     """平均限界効果 = 密度 f(x′β) の平均 × 係数（連続変数）。定数項は含めない。"""
-    design, _ = _design(x)
+    design, _ = design_matrix(x)
     density = LINKS[fit.link].pdf(design @ fit.coefficients.to_numpy())
     return float(np.mean(density)) * fit.coefficients.drop("const")
 

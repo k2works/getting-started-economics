@@ -54,7 +54,7 @@ uv run pytest test/chapter03
 ```
 
 ```text
-28 passed
+30 passed
 ```
 
 自分でコードを書くときは、`practice/chapter03/` に、完成形と同じ名前（`multiple.py`・`test_multiple.py`）のファイルを作ります。
@@ -144,7 +144,10 @@ def regressor_names(x: ArrayLike, width: int) -> list[str]:
     return [f"x{i + 1}" for i in range(width)]
 
 
-def _matrix(x: ArrayLike, constant: bool) -> tuple[NDArray[np.float64], list[str]]:
+def design_matrix(
+    x: ArrayLike, constant: bool = True
+) -> tuple[NDArray[np.float64], list[str]]:
+    """説明変数の行列（定数項を先頭に付けたもの）と、係数の名前。"""
     values = np.asarray(x, dtype=float)
     if values.ndim == 1:
         values = values.reshape(-1, 1)
@@ -157,7 +160,7 @@ def _matrix(x: ArrayLike, constant: bool) -> tuple[NDArray[np.float64], list[str
 
 def fit_ols(y: ArrayLike, x: ArrayLike, constant: bool = True) -> OlsResult:
     """正規方程式 (X'X) b = X'y を解いて、係数・標準誤差・決定係数を求める。"""
-    design, names = _matrix(x, constant)
+    design, names = design_matrix(x, constant)
     target = np.asarray(y, dtype=float)
     n, k = design.shape
     if n <= k:
@@ -314,7 +317,7 @@ def test_てこ比の和は係数の数でありstatsmodelsと一致する() -> 
 ```python
 def leverage(x: ArrayLike, constant: bool = True) -> NDArray[np.float64]:
     """てこ比（ハット行列 H = X (X'X)⁻¹ X' の対角成分）。"""
-    design, _ = _matrix(x, constant)
+    design, _ = design_matrix(x, constant)
     hat = design @ np.linalg.solve(design.T @ design, design.T)
     result: NDArray[np.float64] = np.diag(hat)
     return result
@@ -496,6 +499,19 @@ def test_名前のある系列を渡すと係数名はその名前() -> None:
 def test_被説明変数が定数なら決定係数は計算できない() -> None:
     with pytest.raises(ValueError, match="定数"):
         fit_ols([2.0, 2.0, 2.0, 2.0], [1.0, 2.0, 3.0, 5.0])
+
+
+def test_計画行列は定数項を先頭に付け列の名前を返す() -> None:
+    x = pd.DataFrame({"a": [1.0, 2.0, 3.0], "b": [4.0, 5.0, 6.0]})
+    design, names = design_matrix(x)
+    assert names == ["const", "a", "b"]
+    assert design.tolist() == [[1.0, 1.0, 4.0], [1.0, 2.0, 5.0], [1.0, 3.0, 6.0]]
+
+
+def test_定数項なしの計画行列は説明変数だけ() -> None:
+    design, names = design_matrix(pd.Series([1.0, 2.0, 3.0], name="x"), constant=False)
+    assert names == ["x"]
+    assert design.tolist() == [[1.0], [2.0], [3.0]]
 ```
 
 係数 0.1 は 10.5171%、−0.1 は −9.5163% です。符号によって、近似の誤差の向きが違います。
@@ -560,7 +576,7 @@ uv run pytest test/chapter03
 ```
 
 ```text
-28 passed
+30 passed
 ```
 
 ## 3.6 規則で言うと

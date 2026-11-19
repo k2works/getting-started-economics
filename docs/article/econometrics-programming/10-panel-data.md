@@ -630,7 +630,7 @@ def cluster_standard_errors(
     G ÷ (G − 1) · (n − 1) ÷ (n − k) を掛ける。
     """
     result = fit_ols(y, x)
-    design = np.column_stack([np.ones(len(x)), x.to_numpy(dtype=float)])
+    design, _ = design_matrix(x)
     n, k = design.shape
     scores = (
         pd.DataFrame(design * result.residuals[:, None])

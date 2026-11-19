@@ -683,7 +683,64 @@ heckit bootstrap se {'const': 0.2869, 'educ': 0.0137, 'exper': 0.0154, 'expersq'
 - 除外変数（`nwifeinc`・`age`・`kidslt6`・`kidsge6`）が、賃金の式に影響しないという仮定が成り立たないと、逆ミルズ比の係数の解釈も崩れます
 - 第 2 段階の OLS の標準誤差（0.0156）と、ブートストラップ（0.0137）は、少し違います（教育）。逆ミルズ比の係数では、ブートストラップ 0.1654 が、OLS の 0.1344 より、大きくなっています
 
-> **ここで言えること、言えないこと。** トービットは、「働くか」と「何時間か」が、同じ式で決まると仮定します。6 歳未満の子の限界効果（−526 時間）は、働くかどうか（確率が 26 ポイント下がる）と、働く場合の時間の、両方の合計です。この 2 つを、分けて知りたいときは、選択の式と、時間の式を分ける（ヘックマンのような）モデルを使います。また、ヘックマンの結果は、除外変数（`nwifeinc`・`age`・`kidslt6`・`kidsge6`）が、賃金の式に影響しない、という仮定に依存します。**自作の、トービットとヘックマンの結果は、外部のソフトウェアで照合できていません**（Python の外部パッケージ `py4etrics` は、この執筆時点の `statsmodels` で動かなかった）。勾配が 0 であること、打ち切りがなければ OLS と一致すること、シミュレーションで真の値を復元することを、代わりの検証にしました。
+> **ここで言えること、言えないこと。** トービットは、「働くか」と「何時間か」が、同じ式で決まると仮定します。6 歳未満の子の限界効果（−526 時間）は、働くかどうか（確率が 26 ポイント下がる）と、働く場合の時間の、両方の合計です。この 2 つを、分けて知りたいときは、選択の式と、時間の式を分ける（ヘックマンのような）モデルを使います。また、ヘックマンの結果は、除外変数（`nwifeinc`・`age`・`kidslt6`・`kidsge6`）が、賃金の式に影響しない、という仮定に依存します。トービットとヘックマンの結果は、外部のソフトウェアの結果と照合しました（次の節）。
+
+### 外部のソフトウェアの結果との照合
+
+自作のトービットとヘックマンが、実績のあるソフトウェアと同じ結果になるかを、同じ `mroz` のデータで確かめます。比べる相手は、公開されている次の 2 つの結果です。
+
+- **トービット**: Stata の `tobit hours nwifeinc educ exper expersq age kidslt6 kidsge6, ll(0)` の出力（[Corner Solution - Tobit Model](https://rowesamuel.github.io/rowesamuel/bookdown_statamarkdown/Week10/book/corner-solution---tobit-model.html)。係数・標準誤差・σ・対数尤度 −3819.0946）
+- **ヘックマン**: R の `sampleSelection::heckit()` の出力（[Review of Heckit](https://s-saisw.github.io/rtutorial/heckit.html)。選択の式も賃金の式も、説明変数は educ・exper・expersq・nwifeinc・age・kidslt6・kidsge6。被説明変数は `lwage`）
+
+次のスクリプトを `practice/chapter16/crosscheck.py` として保存し、アプリの根で、`uv run --group realdata python -m practice.chapter16.crosscheck` で実行します。
+
+```python
+import numpy as np
+import wooldridge
+
+from lib.chapter15.limited import fit_tobit
+from lib.chapter16.heckit import heckit_two_step
+
+df = wooldridge.data("mroz")
+columns = ["nwifeinc", "educ", "exper", "expersq", "age", "kidslt6", "kidsge6"]
+
+# Stata: tobit hours nwifeinc educ exper expersq age kidslt6 kidsge6, ll(0) の結果
+stata = {
+    "const": (965.3053, 446.4358), "nwifeinc": (-8.814243, 4.459096),
+    "educ": (80.64561, 21.58322), "exper": (131.5643, 17.27938),
+    "expersq": (-1.864158, 0.5376615), "age": (-54.40501, 7.418496),
+    "kidslt6": (-894.0217, 111.8779), "kidsge6": (-16.218, 38.64136),
+    "sigma": (1122.022, 41.57903),
+}
+tobit = fit_tobit(df["hours"], df[columns])
+coefficient_gap = max(abs(tobit.coefficients[k] - v[0]) / abs(v[0]) for k, v in stata.items())
+error_gap = max(abs(tobit.standard_errors[k] - v[1]) / v[1] for k, v in stata.items())
+print("tobit coefficients agree (1e-5):", coefficient_gap < 1e-5)
+print("tobit standard errors agree (1e-4):", error_gap < 1e-4)
+print("tobit log-likelihood", round(tobit.log_likelihood, 4), "(Stata -3819.0946)")
+
+# R: sampleSelection::heckit(selection = s ~ ..., outcome = lwage ~ ...) の結果
+r_heckit = {
+    "const": -0.5602852, "educ": 0.1187171, "exper": 0.0598358, "expersq": -0.0010523,
+    "nwifeinc": 0.0038434, "age": -0.0111580, "kidslt6": -0.1880451, "kidsge6": -0.0122255,
+    "lambda": 0.2885,
+}
+wage_columns = ["educ", "exper", "expersq", *columns[:1], "age", "kidslt6", "kidsge6"]
+heckit = heckit_two_step(df.assign(selected=df["inlf"], y=df["lwage"]), wage_columns, wage_columns)
+gap = max(abs(heckit.coefficients[k] - v) for k, v in r_heckit.items())
+print("heckit coefficients agree (1e-4):", gap < 1e-4)
+```
+
+```text
+tobit coefficients agree (1e-5): True
+tobit standard errors agree (1e-4): True
+tobit log-likelihood -3819.0946 (Stata -3819.0946)
+heckit coefficients agree (1e-4): True
+```
+
+**トービットは、係数が相対 10⁻⁶ 台、標準誤差が 10⁻⁶ 台で、Stata と一致し、対数尤度も小数第 4 位まで同じ**です。**ヘックマンの 2 段階推定の係数も、R の値と、10⁻⁴ 以内で一致します**（逆ミルズ比の係数は、R 側が小数第 4 位に丸めた 0.2885 と比べています。自作は 0.28846）。第 1 段階のプロビットの係数も、R の出力（0.270077、0.130905、0.123348 …）と、同じ値でした。
+
+> **この照合で言えること、言えないこと。** 同じ式・同じデータでの、点推定値と標準誤差（トービット）が、別の実装と一致したので、**実装の誤りの可能性は、かなり下がりました**。ただし、ヘックマンの標準誤差は、この章のブートストラップと、R の補正した標準誤差（educ で 0.0341）が、別の方法なので、比べていません。外部の値は、公開された文書から転記したもので、各ソフトウェアのバージョンの違いまでは、確かめていません。
 
 ## 16.7 規則で言うと
 
