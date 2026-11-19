@@ -44,6 +44,8 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 
 ### 数値: int と float
 
+この節のコード片は、第 1 章で紹介した対話モード（`uv run python`）に、1 行ずつ打ち込んで、試せます。`#` から後ろは、結果の説明（コメント）なので、打ち込まなくてかまいません。
+
 Python の数値には、整数 `int` と小数 `float` があります。
 
 ```python
@@ -80,6 +82,20 @@ price_change_rate = (price_after - price_before) / price_before   # 0.2
 ```python
 0.25 > 1   # False
 ```
+
+### 型ヒント
+
+関数の引数や戻り値に、`: float` や `-> float` と書くのが、型ヒントです。第 1 章から、すでに使ってきました。
+
+```python
+def is_price_elastic(elasticity: float) -> bool:
+    """価格弾力性が 1 より大きければ弾力的。"""
+    return elasticity > 1
+```
+
+この関数は、「引数 `elasticity` は小数（`float`）で、結果は真偽値（`bool`）」という、人間と道具へのヒントです。Python は、実行するときには、型ヒントをチェックしません（整数を渡しても、動きます）。型ヒントが役に立つのは、エディタや mypy のような検査の道具が、型の合わない呼び出しを、実行する前に、教えてくれるときです。
+
+`int`・`float`・`str`・`bool` のほかに、`list[int]`（整数のリスト）や `dict[int, float]`（整数をキー、小数を値にした辞書）のような書き方も、第 3 章から出てきます。`-> None` は、「何も返さない」という意味で、テストの関数に付けます。
 
 ### 計算の精度
 
@@ -175,6 +191,8 @@ def income_elasticity(
 def test_所得弾力性で財を分類する(elasticity: float, expected: str) -> None:
     assert classify_income_elasticity(elasticity) == expected
 ```
+
+`@pytest.mark.parametrize` は、同じテストを、値の組を変えて、繰り返し実行する書き方です。ここでは、`elasticity` と `expected` の組が 5 つあるので、同じテストが 5 回実行されます。1 つの組で失敗したときは、どの組で失敗したかが、表示されます。
 
 ```python
 def classify_income_elasticity(elasticity: float) -> str:
