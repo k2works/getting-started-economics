@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 
 from lib.chapter01.demand import quantity_demanded
+from lib.chapter07.surplus import equilibrium
 from lib.chapter09.linear import (
     demand_quantities,
     equilibrium_by_linear_algebra,
@@ -76,3 +77,32 @@ def test_配列の計算結果は1つずつ計算した結果と一致する() -
 def test_配列でも負の価格は受け付けない() -> None:
     with pytest.raises(ValueError):
         demand_quantities(np.array([10, -1]), intercept=100, slope=2)
+
+
+@pytest.mark.parametrize(
+    ("supply_intercept", "price", "quantity"),
+    [(0, 20, 60), (10, 18, 64), (-30, 26, 48)],
+)
+def test_供給曲線の切片が違っても連立方程式で均衡を求められる(
+    supply_intercept: float, price: float, quantity: float
+) -> None:
+    result = equilibrium_by_linear_algebra(
+        demand_intercept=100,
+        demand_slope=2,
+        supply_intercept=supply_intercept,
+        supply_slope=3,
+    )
+    assert result == pytest.approx((price, quantity))
+
+
+@pytest.mark.parametrize("supply_intercept", [0, 10, -30])
+def test_連立方程式の解は第7章の閉形式の解と一致する(supply_intercept: float) -> None:
+    market = {
+        "demand_intercept": 100,
+        "demand_slope": 2,
+        "supply_intercept": supply_intercept,
+        "supply_slope": 3,
+    }
+    assert equilibrium_by_linear_algebra(**market) == pytest.approx(
+        equilibrium(**market)
+    )

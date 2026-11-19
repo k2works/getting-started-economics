@@ -176,3 +176,41 @@ def test_政策後のモデルを渡すと移動後の曲線も描く() -> None:
         "LM (after)",
         "Equilibrium (after)",
     ]
+
+
+def test_IS曲線上の点はすべて財市場の均衡を表す() -> None:
+    model = IsLmModel()
+    ax = plot_islm(model).axes[0]
+    points = curve_points(ax.lines[0])
+    assert len(points) > 10
+    for income, rate in points.items():
+        assert is_income(model, rate) == pytest.approx(income)
+
+
+def test_LM曲線上の点はすべて貨幣市場の均衡を表す() -> None:
+    model = IsLmModel()
+    ax = plot_islm(model).axes[0]
+    points = curve_points(ax.lines[1])
+    assert len(points) > 10
+    for income, rate in points.items():
+        assert lm_interest(model, income) == pytest.approx(rate)
+
+
+def test_政策後のIS曲線は政策後のモデルの上にある() -> None:
+    before = IsLmModel()
+    after = IsLmModel(government=120)
+    ax = plot_islm(before, after=after).axes[0]
+    after_points = curve_points(ax.lines[3])
+    for income, rate in after_points.items():
+        assert is_income(after, rate) == pytest.approx(income)
+    # 政策前の IS 曲線とは、別の線になっている
+    assert is_income(before, 6) != pytest.approx(is_income(after, 6))
+
+
+def test_政策後のLM曲線と均衡点は政策後のモデルのもの() -> None:
+    after = IsLmModel(money_supply=575)
+    ax = plot_islm(IsLmModel(), after=after).axes[0]
+    for income, rate in curve_points(ax.lines[4]).items():
+        assert lm_interest(after, income) == pytest.approx(rate)
+    ((income, rate),) = curve_points(ax.lines[5]).items()
+    assert (income, rate) == pytest.approx(solve_equilibrium(after))

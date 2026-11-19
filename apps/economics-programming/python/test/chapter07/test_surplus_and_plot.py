@@ -75,6 +75,23 @@ def test_余剰の合計と税収の合計は課税前より死荷重の分だ�
     assert before - after == pytest.approx(result.deadweight_loss)
 
 
+# 供給曲線に切片がある市場: Q = 10 + 3P（均衡は価格 18、数量 64）
+MARKET_WITH_INTERCEPT = {
+    "demand_intercept": 100,
+    "demand_slope": 2,
+    "supply_intercept": 10,
+    "supply_slope": 3,
+}
+
+# 供給曲線の切片が負の市場: Q = -30 + 3P（価格 10 までは供給量が 0。均衡は価格 26、数量 48）
+MARKET_WITH_NEGATIVE_INTERCEPT = {
+    "demand_intercept": 100,
+    "demand_slope": 2,
+    "supply_intercept": -30,
+    "supply_slope": 3,
+}
+
+
 def curve_points(line: Line2D) -> dict[float, float]:
     """線の (数量, 価格) の組を、数量をキーにした辞書にする。"""
     points: Any = line.get_xydata()
@@ -104,3 +121,49 @@ def test_供給曲線は数量60のとき価格20() -> None:
 def test_負の税額は受け付けない() -> None:
     with pytest.raises(ValueError):
         equilibrium_with_tax(**MARKET, tax=-1)
+
+
+def test_供給曲線に切片があっても均衡を求められる() -> None:
+    # 100 - 2P = 10 + 3P から P = 90 / 5 = 18、Q = 100 - 36 = 64
+    assert equilibrium(**MARKET_WITH_INTERCEPT) == pytest.approx((18, 64))
+
+
+def test_供給曲線の切片が負の市場の均衡と余剰() -> None:
+    # 100 - 2P = -30 + 3P から P = 26、Q = 48。供給曲線の縦軸の切片は 30 / 3 = 10
+    assert equilibrium(**MARKET_WITH_NEGATIVE_INTERCEPT) == pytest.approx((26, 48))
+    # 消費者余剰: 底辺 48、高さ 50 - 26。生産者余剰: 底辺 48、高さ 26 - 10
+    assert consumer_surplus(**MARKET_WITH_NEGATIVE_INTERCEPT) == pytest.approx(576)
+    assert producer_surplus(**MARKET_WITH_NEGATIVE_INTERCEPT) == pytest.approx(384)
+
+
+def test_供給曲線に切片があるときの従量税() -> None:
+    result = equilibrium_with_tax(**MARKET_WITH_INTERCEPT, tax=5)
+    # (100 - 10 + 3 × 5) / 5 = 21、売り手の受取は 21 - 5 = 16、数量は 100 - 2 × 21 = 58
+    assert result.consumer_price == pytest.approx(21)
+    assert result.producer_price == pytest.approx(16)
+    assert result.quantity == pytest.approx(58)
+    assert result.tax_revenue == pytest.approx(290)
+    # 死荷重: 底辺は取引量の減少 64 - 58 = 6、高さは税額 5
+    assert result.deadweight_loss == pytest.approx(15)
+
+
+def test_供給曲線に切片があるとき供給曲線は数量64で価格18() -> None:
+    ax = draw_market(**MARKET_WITH_INTERCEPT).axes[0]
+    # 供給曲線 P = (Q - 10) / 3。数量 10 で価格 0、数量 64 で価格 18
+    points = curve_points(ax.lines[1])
+    assert points[10] == pytest.approx(0)
+    assert points[64] == pytest.approx(18)
+
+
+def test_市場の図の均衡点は数量60と価格20() -> None:
+    ax = draw_market(**MARKET).axes[0]
+    ((quantity, price),) = curve_points(ax.lines[2]).items()
+    assert quantity == pytest.approx(60)
+    assert price == pytest.approx(20)
+
+
+def test_供給曲線に切片があるとき図の均衡点は数量64と価格18() -> None:
+    ax = draw_market(**MARKET_WITH_INTERCEPT).axes[0]
+    ((quantity, price),) = curve_points(ax.lines[2]).items()
+    assert quantity == pytest.approx(64)
+    assert price == pytest.approx(18)

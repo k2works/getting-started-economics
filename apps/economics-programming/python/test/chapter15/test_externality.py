@@ -51,3 +51,33 @@ def test_ピグー税で解消される死荷重は第7章の死荷重の式と�
 def test_負の外部費用は受け付けない() -> None:
     with pytest.raises(ValueError):
         social_optimum_quantity(**MARKET, external_cost=-1)
+
+
+MARKET_WITH_INTERCEPT = {
+    "demand_intercept": 100,
+    "demand_slope": 2,
+    "supply_intercept": 10,
+    "supply_slope": 3,
+}
+
+
+def test_供給曲線に切片があるときの社会的に最適な数量は58() -> None:
+    # (100 - Q) / 2 = (Q - 10) / 3 + 5 を解く。市場の数量は 64
+    assert social_optimum_quantity(
+        **MARKET_WITH_INTERCEPT, external_cost=5
+    ) == pytest.approx(58)
+    assert equilibrium(**MARKET_WITH_INTERCEPT)[1] == pytest.approx(64)
+
+
+def test_供給曲線に切片があるときの死荷重は15() -> None:
+    # 底辺は過剰供給の分 64 - 58 = 6、高さは外部費用 5
+    assert externality_deadweight_loss(
+        **MARKET_WITH_INTERCEPT, external_cost=5
+    ) == pytest.approx(15)
+
+
+def test_供給曲線に切片があるときも外部費用と同額のピグー税で社会的最適になる() -> None:
+    taxed = equilibrium_with_tax(**MARKET_WITH_INTERCEPT, tax=5)
+    assert taxed.quantity == pytest.approx(
+        social_optimum_quantity(**MARKET_WITH_INTERCEPT, external_cost=5)
+    )
