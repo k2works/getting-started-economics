@@ -71,9 +71,15 @@ uv run pytest
 | :--- | :--- | :--- |
 | [第 13 章](13-is-lm-analysis.md) | IS-LM 分析 | 執筆済み |
 | [第 14 章](14-ad-as-and-major-theories.md) | AD-AS 分析と主要理論 | 執筆済み |
-| 第 15 章 | 不完全競争とゲーム理論 | 計画中 |
+| [第 15 章](15-imperfect-competition-and-game-theory.md) | 不完全競争とゲーム理論 | 執筆済み |
 
-付録は、[執筆計画アウトライン](outline.md) の章構成を参照してください。
+### 付録
+
+| 付録 | テーマ | 状況 |
+| :--- | :--- | :--- |
+| [付録 A](appendix-a-bridge-to-regression.md) | 回帰分析への橋渡し | 執筆済み |
+
+全 15 章と付録 A が、執筆済みです。学び終えたら、姉妹サイト（[Pythonで学ぶ入門計量経済学](https://py4etrics.github.io)、[Pythonで学ぶマクロ経済学](https://py4macro.github.io)）に進んでください。
 
 ## 参照
 

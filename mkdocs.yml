@@ -102,6 +102,8 @@ nav:
           - 第 12 章 Pandas による図示: article/economics-programming/12-plotting-with-pandas.md
           - 第 13 章 IS-LM 分析: article/economics-programming/13-is-lm-analysis.md
           - 第 14 章 AD-AS 分析と主要理論: article/economics-programming/14-ad-as-and-major-theories.md
+          - 第 15 章 不完全競争とゲーム理論: article/economics-programming/15-imperfect-competition-and-game-theory.md
+          - 付録 A 回帰分析への橋渡し: article/economics-programming/appendix-a-bridge-to-regression.md
   - リファレンス:
       - 概要: reference/index.md
       - よいソフトウェアとは: reference/よいソフトウェアとは.md
