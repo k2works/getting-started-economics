@@ -20,5 +20,9 @@
   "ch09-volatility": "c196123e20bb17df9f5f28d53afbb0f743d1ebc279ae6c23848a52ea919e6caf",
   "ch10-okun": "7f888970340d87aa38888f6bec46f63c26f879f3e67d9ef8a16bbb50d0092774",
   "ch10-phillips": "3b8cffe3f8a22c0c77724c9c54aa4342ce688bf5b8d79daea86291a2e250b439",
-  "ch10-rolling-slope": "03cbbe4e645886b3d99398e0b025e8a911696fb8d29bd48b518d8147b07e7922"
+  "ch10-rolling-slope": "03cbbe4e645886b3d99398e0b025e8a911696fb8d29bd48b518d8147b07e7922",
+  "ch11-money-inflation": "6a303cd5b9e28097082cddab03b0d58dae438abcb8fda59cc3a3ef1526bf2580",
+  "ch11-money-inflation-moderate": "db7ca6fada753b422c46ccdb60a97b104c3f82da93e2bc701f4152a92f2967b7",
+  "ch12-exchange-rates": "608441a652142bcdb5594dcccb1b17da05bcfc9d5d7c20f7162cbc8d569eab4d",
+  "ch12-regime-volatility": "ebff5115df3068e8d32d0372778290449b823584875e586c27ac65d0e7dd8231"
 }

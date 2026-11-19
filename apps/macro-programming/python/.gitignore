@@ -15,3 +15,5 @@ practice/*
 
 # 実際の統計（各自が取得して使う。改定されるので、リポジトリには入れない）
 data/*.dta
+data/gaku-*.csv
+data/def-*.csv

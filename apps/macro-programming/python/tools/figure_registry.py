@@ -60,6 +60,12 @@ from lib.chapter09.plot import (  # noqa: E402
 )
 from lib.chapter10.okun_phillips import rolling_slope  # noqa: E402
 from lib.chapter10.plot import plot_rolling_slope  # noqa: E402
+from lib.chapter11.money import load_money_panel  # noqa: E402
+from lib.chapter12.exchange import load_exchange, regime_statistics  # noqa: E402
+from lib.chapter12.plot import (  # noqa: E402
+    plot_exchange_rates,
+    plot_regime_volatility,
+)
 
 # 記事に載せる図。名前が、画像のファイル名（名前.png）になる
 FIGURES: dict[str, Callable[[], Figure]] = {
@@ -147,6 +153,28 @@ FIGURES: dict[str, Callable[[], Figure]] = {
             pd.Series(load_quarterly()["inflation"]),
             window=40,
         )
+    ),
+    "ch11-money-inflation": lambda: plot_regression(
+        pd.Series(load_money_panel()["money_growth"]),
+        pd.Series(load_money_panel()["inflation"]),
+        xlabel="Money growth (% per year)",
+        ylabel="Inflation (% per year)",
+        label="Country-years",
+    ),
+    "ch11-money-inflation-moderate": lambda: plot_regression(
+        pd.Series(
+            load_money_panel()[load_money_panel()["inflation"] <= 100]["money_growth"]
+        ),
+        pd.Series(
+            load_money_panel()[load_money_panel()["inflation"] <= 100]["inflation"]
+        ),
+        xlabel="Money growth (% per year)",
+        ylabel="Inflation (% per year)",
+        label="Country-years",
+    ),
+    "ch12-exchange-rates": lambda: plot_exchange_rates(load_exchange(), "1973Q1"),
+    "ch12-regime-volatility": lambda: plot_regime_volatility(
+        regime_statistics(load_exchange(), "1973Q1")
     ),
     "ch03-regression": lambda: plot_regression(
         np.log(load_countries()["k"]),
