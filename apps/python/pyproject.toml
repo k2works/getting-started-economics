@@ -6,6 +6,7 @@ requires-python = ">=3.12"
 dependencies = [
     "matplotlib>=3.11.2",
     "numpy>=2.5.5",
+    "pandas>=3.1.1",
     "scipy>=1.18.1",
 ]
 
@@ -45,4 +46,5 @@ dev = [
     "ruff>=0.8",
     "mypy>=1.13",
     "tox>=4.0",
+    "pandas-stubs>=3.1.0.261029",
 ]
