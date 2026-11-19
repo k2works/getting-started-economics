@@ -6514,7 +6514,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>真の傾きが 0.5 の母集団（誤差の標準偏差 1）から、標本を何度も取って、傾きを推定します。</p>
 <ol>
 <li>標本の大きさ n を 30、100、250、500 と増やすと、傾きの推定値の標準偏差は、それぞれ、およそいくつになりますか（第 2 章の理論値 1 ÷ √(n − 3) を使えます）</li>
-<li>誤差項が、<strong>正規分布ではなく、右に裾が長い分布</strong>（歪度 2）のとき、n = 10 の t 検定（有意水準 5%）は、帰無仮説が正しいのに、5% より多く棄却しますか。n = 500 なら、どうですか</li>
+<li>誤差項が、<strong>正規分布ではなく、右に裾が長い分布</strong>（歪度 2）のとき、n = 10 の t 検定（有意水準 5%）は、帰無仮説が正しいのに、5% より多く棄却しますか。臨界値を 1.96 にした場合と、t 分布の臨界値にした場合で、どうですか。n = 500 なら、どうですか</li>
 <li>誤差が歪んでいるとき、Jarque-Bera 検定は、n = 100 で、どのくらいの割合で、正規性を棄却しますか。誤差が正規分布のときは</li>
 </ol>
 <h2 id="64">6.4 大標本特性の考え方<a class="headerlink" href="#64" title="Permanent link">&para;</a></h2>
@@ -6780,21 +6780,37 @@ TestResult(statistic=31.113580285047014, p_value=2.433627997839447e-08)
     <span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">test_標本が小さく誤差が歪んでいると棄却率が5パーセントを超える</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="n">t_value_distribution</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1.96</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.065</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_小標本で臨界値1_96を使うと棄却率が超えるがt分布の臨界値なら5パーセントに近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="p">(</span>
+    <span class="kc">None</span>
+<span class="p">):</span>
+    <span class="n">critical</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.975</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">skewed</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">t_value_distribution</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="n">skewed</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1.96</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.07</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">critical</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+            <span class="mf">0.05</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.05</span> <span class="o">*</span> <span class="mf">0.95</span> <span class="o">/</span> <span class="mi">2000</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+        <span class="p">)</span>
 </code></pre></div>
-<p>真の傾きを帰無仮説にした t 値 (β̂ − 0.5) ÷ SE を、2000 回求め、平均・標準偏差・|t| &gt; 1.96 の割合を、見ます。</p>
-<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">skewed</span> <span class="ow">in</span> <span class="p">[(</span><span class="mi">30</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span> <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="kc">True</span><span class="p">)]:</span>
+<p>真の傾きを帰無仮説にした t 値 (β̂ − 0.5) ÷ SE を、2000 回求め、平均・標準偏差と、棄却される割合を、見ます。割合は、臨界値を正規分布の 1.96 にした場合と、自由度 n − 2 の t 分布の臨界値にした場合の 2 つです。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">scipy</span><span class="w"> </span><span class="kn">import</span> <span class="n">stats</span>
+
+<span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">skewed</span> <span class="ow">in</span> <span class="p">[(</span><span class="mi">10</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="kc">True</span><span class="p">)]:</span>
     <span class="n">t</span> <span class="o">=</span> <span class="n">t_value_distribution</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="n">skewed</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">skewed</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span> <span class="mi">3</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">std</span><span class="p">()),</span> <span class="mi">3</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1.96</span><span class="p">)))</span>
+    <span class="n">critical</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.975</span><span class="p">,</span> <span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">skewed</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span> <span class="mi">3</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">std</span><span class="p">()),</span> <span class="mi">3</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1.96</span><span class="p">)),</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">critical</span><span class="p">)))</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>30 False 0.025 1.029 0.0535
-30 True -0.014 1.058 0.061
-10 True 0.051 1.138 0.0775
-500 True 0.006 0.995 0.0505
+<div class="highlight"><pre><span></span><code>10 False 0.009 1.118 0.0815 0.0445
+10 True 0.051 1.138 0.0775 0.048
+30 True -0.014 1.058 0.061 0.049
+500 True 0.006 0.995 0.0505 0.0495
 </code></pre></div>
-<p>列は、n、誤差が歪んでいるか、t 値の平均、標準偏差、|t| &gt; 1.96 の割合です。誤差が歪んでいて n = 10 では、割合が 0.0775 と、5% を超えます。n = 500 では 0.0505 で、5% に近く、標準偏差も 1 に近い（0.995）です（予想 2）。<strong>誤差が正規分布でなくても、n が大きければ、t 検定は、ほぼ正しい</strong>ことが、確かめられました。</p>
+<p>列は、n、誤差が歪んでいるか、t 値の平均、標準偏差、|t| &gt; 1.96 の割合、|t| &gt; t 分布の臨界値の割合です。</p>
+<ul>
+<li><strong>臨界値を 1.96 にすると、n = 10 では、誤差が正規分布でも 0.0815 と、5% を超えます。</strong> 原因は、誤差の歪みではなく、<strong>自由度 8 の t 分布の裾が、正規分布より厚いこと</strong>です（誤差が正規なら、理論値は 0.0857）。歪んだ誤差の 0.0775 も、同じ理由です</li>
+<li><strong>t 分布の臨界値（n = 10 で 2.306）を使うと、歪んだ誤差でも、0.048 と、ほぼ 5% です。</strong> この歪み（歪度 2）では、n = 10 でも、t 検定の有意水準は、ほとんどずれません</li>
+<li>n = 500 では、どちらの臨界値でも、0.05 に近く（0.0505、0.0495）、標準偏差も 1 に近い（0.995）です（予想 2）。n が大きければ、1.96 でも t 分布の臨界値でも、ほぼ同じです</li>
+</ul>
+<p><strong>誤差が正規分布でなくても、この歪みなら、t 検定は、ほぼ正しい</strong>ことが、確かめられました（歪みがもっと強い場合は、ずれが大きくなります）。</p>
 <h3 id="_8">正規性の検定の、棄却率<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">jarque_bera_rejection_rate</span><span class="p">(</span>
     <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">skewed</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
@@ -6944,7 +6960,7 @@ log(wage) {'const': 0.2169, 'educ': 0.0979, 'exper': 0.0103} 0.2493
 <h2 id="67">6.7 規則で言うと<a class="headerlink" href="#67" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>標本が大きいと、推定量は真の値に集まる。</strong> 標準偏差は 1 ÷ √n の速さで小さくなる（一致性）</li>
-<li><strong>誤差が正規でなくても、n が大きければ、t 検定は、ほぼ正しい。</strong> 小さな標本では、歪んだ誤差で、有意水準がずれる</li>
+<li><strong>誤差が正規でなくても、n が大きければ、t 検定は、ほぼ正しい。</strong> 小さな標本では、正規分布の臨界値（1.96）を使うと、棄却しすぎる（t 分布の臨界値を使う）。歪みが強いと、さらにずれる</li>
 <li><strong>仮定は、診断してから使う。</strong> 残差の歪度・尖度（JB 検定）と図で、正規性を調べる。賃金のように歪む変数は、対数をとる</li>
 </ol>
 <p>混同しやすい点を、表にまとめます。</p>
@@ -7124,12 +7140,13 @@ log(wage) {'const': 0.2169, 'educ': 0.0979, 'exper': 0.0103} 0.2493
     <span class="k">assert</span> <span class="n">share_beyond</span><span class="p">([</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">],</span> <span class="mf">1.96</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">share_beyond</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mf">1.96</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 </code></pre></div>
-<p><strong>多様</strong>: n = 500 のほうが、5% に近いと予想できます。標本が大きいと、歪んだ誤差でも、t 値が標準正規に近づくためです。</p>
+<p><strong>多様</strong>: n = 500 のほうが、5% に近いと予想できます。標本が大きいと、t 分布が標準正規に近づくためです。n = 10 の 0.0775 は、歪みのせいだけではなく、自由度 8 の t 分布の裾が厚いために生じます。臨界値を t 分布の 2.306 にすると、0.048 と、5% に近づきます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_標本が大きいほど棄却率は5パーセントに近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">small</span> <span class="o">=</span> <span class="n">t_value_distribution</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
     <span class="n">large</span> <span class="o">=</span> <span class="n">t_value_distribution</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
     <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">share_beyond</span><span class="p">(</span><span class="n">large</span><span class="p">,</span> <span class="mf">1.96</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.05</span><span class="p">)</span> <span class="o">&lt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">share_beyond</span><span class="p">(</span><span class="n">small</span><span class="p">,</span> <span class="mf">1.96</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.05</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">share_beyond</span><span class="p">(</span><span class="n">small</span><span class="p">,</span> <span class="mf">1.96</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.0775</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">share_beyond</span><span class="p">(</span><span class="n">small</span><span class="p">,</span> <span class="mf">2.306</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.048</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.002</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>交互</strong>: 誤差が正規分布なら、傾きの推定値の分布は、ほぼ左右対称（歪度 0）で、尖度は 3 に近くなります。観測値は、歪度 0.086、尖度 3.057 です。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_傾きの推定値の分布は正規分布に近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -7147,7 +7164,7 @@ log(wage) {'const': 0.2169, 'educ': 0.0979, 'exper': 0.0103} 0.2493
 <h2 id="611">6.11 まとめ<a class="headerlink" href="#611" title="Permanent link">&para;</a></h2>
 <ul>
 <li>標本が大きいほど、傾きの推定値が真の値に集まり、標準偏差が 1 ÷ √(n − 3) の理論値に従って小さくなる（一致性）ことを、シミュレーションで確かめた</li>
-<li>誤差が右に歪んでいても、n = 500 では、t 値が標準正規分布に近く（棄却率 0.0505）、n = 10 では 5% を超える（0.0775）。歪度・尖度・Jarque-Bera 検定と、LM 検定（LM = n · (1 − RSS_u ÷ RSS_r) の恒等式）を、手計算に一致するように書いた</li>
+<li>誤差が右に歪んでいても、n = 500 では、t 値が標準正規分布に近く（棄却率 0.0505）、n = 10 でも、t 分布の臨界値を使えば、5% に近い（0.048）。臨界値を 1.96 にすると、小標本では、誤差の歪みとは別に、棄却しすぎる（0.0775）。歪度・尖度・Jarque-Bera 検定と、LM 検定（LM = n · (1 − RSS_u ÷ RSS_r) の恒等式）を、手計算に一致するように書いた</li>
 <li>実際の賃金データ（526 人）で、第 1〜6 章の関数を使った。対数賃金の回帰で、教育 1 年あたりの賃金は約 10.3% 高い関係（係数 0.0979、95% 信頼区間 0.083〜0.1129）。この回帰は相関で、因果を示すものではない</li>
 <li>第 1 部の到達チェックを行った。次の第 2 部では、質的変数（ダミー変数）、不均一分散、パネル・データへ、回帰分析を広げます</li>
 </ul>

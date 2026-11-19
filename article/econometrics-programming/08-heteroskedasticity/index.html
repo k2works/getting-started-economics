@@ -6422,7 +6422,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>24 passed
+<div class="highlight"><pre><span></span><code>25 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter08/</code> に、完成形と同じ名前（<code>hetero.py</code>・<code>test_hetero.py</code>）のファイルを作ります。</p>
 <h2 id="83">8.3 予想する<a class="headerlink" href="#83" title="Permanent link">&para;</a></h2>
@@ -6581,14 +6581,20 @@ HC3 {'const': 1.5383, 'x1': 0.7778}
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">white_test</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TestResult</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""White 検定: 説明変数・その 2 乗・交差項で、残差の 2 乗を説明する。"""</span>
+<span class="w">    </span><span class="sd">"""White 検定: 説明変数・その 2 乗・交差項で、残差の 2 乗を説明する。</span>
+
+<span class="sd">    ダミー変数は d² = d になるので、同じ値の列は 1 本にまとめる。</span>
+<span class="sd">    自由度は、まとめたあとの列数。</span>
+<span class="sd">    """</span>
     <span class="n">frame</span> <span class="o">=</span> <span class="n">_frame</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">frame</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">columns</span><span class="p">}</span>
     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
         <span class="n">columns</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">^2"</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span>
     <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
         <span class="n">columns</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">*</span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">*</span> <span class="n">frame</span><span class="p">[</span><span class="n">b</span><span class="p">]</span>
-    <span class="k">return</span> <span class="n">_squared_residual_test</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="p">))</span>
+    <span class="n">auxiliary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">auxiliary</span> <span class="o">=</span> <span class="n">auxiliary</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span> <span class="o">~</span><span class="n">auxiliary</span><span class="o">.</span><span class="n">T</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()]</span>
+    <span class="k">return</span> <span class="n">_squared_residual_test</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">auxiliary</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">reset_test</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TestResult</span><span class="p">:</span>
@@ -6616,6 +6622,23 @@ HC3 {'const': 1.5383, 'x1': 0.7778}
     <span class="n">test</span> <span class="o">=</span> <span class="n">white_test</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">statistic</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">lm</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">p_value</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span>
+    <span class="s2">"ignore::statsmodels.tools.sm_exceptions.SingularMatrixWarning"</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ダミー変数を含んでもWhite検定は_statsmodels_と一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">400</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">random</span><span class="p">(</span><span class="n">n</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.4</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">d</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">+</span> <span class="n">d</span><span class="p">)</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"x"</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">:</span> <span class="n">d</span><span class="p">})</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">white_test</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">frame</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="n">lm</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">het_white</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">fit</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">statistic</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">lm</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">p_value</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_RESETはstatsmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -6723,14 +6746,15 @@ TestResult(statistic=3.5482989645080742, p_value=0.03063623768277364)
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_均一分散なら通常の標準誤差も頑健な標準誤差も実際のばらつきに近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">r</span> <span class="o">=</span> <span class="n">standard_error_comparison</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
-    <span class="k">assert</span> <span class="n">r</span><span class="p">[</span><span class="s2">"classical"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">],</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">r</span><span class="p">[</span><span class="s2">"hc1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">],</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="c1"># 許容誤差: sd の推定誤差（約 1.6%）の 4 倍。HC1 は n = 50 で 5% ほど過小なので、その分を足す</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="p">[</span><span class="s2">"classical"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">],</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.07</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="p">[</span><span class="s2">"hc1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">],</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.12</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_不均一分散なら通常の標準誤差は過小で頑健な標準誤差は近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">r</span> <span class="o">=</span> <span class="n">standard_error_comparison</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
     <span class="k">assert</span> <span class="n">r</span><span class="p">[</span><span class="s2">"classical"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.85</span> <span class="o">*</span> <span class="n">r</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">]</span>
-    <span class="k">assert</span> <span class="n">r</span><span class="p">[</span><span class="s2">"hc1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">],</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.06</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="p">[</span><span class="s2">"hc1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">],</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.12</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.hetero</span><span class="w"> </span><span class="kn">import</span> <span class="n">standard_error_comparison</span>
 
@@ -6767,7 +6791,7 @@ True {'sd': 0.2783, 'classical': 0.222, 'hc1': 0.2694}
 <h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>24 passed
+<div class="highlight"><pre><span></span><code>25 passed
 </code></pre></div>
 <h2 id="86">8.6 規則で言うと<a class="headerlink" href="#86" title="Permanent link">&para;</a></h2>
 <ol>

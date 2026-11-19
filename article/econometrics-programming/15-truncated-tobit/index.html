@@ -7013,8 +7013,8 @@ uncensored only {'const': 2.1632, 'x1': 1.2238}
 
 <span class="n">slopes</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">150</span><span class="p">):</span>
-    <span class="n">x</span><span class="p">,</span> <span class="n">latent</span> <span class="o">=</span> <span class="n">draw_latent_sample</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">))</span>
-    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_tobit</span><span class="p">(</span><span class="n">censor</span><span class="p">(</span><span class="n">latent</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">xs</span><span class="p">,</span> <span class="n">latents</span> <span class="o">=</span> <span class="n">draw_latent_sample</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">))</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_tobit</span><span class="p">(</span><span class="n">censor</span><span class="p">(</span><span class="n">latents</span><span class="p">),</span> <span class="n">xs</span><span class="p">)</span>
     <span class="n">slopes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">])</span>
     <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">])</span>
 <span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">slopes</span><span class="p">)),</span> <span class="mi">4</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">slopes</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span> <span class="mi">4</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">errors</span><span class="p">)),</span> <span class="mi">4</span><span class="p">))</span>
@@ -7088,7 +7088,7 @@ uncensored only {'const': 2.1632, 'x1': 1.2238}
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>{'x1': 1.2837} 1.7104 1.7111
 </code></pre></div>
-<p>期待値 E[y | x] の平均は 1.7104 で、観測された y の平均 1.7111 に、近い値です。x が 1 増えたときの、<strong>打ち切りを含む y の期待値</strong>の変化（平均限界効果）は <strong>1.2837</strong> で、潜在変数への効果 2.0056 の、約 64%（打ち切られていない割合）です。この値は、OLS の傾き 1.2796 と、ほぼ同じです（<strong>打ち切られたデータの OLS は、潜在変数への効果ではなく、観測される y の期待値への効果を、おおよそ推定している</strong>）。</p>
+<p>期待値 E[y | x] の平均は 1.7104 で、観測された y の平均 1.7111 に、近い値です。x が 1 増えたときの、<strong>打ち切りを含む y の期待値</strong>の変化（平均限界効果）は <strong>1.2837</strong> で、潜在変数への効果 2.0056 の、約 64%（打ち切られていない割合）です。この値は、OLS の傾き 1.2796 と、ほぼ同じです（<strong>打ち切られたデータの OLS は、潜在変数への効果ではなく、観測される y の期待値への効果を、おおよそ推定している</strong>。この一致は、x が正規分布のときの性質で、一般には成り立ちません）。なお、限界効果には、E[y | x]（打ち切りを含む。ここで求めたもの）のほかに、E[y | y &gt; 0, x]（打ち切られていない人の中での平均）と P(y &gt; 0 | x)（打ち切られない確率）への効果があり、問いに応じて、使い分けます。</p>
 <h3 id="_11">標準誤差が、スケールで狂う落とし穴<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p><code>test_yの単位を1000倍しても係数と標準偏差が1000倍になるだけ</code> は、y の単位を 1000 倍にしても（時間を、分に変えるように）、係数・σ・標準誤差が、1000 倍になるだけ、という性質を確かめます。<strong>最初の実装（数値微分で、勾配とヘッセ行列を求めた版）は、このテストを通りませんでした</strong>。単位を 1000 倍にした標本で、標準誤差が最大 16% ずれました。シミュレーション（y の大きさが 1 程度）では、見つからなかった不具合です（16.6 節の実際のデータで、気づきました）。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_yの単位を1000倍しても係数と標準偏差が1000倍になるだけ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -7168,7 +7168,7 @@ uncensored only {'const': 2.1632, 'x1': 1.2238}
 </code></pre></div>
 <h2 id="156">15.6 規則で言うと<a class="headerlink" href="#156" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>観測できる範囲だけで OLS すると、傾きが 0 の方向に偏る。</strong> 打ち切り・切断のどちらでも。偏りの大きさは、打ち切られていない割合に、おおよそ比例する</li>
+<li><strong>観測できる範囲だけで OLS すると、傾きが 0 の方向に偏る。</strong> 打ち切り・切断のどちらでも。偏りの大きさは、打ち切られていない割合に、おおよそ比例する（x が正規分布のとき、OLS の傾きは、潜在変数の傾き × 打ち切られていない割合になる。Greene, 1981。この章の x は正規分布）</li>
 <li><strong>打ち切りは、尤度で 2 種類の観測値を区別する。</strong> 切断は、条件付き密度に直す。切断のほうが、情報が少ない（標準誤差が大きい）</li>
 <li><strong>最尤法の実装は、スケールと勾配に、注意する。</strong> 勾配は、解析的に与え、数値微分と比べるテストを書く。単位を変えても、結果が変わらないことを確かめる</li>
 </ol>

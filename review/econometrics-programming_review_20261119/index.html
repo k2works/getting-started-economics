@@ -5986,49 +5986,49 @@
 <td style="text-align: left;"><code>lam = q·pdf/cdf</code> は、極端な値で nan になる。完全分離でないデータでも、「完全分離の可能性」という誤ったエラーになる。<code>exp(logpdf − logcdf)</code> に揃える</td>
 <td style="text-align: left;"><code>lib/chapter14/discrete.py:61</code></td>
 <td style="text-align: left;">プログラマー・テスター</td>
-<td style="text-align: left;">未対応</td>
+<td style="text-align: left;"><strong>修正済み</strong>。<code>exp(logpdf − logcdf)</code> に変更。完全分離でない外れ値のデータも収束する。なお、<code>statsmodels</code> は確率を 2.2e-16 で切り詰めるため、極端な外れ値では最大値に届かない（自作の解は勾配が 0）</td>
 </tr>
 <tr>
 <td style="text-align: left;">3</td>
 <td style="text-align: left;"><code>inverse_mills_ratio</code> が、c = −38 で inf、−40 で nan。同じ修正。c = −40 のテストを足す</td>
 <td style="text-align: left;"><code>lib/chapter16/heckit.py:28</code></td>
 <td style="text-align: left;">プログラマー・テスター</td>
-<td style="text-align: left;">未対応</td>
+<td style="text-align: left;"><strong>修正済み</strong>。c = −100 でも有限</td>
 </tr>
 <tr>
 <td style="text-align: left;">4</td>
 <td style="text-align: left;">|t| &gt; 1.96 の割合の解釈が誤り。n = 10 は自由度 8 で、誤差が正規でも 0.0857。歪んだ誤差の 0.0775 は、むしろ小さい。同じ n の正規の行と並べるか、臨界値を t(n−2) にする</td>
 <td style="text-align: left;"><code>06-asymptotics.md:374-386</code>、テスト <code>test_asymptotics.py:368</code></td>
 <td style="text-align: left;">ライター</td>
-<td style="text-align: left;">未対応</td>
+<td style="text-align: left;"><strong>修正済み</strong>。t 分布の臨界値を使うと、n = 10 でも棄却率は 0.048。記事・テスト・練習問題を直した</td>
 </tr>
 <tr>
 <td style="text-align: left;">5</td>
 <td style="text-align: left;">150 回のループが <code>x, latent</code> を n = 500 の標本で上書きし、後続の出力が記事（1.2837・1.7104）と合わない（実際は 1.3111・1.8252）</td>
 <td style="text-align: left;"><code>15-truncated-tobit.md:659, 740</code></td>
 <td style="text-align: left;">ライター</td>
-<td style="text-align: left;">未対応</td>
+<td style="text-align: left;"><strong>修正済み</strong>。ループの変数名を変更（<code>xs, latents</code>）。Greene (1981) の条件と、限界効果の種類も追記</td>
 </tr>
 <tr>
 <td style="text-align: left;">6</td>
 <td style="text-align: left;">「選択のバイアスは、ほとんど生じていない」は、「検出できない」の言い換え（係数 0.0323、標準誤差 0.1654）。「検出できない（検出力が低い可能性）」に直す</td>
 <td style="text-align: left;"><code>16-heckit.md</code> 16.6・16.7 節</td>
 <td style="text-align: left;">ユーザー代表</td>
-<td style="text-align: left;">未対応</td>
+<td style="text-align: left;"><strong>修正済み</strong>。「検出できない」に変更</td>
 </tr>
 <tr>
 <td style="text-align: left;">7</td>
 <td style="text-align: left;">White 検定にダミー変数を渡すと、d² = d で列が重複し、多重共線性のエラーになる。<code>statsmodels</code> は LM = 3.47 を返す。仕様を決めるテストを先に書く</td>
 <td style="text-align: left;"><code>lib/chapter08/hetero.py:69-77</code></td>
 <td style="text-align: left;">テスター</td>
-<td style="text-align: left;">未対応</td>
+<td style="text-align: left;"><strong>修正済み</strong>。同じ値の列を 1 本にまとめる。<code>statsmodels</code> と一致</td>
 </tr>
 <tr>
 <td style="text-align: left;">8</td>
 <td style="text-align: left;">HC1 の SE 比較が、種を変えると 20 種中 5 種で落ちる（n = 50 で HC1 は約 5% 過小。許容誤差 rel = 0.06 の内側ぎりぎり）。rel を約 0.12 にするか、n を増やす</td>
 <td style="text-align: left;"><code>test/chapter08/test_hetero.py:160, 153-154</code></td>
 <td style="text-align: left;">テスター</td>
-<td style="text-align: left;">未対応</td>
+<td style="text-align: left;"><strong>修正済み</strong>。許容誤差の根拠（sd の誤差 1.6% の 4 倍 ＋ HC1 の偏り 5%）をコメントに書いた</td>
 </tr>
 <tr>
 <td style="text-align: left;">9</td>
@@ -6296,8 +6296,7 @@
 </table>
 <h2 id="_12">対応方針<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>済み</strong>: フェンスの欠落（#1）</li>
-<li><strong>次の Bolt（正しさ）</strong>: #2〜#8。数値の安定性、記事の誤りと再現性、テストの許容誤差、White のダミー</li>
+<li><strong>済み</strong>: フェンスの欠落（#1）と、正しさの #2〜#8（数値の安定性、記事の誤りと再現性、テストの許容誤差、White のダミー）</li>
 <li><strong>その次（基盤）</strong>: #9・#10（<code>tools/</code> の同期と共通化 = U6、実データのスクリプトの検証）</li>
 <li><strong>その後（読みやすさ）</strong>: #11〜#23 を、重要度と費用で選ぶ。#18（折りたたみ・付録化）は、1 章ずつ</li>
 <li><strong>許容・保留</strong>: #24〜#32。必要になった時点で対応</li>

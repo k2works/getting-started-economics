@@ -6527,7 +6527,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter16
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>21 passed
+<div class="highlight"><pre><span></span><code>22 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter16/</code> に、完成形と同じ名前（<code>heckit.py</code>・<code>test_heckit.py</code>）のファイルを作ります。</p>
 <h2 id="163">16.3 予想する<a class="headerlink" href="#163" title="Permanent link">&para;</a></h2>
@@ -6579,6 +6579,12 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">assert</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">test_逆ミルズ比は極端に小さい値でも有限で_c_の符号を変えた値に近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">inverse_mills_ratio</span><span class="p">([</span><span class="o">-</span><span class="mf">38.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">40.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">100.0</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">all</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">values</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mf">38.0</span><span class="p">,</span> <span class="mf">40.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">],</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">test_cが非常に小さいと逆ミルズ比はcの符号を変えた値に近づく</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">inverse_mills_ratio</span><span class="p">(</span><span class="o">-</span><span class="mf">10.0</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">10.098</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">inverse_mills_ratio</span><span class="p">(</span><span class="mf">5.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-5</span>
@@ -6591,7 +6597,10 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">inverse_mills_ratio</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""逆ミルズ比 λ(c) = φ(c) ÷ Φ(c)。選択された観測値の、誤差項の平均の補正に使う。"""</span>
     <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-    <span class="n">result</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">/</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="c1"># 対数の差から作る（c が非常に小さくても、0 ÷ 0 にならない）</span>
+    <span class="n">result</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">logpdf</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">-</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">logcdf</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="p">)</span>
     <span class="k">return</span> <span class="n">result</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter16.heckit</span><span class="w"> </span><span class="kn">import</span> <span class="n">inverse_mills_ratio</span>
@@ -6951,7 +6960,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter16
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>21 passed
+<div class="highlight"><pre><span></span><code>22 passed
 </code></pre></div>
 <h2 id="166">16.6 実際のデータで試す（既婚女性の労働参加・労働時間・賃金）<a class="headerlink" href="#166" title="Permanent link">&para;</a></h2>
 <p>第 4 部の仕上げに、<strong>実際のデータ</strong>で、第 14〜16 章の関数を使います。問いは、「既婚女性の、労働参加・労働時間・賃金は、何に影響されるか」です。</p>
@@ -7050,7 +7059,8 @@ heckit bootstrap se {'const': 0.2869, 'educ': 0.0137, 'exper': 0.0154, 'expersq'
 </ul>
 <p><strong>賃金（ヘックマン）</strong></p>
 <ul>
-<li>教育の係数は、OLS（働いている人だけ）0.1075、ヘックマン <strong>0.1091</strong> で、ほとんど変わりません。逆ミルズ比の係数は <strong>0.0323</strong>（ブートストラップ標準誤差 0.1654）で、<strong>0 と区別できません</strong>（t 値 0.2）。<strong>この標本では、選択のバイアスが、賃金の式に、ほとんど生じていない</strong>ことを示します</li>
+<li>教育の係数は、OLS（働いている人だけ）0.1075、ヘックマン <strong>0.1091</strong> で、ほとんど変わりません。逆ミルズ比の係数は <strong>0.0323</strong>（ブートストラップ標準誤差 0.1654）で、<strong>0 と区別できません</strong>（t 値 0.2）。ただし、「0 と区別できない」ことは、「選択のバイアスがない」ことを意味しません。標準誤差が大きい（0.1654）ので、<strong>この標本では、選択のバイアスを検出できない</strong>だけです（検出力が低い可能性があります）。教育の係数が、OLS と、ほとんど変わらないことは、バイアスが小さいことと整合しますが、証明はしません。</li>
+<li>除外変数（<code>nwifeinc</code>・<code>age</code>・<code>kidslt6</code>・<code>kidsge6</code>）が、賃金の式に影響しないという仮定が成り立たないと、逆ミルズ比の係数の解釈も崩れます</li>
 <li>第 2 段階の OLS の標準誤差（0.0156）と、ブートストラップ（0.0137）は、少し違います（教育）。逆ミルズ比の係数では、ブートストラップ 0.1654 が、OLS の 0.1344 より、大きくなっています</li>
 </ul>
 <blockquote>
@@ -7060,7 +7070,7 @@ heckit bootstrap se {'const': 0.2869, 'educ': 0.0137, 'exper': 0.0154, 'expersq'
 <ol>
 <li><strong>選択された標本の OLS は、選択が結果の誤差と相関すると、偏る。</strong> 無関係なら、選択があっても、偏らない</li>
 <li><strong>ヘックマンは、選択の式から作った補正項で、バイアスを直す。</strong> 除外変数（選択にだけ影響する変数）が、識別に必要</li>
-<li><strong>第 2 段階の標準誤差は、そのままでは使えない。</strong> ブートストラップで求める。逆ミルズ比の係数が 0 と区別できなければ、選択のバイアスは、小さい</li>
+<li><strong>第 2 段階の標準誤差は、そのままでは使えない。</strong> ブートストラップで求める。逆ミルズ比の係数が 0 と区別できないときは、<strong>選択のバイアスを検出できない</strong>（バイアスがない、ではない。標準誤差が大きいと、バイアスがあっても、検出できない）</li>
 </ol>
 <p>混同しやすい点を、表にまとめます。</p>
 <table>
@@ -7260,7 +7270,7 @@ heckit bootstrap se {'const': 0.2869, 'educ': 0.0137, 'exper': 0.0154, 'expersq'
 <h2 id="1611">16.11 まとめ<a class="headerlink" href="#1611" title="Permanent link">&para;</a></h2>
 <ul>
 <li>逆ミルズ比（λ(0) = 0.7979）と、ヘックマンの 2 段階推定を書いた。選択された標本の OLS は、ρ = 0.7 で 1.8309 と偏り、ヘックマンは 1.9988 で復元する。ρ = 0 なら、OLS も偏らない。第 2 段階の標準誤差は、ブートストラップで求める</li>
-<li>実際のデータ（既婚女性 753 人）で、6 歳未満の子が 1 人増えると、働く確率が約 26 ポイント下がる（ロジット・プロビット・線形確率モデルで、ほぼ同じ）。トービットの教育の係数は 80.65 時間（OLS は 28.76）。ヘックマンの逆ミルズ比の係数は 0.0323（標準誤差 0.1654）で、賃金の式に、選択のバイアスは、ほとんどない</li>
+<li>実際のデータ（既婚女性 753 人）で、6 歳未満の子が 1 人増えると、働く確率が約 26 ポイント下がる（ロジット・プロビット・線形確率モデルで、ほぼ同じ）。トービットの教育の係数は 80.65 時間（OLS は 28.76）。ヘックマンの逆ミルズ比の係数は 0.0323（標準誤差 0.1654）で、0 と区別できず、賃金の式の選択のバイアスは、この標本では検出できない（ないとは言えない）</li>
 <li>実際のデータが、最尤法の実装の不具合（数値微分による、収束不足と標準誤差の誤り）を、明らかにした。単位を変えても結果が同じ、というテストを、第 15 章に足した</li>
 <li>第 4 部の到達チェックを行った。これで、全 16 章が完成した。ここまでの章で、推定量を自分で書き、真の値を知るデータと、恒等式で確かめる方法を、学んだ</li>
 </ul>
