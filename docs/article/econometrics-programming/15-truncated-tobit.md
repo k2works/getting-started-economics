@@ -210,134 +210,136 @@ print(round(truncreg_log_likelihood(params, np.array([1.0, 2.0]), design, 0.0), 
 
 ### 解析的な勾配
 
-トービットの勾配は、打ち切られた観測値で**逆ミルズ比** λ = φ(c) ÷ Φ(c)（c = (left − x′β) ÷ σ）を使い、それ以外では標準化残差 z = (y − x′β) ÷ σ を使います。ln σ についての微分は、前者が −λ·c、後者が z² − 1 です。
+??? note "詳しく見る（実装の細部と確認。必要なときに開く）"
 
-```python
-def tobit_gradient(
-    params: NDArray[np.float64],
-    y: NDArray[np.float64],
-    design: NDArray[np.float64],
-    left: float,
-) -> NDArray[np.float64]:
-    """トービットの対数尤度の勾配（β と ln σ についての、1 階微分）。
+    トービットの勾配は、打ち切られた観測値で**逆ミルズ比** λ = φ(c) ÷ Φ(c)（c = (left − x′β) ÷ σ）を使い、それ以外では標準化残差 z = (y − x′β) ÷ σ を使います。ln σ についての微分は、前者が −λ·c、後者が z² − 1 です。
 
-    打ち切られた観測値は、逆ミルズ比 λ = φ(c) ÷ Φ(c)（c = (left − x′β) ÷ σ）を使う。
-    """
-    beta, sigma = params[:-1], np.exp(params[-1])
-    xb = design @ beta
-    censored = y <= left
-    z = (y - xb) / sigma
-    c = (left - xb) / sigma
-    mills = np.exp(stats.norm.logpdf(c) - stats.norm.logcdf(c))
-    weight = np.where(censored, -mills / sigma, z / sigma)
-    d_log_sigma = np.where(censored, -mills * c, z**2 - 1)
-    return np.append(design.T @ weight, d_log_sigma.sum())
+    ```python
+    def tobit_gradient(
+        params: NDArray[np.float64],
+        y: NDArray[np.float64],
+        design: NDArray[np.float64],
+        left: float,
+    ) -> NDArray[np.float64]:
+        """トービットの対数尤度の勾配（β と ln σ についての、1 階微分）。
 
-
-def truncreg_gradient(
-    params: NDArray[np.float64],
-    y: NDArray[np.float64],
-    design: NDArray[np.float64],
-    left: float,
-) -> NDArray[np.float64]:
-    """切断回帰の対数尤度の勾配。m = φ(a) ÷ (1 − Φ(a))、a = (left − x′β) ÷ σ。"""
-    beta, sigma = params[:-1], np.exp(params[-1])
-    xb = design @ beta
-    z = (y - xb) / sigma
-    a = (left - xb) / sigma
-    hazard = np.exp(stats.norm.logpdf(a) - stats.norm.logsf(a))
-    weight = (z - hazard) / sigma
-    d_log_sigma = z**2 - 1 - hazard * a
-    return np.append(design.T @ weight, d_log_sigma.sum())
+        打ち切られた観測値は、逆ミルズ比 λ = φ(c) ÷ Φ(c)（c = (left − x′β) ÷ σ）を使う。
+        """
+        beta, sigma = params[:-1], np.exp(params[-1])
+        xb = design @ beta
+        censored = y <= left
+        z = (y - xb) / sigma
+        c = (left - xb) / sigma
+        mills = np.exp(stats.norm.logpdf(c) - stats.norm.logcdf(c))
+        weight = np.where(censored, -mills / sigma, z / sigma)
+        d_log_sigma = np.where(censored, -mills * c, z**2 - 1)
+        return np.append(design.T @ weight, d_log_sigma.sum())
 
 
-def hessian_from_gradient(
-    gradient: Callable[[NDArray[np.float64]], NDArray[np.float64]],
-    point: NDArray[np.float64],
-) -> NDArray[np.float64]:
-    """勾配の関数を、中心差分で微分して、2 階微分の行列（ヘッセ行列）を求める。
-
-    刻み幅は、各パラメータの大きさに比例させる。結果は、対称な行列にそろえる。
-    """
-    n = len(point)
-    hessian = np.zeros((n, n))
-    for j in range(n):
-        step = 1e-5 * max(1.0, abs(float(point[j])))
-        e = np.eye(n)[j] * step
-        hessian[:, j] = (gradient(point + e) - gradient(point - e)) / (2 * step)
-    return (hessian + hessian.T) / 2
-```
-
-解析的な勾配を、**数値微分と比べる**テストを書きます（式の書き間違いを、見つけられます）。
-
-```python
-def latent_data(n: int = 20000, seed: int = 0) -> tuple[np.ndarray, np.ndarray]:
-    return draw_latent_sample(n, np.random.default_rng(seed))
+    def truncreg_gradient(
+        params: NDArray[np.float64],
+        y: NDArray[np.float64],
+        design: NDArray[np.float64],
+        left: float,
+    ) -> NDArray[np.float64]:
+        """切断回帰の対数尤度の勾配。m = φ(a) ÷ (1 − Φ(a))、a = (left − x′β) ÷ σ。"""
+        beta, sigma = params[:-1], np.exp(params[-1])
+        xb = design @ beta
+        z = (y - xb) / sigma
+        a = (left - xb) / sigma
+        hazard = np.exp(stats.norm.logpdf(a) - stats.norm.logsf(a))
+        weight = (z - hazard) / sigma
+        d_log_sigma = z**2 - 1 - hazard * a
+        return np.append(design.T @ weight, d_log_sigma.sum())
 
 
-def numerical_gradient(
-    f: Callable[[np.ndarray], float], point: np.ndarray
-) -> np.ndarray:
-    step = 1e-6
-    result = np.zeros(len(point))
-    for i in range(len(point)):
-        e = np.eye(len(point))[i] * step
-        result[i] = (f(point + e) - f(point - e)) / (2 * step)
-    return result
+    def hessian_from_gradient(
+        gradient: Callable[[NDArray[np.float64]], NDArray[np.float64]],
+        point: NDArray[np.float64],
+    ) -> NDArray[np.float64]:
+        """勾配の関数を、中心差分で微分して、2 階微分の行列（ヘッセ行列）を求める。
+
+        刻み幅は、各パラメータの大きさに比例させる。結果は、対称な行列にそろえる。
+        """
+        n = len(point)
+        hessian = np.zeros((n, n))
+        for j in range(n):
+            step = 1e-5 * max(1.0, abs(float(point[j])))
+            e = np.eye(n)[j] * step
+            hessian[:, j] = (gradient(point + e) - gradient(point - e)) / (2 * step)
+        return (hessian + hessian.T) / 2
+    ```
+
+    解析的な勾配を、**数値微分と比べる**テストを書きます（式の書き間違いを、見つけられます）。
+
+    ```python
+    def latent_data(n: int = 20000, seed: int = 0) -> tuple[np.ndarray, np.ndarray]:
+        return draw_latent_sample(n, np.random.default_rng(seed))
 
 
-def test_トービットの解析的な勾配は数値微分に一致する() -> None:
-    x, y = latent_data(400)
-    observed = censor(y)
-    design = np.column_stack([np.ones(400), x])
-    for params in (np.array([0.5, 1.5, 0.3]), np.array([-1.0, 3.0, 1.0])):
-        numeric = numerical_gradient(
-            lambda p: tobit_log_likelihood(p, observed, design, 0.0), params
-        )
-        assert tobit_gradient(params, observed, design, 0.0) == pytest.approx(
-            numeric, rel=1e-5, abs=1e-5
-        )
+    def numerical_gradient(
+        f: Callable[[np.ndarray], float], point: np.ndarray
+    ) -> np.ndarray:
+        step = 1e-6
+        result = np.zeros(len(point))
+        for i in range(len(point)):
+            e = np.eye(len(point))[i] * step
+            result[i] = (f(point + e) - f(point - e)) / (2 * step)
+        return result
 
 
-def test_切断回帰の解析的な勾配は数値微分に一致する() -> None:
-    x, y = latent_data(400)
-    kept_x, kept_y = truncate(x, y)
-    design = np.column_stack([np.ones(len(kept_x)), kept_x])
-    for params in (np.array([0.5, 1.5, 0.3]), np.array([1.0, 2.0, 0.7])):
-        numeric = numerical_gradient(
-            lambda p: truncreg_log_likelihood(p, kept_y, design, 0.0), params
-        )
-        assert truncreg_gradient(params, kept_y, design, 0.0) == pytest.approx(
-            numeric, rel=1e-5, abs=1e-5
-        )
+    def test_トービットの解析的な勾配は数値微分に一致する() -> None:
+        x, y = latent_data(400)
+        observed = censor(y)
+        design = np.column_stack([np.ones(400), x])
+        for params in (np.array([0.5, 1.5, 0.3]), np.array([-1.0, 3.0, 1.0])):
+            numeric = numerical_gradient(
+                lambda p: tobit_log_likelihood(p, observed, design, 0.0), params
+            )
+            assert tobit_gradient(params, observed, design, 0.0) == pytest.approx(
+                numeric, rel=1e-5, abs=1e-5
+            )
 
 
-def test_ヘッセ行列は既知の2次式の勾配の差分に一致する() -> None:
-    def gradient(v: np.ndarray) -> np.ndarray:
-        # f = 3a² + ab + 2b² の勾配
-        return np.array([6 * v[0] + v[1], v[0] + 4 * v[1]])
-
-    hessian = hessian_from_gradient(gradient, np.array([1.0, 2.0]))
-    assert hessian == pytest.approx(np.array([[6.0, 1.0], [1.0, 4.0]]), abs=1e-6)
-
-
-def test_ヘッセ行列は対称にそろえる() -> None:
-    # 勾配 (b, 0) の微分は [[0, 1], [0, 0]]。対称にそろえると [[0, 0.5], [0.5, 0]]
-    def gradient(v: np.ndarray) -> np.ndarray:
-        return np.array([v[1], 0.0])
-
-    hessian = hessian_from_gradient(gradient, np.array([1.0, 2.0]))
-    assert hessian == pytest.approx(np.array([[0.0, 0.5], [0.5, 0.0]]), abs=1e-6)
-    assert hessian == pytest.approx(hessian.T)
+    def test_切断回帰の解析的な勾配は数値微分に一致する() -> None:
+        x, y = latent_data(400)
+        kept_x, kept_y = truncate(x, y)
+        design = np.column_stack([np.ones(len(kept_x)), kept_x])
+        for params in (np.array([0.5, 1.5, 0.3]), np.array([1.0, 2.0, 0.7])):
+            numeric = numerical_gradient(
+                lambda p: truncreg_log_likelihood(p, kept_y, design, 0.0), params
+            )
+            assert truncreg_gradient(params, kept_y, design, 0.0) == pytest.approx(
+                numeric, rel=1e-5, abs=1e-5
+            )
 
 
-def test_大きな値のパラメータでもヘッセ行列を求められる() -> None:
-    def gradient(v: np.ndarray) -> np.ndarray:
-        return np.array([2 * v[0], 6 * v[1]])
+    def test_ヘッセ行列は既知の2次式の勾配の差分に一致する() -> None:
+        def gradient(v: np.ndarray) -> np.ndarray:
+            # f = 3a² + ab + 2b² の勾配
+            return np.array([6 * v[0] + v[1], v[0] + 4 * v[1]])
 
-    hessian = hessian_from_gradient(gradient, np.array([1000.0, 5.0]))
-    assert hessian == pytest.approx(np.array([[2.0, 0.0], [0.0, 6.0]]), abs=1e-4)
-```
+        hessian = hessian_from_gradient(gradient, np.array([1.0, 2.0]))
+        assert hessian == pytest.approx(np.array([[6.0, 1.0], [1.0, 4.0]]), abs=1e-6)
+
+
+    def test_ヘッセ行列は対称にそろえる() -> None:
+        # 勾配 (b, 0) の微分は [[0, 1], [0, 0]]。対称にそろえると [[0, 0.5], [0.5, 0]]
+        def gradient(v: np.ndarray) -> np.ndarray:
+            return np.array([v[1], 0.0])
+
+        hessian = hessian_from_gradient(gradient, np.array([1.0, 2.0]))
+        assert hessian == pytest.approx(np.array([[0.0, 0.5], [0.5, 0.0]]), abs=1e-6)
+        assert hessian == pytest.approx(hessian.T)
+
+
+    def test_大きな値のパラメータでもヘッセ行列を求められる() -> None:
+        def gradient(v: np.ndarray) -> np.ndarray:
+            return np.array([2 * v[0], 6 * v[1]])
+
+        hessian = hessian_from_gradient(gradient, np.array([1000.0, 5.0]))
+        assert hessian == pytest.approx(np.array([[2.0, 0.0], [0.0, 6.0]]), abs=1e-4)
+    ```
 
 ### fit_tobit と fit_truncreg を実装する
 

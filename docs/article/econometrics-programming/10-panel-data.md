@@ -524,97 +524,99 @@ def test_定数項ありの1階差分は固定効果と少しだけ違う() -> N
 
 ### 推定量の性質を、シミュレーションで
 
-個人 200 人、5 期で、相関 0 と 1 を、300 回繰り返します（真の傾きは 1）。
+??? note "詳しく見る（実装の細部と確認。必要なときに開く）"
 
-```python
-def estimator_comparison(
-    entities: int,
-    periods: int,
-    correlation: float,
-    repetitions: int,
-    rng: np.random.Generator,
-) -> pd.DataFrame:
-    """パネルを作り直し、3 つの推定量（真の傾きは 1）を繰り返す。"""
-    rows = []
-    for _ in range(repetitions):
-        panel = draw_panel(entities, periods, correlation, rng)
-        rows.append(
-            (
-                pooled_estimate(panel),
-                fixed_effects(panel, "y", ["x"]).coefficients["x"],
-                random_effects(panel, "y", ["x"]).coefficients["x"],
+    個人 200 人、5 期で、相関 0 と 1 を、300 回繰り返します（真の傾きは 1）。
+
+    ```python
+    def estimator_comparison(
+        entities: int,
+        periods: int,
+        correlation: float,
+        repetitions: int,
+        rng: np.random.Generator,
+    ) -> pd.DataFrame:
+        """パネルを作り直し、3 つの推定量（真の傾きは 1）を繰り返す。"""
+        rows = []
+        for _ in range(repetitions):
+            panel = draw_panel(entities, periods, correlation, rng)
+            rows.append(
+                (
+                    pooled_estimate(panel),
+                    fixed_effects(panel, "y", ["x"]).coefficients["x"],
+                    random_effects(panel, "y", ["x"]).coefficients["x"],
+                )
             )
-        )
-    return pd.DataFrame(rows, columns=["pooled", "fixed_effects", "random_effects"])
+        return pd.DataFrame(rows, columns=["pooled", "fixed_effects", "random_effects"])
 
 
-def hausman_rejection_rate(
-    entities: int,
-    periods: int,
-    correlation: float,
-    repetitions: int,
-    significance: float,
-    rng: np.random.Generator,
-) -> float:
-    """Hausman 検定が、同じという帰無仮説を、棄却する割合。"""
-    rejected = 0
-    for _ in range(repetitions):
-        panel = draw_panel(entities, periods, correlation, rng)
-        test = hausman_test(
-            fixed_effects(panel, "y", ["x"]), random_effects(panel, "y", ["x"]), ["x"]
-        )
-        rejected += test.p_value < significance
-    return rejected / repetitions
-```
+    def hausman_rejection_rate(
+        entities: int,
+        periods: int,
+        correlation: float,
+        repetitions: int,
+        significance: float,
+        rng: np.random.Generator,
+    ) -> float:
+        """Hausman 検定が、同じという帰無仮説を、棄却する割合。"""
+        rejected = 0
+        for _ in range(repetitions):
+            panel = draw_panel(entities, periods, correlation, rng)
+            test = hausman_test(
+                fixed_effects(panel, "y", ["x"]), random_effects(panel, "y", ["x"]), ["x"]
+            )
+            rejected += test.p_value < significance
+        return rejected / repetitions
+    ```
 
-```python
-def test_相関があるとプーリングは偏りランダム効果は中間で固定効果は偏らない() -> None:
-    table = estimator_comparison(200, 5, 1.0, 300, np.random.default_rng(0))
-    means = table.mean()
-    se = table.std() / 300**0.5
-    assert abs(means["fixed_effects"] - 1.0) < 4 * se["fixed_effects"]
-    assert abs(means["pooled"] - 1.5) < 4 * se["pooled"]
-    assert means["fixed_effects"] < means["random_effects"] < means["pooled"]
-
-
-def test_相関がなければ3つの推定量はどれも偏らない() -> None:
-    table = estimator_comparison(200, 5, 0.0, 300, np.random.default_rng(0))
-    se = table.std() / 300**0.5
-    for name in table.columns:
-        assert abs(table[name].mean() - 1.0) < 4 * se[name]
-    assert table["pooled"].std() > table["fixed_effects"].std()
+    ```python
+    def test_相関があるとプーリングは偏りランダム効果は中間で固定効果は偏らない() -> None:
+        table = estimator_comparison(200, 5, 1.0, 300, np.random.default_rng(0))
+        means = table.mean()
+        se = table.std() / 300**0.5
+        assert abs(means["fixed_effects"] - 1.0) < 4 * se["fixed_effects"]
+        assert abs(means["pooled"] - 1.5) < 4 * se["pooled"]
+        assert means["fixed_effects"] < means["random_effects"] < means["pooled"]
 
 
-def test_個人の効果が説明変数と相関するとHausman検定は棄却する() -> None:
-    rate = hausman_rejection_rate(100, 5, 1.0, 100, 0.05, np.random.default_rng(0))
-    assert rate > 0.95
+    def test_相関がなければ3つの推定量はどれも偏らない() -> None:
+        table = estimator_comparison(200, 5, 0.0, 300, np.random.default_rng(0))
+        se = table.std() / 300**0.5
+        for name in table.columns:
+            assert abs(table[name].mean() - 1.0) < 4 * se[name]
+        assert table["pooled"].std() > table["fixed_effects"].std()
 
 
-def test_相関がなければHausman検定の棄却率は有意水準に近い() -> None:
-    rate = hausman_rejection_rate(200, 5, 0.0, 300, 0.05, np.random.default_rng(0))
-    assert rate == pytest.approx(0.05, abs=4 * (0.05 * 0.95 / 300) ** 0.5)
-```
+    def test_個人の効果が説明変数と相関するとHausman検定は棄却する() -> None:
+        rate = hausman_rejection_rate(100, 5, 1.0, 100, 0.05, np.random.default_rng(0))
+        assert rate > 0.95
 
-```python
-from lib.chapter10.panel import estimator_comparison, hausman_rejection_rate
 
-for correlation in (0.0, 1.0):
-    table = estimator_comparison(200, 5, correlation, 300, np.random.default_rng(0))
-    rate = hausman_rejection_rate(200, 5, correlation, 300, 0.05, np.random.default_rng(0))
-    print(correlation, table.mean().round(4).to_dict(), table.std().round(4).to_dict(), rate)
-```
+    def test_相関がなければHausman検定の棄却率は有意水準に近い() -> None:
+        rate = hausman_rejection_rate(200, 5, 0.0, 300, 0.05, np.random.default_rng(0))
+        assert rate == pytest.approx(0.05, abs=4 * (0.05 * 0.95 / 300) ** 0.5)
+    ```
 
-```text
-0.0 {'pooled': 1.001, 'fixed_effects': 1.0013, 'random_effects': 1.0013} {'pooled': 0.036, 'fixed_effects': 0.0181, 'random_effects': 0.018} 0.05
-1.0 {'pooled': 1.4993, 'fixed_effects': 1.0013, 'random_effects': 1.2165} {'pooled': 0.0288, 'fixed_effects': 0.0181, 'random_effects': 0.0288} 1.0
-```
+    ```python
+    from lib.chapter10.panel import estimator_comparison, hausman_rejection_rate
 
-列は、各推定量の平均と標準偏差、Hausman 検定の棄却率です。
+    for correlation in (0.0, 1.0):
+        table = estimator_comparison(200, 5, correlation, 300, np.random.default_rng(0))
+        rate = hausman_rejection_rate(200, 5, correlation, 300, 0.05, np.random.default_rng(0))
+        print(correlation, table.mean().round(4).to_dict(), table.std().round(4).to_dict(), rate)
+    ```
 
-- **相関 0**: 3 つとも偏らず（約 1.00）、ランダム効果（0.018）が、固定効果（0.0181）と同じ程度に効率的で、プーリング OLS（0.036）は、約 2 倍ばらつきます。Hausman 検定の棄却率は 0.05 で、有意水準どおりです
-- **相関 1**: 固定効果は偏らず（1.0013）、プーリング OLS は 1.4993（理論値 1.5）、ランダム効果は 1.2165 と中間です。Hausman 検定は、すべての標本で棄却します（1.0）
+    ```text
+    0.0 {'pooled': 1.001, 'fixed_effects': 1.0013, 'random_effects': 1.0013} {'pooled': 0.036, 'fixed_effects': 0.0181, 'random_effects': 0.018} 0.05
+    1.0 {'pooled': 1.4993, 'fixed_effects': 1.0013, 'random_effects': 1.2165} {'pooled': 0.0288, 'fixed_effects': 0.0181, 'random_effects': 0.0288} 1.0
+    ```
 
-![推定値の分布（相関 1）。固定効果は真の値 1 に集まり、ランダム効果は偏り、プーリング OLS は、さらに偏る](images/ch10-estimate-comparison.png)
+    列は、各推定量の平均と標準偏差、Hausman 検定の棄却率です。
+
+    - **相関 0**: 3 つとも偏らず（約 1.00）、ランダム効果（0.018）が、固定効果（0.0181）と同じ程度に効率的で、プーリング OLS（0.036）は、約 2 倍ばらつきます。Hausman 検定の棄却率は 0.05 で、有意水準どおりです
+    - **相関 1**: 固定効果は偏らず（1.0013）、プーリング OLS は 1.4993（理論値 1.5）、ランダム効果は 1.2165 と中間です。Hausman 検定は、すべての標本で棄却します（1.0）
+
+    ![推定値の分布（相関 1）。固定効果は真の値 1 に集まり、ランダム効果は偏り、プーリング OLS は、さらに偏る](images/ch10-estimate-comparison.png)
 
 ### クラスター標準誤差
 

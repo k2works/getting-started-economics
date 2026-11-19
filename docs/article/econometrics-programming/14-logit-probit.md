@@ -405,77 +405,79 @@ LPM {'const': 0.5841, 'x1': 0.1824, 'x2': -0.0977}
 
 ### 反復と収束
 
-```python
-def test_完全に分離できるデータは収束しない() -> None:
-    with pytest.raises(ValueError, match="完全分離"):
+??? note "詳しく見る（実装の細部と確認。必要なときに開く）"
+
+    ```python
+    def test_完全に分離できるデータは収束しない() -> None:
+        with pytest.raises(ValueError, match="完全分離"):
+            fit_binary([0, 0, 0, 1, 1, 1], [1, 2, 3, 4, 5, 6])
+
+
+    def test_ニュートン法は2_x_2の表で5回で収束する() -> None:
+        assert fit_binary(Y, X, "logit").iterations == 5
+        assert fit_binary(Y, X, "probit").iterations == 5
+
+
+    def test_極端な線形予測値でもスコアは有限() -> None:
+        y = np.array([1.0, 0.0, 1.0])
+        xb = np.array([-40.0, 40.0, -800.0])
+        for link in ("logit", "probit"):
+            score, weights = _score_and_weights(link, y, xb)
+            assert np.all(np.isfinite(score))
+            assert np.all(np.isfinite(weights))
+        # 外れた観測値のスコアは、ほぼ |x′β|（誤って予測した側）になる
+        probit_score, _ = _score_and_weights("probit", y, xb)
+        assert probit_score == pytest.approx([40.0, -40.0, 800.0], rel=0.01)
+
+
+    def test_まれな外れ値があっても完全分離と誤報しない() -> None:
+        rng = np.random.default_rng(0)
+        x = rng.standard_normal(20000)
+        y = (4 * x + rng.standard_normal(20000) > 0).astype(float)
+        x = np.append(x, -6.0)
+        y = np.append(y, 1.0)
+        fit = fit_binary(y, x, "probit")
+        # 最大値では、スコアの合計が 0（statsmodels は確率を 2.2e-16 で切り詰めるので、照合に使わない）
+        design = sm.add_constant(x)
+        score, _ = _score_and_weights("probit", y, design @ fit.coefficients.to_numpy())
+        assert design.T @ score == pytest.approx([0.0, 0.0], abs=1e-6)
+        assert fit.coefficients["x1"] == pytest.approx(3.4944, abs=1e-3)
+
+
+    def test_知らないリンク関数は受け付けない() -> None:
+        with pytest.raises(ValueError, match="リンク"):
+            fit_binary(Y, X, "cauchy")
+
+
+    def test_反復の回数が少ないと収束しない() -> None:
+        s = sample()
+        with pytest.raises(ValueError, match="収束"):
+            fit_binary(s["y"], s[["x1", "x2"]], "logit", max_iterations=2)
+
+
+    def test_配列と列の名前() -> None:
+        s = sample()
+        named = fit_binary(s["y"], s[["x1", "x2"]])
+        plain = fit_binary(s["y"], s[["x1", "x2"]].to_numpy())
+        single = fit_binary(s["y"], s["x1"])
+        assert list(named.coefficients.index) == ["const", "x1", "x2"]
+        assert list(plain.coefficients.index) == ["const", "x1", "x2"]
+        assert list(single.coefficients.index) == ["const", "x1"]
+        assert named.coefficients.to_numpy() == pytest.approx(plain.coefficients.to_numpy())
+    ```
+
+    ```python
+    try:
         fit_binary([0, 0, 0, 1, 1, 1], [1, 2, 3, 4, 5, 6])
+    except ValueError as error:
+        print(error)
+    ```
 
+    ```text
+    収束しない（完全分離の可能性がある）
+    ```
 
-def test_ニュートン法は2_x_2の表で5回で収束する() -> None:
-    assert fit_binary(Y, X, "logit").iterations == 5
-    assert fit_binary(Y, X, "probit").iterations == 5
-
-
-def test_極端な線形予測値でもスコアは有限() -> None:
-    y = np.array([1.0, 0.0, 1.0])
-    xb = np.array([-40.0, 40.0, -800.0])
-    for link in ("logit", "probit"):
-        score, weights = _score_and_weights(link, y, xb)
-        assert np.all(np.isfinite(score))
-        assert np.all(np.isfinite(weights))
-    # 外れた観測値のスコアは、ほぼ |x′β|（誤って予測した側）になる
-    probit_score, _ = _score_and_weights("probit", y, xb)
-    assert probit_score == pytest.approx([40.0, -40.0, 800.0], rel=0.01)
-
-
-def test_まれな外れ値があっても完全分離と誤報しない() -> None:
-    rng = np.random.default_rng(0)
-    x = rng.standard_normal(20000)
-    y = (4 * x + rng.standard_normal(20000) > 0).astype(float)
-    x = np.append(x, -6.0)
-    y = np.append(y, 1.0)
-    fit = fit_binary(y, x, "probit")
-    # 最大値では、スコアの合計が 0（statsmodels は確率を 2.2e-16 で切り詰めるので、照合に使わない）
-    design = sm.add_constant(x)
-    score, _ = _score_and_weights("probit", y, design @ fit.coefficients.to_numpy())
-    assert design.T @ score == pytest.approx([0.0, 0.0], abs=1e-6)
-    assert fit.coefficients["x1"] == pytest.approx(3.4944, abs=1e-3)
-
-
-def test_知らないリンク関数は受け付けない() -> None:
-    with pytest.raises(ValueError, match="リンク"):
-        fit_binary(Y, X, "cauchy")
-
-
-def test_反復の回数が少ないと収束しない() -> None:
-    s = sample()
-    with pytest.raises(ValueError, match="収束"):
-        fit_binary(s["y"], s[["x1", "x2"]], "logit", max_iterations=2)
-
-
-def test_配列と列の名前() -> None:
-    s = sample()
-    named = fit_binary(s["y"], s[["x1", "x2"]])
-    plain = fit_binary(s["y"], s[["x1", "x2"]].to_numpy())
-    single = fit_binary(s["y"], s["x1"])
-    assert list(named.coefficients.index) == ["const", "x1", "x2"]
-    assert list(plain.coefficients.index) == ["const", "x1", "x2"]
-    assert list(single.coefficients.index) == ["const", "x1"]
-    assert named.coefficients.to_numpy() == pytest.approx(plain.coefficients.to_numpy())
-```
-
-```python
-try:
-    fit_binary([0, 0, 0, 1, 1, 1], [1, 2, 3, 4, 5, 6])
-except ValueError as error:
-    print(error)
-```
-
-```text
-収束しない（完全分離の可能性がある）
-```
-
-x = 1、2、3 で y = 0、x = 4、5、6 で y = 1 は、完全に分離できます。尤度は、係数を大きくするほど増え続けるので、収束せず、エラーにします（情報行列が、特異になる）。
+    x = 1、2、3 で y = 0、x = 4、5、6 で y = 1 は、完全に分離できます。尤度は、係数を大きくするほど増え続けるので、収束せず、エラーにします（情報行列が、特異になる）。
 
 ### 尤度比検定
 
@@ -541,55 +543,57 @@ print(round(null.log_likelihood, 2), round(lr.statistic, 2), lr.p_value)
 
 ### 標本が大きいと: ロジットとプロビットの違い
 
-n = 100000 の標本を、ロジットの母集団と、プロビットの母集団の、両方から作って、ロジットとプロビットで、推定します。
+??? note "詳しく見る（実装の細部と確認。必要なときに開く）"
 
-```python
-def test_ロジットの標本は標準ロジスティック分布の誤差() -> None:
-    s = draw_binary_sample(100000, "logit", np.random.default_rng(1))
-    fit = fit_binary(s["y"], s[["x1", "x2"]], "logit")
-    assert fit.coefficients.to_numpy() == pytest.approx([0.5, 1.0, -0.8], abs=0.04)
+    n = 100000 の標本を、ロジットの母集団と、プロビットの母集団の、両方から作って、ロジットとプロビットで、推定します。
 
-
-def test_プロビットの標本ではプロビットの係数が真の値でロジットは約1点7倍() -> None:
-    s = draw_binary_sample(100000, "probit", np.random.default_rng(1))
-    probit = fit_binary(s["y"], s[["x1", "x2"]], "probit")
-    logit = fit_binary(s["y"], s[["x1", "x2"]], "logit")
-    assert probit.coefficients.to_numpy() == pytest.approx([0.5, 1.0, -0.8], abs=0.04)
-    ratio = logit.coefficients["x1"] / probit.coefficients["x1"]
-    assert ratio == pytest.approx(1.7, abs=0.1)
+    ```python
+    def test_ロジットの標本は標準ロジスティック分布の誤差() -> None:
+        s = draw_binary_sample(100000, "logit", np.random.default_rng(1))
+        fit = fit_binary(s["y"], s[["x1", "x2"]], "logit")
+        assert fit.coefficients.to_numpy() == pytest.approx([0.5, 1.0, -0.8], abs=0.04)
 
 
-def test_平均限界効果はロジット_プロビット_線形確率モデルでほぼ同じ() -> None:
-    s = draw_binary_sample(100000, "probit", np.random.default_rng(1))
-    x = s[["x1", "x2"]]
-    logit = average_marginal_effects(fit_binary(s["y"], x, "logit"), x)
-    probit = average_marginal_effects(fit_binary(s["y"], x, "probit"), x)
-    lpm = linear_probability(s["y"], x).drop("const")
-    assert logit.to_numpy() == pytest.approx(probit.to_numpy(), abs=0.005)
-    assert lpm.to_numpy() == pytest.approx(probit.to_numpy(), abs=0.01)
-```
+    def test_プロビットの標本ではプロビットの係数が真の値でロジットは約1点7倍() -> None:
+        s = draw_binary_sample(100000, "probit", np.random.default_rng(1))
+        probit = fit_binary(s["y"], s[["x1", "x2"]], "probit")
+        logit = fit_binary(s["y"], s[["x1", "x2"]], "logit")
+        assert probit.coefficients.to_numpy() == pytest.approx([0.5, 1.0, -0.8], abs=0.04)
+        ratio = logit.coefficients["x1"] / probit.coefficients["x1"]
+        assert ratio == pytest.approx(1.7, abs=0.1)
 
-```python
-for generator in ("logit", "probit"):
-    big = draw_binary_sample(100000, generator, np.random.default_rng(1))
-    cols = big[["x1", "x2"]]
-    logit, probit = fit_binary(big["y"], cols, "logit"), fit_binary(big["y"], cols, "probit")
-    print(generator, logit.coefficients.round(3).to_dict(), probit.coefficients.round(3).to_dict(), round(float(logit.coefficients["x1"] / probit.coefficients["x1"]), 3))
-    print("  AME", average_marginal_effects(logit, cols).round(4).to_dict(), average_marginal_effects(probit, cols).round(4).to_dict(), linear_probability(big["y"], cols).drop("const").round(4).to_dict())
-```
 
-```text
-logit {'const': 0.482, 'x1': 0.993, 'x2': -0.79} {'const': 0.287, 'x1': 0.589, 'x2': -0.469} 1.686
-  AME {'x1': 0.1839, 'x2': -0.1463} {'x1': 0.1833, 'x2': -0.1458} {'x1': 0.1834, 'x2': -0.1458}
-probit {'const': 0.846, 'x1': 1.717, 'x2': -1.372} {'const': 0.49, 'x1': 0.993, 'x2': -0.793} 1.729
-  AME {'x1': 0.235, 'x2': -0.1878} {'x1': 0.2351, 'x2': -0.1877} {'x1': 0.2339, 'x2': -0.1869}
-```
+    def test_平均限界効果はロジット_プロビット_線形確率モデルでほぼ同じ() -> None:
+        s = draw_binary_sample(100000, "probit", np.random.default_rng(1))
+        x = s[["x1", "x2"]]
+        logit = average_marginal_effects(fit_binary(s["y"], x, "logit"), x)
+        probit = average_marginal_effects(fit_binary(s["y"], x, "probit"), x)
+        lpm = linear_probability(s["y"], x).drop("const")
+        assert logit.to_numpy() == pytest.approx(probit.to_numpy(), abs=0.005)
+        assert lpm.to_numpy() == pytest.approx(probit.to_numpy(), abs=0.01)
+    ```
 
-各ブロックは、順に、ロジットの係数、プロビットの係数、x1 の係数の比（ロジット ÷ プロビット）、そして、平均限界効果（ロジット・プロビット）と、線形確率モデルの係数です。
+    ```python
+    for generator in ("logit", "probit"):
+        big = draw_binary_sample(100000, generator, np.random.default_rng(1))
+        cols = big[["x1", "x2"]]
+        logit, probit = fit_binary(big["y"], cols, "logit"), fit_binary(big["y"], cols, "probit")
+        print(generator, logit.coefficients.round(3).to_dict(), probit.coefficients.round(3).to_dict(), round(float(logit.coefficients["x1"] / probit.coefficients["x1"]), 3))
+        print("  AME", average_marginal_effects(logit, cols).round(4).to_dict(), average_marginal_effects(probit, cols).round(4).to_dict(), linear_probability(big["y"], cols).drop("const").round(4).to_dict())
+    ```
 
-- **ロジットの母集団**（1 ブロック目）: ロジットの推定値は、真の値（0.5、1、−0.8）に近い（0.482、0.993、−0.79）。プロビットは、約 0.6 倍（比 1.686）
-- **プロビットの母集団**（2 ブロック目）: プロビットの推定値が、真の値に近い（0.49、0.993、−0.793）。ロジットは、約 1.7 倍（比 1.729）
-- **どちらの母集団でも、平均限界効果は、ロジット・プロビット・線形確率モデルで、ほぼ同じ**（x1 で 0.1834〜0.1839、および 0.2339〜0.2351）。**モデルの選択は、係数の大きさを変えますが、確率への効果は、ほとんど変えません。**
+    ```text
+    logit {'const': 0.482, 'x1': 0.993, 'x2': -0.79} {'const': 0.287, 'x1': 0.589, 'x2': -0.469} 1.686
+      AME {'x1': 0.1839, 'x2': -0.1463} {'x1': 0.1833, 'x2': -0.1458} {'x1': 0.1834, 'x2': -0.1458}
+    probit {'const': 0.846, 'x1': 1.717, 'x2': -1.372} {'const': 0.49, 'x1': 0.993, 'x2': -0.793} 1.729
+      AME {'x1': 0.235, 'x2': -0.1878} {'x1': 0.2351, 'x2': -0.1877} {'x1': 0.2339, 'x2': -0.1869}
+    ```
+
+    各ブロックは、順に、ロジットの係数、プロビットの係数、x1 の係数の比（ロジット ÷ プロビット）、そして、平均限界効果（ロジット・プロビット）と、線形確率モデルの係数です。
+
+    - **ロジットの母集団**（1 ブロック目）: ロジットの推定値は、真の値（0.5、1、−0.8）に近い（0.482、0.993、−0.79）。プロビットは、約 0.6 倍（比 1.686）
+    - **プロビットの母集団**（2 ブロック目）: プロビットの推定値が、真の値に近い（0.49、0.993、−0.793）。ロジットは、約 1.7 倍（比 1.729）
+    - **どちらの母集団でも、平均限界効果は、ロジット・プロビット・線形確率モデルで、ほぼ同じ**（x1 で 0.1834〜0.1839、および 0.2339〜0.2351）。**モデルの選択は、係数の大きさを変えますが、確率への効果は、ほとんど変えません。**
 
 ### 線形確率モデルは、範囲の外に出る
 
