@@ -18,6 +18,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 経済学の題材 | 需要曲線の推定（計量経済学への入口） |
 | 使う Python の機能 | 最小二乗法の式、`zip`、第 8 章のシミュレーションの再利用 |
 | 完成形 | `fit_line`、`r_squared` |
+| ファイル | 実装: `lib/appendix_a/regression.py`／テスト: `test/appendix_a/test_regression.py`（自分で書くときは、`practice/appendix_a/` に、同じ名前で作ります） |
 
 回帰分析の本格的な内容（統計的推測、重回帰、検定、時系列など）は、この本の範囲を超えます。この付録は、その入口までです。
 

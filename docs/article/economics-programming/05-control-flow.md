@@ -18,6 +18,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 経済学の題材 | ワルラス調整（価格で調整）とマーシャル調整（数量で調整）（マインドマップ [5-3](<../経済学・経済政策 トピック別マインドマップ.md#t3>)） |
 | 使う Python の機能 | `if` / `elif` / `else`、`for`、`range`、`return` での途中終了、関数を引数に渡す |
 | 完成形 | `market_state`、`walras_path`、`marshall_path` |
+| ファイル | 実装: `lib/chapter05/adjustment.py`／テスト: `test/chapter05/test_adjustment.py`（自分で書くときは、`practice/chapter05/` に、同じ名前で作ります） |
 
 ### 経済学の式とコードの対応
 

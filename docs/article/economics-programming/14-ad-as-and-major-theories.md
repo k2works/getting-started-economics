@@ -18,6 +18,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 経済学の題材 | 総需要（AD）、総供給（AS、古典派とケインズ）、フィリップス曲線、需給ギャップ、オークンの法則、フィッシャー方程式、貨幣数量説（マインドマップ [5-7](<../経済学・経済政策 トピック別マインドマップ.md#t7>)） |
 | 使う Python の機能 | 関数を引数として渡す（第 5 章の復習）、第 6 章の二分法の再利用、`dataclasses.replace` |
 | 完成形 | `aggregate_demand`、`classical_supply`、`keynesian_supply`、`equilibrium_price_and_income`、`phillips_inflation`、`output_gap`、`okun_unemployment`、`real_interest_rate`、`price_level_by_quantity_theory` |
+| ファイル | 実装: `lib/chapter14/adas.py`、`lib/chapter14/indicators.py`／テスト: `test/chapter14/test_adas.py`、`test/chapter14/test_indicators.py`（自分で書くときは、`practice/chapter14/` に、同じ名前で作ります） |
 
 ### 経済学の式とコードの対応
 

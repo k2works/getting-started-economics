@@ -18,6 +18,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 経済学の題材 | 名目と実質の GDP の推移、成長率、景気の判断（移動平均・景気動向指数）（マインドマップ [5-5](<../経済学・経済政策 トピック別マインドマップ.md#t5>)） |
 | 使う Python の機能 | `DataFrame.plot`、`Series.plot.bar`、`rolling`、`diff`、`DataFrame` の列の平均 |
 | 完成形 | `moving_average`、`diffusion_index`、`plot_gdp_chart`、`plot_growth_chart` |
+| ファイル | 実装: `lib/chapter12/charts.py`／テスト: `test/chapter12/test_charts.py`（自分で書くときは、`practice/chapter12/` に、同じ名前で作ります） |
 
 データは、第 11 章と同じ、架空の国の統計（`apps/economics-programming/python/data/economy.csv`）です。
 

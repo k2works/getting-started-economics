@@ -19,6 +19,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 使う Python の機能 | `scipy.optimize` の `minimize`（制約付き）、`minimize_scalar`、`brentq`（解を求める）、無名関数（`lambda`） |
 | 新しく導入するライブラリ | [SciPy](https://scipy.org/)（科学技術計算） |
 | 完成形 | `maximize_utility`、`profit_maximizing_quantity`、`minimize_cost` |
+| ファイル | 実装: `lib/chapter10/optimization.py`／テスト: `test/chapter10/test_optimization.py`（自分で書くときは、`practice/chapter10/` に、同じ名前で作ります） |
 
 ### 経済学の式とコードの対応
 

@@ -18,6 +18,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 経済学の題材 | 均衡価格を求める（マインドマップ [5-3](<../経済学・経済政策 トピック別マインドマップ.md#t3>)） |
 | 使う Python の機能 | `import`、モジュールとパッケージ、例外（`raise`・独自の例外）、クロージャ、アルゴリズム |
 | 完成形 | `make_excess_demand`、`find_equilibrium_price`、`NoEquilibriumError` |
+| ファイル | 実装: `lib/chapter06/bisection.py`／テスト: `test/chapter06/test_bisection.py`（自分で書くときは、`practice/chapter06/` に、同じ名前で作ります） |
 
 ### 経済学の式とコードの対応
 

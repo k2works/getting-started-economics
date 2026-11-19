@@ -18,6 +18,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 経済学の題材 | 需要曲線 Q = a − bP（マインドマップ [5-1](<../経済学・経済政策 トピック別マインドマップ.md#t1>)） |
 | 使う Python の機能 | 関数、`if`、`max`、例外、型ヒント |
 | 完成形 | 価格を入れると需要量を返す `quantity_demanded` 関数と、5 つのテスト |
+| ファイル | 実装: `lib/chapter01/demand.py`／テスト: `test/chapter01/test_demand.py`（自分で書くときは、`practice/chapter01/` に、同じ名前で作ります） |
 
 ### 既に知っていることとの対応
 
@@ -42,15 +43,83 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 
 ## 1.2 環境を準備する
 
-必要なものは、Python のパッケージ管理ツール [uv](https://docs.astral.sh/uv/) です。次のコマンドで、サンプルコードのテストが動く状態にします。
+### 必要なもの
+
+| 必要なもの | 説明 |
+| :--- | :--- |
+| ターミナル | コマンドを打ち込む画面。Windows は「PowerShell」、macOS は「ターミナル」を、検索して開きます |
+| Git | サンプルコードを入手するための道具。無いときは、ZIP ファイルでも入手できます（後述） |
+| uv | Python と、必要なライブラリを用意する道具。次の手順でインストールします |
+| エディタ | コードを書くための道具。メモ帳でも書けますが、[VS Code](https://code.visualstudio.com/) などをお勧めします |
+
+Python 本体を、先に入れておく必要はありません。uv が、必要な版（Python 3.12）を、自動で用意します。初回は、ダウンロードのために、インターネットへの接続が必要で、時間がかかります。
+
+### コマンドの実行のしかた
+
+この本のコマンドは、コードブロックの内容を、そのままターミナルに貼り付けて、Enter キーを押して実行します。`$` や `>` のようなプロンプトの記号は、書いていません。
+
+### uv をインストールする
+
+Windows の PowerShell では、次のコマンドを実行します。
+
+```bash
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
+```
+
+macOS と Linux では、次のコマンドを実行します。
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+インストールしたら、ターミナルを開き直して、バージョンが表示されることを確かめます。
+
+```bash
+uv --version
+```
+
+最新のインストール方法は、公式の案内（<https://docs.astral.sh/uv/getting-started/installation/>）で確認できます。インターネット上のスクリプトを実行するコマンドなので、実行する前に、公式の案内に、同じコマンドが書かれていることを確かめてください。
+
+### サンプルコードを入手する
+
+```bash
+git clone https://github.com/k2works/getting-started-economics.git
+cd getting-started-economics
+```
+
+Git が無いときは、GitHub のリポジトリのページ（<https://github.com/k2works/getting-started-economics>）で、「Code」ボタンから「Download ZIP」を選んで入手します。ZIP を展開したフォルダを、ターミナルで開きます（`cd 展開したフォルダの名前`）。
+
+### テストが動くことを確かめる
+
+サンプルコードは、リポジトリの `apps/economics-programming/python/` にあります。そこで、ライブラリを用意して、第 1 章の完成形のテストを実行します。
 
 ```bash
 cd apps/economics-programming/python
 uv sync
-uv run pytest
+uv run pytest test/chapter01
 ```
 
-サンプルコードは `apps/economics-programming/python/` にあります。実装は `lib/chapter01/`、テストは `test/chapter01/` です。
+```text
+5 passed
+```
+
+`uv sync` は、必要なライブラリを用意します（初回は、時間がかかります）。5 つのテストが通れば、準備は完了です。
+
+各章のコマンドの最初の行 `cd apps/economics-programming/python` は、リポジトリの最上位（`getting-started-economics`）からの道のりです。すでにこのディレクトリにいるときは、その行を省略してください。
+
+### 完成形と、自分のコード
+
+準備の確認で、テストが**最初から通った**のは、リポジトリに、完成した実装とテストが入っているからです。
+
+| ディレクトリ | 中身 | 使い方 |
+| :--- | :--- | :--- |
+| `lib/chapterNN/` | 各章の完成した実装 | 答え合わせ用。自分のコードを書き終えてから開く |
+| `test/chapterNN/` | 各章の完成したテスト | 答え合わせ用。`uv run pytest test/chapterNN` で、完成形が動くことを確かめる |
+| `practice/chapterNN/` | **自分のコードを書く場所** | 章ごとに、自分で作る |
+
+この本の「予想する」「Red → Green → Refactor」「練習問題」は、**自分で `practice/` に書いて体験する**ための手順です。完成形を写すだけでは、テストを先に書く体験になりません。先に自分で考えて、書いてから、`lib/` と `test/` を開いて、答え合わせをしてください。
+
+前の章の関数を使うときは、自分で作ったもの（`practice.chapter01.demand` など）でも、用意してある完成形（`lib.chapter01.demand` など）でも、かまいません。
 
 ## 1.3 予想する
 
@@ -66,31 +135,64 @@ uv run pytest
 
 ### Red: 最初のテストを書く
 
-最初に、実装がまだない関数のテストを書きます。価格が 0 なら、需要量は切片 a と等しいはずです。
+最初に、実装がまだない関数のテストを書きます。価格が 0 なら、需要量は切片 a と等しいはずです。次の手順で、自分のコードを書く場所を作ります。
 
-```python
-def test_価格が0なら需要量は切片と等しい() -> None:
-    assert quantity_demanded(price=0, intercept=100, slope=2) == 100
-```
+1. `apps/economics-programming/python/` で、章のディレクトリを作ります。
+
+    ```bash
+    mkdir practice/chapter01
+    ```
+
+2. `practice/chapter01/test_demand.py` を作って、次の内容を書きます。ファイル名は、`test_` で始めます（pytest が、この名前のファイルを、テストとして見つけます）。
+
+    ```python
+    import pytest
+
+    from practice.chapter01.demand import quantity_demanded
+
+
+    def test_価格が0なら需要量は切片と等しい() -> None:
+        assert quantity_demanded(price=0, intercept=100, slope=2) == 100
+    ```
+
+    1 行目の `pytest` は、テストの道具です（後の節で使います）。3 行目は、これから作る関数 `quantity_demanded` を、`practice/chapter01/demand.py` から読み込む、という意味です。まだ、そのファイルがありません。
+
+3. テストを実行します。
+
+    ```bash
+    uv run pytest practice/chapter01
+    ```
 
 実行すると、関数がないので失敗します。失敗を確かめることが大切です。
 
 ```text
-ModuleNotFoundError: No module named 'lib.chapter01.demand'
+ModuleNotFoundError: No module named 'practice.chapter01.demand'
 ```
+
+画面には、`ERROR practice/chapter01/test_demand.py` と、`1 error` も表示されます。
 
 ### Green: 最小の実装で通す
 
-テストを通す最小の実装は、式をそのまま書くことです。
+テストを通す最小の実装は、式をそのまま書くことです。`practice/chapter01/demand.py` を作って、次の内容を書きます。
 
 ```python
 def quantity_demanded(price: float, intercept: float, slope: float) -> float:
     return intercept - slope * price
 ```
 
+もう一度、テストを実行します。
+
+```bash
+uv run pytest practice/chapter01
+```
+
+```text
+1 passed
+```
+
 ### 次のテストを足す
 
-予想した 2 つ目と 3 つ目の問いを、テストにします。
+予想した 2 つ目と 3 つ目の問いを、テストにします。`test_demand.py` の末尾に、次のテストを書き足します。
 
 ```python
 def test_価格が上がると需要量は傾きの分だけ減る() -> None:
@@ -101,14 +203,14 @@ def test_価格が高すぎると需要量は0になる() -> None:
     assert quantity_demanded(price=60, intercept=100, slope=2) == 0
 ```
 
-3 つ目のテストは、式のとおりだと −20 になるので失敗します。需要量が負にならないよう、`max` で 0 を下限にします。
+3 つ目のテストは、式のとおりだと −20 になるので失敗します（実行して、確かめてください）。需要量が負にならないよう、`demand.py` を、`max` で 0 を下限にする形に書き換えます。
 
 ```python
 def quantity_demanded(price: float, intercept: float, slope: float) -> float:
     return max(intercept - slope * price, 0)
 ```
 
-価格が負の入力は、経済学の意味がありません。これもテストで先に決めます。
+価格が負の入力は、経済学の意味がありません。これもテストで先に決めます。次のテストを、`test_demand.py` の末尾に書き足します。
 
 ```python
 def test_負の価格は受け付けない() -> None:
@@ -118,7 +220,7 @@ def test_負の価格は受け付けない() -> None:
 
 ### Refactor: 完成した実装
 
-テストがすべて通ったら、名前と説明を整えます。需要量がちょうど 0 になる価格（`choke_price`）も、同じ手順で追加します。
+テストがすべて通ったら、名前と説明を整えます。需要量がちょうど 0 になる価格（`choke_price`）も、同じ手順（テストを先に書く）で追加します。`demand.py` を、次の完成形にします。
 
 ```python
 def quantity_demanded(price: float, intercept: float, slope: float) -> float:
@@ -138,7 +240,19 @@ def test_需要が0になる最低の価格を求める() -> None:
     assert choke_price(intercept=100, slope=2) == 50
 ```
 
-テストを実行すると、5 つのテストがすべて通ります。
+テストの追加では、`test_demand.py` の `import` の行を、`from practice.chapter01.demand import choke_price, quantity_demanded` に書き換えます。また、`ValueError` のテストで使う `pytest` を、この `import` で読み込んでいます。
+
+自分のコードで、テストを実行します。5 つのテストがすべて通ります。
+
+```bash
+uv run pytest practice/chapter01
+```
+
+```text
+5 passed
+```
+
+最後に、答え合わせをします。`lib/chapter01/demand.py` を開いて、自分の実装と見比べてください。完成形のテストも、実行できます。
 
 ```bash
 cd apps/economics-programming/python
@@ -170,8 +284,8 @@ uv run pytest test/chapter01
 
 | 種類 | 問題 |
 | :--- | :--- |
-| 想起 | 本文を閉じて、`quantity_demanded` を自分で書いてください。その後、本文と見比べて違いを確かめます |
-| 生成 | 供給曲線 Q = c + dP の関数 `quantity_supplied` を、解説を見る前に、テストから書いてください。価格が 0 のときの供給量は c です |
+| 想起 | 本文を閉じて、`quantity_demanded` を、`practice/chapter01/demand.py` に、自分で書いてください。その後、本文と見比べて違いを確かめます |
+| 生成 | 供給曲線 Q = c + dP の関数 `quantity_supplied` を、解説を見る前に、`practice/chapter01/` に、テストから書いてください。価格が 0 のときの供給量は c です |
 | 多様 | `intercept=100, slope=2` を `intercept=50, slope=5` に変えて、5 つのテストの期待値を手計算で作り直してください |
 | 交互 | 需要曲線と供給曲線を使って、需要量と供給量が等しくなる価格を、紙の上で求めてください（第 5 章で、コードで求めます） |
 

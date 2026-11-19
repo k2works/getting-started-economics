@@ -18,6 +18,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 経済学の題材 | 需要のばらつき、標本平均、大数の法則、中心極限定理 |
 | 使う Python の機能 | 標準ライブラリの `random`（乱数）と `statistics`（平均・標準偏差）、`itertools.accumulate`、ヒストグラム |
 | 完成形 | `simulate_demand`、`running_means`、`roll_dice`、`sample_means`、`plot_histogram` |
+| ファイル | 実装: `lib/chapter08/simulation.py`／テスト: `test/chapter08/test_simulation.py`（自分で書くときは、`practice/chapter08/` に、同じ名前で作ります） |
 
 ### 経済学の式とコードの対応
 

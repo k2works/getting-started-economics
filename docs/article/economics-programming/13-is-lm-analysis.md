@@ -18,6 +18,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 経済学の題材 | IS 曲線、LM 曲線、財政政策、金融政策、クラウディングアウト、流動性のわな（マインドマップ [5-6](<../経済学・経済政策 トピック別マインドマップ.md#t6>)） |
 | 使う Python の機能 | データクラスの既定値と検証（`__post_init__`）、`dataclasses.replace`、`np.linalg.solve`、図の重ね描き |
 | 完成形 | `IsLmModel`、`is_income`、`lm_interest`、`solve_equilibrium`、`plot_islm` |
+| ファイル | 実装: `lib/chapter13/islm.py`／テスト: `test/chapter13/test_islm.py`（自分で書くときは、`practice/chapter13/` に、同じ名前で作ります） |
 
 ### 経済学の式とコードの対応
 

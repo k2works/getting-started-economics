@@ -19,6 +19,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 使う Python の機能 | NumPy の配列（`array`）、形（`shape`）、添字と切り出し、配列どうしの計算、`np.linalg.solve` |
 | 新しく導入するライブラリ | [NumPy](https://numpy.org/)（配列と線形代数） |
 | 完成形 | `multiplier`、`spending_rounds`、`income_determination`、`equilibrium_by_linear_algebra`、`demand_quantities` |
+| ファイル | 実装: `lib/chapter09/linear.py`／テスト: `test/chapter09/test_linear.py`（自分で書くときは、`practice/chapter09/` に、同じ名前で作ります） |
 
 ### 経済学の式とコードの対応
 

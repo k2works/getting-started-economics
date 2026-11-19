@@ -13,14 +13,33 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 
 執筆計画は [執筆計画アウトライン](outline.md) を参照してください。
 
-## 開発環境
+## この記事の読み方
 
-| ツール | 用途 |
-| :--- | :--- |
-| [uv](https://docs.astral.sh/uv/) | パッケージ管理 |
-| [pytest](https://docs.pytest.org/) | テスト |
-| [Ruff](https://docs.astral.sh/ruff/)・[mypy](https://mypy-lang.org/) | 静的解析 |
-| [tox](https://tox.wiki/) | タスクランナー |
+### 対象読者と前提
+
+- 経済学を学び始めた学部生・社会人で、ミクロ・マクロ経済学の入門（需要曲線・供給曲線、IS-LM の図を見たことがある程度）を学んだ方
+- プログラミングの経験は、不要です。第 1 章で、環境の準備から説明します
+
+### 進め方
+
+各章は、次の順で進みます。
+
+1. **予想する**: コードを見る前に、紙で、手計算の答えを予想します
+2. **自分で書く**: `practice/` に、テストを先に書いて、実装を書きます（Red → Green → Refactor）
+3. **答え合わせ**: 完成形（`lib/` と `test/`）と見比べます
+4. **練習問題・振り返り**: 条件を変えて試し、つまずいた所を確かめます
+
+完成形が、手元に入っているので、写すだけで終わらないように、**先に自分で考えて、書いてから、答え合わせをしてください**。
+
+### 使う道具
+
+読者が使うのは、**uv**（Python とライブラリの用意）と、**pytest**（テストの実行）だけです。インストールの手順は、[第 1 章](01-preparation-and-first-test.md) にあります。
+
+| ツール | 用途 | 読者が使うか |
+| :--- | :--- | :--- |
+| [uv](https://docs.astral.sh/uv/) | Python とライブラリの用意 | 使う |
+| [pytest](https://docs.pytest.org/) | テストの実行 | 使う |
+| [Ruff](https://docs.astral.sh/ruff/)・[mypy](https://mypy-lang.org/)・[tox](https://tox.wiki/) | コードの検査（静的解析）、タスクの実行 | 使わない（サンプルコードの品質を保つための道具です） |
 
 数値計算とデータ分析のライブラリは、初めて使う章で導入します（matplotlib は第 7 章、NumPy と SciPy は第 9・10 章、pandas は第 11 章）。第 11・12 章のデータは、`apps/economics-programming/python/data/` にある架空の国の統計です。
 
@@ -28,13 +47,14 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 
 サンプルコードは `apps/economics-programming/python/` にあります。
 
-```bash
-cd apps/economics-programming/python
-uv sync
-uv run pytest
-```
+| ディレクトリ | 中身 |
+| :--- | :--- |
+| `practice/chapterNN/` | **自分のコードを書く場所**（章ごとに、自分で作ります） |
+| `lib/chapterNN/` | 各章の完成した実装（答え合わせ用） |
+| `test/chapterNN/` | 各章の完成したテスト（答え合わせ用） |
+| `data/` | 第 11・12 章で使う、架空の国の統計 |
 
-各章の実装は `lib/chapterNN/`、テストは `test/chapterNN/` にあります。
+準備と、最初のテストの実行は、[第 1 章](01-preparation-and-first-test.md) の 1.2 節を参照してください。
 
 ## 章構成
 

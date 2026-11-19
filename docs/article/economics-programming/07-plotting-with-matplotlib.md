@@ -19,6 +19,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 使う Python の機能 | matplotlib（`Figure` と `Axes`）、データクラス（`dataclass`）、タプル |
 | 新しく導入するライブラリ | [matplotlib](https://matplotlib.org/)（図を描く） |
 | 完成形 | `equilibrium`、`consumer_surplus`、`producer_surplus`、`equilibrium_with_tax`、`draw_market` |
+| ファイル | 実装: `lib/chapter07/plot.py`、`lib/chapter07/surplus.py`／テスト: `test/chapter07/test_surplus_and_plot.py`（自分で書くときは、`practice/chapter07/` に、同じ名前で作ります） |
 
 ### 経済学の式とコードの対応
 
