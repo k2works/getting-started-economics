@@ -6422,7 +6422,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>25 passed
+<div class="highlight"><pre><span></span><code>26 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter08/</code> に、完成形と同じ名前（<code>hetero.py</code>・<code>test_hetero.py</code>）のファイルを作ります。</p>
 <h2 id="83">8.3 予想する<a class="headerlink" href="#83" title="Permanent link">&para;</a></h2>
@@ -6486,7 +6486,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">"x</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">regressor_names</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">robust_standard_errors</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"HC1"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
@@ -6700,6 +6700,7 @@ False 0.29946135 0.20126174
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_均一分散のデータでは棄却しない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">draw_fan_sample</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="c1"># 種を固定した 1 標本の例示。帰無仮説が正しくても、種を変えれば、約 5% で p &lt; 0.05 になる</span>
     <span class="k">assert</span> <span class="n">breusch_pagan</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&gt;</span> <span class="mf">0.05</span>
     <span class="k">assert</span> <span class="n">white_test</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&gt;</span> <span class="mf">0.05</span>
 </code></pre></div>
@@ -6755,6 +6756,15 @@ TestResult(statistic=3.5482989645080742, p_value=0.03063623768277364)
     <span class="n">r</span> <span class="o">=</span> <span class="n">standard_error_comparison</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
     <span class="k">assert</span> <span class="n">r</span><span class="p">[</span><span class="s2">"classical"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.85</span> <span class="o">*</span> <span class="n">r</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">]</span>
     <span class="k">assert</span> <span class="n">r</span><span class="p">[</span><span class="s2">"hc1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">],</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.12</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_頑健な標準誤差の名前は通常の推定の係数名と一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">"educ"</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">4.1</span><span class="p">,</span> <span class="mf">5.9</span><span class="p">,</span> <span class="mf">8.2</span><span class="p">,</span> <span class="mf">12.1</span><span class="p">,</span> <span class="mf">13.8</span><span class="p">,</span> <span class="mf">18.3</span><span class="p">]</span>
+    <span class="n">named</span> <span class="o">=</span> <span class="n">robust_standard_errors</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">named</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">(</span><span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="n">unnamed</span> <span class="o">=</span> <span class="n">robust_standard_errors</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="kc">None</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">unnamed</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"const"</span><span class="p">,</span> <span class="s2">"x1"</span><span class="p">]</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.hetero</span><span class="w"> </span><span class="kn">import</span> <span class="n">standard_error_comparison</span>
 
@@ -6791,7 +6801,7 @@ True {'sd': 0.2783, 'classical': 0.222, 'hc1': 0.2694}
 <h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>25 passed
+<div class="highlight"><pre><span></span><code>26 passed
 </code></pre></div>
 <h2 id="86">8.6 規則で言うと<a class="headerlink" href="#86" title="Permanent link">&para;</a></h2>
 <ol>

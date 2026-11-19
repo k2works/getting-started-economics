@@ -6526,7 +6526,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h3 id="_5">最適化の細部<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>対数尤度を、BFGS 法で最大にします。このとき、2 つの細部が、結果を大きく左右します。</p>
 <ol>
-<li><strong>勾配は、解析的に与える。</strong> 数値微分に任せると、値のスケールが大きいデータ（労働時間は 0〜5000 時間）で、<strong>収束しないうちに、止まってしまう</strong>ことがあります（16.6 節で、実際に起きました）</li>
+<li><strong>勾配は、解析的に与える。</strong> 数値微分に任せると、値のスケールが大きいデータ（労働時間は 0〜5000 時間）で、<strong>収束しないうちに、止まってしまう</strong>ことがあります（労働時間のように、値の大きい実際のデータで起こりやすい）</li>
 <li><strong>標準誤差は、ヘッセ行列（対数尤度の 2 階微分）の逆行列から求める。</strong> 2 階微分は、対数尤度を 2 回差分するのではなく、<strong>解析的な勾配を、1 回差分して</strong>求めます（対数尤度の 2 階差分は、値が大きいと、桁落ちで不正確になります）</li>
 </ol>
 <h2 id="155-red-green-refactor">15.5 Red → Green → Refactor<a class="headerlink" href="#155-red-green-refactor" title="Permanent link">&para;</a></h2>
@@ -7090,7 +7090,7 @@ uncensored only {'const': 2.1632, 'x1': 1.2238}
 </code></pre></div>
 <p>期待値 E[y | x] の平均は 1.7104 で、観測された y の平均 1.7111 に、近い値です。x が 1 増えたときの、<strong>打ち切りを含む y の期待値</strong>の変化（平均限界効果）は <strong>1.2837</strong> で、潜在変数への効果 2.0056 の、約 64%（打ち切られていない割合）です。この値は、OLS の傾き 1.2796 と、ほぼ同じです（<strong>打ち切られたデータの OLS は、潜在変数への効果ではなく、観測される y の期待値への効果を、おおよそ推定している</strong>。この一致は、x が正規分布のときの性質で、一般には成り立ちません）。なお、限界効果には、E[y | x]（打ち切りを含む。ここで求めたもの）のほかに、E[y | y &gt; 0, x]（打ち切られていない人の中での平均）と P(y &gt; 0 | x)（打ち切られない確率）への効果があり、問いに応じて、使い分けます。</p>
 <h3 id="_11">標準誤差が、スケールで狂う落とし穴<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
-<p><code>test_yの単位を1000倍しても係数と標準偏差が1000倍になるだけ</code> は、y の単位を 1000 倍にしても（時間を、分に変えるように）、係数・σ・標準誤差が、1000 倍になるだけ、という性質を確かめます。<strong>最初の実装（数値微分で、勾配とヘッセ行列を求めた版）は、このテストを通りませんでした</strong>。単位を 1000 倍にした標本で、標準誤差が最大 16% ずれました。シミュレーション（y の大きさが 1 程度）では、見つからなかった不具合です（16.6 節の実際のデータで、気づきました）。</p>
+<p><code>test_yの単位を1000倍しても係数と標準偏差が1000倍になるだけ</code> は、y の単位を 1000 倍にしても（時間を、分に変えるように）、係数・σ・標準誤差が、1000 倍になるだけ、という性質を確かめます。<strong>数値微分で、勾配とヘッセ行列を求める実装は、このテストを通りません</strong>。単位を 1000 倍にした標本で、標準誤差が最大 16% ずれます。y の大きさが 1 程度のシミュレーションだけでは見つからない不具合なので、単位を変えるテストが要ります。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_yの単位を1000倍しても係数と標準偏差が1000倍になるだけ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">latent</span><span class="p">(</span><span class="mi">3000</span><span class="p">)</span>
     <span class="n">observed</span> <span class="o">=</span> <span class="n">censor</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
@@ -7273,7 +7273,7 @@ uncensored only {'const': 2.1632, 'x1': 1.2238}
 <ul>
 <li>トービットと切断回帰の対数尤度を、手計算（−2.2199、−1.6498）に一致するように書き、解析的な勾配（数値微分と一致）と、ヘッセ行列から標準誤差を求める最尤推定を書いた。打ち切りがなければ、トービットは OLS と 5 桁まで一致する</li>
 <li>打ち切られた標本の OLS は、傾きが 1.2796（真の値 2、打ち切られていない割合 64%）に縮み、トービットは 2.0056 を復元する。切断された標本では、OLS が 1.2238、切断回帰が 1.9906 で、標準誤差がトービットより大きい</li>
-<li>y の単位を変えても結果が同じ、という性質のテストが、数値微分に頼った最初の実装の不具合を示した</li>
+<li>y の単位を変えても結果が同じ、という性質のテストが、数値微分に頼る実装の不具合を見つける</li>
 <li>次の章では、「働くかどうか」が、賃金に関係する場合の、標本選択バイアスと、ヘックマンの 2 段階推定を書きます</li>
 </ul>
 

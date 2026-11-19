@@ -6657,6 +6657,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">relevant</span> <span class="o">=</span> <span class="n">lm_test</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">df</span><span class="p">[[</span><span class="s2">"x2"</span><span class="p">]],</span> <span class="n">df</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">]])</span>
     <span class="n">irrelevant</span> <span class="o">=</span> <span class="n">lm_test</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">df</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">]],</span> <span class="n">noise</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">relevant</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&lt;</span> <span class="mf">0.001</span>
+    <span class="c1"># 種を固定した 1 標本の例示。帰無仮説が正しくても、種を変えれば、約 5% で p &lt; 0.05 になる</span>
     <span class="k">assert</span> <span class="n">irrelevant</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&gt;</span> <span class="mf">0.05</span>
 
 
