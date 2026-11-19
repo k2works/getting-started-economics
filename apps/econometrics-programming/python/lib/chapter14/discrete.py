@@ -87,6 +87,24 @@ def fit_binary(
     raise ValueError("収束しない（完全分離の可能性がある）")
 
 
+def binary_covariance(fit: BinaryFit, y: ArrayLike, x: ArrayLike) -> pd.DataFrame:
+    """係数の共分散行列 (X′WX)⁻¹（対角成分の平方根が、標準誤差）。
+
+    プロビットの重み W は、y にも依存する（ロジットは、依存しない）ので、y も渡す。
+    """
+    design, names = design_matrix(x)
+    _, weights = _score_and_weights(
+        fit.link,
+        np.asarray(y, dtype=float),
+        design @ fit.coefficients.to_numpy(),
+    )
+    return pd.DataFrame(
+        np.linalg.inv(design.T @ (design * weights[:, None])),
+        index=names,
+        columns=names,
+    )
+
+
 def predicted_probabilities(fit: BinaryFit, x: ArrayLike) -> NDArray[np.float64]:
     """P(y = 1 | x) = F(x′β)。"""
     design, _ = design_matrix(x)

@@ -12,4 +12,4 @@
 - 第 16 章（第 4 部）で、第 13 章と同じ `mroz` を使い、労働参加（ロジット・プロビット）・労働時間（トービット）・賃金（ヘックマン）を調べます
 - 第 13 章（第 3 部）で、女性の賃金のデータ `mroz`（753 行 × 22 列。1975 年の既婚女性。`wage` は、働いている 428 人だけ観測。出典は、Mroz (1987)、Econometrica）を使います
 - 第 10 章（第 2 部）で、賃金のパネル `wagepan`（4360 行 × 44 列。545 人 × 1980〜1987 年。出典は、Vella and Verbeek (1998)、Journal of Applied Econometrics）を使います
-- データそのものは、教科書（Wooldridge, *Introductory Econometrics: A Modern Approach*、Cengage）のものです。利用条件は、各自で確認し、使うときは、出典を明記してください
+- データそのものは、教科書（Wooldridge, *Introductory Econometrics: A Modern Approach*、Cengage）のものです。利用条件は、確認できた範囲（パッケージは MIT、教科書は教育目的で提供され Cengage の利用規約に従う）と、確認できていない点（研究・再配布への利用）が、第 6 章の「データの利用条件」にあります。各自で確認し、使うときは、出典を明記してください

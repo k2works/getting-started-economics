@@ -8,8 +8,8 @@ import pandas as pd
 from numpy.typing import ArrayLike, NDArray
 from scipy import stats
 
-from lib.chapter03.multiple import fit_ols
-from lib.chapter14.discrete import BinaryFit, fit_binary
+from lib.chapter03.multiple import design_matrix, fit_ols
+from lib.chapter14.discrete import BinaryFit, binary_covariance, fit_binary
 
 
 @dataclass(frozen=True)
@@ -54,6 +54,40 @@ def heckit_two_step(
         selection=selection,
         n_selected=int(chosen.sum()),
     )
+
+
+def heckit_corrected_standard_errors(
+    df: pd.DataFrame, x_columns: list[str], selection_columns: list[str]
+) -> pd.Series:
+    """Heckman の補正した標準誤差（解析式）。第 1 段階の推定誤差も反映する。
+
+    Var(b) = σ̂² (Z′Z)⁻¹ [Z′(I − ρ̂²Δ)Z + ρ̂² F V_γ F′] (Z′Z)⁻¹。
+    Z は、第 2 段階の説明変数と λ̂。Δ は、対角成分が δ_i = λ̂_i (λ̂_i + w_i′γ̂) の行列。
+    F = Z′Δ W（W は、選択された観測値の、選択の式の説明変数）。
+    V_γ は、第 1 段階の共分散行列。σ̂² = e′e ÷ n_s + β̂_λ² · mean(δ)、ρ̂² = β̂_λ² ÷ σ̂²。
+    """
+    fit = heckit_two_step(df, x_columns, selection_columns)
+    chosen = (df["selected"] == 1).to_numpy()
+    selection_x = df[selection_columns]
+    w_all, _ = design_matrix(selection_x)
+    index = w_all @ fit.selection.coefficients.to_numpy()
+    mills = inverse_mills_ratio(index)[chosen]
+    delta = mills * (mills + index[chosen])
+    z, names = design_matrix(df.loc[chosen, x_columns].assign(lambda_=mills))
+    names[-1] = "lambda"
+    y = df.loc[chosen, "y"].to_numpy(dtype=float)
+    residuals = y - z @ fit.coefficients.to_numpy()
+    lambda_coefficient = float(fit.coefficients["lambda"])
+    sigma2 = float(residuals @ residuals) / len(y) + lambda_coefficient**2 * float(
+        delta.mean()
+    )
+    rho2 = lambda_coefficient**2 / sigma2
+    gram_inverse = np.linalg.inv(z.T @ z)
+    f = z.T @ (delta[:, None] * w_all[chosen])
+    v_gamma = binary_covariance(fit.selection, df["selected"], selection_x).to_numpy()
+    middle = z.T @ (z - rho2 * delta[:, None] * z) + rho2 * f @ v_gamma @ f.T
+    variance = sigma2 * gram_inverse @ middle @ gram_inverse
+    return pd.Series(np.sqrt(np.diag(variance)), index=names)
 
 
 def heckit_bootstrap_standard_errors(

@@ -13,6 +13,7 @@ from lib.chapter16.heckit import (
     HeckitFit,
     draw_selection_sample,
     heckit_bootstrap_standard_errors,
+    heckit_corrected_standard_errors,
     heckit_two_step,
     inverse_mills_ratio,
     selection_bias_experiment,
@@ -211,3 +212,38 @@ def test_逆ミルズ比は極端に小さい値でも有限で_c_の符号を�
     values = inverse_mills_ratio([-38.0, -40.0, -100.0])
     assert np.all(np.isfinite(values))
     assert values == pytest.approx([38.0, 40.0, 100.0], rel=0.01)
+
+
+def test_補正した標準誤差は同じ標本の推定値の実際のばらつきに近い() -> None:
+    # 許容誤差: 150 回の標準偏差の推定誤差（約 6%）の 4 倍弱
+    estimates, errors = [], []
+    for seed in range(150):
+        df = draw_selection_sample(800, 0.7, np.random.default_rng(seed))
+        estimates.append(heckit_two_step(df, ["x"], ["x", "z"]).coefficients["x"])
+        errors.append(heckit_corrected_standard_errors(df, ["x"], ["x", "z"])["x"])
+    assert np.mean(errors) == pytest.approx(np.std(estimates, ddof=1), rel=0.25)
+
+
+def test_補正した標準誤差は名前と順序が係数と同じ() -> None:
+    df = sample(n=500)
+    fit = heckit_two_step(df, ["x"], ["x", "z"])
+    errors = heckit_corrected_standard_errors(df, ["x"], ["x", "z"])
+    assert list(errors.index) == list(fit.coefficients.index)
+    assert (errors > 0).all()
+
+
+def test_補正した標準誤差は同じ標本ならブートストラップと同程度() -> None:
+    df = sample(n=3000)
+    corrected = heckit_corrected_standard_errors(df, ["x"], ["x", "z"])
+    boot = heckit_bootstrap_standard_errors(
+        df, ["x"], ["x", "z"], 200, np.random.default_rng(1)
+    )
+    assert corrected.to_numpy() == pytest.approx(boot.to_numpy(), rel=0.25)
+
+
+def test_相関がなければ補正した標準誤差は第2段階のOLSの標準誤差に近い() -> None:
+    # 相関 0 なら、逆ミルズ比の係数は 0 で、補正項（ρ² に比例）は消える
+    df = draw_selection_sample(4000, 0.0, np.random.default_rng(2))
+    naive = heckit_two_step(df, ["x"], ["x", "z"]).naive_standard_errors
+    corrected = heckit_corrected_standard_errors(df, ["x"], ["x", "z"])
+    assert corrected["x"] == pytest.approx(naive["x"], rel=0.05)
