@@ -14,6 +14,10 @@ dependencies = [
 [tool.uv]
 python-preference = "only-managed"
 
+# 記事の検査ツールは、3 シリーズ共通のパッケージ（apps/article-tools/）
+[tool.uv.sources]
+article-tools = { path = "../../article-tools", editable = true }
+
 [tool.pytest.ini_options]
 testpaths = ["test"]
 pythonpath = ["."]
@@ -41,6 +45,7 @@ ignore_missing_imports = true
 
 [dependency-groups]
 dev = [
+    "article-tools",
     "pytest>=8.0",
     "pytest-cov>=6.0",
     "ruff>=0.8",
