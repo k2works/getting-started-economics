@@ -65,6 +65,8 @@ plugins:
 
 exclude_docs: |
   wiki
+  # 執筆者向けの内部文書（読者向けのサイトには含めない）
+  article/economics-programming/outline.md
   # 参照用に取得した外部資料（.gitignore の対象。サイトには含めない）
   article/py4basics.github.io/
   article/py4etrics.github.io/
@@ -94,7 +96,7 @@ nav:
       - 経済学・経済政策 トピック別マインドマップ: article/経済学・経済政策 トピック別マインドマップ.md
       - 経済学のためのプログラミング入門:
           - 概要: article/economics-programming/index.md
-          - 執筆計画: article/economics-programming/outline.md
+          - この記事の読み方: article/economics-programming/how-to-read.md
           - 第 1 章 準備とはじめてのテスト: article/economics-programming/01-preparation-and-first-test.md
           - 第 2 章 データ型と変数: article/economics-programming/02-data-types-and-variables.md
           - 第 3 章 コンテナとデータの操作: article/economics-programming/03-containers-and-data-operations.md

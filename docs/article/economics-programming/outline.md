@@ -1,13 +1,15 @@
 ---
 type: Article
 title: "執筆計画アウトライン"
-description: "「経済学のためのプログラミング入門」の章構成・参照元の使い方・サンプル実装・Bolt 計画をまとめた執筆計画。"
+description: "「経済学のためのプログラミング入門」の章構成・参照元の使い方・サンプル実装・Bolt 計画・判断の記録をまとめた、執筆者向けの内部文書。"
 tags: [article,economics-programming]
-status: stable
+status: draft
 generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 ---
 
 # 執筆計画アウトライン
+
+> **執筆者向けの内部文書です。** 読者向けのサイトには含めていません（`mkdocs.yml` の `exclude_docs`）。読者向けの案内は、[索引](index.md) と [この記事の読み方](how-to-read.md) にあります。
 
 ## 概要
 
@@ -41,7 +43,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | メンタルモデル構築ガイド（汎用版） | `docs/reference/メンタルモデル構築ガイド_汎用版.md` | 章の型、練習問題の設計、到達チェック、落とし穴の点検の根拠にする |
 | 機械学習から始めるプログラミング入門 Python 版 | `tmp/getting-started-machine-learning/docs/article/getting-start-ml/python/` | 記事ディレクトリの構成、Python の開発環境（uv・pytest・Ruff・mypy・tox）、章ファイルの書式を雛形にする |
 
-`tmp/` は `.gitignore` の対象外にするか、コミットしない前提で参照するかを決める必要がある（承認事項 4）。
+`tmp/` と、`docs/article/py4*.github.io/` は、`.gitignore` に追加して、コミットしない（承認事項 4。対応済み）。`mkdocs.yml` の `exclude_docs` にも追加して、サイトのビルドからも除外した。
 
 ### 参照元の扱い
 
@@ -96,7 +98,7 @@ py4basics の「Python 入門 I（基礎）→ II（NumPy・Pandas・Matplotlib�
 | :--- | :--- |
 | A | 回帰分析への橋渡し（py4etrics・py4macro への案内） |
 
-章数と題材は草案です。第 13 章以降は py4basics に対応する章がないため、マインドマップの内容から新たに書き起こします。
+全 15 章と付録 A を執筆済みです。第 13 章以降は py4basics に対応する章がないため、マインドマップの内容から新たに書き起こしました。
 
 ## 学習設計（メンタルモデル構築ガイドの適用）
 
@@ -114,16 +116,20 @@ py4basics の「Python 入門 I（基礎）→ II（NumPy・Pandas・Matplotlib�
 
 ### 章の型
 
-全章を同じ節構成にそろえ、型そのものを読者のメンタルモデルの一部にします。
+全章を同じ節構成にそろえ、型そのものを読者のメンタルモデルの一部にします。実際の節は、次の 8 つです（読者向けの説明は、[この記事の読み方](how-to-read.md)）。
 
 | 節 | 内容 | 対応するフェーズ |
 | :--- | :--- | :--- |
-| この章の地図 | 題材・使う機能・完成形の図。既に知っていることとのつながり | 1 |
+| この章の地図 | 題材・使う機能・完成形と、実装・テストのファイル、式とコードの対応表。既に知っていることとのつながり | 1 |
 | 予想する | コードを見る前に、結果を自分で予想する | 3（生成） |
+| 概念の説明 | その章で使う Python の機能と、経済学の用語（節の名前は、章ごとに違う） | 1 |
 | Red → Green → Refactor | テストを先に書き、最小の実装で通し、整える | 3 |
-| 規則で言うと | 原則 2〜3 個と、混同しやすい対比の表 | 2 |
-| 練習問題 | 想起・生成・多様・交互を各 1 問以上。解答は別ページか折りたたみ | 3 |
-| 振り返り | 何がうまくいき、何が詰まったか、次に試すこと。書く欄を用意する | 3（省察） |
+| 規則で言うと | 原則 2〜3 個と、混同しやすい対比の表、「このモデルが成り立たない場面」 | 2 |
+| 練習問題 | 想起・生成・多様・交互を各 1 問。解答は、問題の下に折りたたむ（`pymdownx.details`） | 3 |
+| 振り返り | 何がうまくいき、何が詰まったか、次に試すこと | 3（省察） |
+| まとめ | 学んだことの確認と、次の章の予告 | 2 |
+
+各部の最後の章（第 6・10・12・15 章）には、「到達チェック」（できること・時間を決めて書く課題・誤りの原因の分類）を置いています。
 
 ### 部ごとの到達チェック
 
@@ -131,7 +137,7 @@ py4basics の「Python 入門 I（基礎）→ II（NumPy・Pandas・Matplotlib�
 | :--- | :--- | :--- |
 | 1 | 需要曲線・弾力性・費用関数を関数にし、テストで確かめる | 自作の関数が章末のテストを通る |
 | 2 | 需要・供給曲線を描き、均衡と余剰を求める | 手計算の値と図が一致する |
-| 3 | 経済統計を読み込み、指標を計算して図示する | 公表値と計算結果が一致する |
+| 3 | 経済統計を読み込み、指標を計算して図示する | 手計算の値と一致する（第 11・12 章は、架空の国のデータを使う） |
 | 4 | IS-LM などのモデルを関数にして、政策変更の効果を示す | 教科書の比較静学の結果（曲線の向き）と一致する |
 
 ### 落とし穴への対策
@@ -148,27 +154,32 @@ py4basics の「Python 入門 I（基礎）→ II（NumPy・Pandas・Matplotlib�
 
 | 項目 | パス |
 | :--- | :--- |
-| 計画（本書） | `docs/article/economics-programming/outline.md` |
-| 記事トップ・章 | `docs/article/economics-programming/index.md`、`01-preparation-and-first-test.md` など |
-| 執筆ワークフロー | `docs/article/economics-programming/workflow.md`（ML 版を雛形にする） |
-| サンプル実装 | `apps/economics-programming/python/lib/chapterNN/`、`apps/economics-programming/python/test/chapterNN/` |
-| Notebook | `apps/economics-programming/python/notebooks/`（`nbstripout` で出力を除く） |
+| 計画（本書。内部文書） | `docs/article/economics-programming/outline.md` |
+| 記事トップ・読み方 | `docs/article/economics-programming/index.md`、`how-to-read.md` |
+| 章・付録 | `docs/article/economics-programming/01-preparation-and-first-test.md` など、`appendix-a-bridge-to-regression.md` |
+| 図 | `docs/article/economics-programming/images/`（手作業で生成している） |
+| サンプル実装（完成形） | `apps/economics-programming/python/lib/chapterNN/`、`apps/economics-programming/python/test/chapterNN/` |
+| 読者が自分のコードを書く場所 | `apps/economics-programming/python/practice/chapterNN/`（`README.md` だけを管理する） |
+| 第 11・12 章のデータ | `apps/economics-programming/python/data/`（架空の国の統計） |
+| 記事の整合の検査 | `apps/economics-programming/python/tools/`、`test/tools/` |
+| レビュー | `docs/review/economics-programming_review_20261119.md` |
 
-章のファイル名は、ML 版の命名（`NN-english-slug.md`）を踏襲します。
+章のファイル名は、ML 版の命名（`NN-english-slug.md`）を踏襲します。執筆ワークフロー（`workflow.md`）は、作っていません。手順は、本書と、[記事の整合の検査](#記事とサンプル実装の整合の検査) に書いています。
 
 ## 開発環境
 
-ML 版 Python と同じ構成にそろえます。
+ML 版 Python と同じ構成を雛形にしました。
 
-| ツール | 用途 |
-| :--- | :--- |
-| uv | パッケージ管理 |
-| pytest・pytest-cov | テスト |
-| Ruff・mypy | 静的解析 |
-| JupyterLab・matplotlib | 探索と図示 |
-| NumPy・pandas・SciPy | 数値計算・データ分析（各章で初出時に導入） |
+| ツール | 用途 | 読者が使うか |
+| :--- | :--- | :--- |
+| uv | パッケージ管理 | 使う |
+| pytest | テスト | 使う |
+| pytest-cov・Ruff・mypy・tox | カバレッジ・静的解析・タスクの実行（サンプルコードの品質の維持） | 使わない |
+| matplotlib | 図示（第 7 章で導入） | 使う |
+| NumPy・SciPy | 数値計算（第 9・10 章で導入） | 使う |
+| pandas | データ分析（第 11 章で導入） | 使う |
 
-ライブラリの選定理由は ADR に残します（`creating-adr`）。
+JupyterLab と Notebook は、使っていません（「判断の記録」を参照）。ライブラリの選定理由は、「判断の記録」に残しています。ADR は、作っていません（`docs/adr/` は、プロジェクトごとの構成（`adr/<project>/`）で、この記事は、まだ、そのプロジェクトとして登録していないためです）。
 
 ## 記事とサンプル実装の整合の検査
 
@@ -188,6 +199,22 @@ uv run tox -e articles
 - **テストを足したとき:** その章の記事の「実行結果」の件数を、更新する（件数がずれると、検査が失敗する）。
 - **説明用の抜粋を書いたとき:** 完成形と違う、途中段階や省略した形のコードは、`apps/economics-programming/python/tools/article_code_excerpts.json` に、そのままの形で登録する。登録がないと、「ソースにないコード」として失敗する。抜粋の内容を変えたときも、登録を更新する。
 - **CI:** `.github/workflows/python-ci.yml` が、記事またはサンプル実装の変更で、テスト（カバレッジ 100% の強制）、静的解析、この検査を実行する。`.github/workflows/article-docs.yml` が、記事・マインドマップのページを、サイトとしてビルドして、リンク切れと、見つからないアンカーを検出する。
+
+## 判断の記録
+
+計画と、実際の構成が違う点と、その理由です。
+
+| # | 判断 | 理由 |
+| :--- | :--- | :--- |
+| 1 | 対象言語は Python のみ | py4basics の題材に合わせた。他の言語は、この記事の範囲外 |
+| 2 | ライブラリは、初めて使う章で導入する（matplotlib は第 7 章、NumPy・SciPy は第 9・10 章、pandas は第 11 章）。第 8 章の乱数は、NumPy ではなく、標準ライブラリの `random` と `statistics` で書いた | 読者が、ライブラリを 1 つずつ、必要になった理由とともに学べる。乱数の生成器を引数で渡す形は、種を固定したテストに向く |
+| 3 | 第 11・12 章のデータは、実在の統計ではなく、架空の国のデータを自作した | 統計表の指定がなかったことと、実在の値を記憶から転記して誤る危険、取得元の利用条件を確認できていなかったことによる。構造は、実際の国民経済計算（3 面、統計上の不突合、GDP デフレーター）にそろえ、実際の統計への置き換えを、練習問題で案内している。承認事項 5（公開統計から自分で取得する）とは異なる判断 |
+| 4 | 読者が自分のコードを書く場所 `practice/` を用意した（`__init__.py` なし、`README.md` だけを管理、Ruff の検査と Git の対象から外す） | 完成形が手元にあるので、そのままでは、「テストを先に書く」体験ができない。レビュー（H2）の指摘 |
+| 5 | Notebook（Jupyter）は、使わない。対話的な試し方は、`uv run python` の対話モードで案内する | 環境の準備を、uv と pytest だけに絞るため。Notebook の導入は、将来の課題 |
+| 6 | 練習問題の解答は、各章の問題の下に、折りたたんで置く（案 A） | 章を離れずに答え合わせができ、サイトでは、最初は閉じている。レビュー（H4）の指摘。解答のコードは、検査で実行している |
+| 7 | 第 15 章に、計画になかった外部不経済とピグー税を含めた | マインドマップ 5-4 の「市場の失敗」を扱い、第 7 章の課税の関数と、ピグー税をつなげられるため |
+| 8 | 記事の整合を、機械的に検査する（コード例・件数・解答のコード） | 記事と実装のずれを、人の注意に頼らずに防ぐ。レビュー（M8）の指摘 |
+| 9 | 参照元（py4basics など）は、`.gitignore` と `exclude_docs` で、コミットとサイトから除外する | ライセンスが確認できていない外部資料を、誤って公開しないため。レビュー（H1）の指摘 |
 
 ## 開発計画（AI-DLC）
 
@@ -226,7 +253,7 @@ uv run tox -e articles
 | 4 | `tmp/` の参照元を `.gitignore` のまま使うか | そのまま使う（コミットしない） |
 | 5 | データを公開統計から自分で取得することの可否 | 可 |
 | 6 | py4basics の著者への連絡や出典の記載方法 | 出典を明記し、転記はしない |
-| 7 | 章の型（6 節）と練習問題 4 種を全章に必須とするか | 必須とする。ただし第 1 部は節を軽くして負荷を抑える |
+| 7 | 章の型と練習問題 4 種を全章に必須とするか | 必須とする。ただし第 1 部は節を軽くして負荷を抑える（実際の節は 8 つ。「章の型」を参照） |
 
 ## 次のステップ
 
@@ -238,4 +265,5 @@ uv run tox -e articles
 6. Bolt 5 は完了（第 11〜12 章。pandas を導入。統計表の指定がなかったため、実在の統計を転記せず、構造を実際の統計にそろえた架空の国のデータ `apps/economics-programming/python/data/economy.csv` を自作した。実際の公開統計への置き換えは、練習問題で案内している。第 3 部の到達チェックを第 12 章に含む）
 7. Bolt 6 は完了（第 13〜14 章。IS-LM 分析、AD-AS 分析、フィリップス曲線・オークンの法則・フィッシャー方程式・貨幣数量説）
 8. Bolt 7 は完了（第 15 章と付録 A。独占・寡占・ゲーム理論に加え、マインドマップ 5-4 の外部不経済とピグー税も扱った。第 4 部の到達チェックを第 15 章に含む）
-9. 全章の執筆が完了。残りは、GitHub 上の CI の確認、MkDocs のビルド確認、全体のレビュー（`analyzing-review` / `developing-review`）、公開
+9. 全章の執筆が完了。全体のレビュー（2026-11-19）の、重要度「高」の 9 件は、すべて対応済み。MkDocs のビルドは確認済み。
+10. 残りは、レビューの中・低の項目、GitHub 上での CI の初回の実行の確認、人によるレビューと検証（`verified`）、`status` を `stable` に更新すること、公開
