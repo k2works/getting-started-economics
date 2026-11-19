@@ -7085,7 +7085,7 @@ hausman 184.07 6.258411565090162e-42
 <span class="sd">    G ÷ (G − 1) · (n − 1) ÷ (n − k) を掛ける。</span>
 <span class="sd">    """</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-    <span class="n">design</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="n">x</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)])</span>
+    <span class="n">design</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">design_matrix</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">design</span><span class="o">.</span><span class="n">shape</span>
     <span class="n">scores</span> <span class="o">=</span> <span class="p">(</span>
         <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">design</span> <span class="o">*</span> <span class="n">result</span><span class="o">.</span><span class="n">residuals</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span>

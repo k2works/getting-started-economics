@@ -3783,6 +3783,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        外部のソフトウェアの結果との照合
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -3801,7 +3812,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_15" class="md-nav__link">
+  <a href="#_16" class="md-nav__link">
     <span class="md-ellipsis">
       
         この方法が成り立たない場面
@@ -3829,7 +3840,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_16" class="md-nav__link">
+  <a href="#_17" class="md-nav__link">
     <span class="md-ellipsis">
       
         できること
@@ -3840,7 +3851,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_17" class="md-nav__link">
+  <a href="#_18" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -3851,7 +3862,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_18" class="md-nav__link">
+  <a href="#_19" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -3901,7 +3912,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_19" class="md-nav__link">
+  <a href="#_20" class="md-nav__link">
     <span class="md-ellipsis">
       
         この連載で扱わなかったこと、次に学ぶこと
@@ -7082,7 +7093,58 @@ heckit bootstrap se {'const': 0.2869, 'educ': 0.0137, 'exper': 0.0154, 'expersq'
 <li>第 2 段階の OLS の標準誤差（0.0156）と、ブートストラップ（0.0137）は、少し違います（教育）。逆ミルズ比の係数では、ブートストラップ 0.1654 が、OLS の 0.1344 より、大きくなっています</li>
 </ul>
 <blockquote>
-<p><strong>ここで言えること、言えないこと。</strong> トービットは、「働くか」と「何時間か」が、同じ式で決まると仮定します。6 歳未満の子の限界効果（−526 時間）は、働くかどうか（確率が 26 ポイント下がる）と、働く場合の時間の、両方の合計です。この 2 つを、分けて知りたいときは、選択の式と、時間の式を分ける（ヘックマンのような）モデルを使います。また、ヘックマンの結果は、除外変数（<code>nwifeinc</code>・<code>age</code>・<code>kidslt6</code>・<code>kidsge6</code>）が、賃金の式に影響しない、という仮定に依存します。<strong>自作の、トービットとヘックマンの結果は、外部のソフトウェアで照合できていません</strong>（Python の外部パッケージ <code>py4etrics</code> は、この執筆時点の <code>statsmodels</code> で動かなかった）。勾配が 0 であること、打ち切りがなければ OLS と一致すること、シミュレーションで真の値を復元することを、代わりの検証にしました。</p>
+<p><strong>ここで言えること、言えないこと。</strong> トービットは、「働くか」と「何時間か」が、同じ式で決まると仮定します。6 歳未満の子の限界効果（−526 時間）は、働くかどうか（確率が 26 ポイント下がる）と、働く場合の時間の、両方の合計です。この 2 つを、分けて知りたいときは、選択の式と、時間の式を分ける（ヘックマンのような）モデルを使います。また、ヘックマンの結果は、除外変数（<code>nwifeinc</code>・<code>age</code>・<code>kidslt6</code>・<code>kidsge6</code>）が、賃金の式に影響しない、という仮定に依存します。トービットとヘックマンの結果は、外部のソフトウェアの結果と照合しました（次の節）。</p>
+</blockquote>
+<h3 id="_15">外部のソフトウェアの結果との照合<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<p>自作のトービットとヘックマンが、実績のあるソフトウェアと同じ結果になるかを、同じ <code>mroz</code> のデータで確かめます。比べる相手は、公開されている次の 2 つの結果です。</p>
+<ul>
+<li><strong>トービット</strong>: Stata の <code>tobit hours nwifeinc educ exper expersq age kidslt6 kidsge6, ll(0)</code> の出力（<a href="https://rowesamuel.github.io/rowesamuel/bookdown_statamarkdown/Week10/book/corner-solution---tobit-model.html">Corner Solution - Tobit Model</a>。係数・標準誤差・σ・対数尤度 −3819.0946）</li>
+<li><strong>ヘックマン</strong>: R の <code>sampleSelection::heckit()</code> の出力（<a href="https://s-saisw.github.io/rtutorial/heckit.html">Review of Heckit</a>。選択の式も賃金の式も、説明変数は educ・exper・expersq・nwifeinc・age・kidslt6・kidsge6。被説明変数は <code>lwage</code>）</li>
+</ul>
+<p>次のスクリプトを <code>practice/chapter16/crosscheck.py</code> として保存し、アプリの根で、<code>uv run --group realdata python -m practice.chapter16.crosscheck</code> で実行します。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">wooldridge</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter15.limited</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_tobit</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter16.heckit</span><span class="w"> </span><span class="kn">import</span> <span class="n">heckit_two_step</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">wooldridge</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="s2">"mroz"</span><span class="p">)</span>
+<span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"nwifeinc"</span><span class="p">,</span> <span class="s2">"educ"</span><span class="p">,</span> <span class="s2">"exper"</span><span class="p">,</span> <span class="s2">"expersq"</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">,</span> <span class="s2">"kidslt6"</span><span class="p">,</span> <span class="s2">"kidsge6"</span><span class="p">]</span>
+
+<span class="c1"># Stata: tobit hours nwifeinc educ exper expersq age kidslt6 kidsge6, ll(0) の結果</span>
+<span class="n">stata</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"const"</span><span class="p">:</span> <span class="p">(</span><span class="mf">965.3053</span><span class="p">,</span> <span class="mf">446.4358</span><span class="p">),</span> <span class="s2">"nwifeinc"</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mf">8.814243</span><span class="p">,</span> <span class="mf">4.459096</span><span class="p">),</span>
+    <span class="s2">"educ"</span><span class="p">:</span> <span class="p">(</span><span class="mf">80.64561</span><span class="p">,</span> <span class="mf">21.58322</span><span class="p">),</span> <span class="s2">"exper"</span><span class="p">:</span> <span class="p">(</span><span class="mf">131.5643</span><span class="p">,</span> <span class="mf">17.27938</span><span class="p">),</span>
+    <span class="s2">"expersq"</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.864158</span><span class="p">,</span> <span class="mf">0.5376615</span><span class="p">),</span> <span class="s2">"age"</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mf">54.40501</span><span class="p">,</span> <span class="mf">7.418496</span><span class="p">),</span>
+    <span class="s2">"kidslt6"</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mf">894.0217</span><span class="p">,</span> <span class="mf">111.8779</span><span class="p">),</span> <span class="s2">"kidsge6"</span><span class="p">:</span> <span class="p">(</span><span class="o">-</span><span class="mf">16.218</span><span class="p">,</span> <span class="mf">38.64136</span><span class="p">),</span>
+    <span class="s2">"sigma"</span><span class="p">:</span> <span class="p">(</span><span class="mf">1122.022</span><span class="p">,</span> <span class="mf">41.57903</span><span class="p">),</span>
+<span class="p">}</span>
+<span class="n">tobit</span> <span class="o">=</span> <span class="n">fit_tobit</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"hours"</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="n">columns</span><span class="p">])</span>
+<span class="n">coefficient_gap</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">tobit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">stata</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+<span class="n">error_gap</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">tobit</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">stata</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"tobit coefficients agree (1e-5):"</span><span class="p">,</span> <span class="n">coefficient_gap</span> <span class="o">&lt;</span> <span class="mf">1e-5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"tobit standard errors agree (1e-4):"</span><span class="p">,</span> <span class="n">error_gap</span> <span class="o">&lt;</span> <span class="mf">1e-4</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"tobit log-likelihood"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">tobit</span><span class="o">.</span><span class="n">log_likelihood</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"(Stata -3819.0946)"</span><span class="p">)</span>
+
+<span class="c1"># R: sampleSelection::heckit(selection = s ~ ..., outcome = lwage ~ ...) の結果</span>
+<span class="n">r_heckit</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"const"</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.5602852</span><span class="p">,</span> <span class="s2">"educ"</span><span class="p">:</span> <span class="mf">0.1187171</span><span class="p">,</span> <span class="s2">"exper"</span><span class="p">:</span> <span class="mf">0.0598358</span><span class="p">,</span> <span class="s2">"expersq"</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0010523</span><span class="p">,</span>
+    <span class="s2">"nwifeinc"</span><span class="p">:</span> <span class="mf">0.0038434</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0111580</span><span class="p">,</span> <span class="s2">"kidslt6"</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.1880451</span><span class="p">,</span> <span class="s2">"kidsge6"</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.0122255</span><span class="p">,</span>
+    <span class="s2">"lambda"</span><span class="p">:</span> <span class="mf">0.2885</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">wage_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"educ"</span><span class="p">,</span> <span class="s2">"exper"</span><span class="p">,</span> <span class="s2">"expersq"</span><span class="p">,</span> <span class="o">*</span><span class="n">columns</span><span class="p">[:</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"age"</span><span class="p">,</span> <span class="s2">"kidslt6"</span><span class="p">,</span> <span class="s2">"kidsge6"</span><span class="p">]</span>
+<span class="n">heckit</span> <span class="o">=</span> <span class="n">heckit_two_step</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">selected</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">"inlf"</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">"lwage"</span><span class="p">]),</span> <span class="n">wage_columns</span><span class="p">,</span> <span class="n">wage_columns</span><span class="p">)</span>
+<span class="n">gap</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">heckit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">r_heckit</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"heckit coefficients agree (1e-4):"</span><span class="p">,</span> <span class="n">gap</span> <span class="o">&lt;</span> <span class="mf">1e-4</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>tobit coefficients agree (1e-5): True
+tobit standard errors agree (1e-4): True
+tobit log-likelihood -3819.0946 (Stata -3819.0946)
+heckit coefficients agree (1e-4): True
+</code></pre></div>
+<p><strong>トービットは、係数が相対 10⁻⁶ 台、標準誤差が 10⁻⁶ 台で、Stata と一致し、対数尤度も小数第 4 位まで同じ</strong>です。<strong>ヘックマンの 2 段階推定の係数も、R の値と、10⁻⁴ 以内で一致します</strong>（逆ミルズ比の係数は、R 側が小数第 4 位に丸めた 0.2885 と比べています。自作は 0.28846）。第 1 段階のプロビットの係数も、R の出力（0.270077、0.130905、0.123348 …）と、同じ値でした。</p>
+<blockquote>
+<p><strong>この照合で言えること、言えないこと。</strong> 同じ式・同じデータでの、点推定値と標準誤差（トービット）が、別の実装と一致したので、<strong>実装の誤りの可能性は、かなり下がりました</strong>。ただし、ヘックマンの標準誤差は、この章のブートストラップと、R の補正した標準誤差（educ で 0.0341）が、別の方法なので、比べていません。外部の値は、公開された文書から転記したもので、各ソフトウェアのバージョンの違いまでは、確かめていません。</p>
 </blockquote>
 <h2 id="167">16.7 規則で言うと<a class="headerlink" href="#167" title="Permanent link">&para;</a></h2>
 <ol>
@@ -7113,7 +7175,7 @@ heckit bootstrap se {'const': 0.2869, 'educ': 0.0137, 'exper': 0.0154, 'expersq'
 </tr>
 </tbody>
 </table>
-<h3 id="_15">この方法が成り立たない場面<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<h3 id="_16">この方法が成り立たない場面<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>誤差項の、同時正規分布を仮定します。</strong> 正規でないと、ヘックマンは、一致性を失います（OLS より悪くなることもある）</li>
 <li><strong>除外変数が、結果の式に影響しない、という仮定は、検定できません。</strong> 選択の式と結果の式に、同じ変数しかないと、逆ミルズ比の非線形性だけに頼ることになり、不安定です</li>
@@ -7121,7 +7183,7 @@ heckit bootstrap se {'const': 0.2869, 'educ': 0.0137, 'exper': 0.0154, 'expersq'
 </ul>
 <h2 id="168-4">16.8 第 4 部の到達チェック<a class="headerlink" href="#168-4" title="Permanent link">&para;</a></h2>
 <p>第 4 部（第 14〜16 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。</p>
-<h3 id="_16">できること<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_17">できること<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -7168,7 +7230,7 @@ heckit bootstrap se {'const': 0.2869, 'educ': 0.0137, 'exper': 0.0154, 'expersq'
 </tr>
 </tbody>
 </table>
-<h3 id="_17">時間を決めて書く課題<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<h3 id="_18">時間を決めて書く課題<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、関数とテストを書きます。</p>
 <table>
 <thead>
@@ -7192,7 +7254,7 @@ heckit bootstrap se {'const': 0.2869, 'educ': 0.0137, 'exper': 0.0154, 'expersq'
 </tr>
 </tbody>
 </table>
-<h3 id="_18">誤りの原因の分類<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
+<h3 id="_19">誤りの原因の分類<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
 <p>できなかったときは、原因を分類して、戻る章に戻ります。</p>
 <table>
 <thead>
@@ -7292,7 +7354,7 @@ heckit bootstrap se {'const': 0.2869, 'educ': 0.0137, 'exper': 0.0154, 'expersq'
 <li>値の大きい実際のデータでは、数値微分による最適化が、収束不足と標準誤差の誤りを起こしやすい。解析的な勾配と、単位を変えても結果が同じ、というテストで防ぐ（第 15 章）</li>
 <li>第 4 部の到達チェックを行った。これで、全 16 章が完成した。ここまでの章で、推定量を自分で書き、真の値を知るデータと、恒等式で確かめる方法を、学んだ</li>
 </ul>
-<h3 id="_19">この連載で扱わなかったこと、次に学ぶこと<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<h3 id="_20">この連載で扱わなかったこと、次に学ぶこと<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
 <p>この連載は、クロスセクションとパネルのデータで、推定量と検定を、自分のコードで確かめる所までです。自分のデータで論文の表を作るには、次のことが、さらに要ります。</p>
 <ul>
 <li><strong>時系列</strong>: 系列相関、単位根、HAC 標準誤差（Newey-West）、ARIMA・VAR。第 2 シリーズ（マクロ）の、時系列の扱いも参照してください</li>

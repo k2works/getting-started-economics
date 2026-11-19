@@ -6413,12 +6413,14 @@
 </tr>
 </tbody>
 </table>
+<p>| 25 | 対応しない | <code>matrix_rank(gram)</code> を <code>matrix_rank(design)</code> に変える提案は、採らない。この実装は正規方程式を解くので、Gram 行列の条件数が問題になる。ほぼ共線なデータ（条件数 3.6×10¹⁵）で、設計行列のランクは 3 のままだが、正規方程式の解は不安定（係数が ±6×10⁴）。Gram 行列で調べるほうが、安全側 |
+| 28 | 済み | Stata の <code>tobit</code>（係数・標準誤差・σ・対数尤度）と、R の <code>sampleSelection::heckit()</code>（第 2 段階の係数）の公開された出力と、同じ <code>mroz</code> で照合した。トービットは相対 10⁻⁶ 台、ヘックマンは 10⁻⁴ 以内（R 側が λ を丸めている）で一致し、第 1 段階のプロビットも R と同じ値。第 16 章 16.6 節に、スクリプトを載せ、<code>check_realdata</code> で CI でも実行する |</p>
 <h3 id="_14">未対応・保留<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>#25</strong>（<code>matrix_rank</code> を設計行列に）: 判定の挙動が変わるため、保留した</li>
-<li><strong>#28</strong>（第 16 章の naive SE の、外部の固定値での照合）: R の <code>sampleSelection</code> など、外部の結果を、この環境では得られていない</li>
-<li><strong>#11</strong> の設計行列の組み立ての完全な共通化、<strong>#9</strong> の第 2 段（共通パッケージ化。別の Unit）</li>
-<li>実データの利用条件の確認、トービットとヘックマンの外部ソフトウェアでの照合</li>
+<li><strong>#18</strong>: 章の分割・付録化は、章番号に結びつく箇所が多いので、しない（折りたたみまで）</li>
+<li><strong>#9 の第 2 段</strong>: <code>tools/</code> の共通パッケージ化。別の Unit（U6）</li>
+<li><strong>実データの利用条件</strong>: 2026-11-19 に、PyPI と GitHub を確認した。パッケージは MIT。READMEは出典を教科書と明記するが、データの許諾（Cengage・著者）の記載はない。判断できる情報がないので、未確認のまま、記事に各自の確認を書いている</li>
+<li><strong>ヘックマンの標準誤差</strong>: R の補正した標準誤差と、この連載のブートストラップは、別の方法なので、比べていない</li>
 </ul>
 
 
