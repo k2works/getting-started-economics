@@ -70,6 +70,12 @@ jobs:
       - name: Check articles against the sample code
         run: uv run tox -e articles
 
+      # 実データ（wooldridge）のスクリプトを実行し、出力が記事と一致するかを確かめる（第 3 シリーズのみ）。
+      # practice/ は Git の管理外なので、lib の変更で記事のスクリプトが壊れても、ここまでは気づけない
+      - name: Check the real-data scripts in the articles
+        if: matrix.series == 'econometrics-programming'
+        run: uv run tox -e realdata
+
   # 3 シリーズに複製した、記事の検査ツールとそのテストが、同一であることを確かめる。
   # 1 つだけ直して、ほかの複製が古いまま残る（実際に起きた）のを防ぐ。
   tools-sync:
