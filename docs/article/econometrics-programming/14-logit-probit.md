@@ -57,7 +57,7 @@ uv run pytest test/chapter14
 ```
 
 ```text
-34 passed
+35 passed
 ```
 
 自分でコードを書くときは、`practice/chapter14/` に、完成形と同じ名前（`discrete.py`・`test_discrete.py`）のファイルを作ります。
@@ -314,6 +314,24 @@ def average_marginal_effects(fit: BinaryFit, x: ArrayLike) -> pd.Series:
     return float(np.mean(density)) * fit.coefficients.drop("const")
 
 
+def binary_covariance(fit: BinaryFit, y: ArrayLike, x: ArrayLike) -> pd.DataFrame:
+    """係数の共分散行列 (X′WX)⁻¹（対角成分の平方根が、標準誤差）。
+
+    プロビットの重み W は、y にも依存する（ロジットは、依存しない）ので、y も渡す。
+    """
+    design, names = design_matrix(x)
+    _, weights = _score_and_weights(
+        fit.link,
+        np.asarray(y, dtype=float),
+        design @ fit.coefficients.to_numpy(),
+    )
+    return pd.DataFrame(
+        np.linalg.inv(design.T @ (design * weights[:, None])),
+        index=names,
+        columns=names,
+    )
+
+
 def draw_binary_sample(n: int, link: str, rng: np.random.Generator) -> pd.DataFrame:
     """潜在変数 y* = 0.5 + x1 − 0.8·x2 + ε から、y = 1（y* > 0）の標本を作る。
 
@@ -324,6 +342,8 @@ def draw_binary_sample(n: int, link: str, rng: np.random.Generator) -> pd.DataFr
     latent = 0.5 + x1 - 0.8 * x2 + error
     return pd.DataFrame({"y": (latent > 0).astype(float), "x1": x1, "x2": x2})
 ```
+
+`binary_covariance` は、係数の共分散行列 (X′WX)⁻¹ を返します（対角成分の平方根が、標準誤差）。プロビットの重み W は y にも依存するので、y も渡します。第 16 章で、第 1 段階のプロビットの推定誤差を、標準誤差の補正に使います。
 
 ```python
 def sample(link: str = "logit", n: int = 500) -> pd.DataFrame:
@@ -629,6 +649,18 @@ def test_説明変数が完全に共線ならエラーにする() -> None:
     y = (x1 + rng.standard_normal(100) > 0).astype(float)
     with pytest.raises(ValueError, match="多重共線性"):
         fit_binary(y, np.column_stack([x1, x1]))
+
+
+def test_係数の共分散行列の対角成分は標準誤差の2乗() -> None:
+    s = draw_binary_sample(500, "logit", np.random.default_rng(0))
+    x = s[["x1", "x2"]]
+    for link in ("logit", "probit"):
+        fit = fit_binary(s["y"], x, link)
+        covariance = binary_covariance(fit, s["y"], x)
+        assert list(covariance.index) == list(fit.coefficients.index)
+        assert list(covariance.columns) == list(fit.coefficients.index)
+        assert np.sqrt(np.diag(covariance)) == pytest.approx(fit.standard_errors)
+        assert covariance.to_numpy() == pytest.approx(covariance.to_numpy().T)
 ```
 
 ```python
@@ -739,7 +771,7 @@ uv run pytest test/chapter14
 ```
 
 ```text
-34 passed
+35 passed
 ```
 
 ## 14.6 規則で言うと

@@ -25,7 +25,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 計量経済学の題材 | 標本選択バイアス、逆ミルズ比、ヘックマンの 2 段階推定、除外制約、ブートストラップ標準誤差 |
 | 使う Python の機能 | pandas の列の結合・復元抽出（`iloc`）、第 14 章のプロビット、`scipy.stats.norm` |
 | 新しく導入するライブラリ | なし（実際のデータは `wooldridge`。任意の依存グループ `realdata`） |
-| 完成形 | `HeckitFit`、`inverse_mills_ratio`、`heckit_two_step`、`heckit_bootstrap_standard_errors`、`draw_selection_sample`、`selection_bias_experiment` |
+| 完成形 | `HeckitFit`、`inverse_mills_ratio`、`heckit_two_step`、`heckit_bootstrap_standard_errors`、`heckit_corrected_standard_errors`、`draw_selection_sample`、`selection_bias_experiment` |
 | ファイル | 実装: `lib/chapter16/heckit.py`、`lib/chapter16/plot.py`（図）／テスト: `test/chapter16/test_heckit.py`、`test/chapter16/test_plot.py`（自分で書くときは、`practice/chapter16/` に、同じ名前で作ります） |
 | データ | 乱数。16.6 節だけ、実際のデータ（`wooldridge` の `mroz`） |
 
@@ -58,7 +58,7 @@ uv run pytest test/chapter16
 ```
 
 ```text
-22 passed
+26 passed
 ```
 
 自分でコードを書くときは、`practice/chapter16/` に、完成形と同じ名前（`heckit.py`・`test_heckit.py`）のファイルを作ります。
@@ -93,7 +93,7 @@ uv run pytest test/chapter16
 
 ### 標準誤差
 
-第 2 段階の OLS の標準誤差は、正しくありません。(1) λ̂ は、第 1 段階の推定値（推定誤差を含む）、(2) 誤差項に、不均一分散が生じる、ためです。解析的な補正式もありますが、この章は、**ブートストラップ**（[第 6 章](06-asymptotics.md)で学んだ方法。標本を復元抽出で取り直し、2 段階推定を繰り返して、標準偏差を求める）で求めます。
+第 2 段階の OLS の標準誤差は、正しくありません。(1) λ̂ は、第 1 段階の推定値（推定誤差を含む）、(2) 誤差項に、不均一分散が生じる、ためです。解析的な補正式（Heckman）と、**ブートストラップ**（[第 6 章](06-asymptotics.md)で学んだ方法。標本を復元抽出で取り直し、2 段階推定を繰り返して、標準偏差を求める）の、2 つで求め、比べます。
 
 ## 16.5 Red → Green → Refactor
 
@@ -428,7 +428,100 @@ print(errors.round(4).to_dict())
 {'const': 0.0303, 'x': 0.0228, 'lambda': 0.0513}
 ```
 
-ブートストラップの標準誤差は、x で 0.0228（第 2 段階の OLS では 0.0212）、切片で 0.0303（0.0281）と、少し大きい値です（予想 4: 正しくない。この標本では、差は 1 割程度）。逆ミルズ比の係数の標準誤差は、同じ 0.0513 です。
+### 補正した標準誤差（解析式）
+
+ブートストラップを使わずに、**第 1 段階の推定誤差を反映した標準誤差を、式で求める**こともできます（Heckman, 1979）。第 2 段階の回帰の説明変数を Z（x と λ̂）、残差を e として、
+
+- Var(b) = σ̂² (Z′Z)⁻¹ [ Z′(I − ρ̂²Δ)Z + ρ̂² F V_γ F′ ] (Z′Z)⁻¹
+- Δ は、対角成分が δ_i = λ̂_i (λ̂_i + w_i′γ̂) の行列、F = Z′Δ W（W は、選択された観測値の、選択の式の説明変数）、V_γ は、第 1 段階のプロビットの共分散行列
+- σ̂² = e′e ÷ n_s + β̂_λ² · mean(δ)、ρ̂² = β̂_λ² ÷ σ̂²
+
+通常の OLS の標準誤差 σ̂²(Z′Z)⁻¹ に、(1) 誤差の分散が、観測値ごとに違う分（ρ̂²Δ）と、(2) 第 1 段階の推定誤差（V_γ）の分を、足したものです。V_γ には、第 14 章の `binary_covariance` を使います。
+
+```python
+def heckit_corrected_standard_errors(
+    df: pd.DataFrame, x_columns: list[str], selection_columns: list[str]
+) -> pd.Series:
+    """Heckman の補正した標準誤差（解析式）。第 1 段階の推定誤差も反映する。
+
+    Var(b) = σ̂² (Z′Z)⁻¹ [Z′(I − ρ̂²Δ)Z + ρ̂² F V_γ F′] (Z′Z)⁻¹。
+    Z は、第 2 段階の説明変数と λ̂。Δ は、対角成分が δ_i = λ̂_i (λ̂_i + w_i′γ̂) の行列。
+    F = Z′Δ W（W は、選択された観測値の、選択の式の説明変数）。
+    V_γ は、第 1 段階の共分散行列。σ̂² = e′e ÷ n_s + β̂_λ² · mean(δ)、ρ̂² = β̂_λ² ÷ σ̂²。
+    """
+    fit = heckit_two_step(df, x_columns, selection_columns)
+    chosen = (df["selected"] == 1).to_numpy()
+    selection_x = df[selection_columns]
+    w_all, _ = design_matrix(selection_x)
+    index = w_all @ fit.selection.coefficients.to_numpy()
+    mills = inverse_mills_ratio(index)[chosen]
+    delta = mills * (mills + index[chosen])
+    z, names = design_matrix(df.loc[chosen, x_columns].assign(lambda_=mills))
+    names[-1] = "lambda"
+    y = df.loc[chosen, "y"].to_numpy(dtype=float)
+    residuals = y - z @ fit.coefficients.to_numpy()
+    lambda_coefficient = float(fit.coefficients["lambda"])
+    sigma2 = float(residuals @ residuals) / len(y) + lambda_coefficient**2 * float(
+        delta.mean()
+    )
+    rho2 = lambda_coefficient**2 / sigma2
+    gram_inverse = np.linalg.inv(z.T @ z)
+    f = z.T @ (delta[:, None] * w_all[chosen])
+    v_gamma = binary_covariance(fit.selection, df["selected"], selection_x).to_numpy()
+    middle = z.T @ (z - rho2 * delta[:, None] * z) + rho2 * f @ v_gamma @ f.T
+    variance = sigma2 * gram_inverse @ middle @ gram_inverse
+    return pd.Series(np.sqrt(np.diag(variance)), index=names)
+```
+
+```python
+def test_補正した標準誤差は同じ標本の推定値の実際のばらつきに近い() -> None:
+    # 許容誤差: 150 回の標準偏差の推定誤差（約 6%）の 4 倍弱
+    estimates, errors = [], []
+    for seed in range(150):
+        df = draw_selection_sample(800, 0.7, np.random.default_rng(seed))
+        estimates.append(heckit_two_step(df, ["x"], ["x", "z"]).coefficients["x"])
+        errors.append(heckit_corrected_standard_errors(df, ["x"], ["x", "z"])["x"])
+    assert np.mean(errors) == pytest.approx(np.std(estimates, ddof=1), rel=0.25)
+
+
+def test_補正した標準誤差は名前と順序が係数と同じ() -> None:
+    df = sample(n=500)
+    fit = heckit_two_step(df, ["x"], ["x", "z"])
+    errors = heckit_corrected_standard_errors(df, ["x"], ["x", "z"])
+    assert list(errors.index) == list(fit.coefficients.index)
+    assert (errors > 0).all()
+
+
+def test_補正した標準誤差は同じ標本ならブートストラップと同程度() -> None:
+    df = sample(n=3000)
+    corrected = heckit_corrected_standard_errors(df, ["x"], ["x", "z"])
+    boot = heckit_bootstrap_standard_errors(
+        df, ["x"], ["x", "z"], 200, np.random.default_rng(1)
+    )
+    assert corrected.to_numpy() == pytest.approx(boot.to_numpy(), rel=0.25)
+
+
+def test_相関がなければ補正した標準誤差は第2段階のOLSの標準誤差に近い() -> None:
+    # 相関 0 なら、逆ミルズ比の係数は 0 で、補正項（ρ² に比例）は消える
+    df = draw_selection_sample(4000, 0.0, np.random.default_rng(2))
+    naive = heckit_two_step(df, ["x"], ["x", "z"]).naive_standard_errors
+    corrected = heckit_corrected_standard_errors(df, ["x"], ["x", "z"])
+    assert corrected["x"] == pytest.approx(naive["x"], rel=0.05)
+```
+
+```python
+from lib.chapter16.heckit import heckit_corrected_standard_errors
+
+print(fit.naive_standard_errors.round(4).to_dict())
+print(heckit_corrected_standard_errors(df, ["x"], ["x", "z"]).round(4).to_dict())
+```
+
+```text
+{'const': 0.0281, 'x': 0.0212, 'lambda': 0.0513}
+{'const': 0.0297, 'x': 0.0224, 'lambda': 0.0512}
+```
+
+x の標準誤差は、通常の OLS 0.0212、**補正した式 0.0224**、ブートストラップ 0.0228 です。補正した式とブートストラップは近く、通常の OLS より、6〜8% ほど大きい値です。**補正した式は、実際のばらつきを、シミュレーションでも再現します**（150 回の標本の傾きの標準偏差に、標準誤差の平均が、近い）。この式は、実際のデータでも、R の `sampleSelection` と一致します（16.6 節）。
 
 ### 偏りと、ヘックマンの効果を、繰り返しで確かめる
 
@@ -564,7 +657,7 @@ uv run pytest test/chapter16
 ```
 
 ```text
-22 passed
+26 passed
 ```
 
 ## 16.6 実際のデータで試す（既婚女性の労働参加・労働時間・賃金）
@@ -690,7 +783,7 @@ heckit bootstrap se {'const': 0.2869, 'educ': 0.0137, 'exper': 0.0154, 'expersq'
 自作のトービットとヘックマンが、実績のあるソフトウェアと同じ結果になるかを、同じ `mroz` のデータで確かめます。比べる相手は、公開されている次の 2 つの結果です。
 
 - **トービット**: Stata の `tobit hours nwifeinc educ exper expersq age kidslt6 kidsge6, ll(0)` の出力（[Corner Solution - Tobit Model](https://rowesamuel.github.io/rowesamuel/bookdown_statamarkdown/Week10/book/corner-solution---tobit-model.html)。係数・標準誤差・σ・対数尤度 −3819.0946）
-- **ヘックマン**: R の `sampleSelection::heckit()` の出力（[Review of Heckit](https://s-saisw.github.io/rtutorial/heckit.html)。選択の式も賃金の式も、説明変数は educ・exper・expersq・nwifeinc・age・kidslt6・kidsge6。被説明変数は `lwage`）
+- **ヘックマン**: R の `sampleSelection::heckit()` の出力（[Review of Heckit](https://s-saisw.github.io/rtutorial/heckit.html)（係数と、補正した標準誤差）。選択の式も賃金の式も、説明変数は educ・exper・expersq・nwifeinc・age・kidslt6・kidsge6。被説明変数は `lwage`）
 
 次のスクリプトを `practice/chapter16/crosscheck.py` として保存し、アプリの根で、`uv run --group realdata python -m practice.chapter16.crosscheck` で実行します。
 
@@ -699,7 +792,7 @@ import numpy as np
 import wooldridge
 
 from lib.chapter15.limited import fit_tobit
-from lib.chapter16.heckit import heckit_two_step
+from lib.chapter16.heckit import heckit_corrected_standard_errors, heckit_two_step
 
 df = wooldridge.data("mroz")
 columns = ["nwifeinc", "educ", "exper", "expersq", "age", "kidslt6", "kidsge6"]
@@ -729,6 +822,17 @@ wage_columns = ["educ", "exper", "expersq", *columns[:1], "age", "kidslt6", "kid
 heckit = heckit_two_step(df.assign(selected=df["inlf"], y=df["lwage"]), wage_columns, wage_columns)
 gap = max(abs(heckit.coefficients[k] - v) for k, v in r_heckit.items())
 print("heckit coefficients agree (1e-4):", gap < 1e-4)
+
+# R の標準誤差（Heckman の補正した解析式）。lambda は、R が小数第 4 位に丸めている
+r_errors = {
+    "const": 0.4587672, "educ": 0.0340507, "exper": 0.0336730, "expersq": 0.0006381,
+    "nwifeinc": 0.0044919, "age": 0.0134792, "kidslt6": 0.2308275, "kidsge6": 0.0296063,
+    "lambda": 0.4636,
+}
+data = df.assign(selected=df["inlf"], y=df["lwage"])
+corrected = heckit_corrected_standard_errors(data, wage_columns, wage_columns)
+error_gap = max(abs(corrected[k] - v) / v for k, v in r_errors.items())
+print("heckit corrected standard errors agree (2e-4):", error_gap < 2e-4)
 ```
 
 ```text
@@ -736,11 +840,12 @@ tobit coefficients agree (1e-5): True
 tobit standard errors agree (1e-4): True
 tobit log-likelihood -3819.0946 (Stata -3819.0946)
 heckit coefficients agree (1e-4): True
+heckit corrected standard errors agree (2e-4): True
 ```
 
-**トービットは、係数が相対 10⁻⁶ 台、標準誤差が 10⁻⁶ 台で、Stata と一致し、対数尤度も小数第 4 位まで同じ**です。**ヘックマンの 2 段階推定の係数も、R の値と、10⁻⁴ 以内で一致します**（逆ミルズ比の係数は、R 側が小数第 4 位に丸めた 0.2885 と比べています。自作は 0.28846）。第 1 段階のプロビットの係数も、R の出力（0.270077、0.130905、0.123348 …）と、同じ値でした。
+**トービットは、係数が相対 10⁻⁶ 台、標準誤差が 10⁻⁶ 台で、Stata と一致し、対数尤度も小数第 4 位まで同じ**です。**ヘックマンの 2 段階推定の係数も、R の値と、10⁻⁴ 以内で一致し、補正した標準誤差（教育 0.0340507 など）も、相対 10⁻⁴ 以内で一致します**（逆ミルズ比の係数は、R 側が小数第 4 位に丸めた 0.2885 と比べています。自作は 0.28846）。第 1 段階のプロビットの係数も、R の出力（0.270077、0.130905、0.123348 …）と、同じ値でした。
 
-> **この照合で言えること、言えないこと。** 同じ式・同じデータでの、点推定値と標準誤差（トービット）が、別の実装と一致したので、**実装の誤りの可能性は、かなり下がりました**。ただし、ヘックマンの標準誤差は、この章のブートストラップと、R の補正した標準誤差（educ で 0.0341）が、別の方法なので、比べていません。外部の値は、公開された文書から転記したもので、各ソフトウェアのバージョンの違いまでは、確かめていません。
+> **この照合で言えること、言えないこと。** 同じ式・同じデータでの、点推定値と標準誤差（トービット）が、別の実装と一致したので、**実装の誤りの可能性は、かなり下がりました**。ヘックマンの標準誤差は、R と同じ解析式（補正した標準誤差）で比べました。ブートストラップは、別の方法なので、この照合の対象ではありません（同じ標本の、補正した式と、近い値になることは、シミュレーションで確かめました）。外部の値は、公開された文書から転記したもので、各ソフトウェアのバージョンの違いまでは、確かめていません。
 
 ## 16.7 規則で言うと
 
