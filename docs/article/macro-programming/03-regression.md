@@ -327,7 +327,7 @@ uv run pytest test/chapter03
 ```
 
 ```text
-19 passed
+20 passed
 ```
 
 ## 3.5 規則で言うと

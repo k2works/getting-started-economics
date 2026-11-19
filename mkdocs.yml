@@ -124,6 +124,9 @@ nav:
           - 第 5 章 ソロー・モデル: article/macro-programming/05-solow-model.md
           - 第 6 章 所得分布と所得収斂: article/macro-programming/06-income-convergence.md
           - 第 7 章 一物一価と購買力平価: article/macro-programming/07-purchasing-power-parity.md
+          - 第 8 章 ランダム変数と確率過程: article/macro-programming/08-random-variables.md
+          - 第 9 章 主なマクロ・データの特徴: article/macro-programming/09-macro-data-features.md
+          - 第 10 章 オークンの法則とフィリップス曲線: article/macro-programming/10-okun-and-phillips.md
   - リファレンス:
       - 概要: reference/index.md
       - よいソフトウェアとは: reference/よいソフトウェアとは.md
