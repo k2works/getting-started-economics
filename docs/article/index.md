@@ -2,7 +2,7 @@
 
 学習用の記事シリーズ一覧です。
 
-記事は各リポジトリで継続的に追加・更新されているため、本文はここに置かず、公開サイトへのリンクのみを掲載しています。
+記事は各リポジトリで継続的に追加・更新されているため、本文はここに置かず、公開サイトへのリンクのみを掲載しています。ただし、本リポジトリで執筆中のシリーズは、本文をこのディレクトリに置いています。
 
 | シリーズ | テーマ | 説明 |
 |------|------|------|
@@ -17,3 +17,4 @@
 | [From Objects to Functions 演習](https://k2works.github.io/from-objects-to-functions-excersice/article/zettai/) | 関数型アーキテクチャ | To-Do アプリ Zettai を題材に、HTTP、ドメインモデリング、イベントソーシング、関数型エラーハンドリング、ファンクタ・モナドによる射影と永続化までを Kotlin・なでしこ3・Rust で実装しながら学べます。 |
 | [実践データベース設計：基幹業務システム編](https://k2works.github.io/practical-database-design/article/) | データベース設計 | 販売管理・財務会計・生産管理の基幹業務システムを題材に、業務フローとデータモデルを体系的に学べます。 |
 | [Docker/Kubernetes 実践コンテナ解説](https://k2works.github.io/getting-started-docker-kubernetes/article/) | コンテナ・オーケストレーション | コンテナの基礎から複数コンテナ構成、Kubernetes、継続的デリバリー、ケーススタディまで実践的に学べます。 |
+| [経済学のためのプログラミング入門](economics-programming/index.md) | 経済学モデルを軸にした Python 入門 | 需要曲線・市場均衡・IS-LM などの経済モデルを、テストを書きながら Python で実装し、基礎・数値計算・データ分析を学べます。（執筆中） |
