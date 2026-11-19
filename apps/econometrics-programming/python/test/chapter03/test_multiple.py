@@ -174,6 +174,17 @@ def test_相関が強くても推定値は不偏() -> None:
     assert table.mean().to_numpy() == pytest.approx([1, 1], abs=0.05)
 
 
+def test_1回分の推定を手で再現すると列の順序はx1とx2() -> None:
+    rng = np.random.default_rng(7)
+    z1, z2, u = rng.standard_normal((3, 20))
+    x2 = 0.6 * z1 + 0.8 * z2
+    expected = fit_ols(1 + z1 + x2 + u, np.column_stack([z1, x2])).coefficients
+    table = multicollinearity_experiment(0.6, 20, 1, np.random.default_rng(7))
+    assert table.loc[0, "x1"] == pytest.approx(expected["x1"])
+    assert table.loc[0, "x2"] == pytest.approx(expected["x2"])
+    assert table.loc[0, "x1"] != pytest.approx(table.loc[0, "x2"])
+
+
 def test_相関が強いほど係数はばらつく() -> None:
     low = multicollinearity_experiment(0.0, 50, 1000, np.random.default_rng(0))
     high = multicollinearity_experiment(0.9, 50, 1000, np.random.default_rng(0))

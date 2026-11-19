@@ -54,7 +54,7 @@ uv run pytest test/chapter03
 ```
 
 ```text
-24 passed
+25 passed
 ```
 
 自分でコードを書くときは、`practice/chapter03/` に、完成形と同じ名前（`multiple.py`・`test_multiple.py`）のファイルを作ります。
@@ -410,6 +410,17 @@ def test_相関が強いほど係数はばらつく() -> None:
     ratio = high["x1"].std() / low["x1"].std()
     assert ratio == pytest.approx((1 / (1 - 0.9**2)) ** 0.5, rel=0.15)
 
+
+def test_1回分の推定を手で再現すると列の順序はx1とx2() -> None:
+    rng = np.random.default_rng(7)
+    z1, z2, u = rng.standard_normal((3, 20))
+    x2 = 0.6 * z1 + 0.8 * z2
+    expected = fit_ols(1 + z1 + x2 + u, np.column_stack([z1, x2])).coefficients
+    table = multicollinearity_experiment(0.6, 20, 1, np.random.default_rng(7))
+    assert table.loc[0, "x1"] == pytest.approx(expected["x1"])
+    assert table.loc[0, "x2"] == pytest.approx(expected["x2"])
+    assert table.loc[0, "x1"] != pytest.approx(table.loc[0, "x2"])
+
 ```python
 import numpy as np
 
@@ -472,9 +483,9 @@ def test_ヒストグラムの度数の合計は観測数() -> None:
 
 def test_真の値の線は既定で1の位置() -> None:
     ax = plot_collinearity_distributions([1.0, 1.1], [0.5, 1.5]).axes[0]
-    assert [float(v) for v in ax.lines[0].get_xdata()] == [1.0, 1.0]
+    assert line_x(ax) == [1.0, 1.0]
     ax = plot_collinearity_distributions([1.0, 1.1], [0.5, 1.5], 2.0).axes[0]
-    assert [float(v) for v in ax.lines[0].get_xdata()] == [2.0, 2.0]
+    assert line_x(ax) == [2.0, 2.0]
 
 def plot_collinearity_distributions(
     low: Sequence[float], high: Sequence[float], true_value: float = 1.0
@@ -497,7 +508,7 @@ uv run pytest test/chapter03
 ```
 
 ```text
-24 passed
+25 passed
 ```
 
 ## 3.6 規則で言うと
