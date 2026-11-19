@@ -45,12 +45,12 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 必要なものは、Python のパッケージ管理ツール [uv](https://docs.astral.sh/uv/) です。次のコマンドで、サンプルコードのテストが動く状態にします。
 
 ```bash
-cd apps/python
+cd apps/economics-programming/python
 uv sync
 uv run pytest
 ```
 
-サンプルコードは `apps/python/` にあります。実装は `lib/chapter01/`、テストは `test/chapter01/` です。
+サンプルコードは `apps/economics-programming/python/` にあります。実装は `lib/chapter01/`、テストは `test/chapter01/` です。
 
 ## 1.3 予想する
 
@@ -141,7 +141,7 @@ def test_需要が0になる最低の価格を求める() -> None:
 テストを実行すると、5 つのテストがすべて通ります。
 
 ```bash
-cd apps/python
+cd apps/economics-programming/python
 uv run pytest
 ```
 

@@ -520,7 +520,7 @@ def test_ピグー税で解消される死荷重は第7章の死荷重の式と�
 ### 実行結果
 
 ```bash
-cd apps/python
+cd apps/economics-programming/python
 uv run pytest
 ```
 

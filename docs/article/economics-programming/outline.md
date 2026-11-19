@@ -21,7 +21,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | :--- | :--- |
 | 経済モデルを題材にする | 文法の解説だけで終わらせず、各章に経済学の題材を 1 つ置く。コードが何の経済的な量を計算しているかを必ず説明する |
 | 書いて確かめる | 経済モデルの計算は関数にして、pytest で期待値（手計算できる値）を確かめる。TDD の三原則は変えない |
-| 記事とコードを同期する | 記事のコード例は、`apps/python/` で動作確認した実装から転記する |
+| 記事とコードを同期する | 記事のコード例は、`apps/economics-programming/python/` で動作確認した実装から転記する |
 | 数値は実測値を載せる | 記事に載せる数値は、実装を実際に動かした結果だけを載せる |
 | 自分の言葉で書き起こす | py4basics の本文・コード・図は転記しない（後述の「参照元の扱い」を参照） |
 | メンタルモデルを組み上げる | 読者が「経済モデル ↔ コード」の対応を自分で組み上げられるよう、各章を 5 フェーズ（土台・構造・練習・自動化・検証）に沿った型で書く（後述の「学習設計」を参照） |
@@ -151,8 +151,8 @@ py4basics の「Python 入門 I（基礎）→ II（NumPy・Pandas・Matplotlib�
 | 計画（本書） | `docs/article/economics-programming/outline.md` |
 | 記事トップ・章 | `docs/article/economics-programming/index.md`、`01-preparation-and-first-test.md` など |
 | 執筆ワークフロー | `docs/article/economics-programming/workflow.md`（ML 版を雛形にする） |
-| サンプル実装 | `apps/python/lib/chapterNN/`、`apps/python/test/chapterNN/` |
-| Notebook | `apps/python/notebooks/`（`nbstripout` で出力を除く） |
+| サンプル実装 | `apps/economics-programming/python/lib/chapterNN/`、`apps/economics-programming/python/test/chapterNN/` |
+| Notebook | `apps/economics-programming/python/notebooks/`（`nbstripout` で出力を除く） |
 
 章のファイル名は、ML 版の命名（`NN-english-slug.md`）を踏襲します。
 
@@ -180,7 +180,7 @@ ML 版 Python と同じ構成にそろえます。
 
 | Unit | 内容 | 依存 |
 | :--- | :--- | :--- |
-| U1 | 前提整備（記事ディレクトリ・`apps/python/` の雛形・CI・サイトのナビゲーション） | なし |
+| U1 | 前提整備（記事ディレクトリ・`apps/economics-programming/python/` の雛形・CI・サイトのナビゲーション） | なし |
 | U2 | 第 1 部（第 1〜6 章） | U1 |
 | U3 | 第 2 部（第 7〜10 章） | U2 |
 | U4 | 第 3 部（第 11〜12 章） | U3 |
@@ -211,12 +211,12 @@ ML 版 Python と同じ構成にそろえます。
 
 ## 次のステップ
 
-1. Bolt 0 は完了（`apps/python/` の雛形、第 1 章、CI、サイトのナビゲーション）
+1. Bolt 0 は完了（`apps/economics-programming/python/` の雛形、第 1 章、CI、サイトのナビゲーション）
 2. Bolt 1 は完了（第 2〜3 章）
 3. Bolt 2 は完了（第 4〜6 章。第 1 部の到達チェックを第 6 章に含む）
 4. Bolt 3 は完了（第 7〜8 章。matplotlib を導入。第 8 章は標準ライブラリの乱数を使い、NumPy は第 9 章に回した）
 5. Bolt 4 は完了（第 9〜10 章。NumPy と SciPy を導入。第 2 部の到達チェックを第 10 章に含む）
-6. Bolt 5 は完了（第 11〜12 章。pandas を導入。統計表の指定がなかったため、実在の統計を転記せず、構造を実際の統計にそろえた架空の国のデータ `apps/python/data/economy.csv` を自作した。実際の公開統計への置き換えは、練習問題で案内している。第 3 部の到達チェックを第 12 章に含む）
+6. Bolt 5 は完了（第 11〜12 章。pandas を導入。統計表の指定がなかったため、実在の統計を転記せず、構造を実際の統計にそろえた架空の国のデータ `apps/economics-programming/python/data/economy.csv` を自作した。実際の公開統計への置き換えは、練習問題で案内している。第 3 部の到達チェックを第 12 章に含む）
 7. Bolt 6 は完了（第 13〜14 章。IS-LM 分析、AD-AS 分析、フィリップス曲線・オークンの法則・フィッシャー方程式・貨幣数量説）
 8. Bolt 7 は完了（第 15 章と付録 A。独占・寡占・ゲーム理論に加え、マインドマップ 5-4 の外部不経済とピグー税も扱った。第 4 部の到達チェックを第 15 章に含む）
 9. 全章の執筆が完了。残りは、GitHub 上の CI の確認、MkDocs のビルド確認、全体のレビュー（`analyzing-review` / `developing-review`）、公開

@@ -22,9 +22,9 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 
 ### この章のデータについて
 
-使うデータは、`apps/python/data/economy.csv` にある、**架空の国**の 2010〜2021 年の統計です。実在の国や年の統計ではありません。構造だけを、実際の国民経済計算（生産・分配・支出の 3 面、統計上の不突合、GDP デフレーター）にそろえてあります。
+使うデータは、`apps/economics-programming/python/data/economy.csv` にある、**架空の国**の 2010〜2021 年の統計です。実在の国や年の統計ではありません。構造だけを、実際の国民経済計算（生産・分配・支出の 3 面、統計上の不突合、GDP デフレーター）にそろえてあります。
 
-実際の公開統計（内閣府の国民経済計算など）で試したいときは、同じ列の形に整えれば、この章の関数がそのまま使えます（`apps/python/data/README.md` と練習問題を参照）。
+実際の公開統計（内閣府の国民経済計算など）で試したいときは、同じ列の形に整えれば、この章の関数がそのまま使えます（`apps/economics-programming/python/data/README.md` と練習問題を参照）。
 
 ### 経済学の式とコードの対応
 
@@ -355,7 +355,7 @@ def paasche_index(
 ### 実行結果
 
 ```bash
-cd apps/python
+cd apps/economics-programming/python
 uv run pytest
 ```
 

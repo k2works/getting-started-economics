@@ -180,7 +180,7 @@ def market_clearing_prices(
 ### 実行結果
 
 ```bash
-cd apps/python
+cd apps/economics-programming/python
 uv run pytest
 ```
 

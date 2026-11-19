@@ -278,7 +278,7 @@ def test_産出量が負なら費用最小化はできない() -> None:
 ### 実行結果
 
 ```bash
-cd apps/python
+cd apps/economics-programming/python
 uv run pytest
 ```
 

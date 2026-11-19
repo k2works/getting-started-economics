@@ -364,7 +364,7 @@ def test_政策後のモデルを渡すと移動後の曲線も描く() -> None:
 ### 実行結果
 
 ```bash
-cd apps/python
+cd apps/economics-programming/python
 uv run pytest
 ```
 

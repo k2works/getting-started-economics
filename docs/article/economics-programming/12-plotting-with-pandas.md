@@ -19,7 +19,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 使う Python の機能 | `DataFrame.plot`、`Series.plot.bar`、`rolling`、`diff`、`DataFrame` の列の平均 |
 | 完成形 | `moving_average`、`diffusion_index`、`plot_gdp_chart`、`plot_growth_chart` |
 
-データは、第 11 章と同じ、架空の国の統計（`apps/python/data/economy.csv`）です。
+データは、第 11 章と同じ、架空の国の統計（`apps/economics-programming/python/data/economy.csv`）です。
 
 ### 経済学の式とコードの対応
 
@@ -223,7 +223,7 @@ def plot_growth_chart(df: pd.DataFrame) -> Figure:
 ### 実行結果
 
 ```bash
-cd apps/python
+cd apps/economics-programming/python
 uv run pytest
 ```
 

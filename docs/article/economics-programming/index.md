@@ -22,14 +22,14 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | [Ruff](https://docs.astral.sh/ruff/)・[mypy](https://mypy-lang.org/) | 静的解析 |
 | [tox](https://tox.wiki/) | タスクランナー |
 
-数値計算とデータ分析のライブラリは、初めて使う章で導入します（matplotlib は第 7 章、NumPy と SciPy は第 9・10 章、pandas は第 11 章）。第 11・12 章のデータは、`apps/python/data/` にある架空の国の統計です。
+数値計算とデータ分析のライブラリは、初めて使う章で導入します（matplotlib は第 7 章、NumPy と SciPy は第 9・10 章、pandas は第 11 章）。第 11・12 章のデータは、`apps/economics-programming/python/data/` にある架空の国の統計です。
 
 ## サンプルコード
 
-サンプルコードは `apps/python/` にあります。
+サンプルコードは `apps/economics-programming/python/` にあります。
 
 ```bash
-cd apps/python
+cd apps/economics-programming/python
 uv sync
 uv run pytest
 ```

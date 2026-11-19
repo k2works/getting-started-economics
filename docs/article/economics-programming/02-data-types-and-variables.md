@@ -199,7 +199,7 @@ def is_price_elastic(elasticity: float) -> bool:
 ### 実行結果
 
 ```bash
-cd apps/python
+cd apps/economics-programming/python
 uv run pytest
 ```
 

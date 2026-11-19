@@ -215,7 +215,7 @@ def plot_histogram(values: list[float], bins: int) -> Figure:
 ### 実行結果
 
 ```bash
-cd apps/python
+cd apps/economics-programming/python
 uv run pytest
 ```
 

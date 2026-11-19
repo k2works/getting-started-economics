@@ -304,7 +304,7 @@ def draw_market(
 図を保存するには、次のコマンドを実行します。
 
 ```bash
-cd apps/python
+cd apps/economics-programming/python
 uv run python -c "from lib.chapter07.plot import draw_market; draw_market(100, 2, 0, 3).savefig('market.png')"
 ```
 
@@ -313,7 +313,7 @@ uv run python -c "from lib.chapter07.plot import draw_market; draw_market(100, 2
 ### 実行結果
 
 ```bash
-cd apps/python
+cd apps/economics-programming/python
 uv run pytest
 ```
 

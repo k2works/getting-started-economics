@@ -352,7 +352,7 @@ def price_level_by_quantity_theory(
 ### 実行結果
 
 ```bash
-cd apps/python
+cd apps/economics-programming/python
 uv run pytest
 ```
 

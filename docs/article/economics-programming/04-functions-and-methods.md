@@ -212,7 +212,7 @@ def marginal_rate_of_substitution(x: float, y: float, alpha: float = 0.5) -> flo
 ### 実行結果
 
 ```bash
-cd apps/python
+cd apps/economics-programming/python
 uv run pytest
 ```
 

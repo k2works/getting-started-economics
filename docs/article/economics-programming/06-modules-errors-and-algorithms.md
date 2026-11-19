@@ -207,7 +207,7 @@ def test_下限が上限以上なら区間として成り立たない() -> None:
 ### 実行結果
 
 ```bash
-cd apps/python
+cd apps/economics-programming/python
 uv run pytest
 ```
 
