@@ -159,10 +159,16 @@ def find_steady_state(
     tol: float = 1e-10,
     max_iter: int = 100,
 ) -> Vector:
-    """f(x, x) = 0 の解を、ニュートン法で探す。"""
+    """f(x, x) = 0 の解を、ニュートン法で探す。
+
+    tol は、残差の絶対値の許容（変数の大きさに依存する）。途中で、値が負になって、
+    べき乗などが計算できなくなる（有限でない）ときは、初期値を見直すように、エラーにする。
+    """
     x = np.array(guess, dtype=float)
     for _ in range(max_iter):
         residual = equations(x, x)
+        if not np.all(np.isfinite(residual)):
+            raise ValueError("定常状態が収束しない（値が有限でない。初期値を見直す）")
         if np.max(np.abs(residual)) < tol:
             return x
         jacobian = numerical_jacobian(lambda v: equations(v, v), x)
@@ -250,7 +256,7 @@ def log_linearize(
 def linear_transition(
     a_matrix: NDArray[np.float64], b_matrix: NDArray[np.float64]
 ) -> NDArray[np.float64]:
-    """x̂' = M·x̂ の M = -A⁻¹B。"""
+    """x̂' = M·x̂ の M = -A⁻¹B（A が特異なら解けない。静学的な式は先に消す）。"""
     return -np.linalg.solve(a_matrix, b_matrix)
 ```
 
@@ -342,16 +348,15 @@ def solve_saddle_path(
         raise ValueError(
             "解が一意に決まらない（不安定な固有値が、ジャンプ変数より少ない）"
         )
-    w: Any = np.real_if_close(vectors[:, unstable].T, tol=1000)
-    if np.iscomplexobj(w):
+    left = np.real_if_close(vectors[:, unstable].T, tol=1000)
+    if np.iscomplexobj(left):
         raise ValueError("不安定な固有値が複素数の場合は扱わない")
-    policy: Any
-    if n_jump == 0:
-        policy = np.zeros((0, n_state))
-    else:
+    w = np.asarray(left, dtype=np.float64)
+    policy = np.zeros((0, n_state))
+    if n_jump > 0:
         policy = -np.linalg.solve(w[:, n_state:], w[:, :n_state])
     transition = m[:n_state, :n_state] + m[:n_state, n_state:] @ policy
-    return policy.real, transition.real
+    return policy, np.asarray(transition.real, dtype=np.float64)
 ```
 
 1 つ目のテストは、x = λ·E x(t+1) + a の解（x = a ÷ (1 − λρ)）を復元できることを確かめます。次の 4 つは、**条件が成り立たないときに、エラーにする**テストです（解が一意でない、存在しない、複素数の固有値）。最後の 2 つは、境界（絶対値がちょうど 1 の固有値は、不安定と数えない）と、安定な複素数の固有値が、エラーにならないことを確かめます。
@@ -451,7 +456,7 @@ uv run pytest test/chapter17
 ```
 
 ```text
-25 passed
+26 passed
 ```
 
 ## 17.5 規則で言うと

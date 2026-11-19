@@ -373,14 +373,15 @@ def impulse_response(
     shock_mp: float = 0.0,
     shock_pc: float = 0.0,
     periods_after: int = 20,
+    periods_before: int = 3,
 ) -> pd.DataFrame:
     """1 期間だけのショック（IS: u、MP: v、PC: e）への反応。
 
-    最初の 3 期間は定常状態、4 期目にショック、その後は、ショックなし。
+    最初の periods_before 期間（既定は 3）は定常状態、次の期にショック、その後はなし。
     列は pi（インフレ率）、y（産出量）、i（名目利子率）、r（実質利子率）。
     """
     steady = _row(params, params.y_star, params.pi_star, 0.0)
-    rows = [dict(steady) for _ in range(3)]
+    rows = [dict(steady) for _ in range(periods_before)]
     y, pi = params.y_star, params.pi_star
     shocks = [(shock_is, shock_mp, shock_pc)] + [(0.0, 0.0, 0.0)] * periods_after
     for u, v, e in shocks:
@@ -543,7 +544,7 @@ uv run pytest test/chapter15
 ```
 
 ```text
-38 passed
+39 passed
 ```
 
 > **実際の統計では試していません。** このモデルの政策金利・インフレ率の実際のデータの、取得元と形を、確認できていないためです。この章は、パラメーターを決めて、モデルを動かす章です。

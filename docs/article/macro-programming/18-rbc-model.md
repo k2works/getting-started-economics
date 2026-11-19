@@ -451,7 +451,7 @@ def impulse_response(
 ```python
 def test_基本モデルのインパクト効果は元の記事のlinearsolveの結果と一致する() -> None:
     df = impulse_response(solve_rbc(BASIC), shock=0.01)
-    impact = df.iloc[3] / 1.0
+    impact = df.iloc[3]
     assert impact["a"] == pytest.approx(1.0)
     assert impact["k"] == pytest.approx(0.0)
     assert impact["y"] == pytest.approx(1.0)
@@ -461,7 +461,7 @@ def test_基本モデルのインパクト効果は元の記事のlinearsolveの
     assert impact["i"] == pytest.approx(3.6466, abs=0.001)
 
 
-def test_列と長さ() -> None:
+def test_インパルス反応の列と長さ() -> None:
     basic = impulse_response(solve_rbc(BASIC), shock=0.01)
     assert list(basic.columns) == ["a", "k", "c", "y", "i", "r", "w"]
     assert len(basic) == 3 + 1 + 40
@@ -493,7 +493,7 @@ def test_モデルの均衡経路はすべての変数が定常状態に戻る()
     assert df.iloc[-1].abs().max() < 1e-2
 
 
-def test_ショックは比例し足し合わせられる() -> None:
+def test_ショックの大きさに反応は比例する() -> None:
     solution = solve_rbc(BASIC)
     one = impulse_response(solution, shock=0.01)
     three = impulse_response(solution, shock=0.03)
@@ -821,6 +821,8 @@ def test_HPフィルターをかけたシミュレーションの特徴() -> Non
 
 | 課題 | 目安の時間 |
 | :--- | :--- |
+| IS-MP-PC モデルの 1 期分（`step`）と、手計算（PC ショックで π = 2.8、y = 99.2）のテスト | 20 分 |
+| 景気循環の要素分解（共分散を含む）と、合計が 1 になる手計算の例のテスト | 20 分 |
 | 数値微分のヤコビ行列と、手計算（f(x) = (x₀², x₀·x₁)）のテスト | 15 分 |
 | RBC モデルの定常状態（R = 1 ÷ β − 1、K ÷ Y = α ÷ (R + δ)）の関数と、手計算のテスト | 15 分 |
 | x = λ·E x(t+1) + a のモデルの解（ブランチャード・カーン）と、手計算のテスト | 25 分 |
