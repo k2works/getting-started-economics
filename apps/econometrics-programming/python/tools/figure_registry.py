@@ -21,6 +21,7 @@ from lib.chapter02.plot import (  # noqa: E402
 )
 from lib.chapter02.simple import fit_simple, sampling_distribution  # noqa: E402
 from lib.chapter03.multiple import (  # noqa: E402
+    fit_ols,
     multicollinearity_experiment,
     partial_out,
 )
@@ -61,6 +62,19 @@ from lib.chapter12.iv import (  # noqa: E402
 )
 from lib.chapter13.iv_tests import sargan_rejection_rate  # noqa: E402
 from lib.chapter13.plot import plot_rejection_rates  # noqa: E402
+from lib.chapter14.discrete import draw_binary_sample  # noqa: E402
+from lib.chapter14.plot import plot_probability_curves  # noqa: E402
+from lib.chapter15.limited import (  # noqa: E402
+    censor,
+    draw_latent_sample,
+    fit_tobit,
+)
+from lib.chapter15.plot import plot_censored_data  # noqa: E402
+from lib.chapter16.heckit import (  # noqa: E402
+    draw_selection_sample,
+    selection_bias_experiment,
+)
+from lib.chapter16.plot import plot_selection  # noqa: E402
 
 
 def _correlated_regressors() -> pd.DataFrame:
@@ -151,6 +165,30 @@ def _rejection_figure() -> Figure:
     return plot_rejection_rates(rates, 0.05)
 
 
+def _probability_curves() -> Figure:
+    sample = draw_binary_sample(300, "logit", np.random.default_rng(0))
+    return plot_probability_curves(sample["x1"].to_numpy(), sample["y"].to_numpy())
+
+
+def _censored_figure() -> Figure:
+    x, latent = draw_latent_sample(1000, np.random.default_rng(0))
+    return plot_censored_data(x, censor(latent))
+
+
+def _tobit_distributions() -> Figure:
+    rows = []
+    for seed in range(150):
+        x, latent = draw_latent_sample(500, np.random.default_rng(seed))
+        observed = censor(latent)
+        rows.append(
+            (
+                fit_ols(observed, x).coefficients["x1"],
+                fit_tobit(observed, x).coefficients["x1"],
+            )
+        )
+    return plot_estimate_comparison(pd.DataFrame(rows, columns=["ols", "tobit"]), 2.0)
+
+
 # 記事に載せる図。名前が、画像のファイル名（名前.png）になる
 FIGURES: dict[str, Callable[[], Figure]] = {
     "ch01-densities": plot_densities,
@@ -204,4 +242,13 @@ FIGURES: dict[str, Callable[[], Figure]] = {
     "ch12-first-stage": _first_stage_figure,
     "ch12-iv-distributions": _iv_distribution_figure,
     "ch13-sargan-rejection": _rejection_figure,
+    "ch14-probability-curves": _probability_curves,
+    "ch15-censored": _censored_figure,
+    "ch15-slope-distributions": _tobit_distributions,
+    "ch16-selection": lambda: plot_selection(
+        draw_selection_sample(3000, 0.7, np.random.default_rng(0))
+    ),
+    "ch16-heckit-distributions": lambda: plot_estimate_comparison(
+        selection_bias_experiment(1000, 0.7, 200, np.random.default_rng(0)), 2.0
+    ),
 }
