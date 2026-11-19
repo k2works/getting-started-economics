@@ -89,6 +89,8 @@ nav:
           - 概要: article/economics-programming/index.md
           - 執筆計画: article/economics-programming/outline.md
           - 第 1 章 準備とはじめてのテスト: article/economics-programming/01-preparation-and-first-test.md
+          - 第 2 章 データ型と変数: article/economics-programming/02-data-types-and-variables.md
+          - 第 3 章 コンテナとデータの操作: article/economics-programming/03-containers-and-data-operations.md
   - リファレンス:
       - 概要: reference/index.md
       - よいソフトウェアとは: reference/よいソフトウェアとは.md
