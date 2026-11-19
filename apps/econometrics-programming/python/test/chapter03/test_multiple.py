@@ -190,3 +190,15 @@ def test_相関が強いほど係数はばらつく() -> None:
     high = multicollinearity_experiment(0.9, 50, 1000, np.random.default_rng(0))
     ratio = high["x1"].std() / low["x1"].std()
     assert ratio == pytest.approx((1 / (1 - 0.9**2)) ** 0.5, rel=0.15)
+
+
+def test_名前のない系列を渡すと係数名は_x1() -> None:
+    x = pd.Series([1.0, 2.0, 3.0, 4.0, 6.0])
+    y = [2.0, 4.1, 5.9, 8.2, 12.1]
+    assert list(fit_ols(y, x).coefficients.index) == ["const", "x1"]
+
+
+def test_名前のある系列を渡すと係数名はその名前() -> None:
+    x = pd.Series([1.0, 2.0, 3.0, 4.0, 6.0], name="educ")
+    y = [2.0, 4.1, 5.9, 8.2, 12.1]
+    assert list(fit_ols(y, x).coefficients.index) == ["const", "educ"]

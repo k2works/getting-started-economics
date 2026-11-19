@@ -7,7 +7,7 @@ import pandas as pd
 from numpy.typing import ArrayLike, NDArray
 from scipy import stats
 
-from lib.chapter03.multiple import fit_ols, leverage
+from lib.chapter03.multiple import fit_ols, leverage, regressor_names
 from lib.chapter05.inference import TestResult, f_test
 
 KINDS = ("HC0", "HC1", "HC2", "HC3")
@@ -20,7 +20,7 @@ def _frame(x: ArrayLike) -> pd.DataFrame:
     values = np.asarray(x, dtype=float)
     if values.ndim == 1:
         values = values.reshape(-1, 1)
-    return pd.DataFrame(values, columns=[f"x{i + 1}" for i in range(values.shape[1])])
+    return pd.DataFrame(values, columns=regressor_names(x, values.shape[1]))
 
 
 def robust_standard_errors(y: ArrayLike, x: ArrayLike, kind: str = "HC1") -> pd.Series:

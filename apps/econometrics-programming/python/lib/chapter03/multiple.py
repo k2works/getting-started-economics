@@ -20,10 +20,11 @@ class OlsResult:
     df_resid: int
 
 
-def _names(x: ArrayLike, width: int) -> list[str]:
+def regressor_names(x: ArrayLike, width: int) -> list[str]:
+    """説明変数の名前。表の列名・系列の名前を使い、名前がなければ x1, x2, …。"""
     if isinstance(x, pd.DataFrame):
         return [str(c) for c in x.columns]
-    if isinstance(x, pd.Series):
+    if isinstance(x, pd.Series) and x.name is not None:
         return [str(x.name)]
     return [f"x{i + 1}" for i in range(width)]
 
@@ -32,7 +33,7 @@ def _matrix(x: ArrayLike, constant: bool) -> tuple[NDArray[np.float64], list[str
     values = np.asarray(x, dtype=float)
     if values.ndim == 1:
         values = values.reshape(-1, 1)
-    names = _names(x, values.shape[1])
+    names = regressor_names(x, values.shape[1])
     if constant:
         values = np.column_stack([np.ones(len(values)), values])
         names = ["const", *names]

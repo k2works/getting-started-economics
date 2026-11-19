@@ -158,6 +158,7 @@ def test_関係のない変数を足しても尤度比検定は棄却しない()
     full = fit_binary(s["y"], np.column_stack([s["x1"], s["x2"], noise]))
     restricted = fit_binary(s["y"], s[["x1", "x2"]])
     test = likelihood_ratio_test(full.log_likelihood, restricted.log_likelihood, 1)
+    # 種を固定した 1 標本の例示。帰無仮説が正しくても、種を変えれば、約 5% で p < 0.05 になる
     assert test.p_value > 0.05
 
 
@@ -236,3 +237,11 @@ def test_まれな外れ値があっても完全分離と誤報しない() -> No
     score, _ = _score_and_weights("probit", y, design @ fit.coefficients.to_numpy())
     assert design.T @ score == pytest.approx([0.0, 0.0], abs=1e-6)
     assert fit.coefficients["x1"] == pytest.approx(3.4944, abs=1e-3)
+
+
+def test_系列の名前は係数名になり名前がなければ_x1() -> None:
+    rng = np.random.default_rng(0)
+    x = pd.Series(rng.standard_normal(200), name="educ")
+    y = (x + rng.standard_normal(200) > 0).astype(float)
+    assert list(fit_binary(y, x).coefficients.index) == ["const", "educ"]
+    assert list(fit_binary(y, x.rename(None)).coefficients.index) == ["const", "x1"]

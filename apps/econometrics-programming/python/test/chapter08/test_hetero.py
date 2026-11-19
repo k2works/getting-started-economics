@@ -104,6 +104,7 @@ def test_不均一分散のデータでは均一分散の帰無仮説を棄却�
 
 def test_均一分散のデータでは棄却しない() -> None:
     x, y = draw_fan_sample(200, np.random.default_rng(1), False)
+    # 種を固定した 1 標本の例示。帰無仮説が正しくても、種を変えれば、約 5% で p < 0.05 になる
     assert breusch_pagan(y, x).p_value > 0.05
     assert white_test(y, x).p_value > 0.05
 
@@ -183,3 +184,12 @@ def test_ダミー変数を含んでもWhite検定は_statsmodels_と一致す�
     lm, p, _, _ = het_white(fit.resid, fit.model.exog)
     assert result.statistic == pytest.approx(lm)
     assert result.p_value == pytest.approx(p)
+
+
+def test_頑健な標準誤差の名前は通常の推定の係数名と一致する() -> None:
+    x = pd.Series([1.0, 2.0, 3.0, 4.0, 6.0, 7.0, 9.0], name="educ")
+    y = [2.0, 4.1, 5.9, 8.2, 12.1, 13.8, 18.3]
+    named = robust_standard_errors(y, x)
+    assert list(named.index) == list(fit_ols(y, x).coefficients.index)
+    unnamed = robust_standard_errors(y, x.rename(None))
+    assert list(unnamed.index) == ["const", "x1"]

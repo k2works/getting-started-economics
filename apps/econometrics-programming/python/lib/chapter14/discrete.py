@@ -7,7 +7,7 @@ import pandas as pd
 from numpy.typing import ArrayLike, NDArray
 from scipy import stats
 
-from lib.chapter03.multiple import fit_ols
+from lib.chapter03.multiple import fit_ols, regressor_names
 from lib.chapter05.inference import TestResult
 
 # リンク関数（誤差項の分布）: ロジットは標準ロジスティック分布、プロビットは標準正規分布
@@ -28,17 +28,10 @@ class BinaryFit:
 
 def _design(x: ArrayLike) -> tuple[NDArray[np.float64], list[str]]:
     """定数項を先頭に足した説明変数の行列と、係数の名前。"""
-    if isinstance(x, pd.DataFrame):
-        names = [str(c) for c in x.columns]
-    elif isinstance(x, pd.Series):
-        names = [str(x.name)]
-    else:
-        names = []
     values = np.asarray(x, dtype=float)
     if values.ndim == 1:
         values = values.reshape(-1, 1)
-    if not names:
-        names = [f"x{i + 1}" for i in range(values.shape[1])]
+    names = regressor_names(x, values.shape[1])
     return np.column_stack([np.ones(len(values)), values]), ["const", *names]
 
 
