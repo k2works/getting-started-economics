@@ -16,7 +16,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 項目 | 内容 |
 | :--- | :--- |
 | 経済学の題材 | 効用最大化、利潤最大化（P = MC、操業停止点）、費用最小化（マインドマップ [5-1](<../経済学・経済政策 トピック別マインドマップ.md#t1>), [5-2](<../経済学・経済政策 トピック別マインドマップ.md#t2>)） |
-| 使う Python の機能 | `scipy.optimize` の `minimize`（制約付き）、`minimize_scalar`、`brentq`（解を求める）、無名関数（`lambda`） |
+| 使う Python の機能 | `scipy.optimize` の `minimize`（制約付き）、`minimize_scalar`、`brentq`（解を求める）、無名関数（`lambda`）、f 文字列、結果の属性（`.x`・`.success`） |
 | 新しく導入するライブラリ | [SciPy](https://scipy.org/)（科学技術計算） |
 | 完成形 | `maximize_utility`、`profit_maximizing_quantity`、`minimize_cost` |
 | ファイル | 実装: `lib/chapter10/optimization.py`／テスト: `test/chapter10/test_optimization.py`（自分で書くときは、`practice/chapter10/` に、同じ名前で作ります） |
@@ -88,6 +88,22 @@ result.x    # array([1., 1.])
 ```
 
 `"eq"` は、制約の関数が 0 になる、という等式制約です。
+
+### 読み方の補足
+
+この章のコードに出てくる、小さな書き方です。
+
+| 書き方 | 意味 |
+| :--- | :--- |
+| `f"利子率は {rate}% です"` | f 文字列。文字列の前に `f` を付けると、`{ }` の中の式が、値に置き換わる |
+| `result.x`・`result.fun`・`result.success`・`result.message` | 最適化の結果。解、最小値、成功したか、メッセージ |
+| `bounds=[(a, b), ...]` | 変数ごとの、下限と上限。`None` は、制限なし |
+| `_EPSILON` のように、先頭が `_` の名前 | そのファイルの中だけで使う、という約束（外から使わない） |
+
+```python
+rate = 5
+f"利子率は {rate}% です"   # '利子率は 5% です'
+```
 
 ## 10.4 Red → Green → Refactor
 

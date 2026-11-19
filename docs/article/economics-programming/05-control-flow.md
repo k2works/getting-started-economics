@@ -16,7 +16,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 項目 | 内容 |
 | :--- | :--- |
 | 経済学の題材 | ワルラス調整（価格で調整）とマーシャル調整（数量で調整）（マインドマップ [5-3](<../経済学・経済政策 トピック別マインドマップ.md#t3>)） |
-| 使う Python の機能 | `if` / `elif` / `else`、`for`、`range`、`return` での途中終了、関数を引数に渡す |
+| 使う Python の機能 | `if` / `elif` / `else`、`for`、`range`、`return` での途中終了、関数を引数に渡す（`Callable` の型ヒント）、`+=`、`abs`、切り出し（`[:3]`・`[-1]`） |
 | 完成形 | `market_state`、`walras_path`、`marshall_path` |
 | ファイル | 実装: `lib/chapter05/adjustment.py`／テスト: `test/chapter05/test_adjustment.py`（自分で書くときは、`practice/chapter05/` に、同じ名前で作ります） |
 
@@ -80,6 +80,26 @@ walras_path(demand, supply, initial_price=0, step=0.1)
 ```
 
 これで、需要曲線や供給曲線の式を変えても、調整のコードは変えずに済みます。
+
+### 読み方の補足
+
+この章のコードに出てくる、小さな書き方です。
+
+| 書き方 | 意味 |
+| :--- | :--- |
+| `price += step * excess` | `price = price + step * excess` と同じ。値を足して、同じ名前に結び付け直す |
+| `abs(x)` | 絶対値。`abs(-3)` は 3 |
+| `for _ in range(n):` | n 回、繰り返す。何回目かの番号は使わないので、変数の名前を `_` にする |
+| `path[:3]` | リストの、先頭から 3 個を取り出す（切り出し） |
+| `path[-1]` | リストの、最後の 1 個 |
+| `Callable[[float], float]` | 型ヒント。「小数を 1 つ受け取って、小数を返す関数」 |
+| `raise RuntimeError("...")` | 処理を止めて、エラーを知らせる（第 6 章で詳しく説明する） |
+
+```python
+path = [0, 10, 15, 17.5]
+path[:3]    # [0, 10, 15]
+path[-1]    # 17.5
+```
 
 ## 5.4 Red → Green → Refactor
 

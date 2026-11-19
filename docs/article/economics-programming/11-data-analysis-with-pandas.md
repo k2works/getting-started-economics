@@ -16,7 +16,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 項目 | 内容 |
 | :--- | :--- |
 | 経済学の題材 | GDP の三面等価、名目と実質、成長率、支出の構成比、物価指数（マインドマップ [5-5](<../経済学・経済政策 トピック別マインドマップ.md#t5>)） |
-| 使う Python の機能 | pandas の `DataFrame` と `Series`、CSV の読み込み、列と行の選択、条件による行の抽出、`pytest.fixture` |
+| 使う Python の機能 | pandas の `DataFrame` と `Series`、CSV の読み込み、列と行の選択、条件による行の抽出、`pytest.fixture`、`Path`、`zip`、ジェネレータ式 |
 | 新しく導入するライブラリ | [pandas](https://pandas.pydata.org/)（表形式のデータ分析） |
 | 完成形 | `load_economy`、`production_gdp`、`income_gdp`、`expenditure_gdp`、`statistical_discrepancy`、`real_gdp`、`growth_rates`、`recession_years`、`expenditure_shares`、`laspeyres_index`、`paasche_index` |
 | ファイル | 実装: `lib/chapter11/economy.py`／テスト: `test/chapter11/test_economy.py`（自分で書くときは、`practice/chapter11/` に、同じ名前で作ります） |
@@ -136,6 +136,8 @@ def load_economy(path: Path = DEFAULT_DATA_PATH) -> pd.DataFrame:
 ```
 
 `Path(__file__)` は、このファイルの場所です。そこから、`data` ディレクトリのファイルの場所を求めているので、どのディレクトリから実行しても読めます。
+
+`.resolve()` は、絶対パスにします。`.parents[2]` は、2 つ上のディレクトリです（このファイルは `lib/chapter11/economy.py` なので、`[0]` が `lib/chapter11/`、`[1]` が `lib/`、`[2]` が、その上の `apps/economics-programming/python/` です）。`/` は、パスをつなぐ演算子です。
 
 ### GDP の三面等価
 
@@ -350,6 +352,8 @@ def paasche_index(
     base = sum(p * q for p, q in zip(base_prices, current_quantities, strict=True))
     return current / base * 100
 ```
+
+`zip(a, b, strict=True)` は、2 つの列を、先頭から順に組にします（ここでは、財ごとの価格と数量の組を作ります）。`strict=True` は、長さが違うときに、`ValueError` にします。`sum(p * q for p, q in zip(...))` は、各組の積（価格 × 数量）を、足し合わせる書き方です（内包表記に似た、ジェネレータ式です）。
 
 2 つの財の価格が 100 → 110 と 200 → 190 に変わったとき、ラスパイレス指数は 102.5、パーシェ指数は 101.0 です。値が違うのは、重みの数量が違うからです。この例では、値上がりした財 1 の数量が、基準年（10）から比較年（8）に減り、値下がりした財 2 の数量が増えた（5 → 6）ので、パーシェ指数の方が小さくなっています。
 

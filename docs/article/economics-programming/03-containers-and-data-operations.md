@@ -16,7 +16,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 項目 | 内容 |
 | :--- | :--- |
 | 経済学の題材 | 需要表・供給表、超過需要、市場均衡（マインドマップ [5-3](<../経済学・経済政策 トピック別マインドマップ.md#t3>)） |
-| 使う Python の機能 | リスト、辞書、内包表記、`in`、`Mapping` の型ヒント |
+| 使う Python の機能 | リスト、辞書（`.items()`）、内包表記（`if` つき）、`in`、`Mapping` の型ヒント |
 | 完成形 | `demand_schedule`、`supply_schedule`、`excess_demand`、`market_clearing_prices` |
 | ファイル | 実装: `lib/chapter03/schedule.py`／テスト: `test/chapter03/test_schedule.py`（自分で書くときは、`practice/chapter03/` に、同じ名前で作ります） |
 
@@ -62,6 +62,17 @@ demand[20]      # 60
 20 in demand    # True   キー 20 があるか
 ```
 
+辞書の「キーと値の組」を、順に取り出すには、`.items()` を使います。`.items()` のように、値の後ろに `.名前()` を付けて呼び出すものを、メソッドと呼びます（第 4 章で詳しく説明します）。
+
+```python
+demand.items()   # dict_items([(0, 100), (10, 80), (20, 60), (30, 40)])
+
+for price, quantity in demand.items():
+    print(price, quantity)   # 0 100、10 80、20 60、30 40 の順に表示される
+```
+
+`for price, quantity in ...` は、組を、2 つの変数に分けて受け取ります。
+
 ### 内包表記
 
 リストや辞書を、1 行で作る書き方です。繰り返しの値から、新しい辞書を作ります。
@@ -69,6 +80,12 @@ demand[20]      # 60
 ```python
 {p: 100 - 2 * p for p in [0, 10, 20, 30]}
 # {0: 100, 10: 80, 20: 60, 30: 40}
+```
+
+内包表記の最後に `if 条件` を付けると、条件が成り立つ要素だけが入ります。
+
+```python
+[p for p, q in demand.items() if q > 50]   # [0, 10, 20]   需要量が 50 より大きい価格だけ
 ```
 
 ## 3.4 Red → Green → Refactor

@@ -217,6 +217,8 @@ def test_相手が非常に多く生産すれば最適反応は0() -> None:
     assert best_response(100, **MARKET) == 0
 ```
 
+`TypedDict` は、辞書に、「どんなキーがあり、値がどんな型か」を書く型ヒントです。`**MARKET` で関数に渡すときに、検査の道具（mypy）が、引数の名前と型を確かめられるようにするために使っています。実行には、影響しません（`MARKET` は、ふつうの辞書です）。
+
 ```python
 def best_response(
     opponent_quantity: float,
@@ -413,6 +415,8 @@ def pure_nash_equilibria(payoffs: Payoffs) -> list[tuple[str, str]]:
         and _is_best_for_col(payoffs, cols, row, col)
     ]
 ```
+
+コードの読み方を補います。引数の型に出てくる `Payoffs` は、`Mapping[tuple[str, str], tuple[float, float]]` という長い型に付けた、別名です。`dict.fromkeys(...)` は、重複を除いて、出てきた順を保つ書き方で、戦略の一覧（行と列）を作るのに使っています。`all(条件 for ...)` は、すべての要素で条件が成り立つときだけ `True` になります。`for row in rows for col in cols` と続く内包表記は、行と列の、すべての組を調べる 2 重の繰り返しです。
 
 囚人のジレンマでは、両者が協力すれば (3, 3) で、両者が裏切るより得なのに、均衡は両者が裏切る (1, 1) です。相手が協力しても裏切っても、自分は裏切った方が得だからです（支配戦略）。調整ゲームには、均衡が 2 つあります。コイン合わせには、純粋戦略の均衡がありません（確率的に選ぶ「混合戦略」が必要で、この章では扱いません）。
 

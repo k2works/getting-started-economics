@@ -16,7 +16,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 項目 | 内容 |
 | :--- | :--- |
 | 経済学の題材 | 均衡価格を求める（マインドマップ [5-3](<../経済学・経済政策 トピック別マインドマップ.md#t3>)） |
-| 使う Python の機能 | `import`、モジュールとパッケージ、例外（`raise`・独自の例外）、クロージャ、アルゴリズム |
+| 使う Python の機能 | `import`、モジュールとパッケージ、例外（`raise`・独自の例外）、クロージャ（`nonlocal`）、アルゴリズム |
 | 完成形 | `make_excess_demand`、`find_equilibrium_price`、`NoEquilibriumError` |
 | ファイル | 実装: `lib/chapter06/bisection.py`／テスト: `test/chapter06/test_bisection.py`（自分で書くときは、`practice/chapter06/` に、同じ名前で作ります） |
 
@@ -233,6 +233,8 @@ def test_超過需要の評価は1回の反復につき1回だけ() -> None:
 ```
 
 超過需要の関数を、呼び出した回数を数える関数で包んで、評価の回数も、テストで固定します（両端の確認で 2 回、反復で 37 回）。
+
+`def counting` の中の `nonlocal calls` は、外側の関数の変数 `calls` を、内側の関数から書き換える、という宣言です。`nonlocal` がないと、`calls += 1` は、内側だけの新しい変数を作ろうとして、エラー（`UnboundLocalError`）になります。
 
 端点がちょうど均衡のときも、テストで確かめています。
 
