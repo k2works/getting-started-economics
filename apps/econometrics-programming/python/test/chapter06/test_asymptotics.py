@@ -11,6 +11,7 @@ from statsmodels.stats.stattools import jarque_bera as reference_jarque_bera
 from lib.chapter03.multiple import fit_ols
 from lib.chapter05.inference import TestResult
 from lib.chapter06.asymptotics import (
+    bootstrap_standard_error,
     consistency_experiment,
     draw_skewed_sample,
     jarque_bera,
@@ -154,3 +155,36 @@ def test_ばらつきのない列では歪度も尖度も計算できない() ->
     for function in (skewness, kurtosis):
         with pytest.raises(ValueError, match="ばらつき"):
             function([3.0, 3.0, 3.0])
+
+
+def test_ブートストラップ標準誤差は復元抽出を繰り返した統計量の標準偏差() -> None:
+    values = np.array([1.0, 2.0, 4.0, 8.0, 16.0])
+    rng = np.random.default_rng(3)
+    expected_rng = np.random.default_rng(3)
+    draws = [
+        values[expected_rng.integers(0, len(values), len(values))].mean()
+        for _ in range(5)
+    ]
+    assert bootstrap_standard_error(values, np.mean, 5, rng) == pytest.approx(
+        np.std(draws, ddof=1)
+    )
+
+
+def test_標本平均のブートストラップ標準誤差は公式の標準誤差に近い() -> None:
+    values = np.random.default_rng(0).standard_normal(200)
+    formula = values.std(ddof=1) / np.sqrt(len(values))
+    boot = bootstrap_standard_error(values, np.mean, 2000, np.random.default_rng(1))
+    # 許容誤差: ブートストラップ回数 2000 での標準偏差の推定誤差（約 1.6%）の 4 倍
+    assert boot == pytest.approx(formula, rel=0.07)
+
+
+def test_中央値のように公式のない統計量にも使える() -> None:
+    values = np.random.default_rng(0).standard_normal(200)
+    boot = bootstrap_standard_error(values, np.median, 500, np.random.default_rng(1))
+    mean_boot = bootstrap_standard_error(values, np.mean, 500, np.random.default_rng(1))
+    assert boot > mean_boot  # 正規分布の標本では、中央値のほうがばらつく（約 1.25 倍）
+
+
+def test_ブートストラップの回数が2未満なら標準偏差を求められない() -> None:
+    with pytest.raises(ValueError, match="2 回以上"):
+        bootstrap_standard_error([1.0, 2.0], np.mean, 1, np.random.default_rng(0))

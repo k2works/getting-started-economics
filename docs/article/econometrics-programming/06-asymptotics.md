@@ -20,7 +20,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 計量経済学の題材 | 一致性、小標本特性と大標本特性、歪んだ誤差項の下での t 値、歪度・尖度、Jarque-Bera 検定、LM 検定 |
 | 使う Python の機能 | NumPy の乱数（指数分布）、pandas の `concat`、乱数の生成器 |
 | 新しく導入するライブラリ | wooldridge（実際のデータの節だけ。任意の依存グループ `realdata`） |
-| 完成形 | `skewness`、`kurtosis`、`jarque_bera`、`lm_test`、`draw_skewed_sample`、`consistency_experiment`、`t_value_distribution`、`jarque_bera_rejection_rate` |
+| 完成形 | `skewness`、`kurtosis`、`jarque_bera`、`lm_test`、`draw_skewed_sample`、`consistency_experiment`、`t_value_distribution`、`jarque_bera_rejection_rate`、`bootstrap_standard_error` |
 | ファイル | 実装: `lib/chapter06/asymptotics.py`、`lib/chapter06/plot.py`（図）／テスト: `test/chapter06/test_asymptotics.py`、`test/chapter06/test_plot.py`（自分で書くときは、`practice/chapter06/` に、同じ名前で作ります） |
 | データ | 母集団の式から作った乱数。6.6 節だけ、実際のデータ（`wooldridge` の賃金データ） |
 
@@ -52,7 +52,7 @@ uv run pytest test/chapter06
 ```
 
 ```text
-19 passed
+23 passed
 ```
 
 自分でコードを書くときは、`practice/chapter06/` に、完成形と同じ名前（`asymptotics.py`・`test_asymptotics.py`）のファイルを作ります。
@@ -448,6 +448,87 @@ True 1.0
 
 誤差が正規分布のとき、棄却率は 0.038（有意水準 5% より少し小さい）で、歪んだ誤差のときは、n = 100 で、すべての標本で棄却されました（予想 3）。
 
+### ブートストラップ標準誤差
+
+標準誤差の公式がない統計量（中央値など）や、公式が複雑な統計量（第 16 章のヘックマンの 2 段階推定）では、**標本から復元抽出を繰り返して、統計量のばらつきを、計算で求める**方法があります。これが**ブートストラップ**です。
+
+1. 手元の標本（n 個）から、n 個を、**同じ値を何度選んでもよい**（復元抽出）として、選び直す
+2. 選び直した標本で、統計量（平均・中央値など）を求める
+3. 1〜2 を、何百回も繰り返し、統計量の**標準偏差**を求める。これがブートストラップ標準誤差
+
+```python
+def test_ブートストラップ標準誤差は復元抽出を繰り返した統計量の標準偏差() -> None:
+    values = np.array([1.0, 2.0, 4.0, 8.0, 16.0])
+    rng = np.random.default_rng(3)
+    expected_rng = np.random.default_rng(3)
+    draws = [
+        values[expected_rng.integers(0, len(values), len(values))].mean()
+        for _ in range(5)
+    ]
+    assert bootstrap_standard_error(values, np.mean, 5, rng) == pytest.approx(
+        np.std(draws, ddof=1)
+    )
+
+
+def test_標本平均のブートストラップ標準誤差は公式の標準誤差に近い() -> None:
+    values = np.random.default_rng(0).standard_normal(200)
+    formula = values.std(ddof=1) / np.sqrt(len(values))
+    boot = bootstrap_standard_error(values, np.mean, 2000, np.random.default_rng(1))
+    # 許容誤差: ブートストラップ回数 2000 での標準偏差の推定誤差（約 1.6%）の 4 倍
+    assert boot == pytest.approx(formula, rel=0.07)
+
+
+def test_中央値のように公式のない統計量にも使える() -> None:
+    values = np.random.default_rng(0).standard_normal(200)
+    boot = bootstrap_standard_error(values, np.median, 500, np.random.default_rng(1))
+    mean_boot = bootstrap_standard_error(values, np.mean, 500, np.random.default_rng(1))
+    assert boot > mean_boot  # 正規分布の標本では、中央値のほうがばらつく（約 1.25 倍）
+
+
+def test_ブートストラップの回数が2未満なら標準偏差を求められない() -> None:
+    with pytest.raises(ValueError, match="2 回以上"):
+        bootstrap_standard_error([1.0, 2.0], np.mean, 1, np.random.default_rng(0))
+```
+
+```python
+def bootstrap_standard_error(
+    values: ArrayLike,
+    statistic: Callable[[NDArray[np.float64]], float],
+    repetitions: int,
+    rng: np.random.Generator,
+) -> float:
+    """ブートストラップ標準誤差。標本から復元抽出を繰り返し、統計量の標準偏差を求める。
+
+    公式のない統計量（中央値など）や、公式が複雑な統計量の標準誤差を、計算だけで求められる。
+    """
+    if repetitions < 2:
+        raise ValueError("ブートストラップは 2 回以上、繰り返す必要がある")
+    data = np.asarray(values, dtype=float)
+    draws = [
+        statistic(data[rng.integers(0, len(data), len(data))])
+        for _ in range(repetitions)
+    ]
+    return float(np.std(draws, ddof=1))
+```
+
+標本平均では、公式の標準誤差 s ÷ √n と、比べられます。
+
+```python
+from lib.chapter06.asymptotics import bootstrap_standard_error
+
+values = np.random.default_rng(0).standard_normal(200)
+formula = values.std(ddof=1) / np.sqrt(len(values))
+boot_mean = bootstrap_standard_error(values, np.mean, 2000, np.random.default_rng(1))
+boot_median = bootstrap_standard_error(values, np.median, 2000, np.random.default_rng(1))
+print(round(float(formula), 4), round(boot_mean, 4), round(boot_median, 4))
+```
+
+```text
+0.0681 0.0676 0.0968
+```
+
+標本平均では、公式の 0.0681 と、ブートストラップの 0.0676 が、ほぼ一致します。**ブートストラップは、公式がある場合に、公式と同じ値を返す**ので、信頼できます。中央値には、簡単な公式がありませんが、ブートストラップで 0.0968 と求められます（平均より大きく、中央値のほうが、ばらつきます）。第 16 章では、ヘックマンの 2 段階推定の標準誤差を、この方法で求めます。
+
 ### 図
 
 `plot_estimate_distributions` は、標本の大きさごとのヒストグラム（密度）と、真の値の線を描きます。テストは、密度のヒストグラムの面積が 1 になることを確かめます。
@@ -497,7 +578,7 @@ uv run pytest test/chapter06
 ```
 
 ```text
-19 passed
+23 passed
 ```
 
 ## 6.6 実際のデータで試す（賃金）

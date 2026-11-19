@@ -1,5 +1,7 @@
 """大標本特性: 一致性、誤差項が正規でないときの t 値、正規性の検定、LM 検定。"""
 
+from collections.abc import Callable
+
 import numpy as np
 import pandas as pd
 from numpy.typing import ArrayLike, NDArray
@@ -99,3 +101,23 @@ def jarque_bera_rejection_rate(
         x, y = _draw(n, skewed, rng)
         rejected += jarque_bera(fit_ols(y, x).residuals).p_value < 0.05
     return rejected / repetitions
+
+
+def bootstrap_standard_error(
+    values: ArrayLike,
+    statistic: Callable[[NDArray[np.float64]], float],
+    repetitions: int,
+    rng: np.random.Generator,
+) -> float:
+    """ブートストラップ標準誤差。標本から復元抽出を繰り返し、統計量の標準偏差を求める。
+
+    公式のない統計量（中央値など）や、公式が複雑な統計量の標準誤差を、計算だけで求められる。
+    """
+    if repetitions < 2:
+        raise ValueError("ブートストラップは 2 回以上、繰り返す必要がある")
+    data = np.asarray(values, dtype=float)
+    draws = [
+        statistic(data[rng.integers(0, len(data), len(data))])
+        for _ in range(repetitions)
+    ]
+    return float(np.std(draws, ddof=1))
