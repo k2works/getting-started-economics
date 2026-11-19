@@ -1,4 +1,6 @@
 line-length = 88
+# 読者が自分のコードを書く場所は、検査の対象にしない
+extend-exclude = ["practice"]
 target-version = "py312"
 
 [lint]

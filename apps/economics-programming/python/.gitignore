@@ -8,3 +8,7 @@ __pycache__/
 htmlcov/
 .ipynb_checkpoints/
 model/
+
+# 読者が自分のコードを書く場所（README.md だけを管理する）
+practice/*
+!practice/README.md
