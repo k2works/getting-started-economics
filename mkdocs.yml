@@ -140,6 +140,11 @@ nav:
           - 概要: article/econometrics-programming/index.md
           - この記事の読み方: article/econometrics-programming/how-to-read.md
           - 第 1 章 統計学の復習: article/econometrics-programming/01-statistics-review.md
+          - 第 2 章 単回帰分析: article/econometrics-programming/02-simple-regression.md
+          - 第 3 章 重回帰分析: article/econometrics-programming/03-multiple-regression.md
+          - 第 4 章 残差診断: article/econometrics-programming/04-residual-diagnostics.md
+          - 第 5 章 推論（検定と信頼区間）: article/econometrics-programming/05-inference.md
+          - 第 6 章 大標本特性: article/econometrics-programming/06-asymptotics.md
   - リファレンス:
       - 概要: reference/index.md
       - よいソフトウェアとは: reference/よいソフトウェアとは.md
