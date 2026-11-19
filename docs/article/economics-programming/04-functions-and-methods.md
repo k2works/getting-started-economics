@@ -18,7 +18,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 経済学の題材 | 費用曲線（MC・AC・AVC）、効用関数、限界代替率（マインドマップ [5-1](<../経済学・経済政策 トピック別マインドマップ.md#t1>), [5-2](<../経済学・経済政策 トピック別マインドマップ.md#t2>)） |
 | 使う Python の機能 | 引数、戻り値、既定値、キーワード引数、組み込み関数、スコープ、メソッド |
 | 完成形 | `total_cost`、`marginal_cost`、`average_cost`、`average_variable_cost`、`cobb_douglas_utility`、`marginal_rate_of_substitution` |
-| ファイル | 実装: `lib/chapter04/cost.py`、`lib/chapter04/utility.py`／テスト: `test/chapter04/test_cost_and_utility.py`（自分で書くときは、`practice/chapter04/` に、同じ名前で作ります） |
+| ファイル | 実装: `lib/chapter04/cost.py`、`lib/chapter04/utility.py`、`lib/chapter04/plot.py`（費用曲線の図）／テスト: `test/chapter04/test_cost_and_utility.py`、`test/chapter04/test_plot.py`（自分で書くときは、`practice/chapter04/` に、同じ名前で作ります） |
 
 ### 経済学の式とコードの対応
 
@@ -181,6 +181,19 @@ def test_生産量が3のとき限界費用は平均可変費用に等しい() -
 
 q = 3 で MC と AVC が等しくなり、そこが AVC の最低点（6）です。価格がこの 6 を下回ると、企業は生産しない方が損失が小さくなります。
 
+式や表の数値だけでは、3 本の曲線の関係は見えにくいので、図にします。
+
+![限界費用・平均可変費用・平均費用の曲線と操業停止点](images/ch04-cost-curves.png)
+
+図の読み方:
+
+- 青い線（MC）は、最初に下がり、q = 2 で最低（3）になり、そのあと急に上がる
+- オレンジの線（AVC）の**最低点**を、青い線（MC）が下から横切る。その交点（黒い点、q = 3、価格 6）が、操業停止点
+- 緑の線（AC）は、AVC より常に上にある。固定費用の分だけ高い。MC は、AC の最低点（q ≈ 3.4）も横切る
+- 価格が 6 を下回ると、売るほど損が増えるので、生産しない。価格が 6 以上なら、MC が右上がりの部分（q ≥ 3）が、企業の供給曲線になる
+
+この図は、`lib/chapter04/plot.py` の `plot_cost_curves` が、第 4 章の費用関数から描きます（図の生成の方法は、第 7 章にあります）。テストでは、3 本の線の値が費用関数と同じこと、MC と AVC が q = 3 で交わることを確かめています。
+
 ### 効用関数
 
 効用関数も、同じ形で書きます。
@@ -220,7 +233,7 @@ uv run pytest test/chapter04
 ```
 
 ```text
-13 passed
+18 passed
 ```
 
 ## 4.5 規則で言うと

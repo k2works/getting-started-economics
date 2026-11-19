@@ -18,7 +18,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 経済学の題材 | 独占（MR = MC、死荷重）、寡占（クールノー均衡、囚人のジレンマ、ナッシュ均衡）、外部不経済とピグー税（マインドマップ [5-4](<../経済学・経済政策 トピック別マインドマップ.md#t4>)） |
 | 使う Python の機能 | タプルをキーにした辞書、繰り返しによる均衡の探索（第 5 章の復習）、`TypedDict`（テストの型）、第 7 章の関数の再利用 |
 | 完成形 | `monopoly_outcome`、`best_response`、`cournot_by_iteration`、`cournot_symmetric`、`duopoly_profits`、`pure_nash_equilibria`、`social_optimum_quantity` |
-| ファイル | 実装: `lib/chapter15/externality.py`、`lib/chapter15/game.py`、`lib/chapter15/monopoly.py`、`lib/chapter15/oligopoly.py`／テスト: `test/chapter15/test_externality.py`、`test/chapter15/test_monopoly.py`、`test/chapter15/test_oligopoly_and_game.py`（自分で書くときは、`practice/chapter15/` に、同じ名前で作ります） |
+| ファイル | 実装: `lib/chapter15/externality.py`、`lib/chapter15/game.py`、`lib/chapter15/monopoly.py`、`lib/chapter15/oligopoly.py`、`lib/chapter15/plot.py`（独占の図）／テスト: `test/chapter15/test_externality.py`、`test/chapter15/test_monopoly.py`、`test/chapter15/test_oligopoly_and_game.py`、`test/chapter15/test_plot.py`（自分で書くときは、`practice/chapter15/` に、同じ名前で作ります） |
 
 ### 経済学の式とコードの対応
 
@@ -160,6 +160,19 @@ MR = (100 − 2Q) ÷ 2 = MC = 10 から、Q = 40 です。価格は、需要曲�
 | 死荷重 | 0 | 400 |
 
 完全競争の総余剰（1600）は、独占では、消費者余剰（400）、企業の利潤（800）、死荷重（400）に分かれます。消費者から企業に移った分（800）と、誰にも渡らず失われた分（400）があります。
+
+独占と完全競争の違いは、図で見ると、すぐに分かります。
+
+![独占の需要曲線・限界収入・限界費用、利潤と死荷重](images/ch15-monopoly.png)
+
+図の読み方:
+
+- 青い線が需要曲線、オレンジの線が限界収入（MR）。MR は、需要曲線の**2 倍の傾き**で、数量 50 で 0 になる
+- 緑の水平線が限界費用（MC = 10）。独占は、MR と MC が交わる点（数量 40）で数量を決め、価格は、その数量での**需要曲線の上**（30、黒い丸）で決まる
+- 完全競争は、価格と MC が等しい点（数量 80、価格 10、黒い四角）。独占は、数量が半分で、価格が 3 倍
+- 薄い緑の長方形が**利潤**（40 × 20 = 800）。赤い三角形が**死荷重**（0.5 × 40 × 20 = 400）。取引されなくなった分で、誰にも渡らない
+
+テストでは、長方形の面積が利潤、三角形の面積が死荷重と一致することを確かめています。この図は、`lib/chapter15/plot.py` の `plot_monopoly` が描きます。
 
 ```python
 def test_完全競争の総余剰は独占の消費者余剰と利潤と死荷重の合計() -> None:
@@ -544,7 +557,7 @@ uv run pytest test/chapter15
 ```
 
 ```text
-42 passed
+48 passed
 ```
 
 ## 15.5 規則で言うと

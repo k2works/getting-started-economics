@@ -19,7 +19,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 使う Python の機能 | NumPy の配列（`array`）、形（`shape`）、添字と切り出し、配列どうしの計算、`np.linalg.solve` |
 | 新しく導入するライブラリ | [NumPy](https://numpy.org/)（配列と線形代数） |
 | 完成形 | `multiplier`、`spending_rounds`、`income_determination`、`equilibrium_by_linear_algebra`、`demand_quantities` |
-| ファイル | 実装: `lib/chapter09/linear.py`／テスト: `test/chapter09/test_linear.py`（自分で書くときは、`practice/chapter09/` に、同じ名前で作ります） |
+| ファイル | 実装: `lib/chapter09/linear.py`、`lib/chapter09/plot.py`（45 度線の図）／テスト: `test/chapter09/test_linear.py`、`test/chapter09/test_plot.py`（自分で書くときは、`practice/chapter09/` に、同じ名前で作ります） |
 
 ### 経済学の式とコードの対応
 
@@ -190,6 +190,19 @@ def income_determination(
 
 結果は、Y = 250.00000000000006、C = 220.00000000000006 です。第 2 章で学んだとおり、小数の計算には誤差があるので、`pytest.approx` で確かめます。Y = (C0 + I) ÷ (1 − c) = (20 + 30) × 5 = 250 と、乗数の式で求めた値と一致します。
 
+連立方程式の解は、グラフでは、2 本の線の交点です。45 度線分析（ケインズの交差図）で確かめます。
+
+![45 度線と総支出の線。投資が増えると、均衡所得は乗数倍に増える](images/ch09-keynesian-cross.png)
+
+図の読み方:
+
+- 横軸が所得 Y、縦軸が総支出。青い線（45 度線）は、「支出 = 所得」になる点の集まり
+- オレンジの線は、総支出 C0 + cY + I = 20 + 0.8Y + 30。切片が C0 + I = 50、傾きが限界消費性向 0.8
+- 2 本の交点（黒い丸）が均衡で、Y = 250。連立方程式の解と同じ
+- 投資が 30 から 40 に増えると、総支出の線（緑）が、10 だけ上にずれる。均衡は、黒い四角（Y = 300）に移り、所得は 50 増える。増加分 10 の 5 倍（乗数 5）
+
+傾きが 1 に近い（0.8）ので、線が少し上にずれるだけで、交点が横に大きく動きます。これが、乗数が大きい理由です。テストでは、均衡点が連立方程式の解と一致することと、所得の増加が投資の増加 × 乗数に等しいことを確かめています。この図は、`lib/chapter09/plot.py` の `plot_keynesian_cross` が描きます。
+
 ### 需要・供給の連立方程式
 
 第 7 章では、均衡の式を、手で P について解きました。連立方程式にすると、係数（切片や傾き）が変わっても、式を解き直さずに、同じ関数で解けます（ただし、直線の式に限ります）。
@@ -304,7 +317,7 @@ uv run pytest test/chapter09
 ```
 
 ```text
-22 passed
+28 passed
 ```
 
 ## 9.5 規則で言うと
