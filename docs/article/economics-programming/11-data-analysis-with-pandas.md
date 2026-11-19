@@ -18,14 +18,14 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 経済学の題材 | GDP の三面等価、名目と実質、成長率、支出の構成比、物価指数（マインドマップ [5-5](<../経済学・経済政策 トピック別マインドマップ.md#t5>)） |
 | 使う Python の機能 | pandas の `DataFrame` と `Series`、CSV の読み込み、列と行の選択、条件による行の抽出、`pytest.fixture`、`Path`、`zip`、ジェネレータ式 |
 | 新しく導入するライブラリ | [pandas](https://pandas.pydata.org/)（表形式のデータ分析） |
-| 完成形 | `load_economy`、`production_gdp`、`income_gdp`、`expenditure_gdp`、`statistical_discrepancy`、`real_gdp`、`growth_rates`、`recession_years`、`expenditure_shares`、`laspeyres_index`、`paasche_index` |
-| ファイル | 実装: `lib/chapter11/economy.py`／テスト: `test/chapter11/test_economy.py`（自分で書くときは、`practice/chapter11/` に、同じ名前で作ります） |
+| 完成形 | `load_economy`、`production_gdp`、`income_gdp`、`expenditure_gdp`、`statistical_discrepancy`、`real_gdp`、`growth_rates`、`recession_years`、`expenditure_shares`、`laspeyres_index`、`paasche_index`、`load_sna_expenditure`（実際の統計の読み込み） |
+| ファイル | 実装: `lib/chapter11/economy.py`・`lib/chapter11/sna.py`／テスト: `test/chapter11/test_economy.py`・`test/chapter11/test_sna.py`（自分で書くときは、`practice/chapter11/` に、同じ名前で作ります） |
 
 ### この章のデータについて
 
 使うデータは、`apps/economics-programming/python/data/economy.csv` にある、**架空の国**の 2010〜2021 年の統計です。実在の国や年の統計ではありません。構造だけを、実際の国民経済計算（生産・分配・支出の 3 面、統計上の不突合、GDP デフレーター）にそろえてあります。
 
-実際の公開統計（内閣府の国民経済計算など）で試したいときは、同じ列の形に整えれば、この章の関数がそのまま使えます（`apps/economics-programming/python/data/README.md` と練習問題を参照）。
+実際の公開統計（内閣府の国民経済計算）で試す手順は、11.4 節の「実際の統計で試す」にあります（取得する表、CSV の形、読み込む関数、分析の例）。`apps/economics-programming/python/data/README.md` にも、要点があります。
 
 ### 経済学の式とコードの対応
 
@@ -357,6 +357,106 @@ def paasche_index(
 
 2 つの財の価格が 100 → 110 と 200 → 190 に変わったとき、ラスパイレス指数は 102.5、パーシェ指数は 101.0 です。値が違うのは、重みの数量が違うからです。この例では、値上がりした財 1 の数量が、基準年（10）から比較年（8）に減り、値下がりした財 2 の数量が増えた（5 → 6）ので、パーシェ指数の方が小さくなっています。
 
+### 実際の統計で試す
+
+ここまでは、架空の国のデータでした。最後に、実際の統計（内閣府の国民経済計算）で、同じ分析を試します。
+
+#### 取得する 2 つの CSV
+
+内閣府・経済社会総合研究所の「四半期別 GDP 速報」の統計表一覧（例: [2026 年 1-3 月期 1 次速報](https://www.esri.cao.go.jp/jp/sna/data/data_list/sokuhou/files/2026/qe261/gdemenuja.html)）から、2 つの CSV を、手元に保存します。最新の公表版は、内閣府の国民経済計算のページから、「四半期別 GDP 速報」の最新の統計表一覧をたどって探します。
+
+| 表 | 統計表一覧での場所 | ファイル名（2026 年 1-3 月期 1 次速報の例） |
+| :--- | :--- | :--- |
+| 名目 GDP と支出の各項目 | 「国内総生産(支出側)及び各需要項目」の「実額」の「名目暦年」 | `gaku-mcy2611.csv` |
+| GDP デフレーター | 同じ表の「デフレーター」の「暦年デフレーター」 | `def-cy2611.csv` |
+
+ファイル名の末尾の数字は、公表の回を表すので、回ごとに変わります。統計は、後から改定されるので、ファイルを取得した日と、公表の回を、記録しておきます。
+
+#### CSV の形（読む前に確かめたこと）
+
+| 項目 | 内容 |
+| :--- | :--- |
+| 文字コード | cp932（Shift_JIS 系）。UTF-8 では、読めずに文字化けする |
+| 先頭 | 見出しが 7 行ある。数値は、8 行目から始まる |
+| 年の行 | `2020/1-12.` の形。末尾に、注記などの行がある |
+| 数値 | 3 桁区切り（`"521,675.1"`）。文字列として入っている |
+| 金額の単位 | 10 億円。この章の表は兆円なので、1000 で割る |
+| デフレーターの基準 | 2020 年 = 100（この章の架空のデータは、2015 年 = 100） |
+| 支出の項目 | 民間最終消費支出、民間住宅、民間企業設備、民間在庫変動、政府最終消費支出、公的固定資本形成、公的在庫変動、輸出、輸入が、別の列にある |
+
+#### 読み込む関数
+
+この章の表（`consumption`・`investment`・`government`・`exports`・`imports`・`deflator`）の形に直す関数を、`lib/chapter11/sna.py` に作りました。投資は、民間住宅・民間企業設備・民間在庫変動・公的固定資本形成・公的在庫変動の合計です。年の行だけを取り出して、見出しや注記は読み飛ばします。
+
+```python
+def _read_calendar_years(path: Path) -> dict[int, list[str]]:
+    """「2020/1-12.」の形の行だけを、年ごとに取り出す（見出しや注記は読み飛ばす）。"""
+    rows: dict[int, list[str]] = {}
+    with path.open(encoding=ENCODING, newline="") as file:
+        for row in csv.reader(file):
+            match = _YEAR_ROW.match(row[0]) if row else None
+            if match:
+                rows[int(match.group(1))] = row
+    return rows
+```
+
+```python
+def load_sna_expenditure(nominal_path: Path, deflator_path: Path) -> pd.DataFrame:
+    """支出側の名目 GDP の CSV と、デフレーターの CSV から、この章の表を作る。
+
+    列は、consumption・investment・government・exports・imports（兆円）と
+    deflator（GDP デフレーター。基準年は、CSV に書かれた年で 100）。
+    投資には、在庫と公的固定資本形成も含める。
+    """
+    nominal = _read_calendar_years(nominal_path)
+    deflator = _read_calendar_years(deflator_path)
+    if nominal.keys() != deflator.keys():
+        raise ValueError("名目 GDP とデフレーターの CSV で、年がそろっていない")
+    records = {
+        year: {
+            "consumption": _number(row, _PRIVATE_CONSUMPTION) / _UNIT,
+            "investment": sum(_number(row, c) for c in _INVESTMENT_COLUMNS) / _UNIT,
+            "government": _number(row, _GOVERNMENT_CONSUMPTION) / _UNIT,
+            "exports": _number(row, _EXPORTS) / _UNIT,
+            "imports": _number(row, _IMPORTS) / _UNIT,
+            "deflator": _number(deflator[year], _GDP),
+        }
+        for year, row in sorted(nominal.items())
+    }
+    return pd.DataFrame.from_dict(records, orient="index")
+```
+
+テストは、公式の CSV と同じ構造（cp932、見出し 7 行、3 桁区切り）の小さなファイルを、テストの中で作って、確かめています。単位の変換、投資の合計、支出面の合計が公表の GDP と一致すること、注記の行を読み飛ばすこと、2 つのファイルで年がそろわないときのエラーです。
+
+#### 分析する
+
+読み込んだ表は、この章の関数に渡せます。ただし、この表には、生産面と分配面の列がありません。そのため、生産面の GDP を使う `real_gdp` や `expenditure_shares` は使えず、支出面の GDP（`expenditure_gdp`）で、同じ計算をします。
+
+```python
+from pathlib import Path
+
+from lib.chapter11.economy import expenditure_gdp, growth_rates
+from lib.chapter11.sna import load_sna_expenditure
+
+df = load_sna_expenditure(Path("gaku-mcy2611.csv"), Path("def-cy2611.csv"))
+real = expenditure_gdp(df) / df["deflator"] * 100
+growth = growth_rates(real)
+[int(year) for year in growth.index[growth < 0]]
+```
+
+```text
+[1998, 1999, 2008, 2009, 2011, 2019, 2020, 2024]
+```
+
+これは、2026 年 5 月 19 日に公表された 1 次速報の値での結果です（公表の回が変わると、値も変わりえます）。バブル崩壊後の 1998・1999 年、リーマン・ショックの 2008・2009 年、東日本大震災の 2011 年、コロナ禍の 2020 年が、並んでいます。
+
+確かめたこと:
+
+- 読み込んだ表の `expenditure_gdp` は、公表の名目 GDP と、全年で 0.0002 兆円以内で一致しました（四捨五入の差）
+- 同じ統計表一覧の「実質暦年」（連鎖方式の実質 GDP）の成長率と比べると、マイナス成長の年は同じで、成長率の差は、最大でも 0.09 ポイントでした
+
+名目 GDP をデフレーターで割る方法は、この章で学んだ、簡単な実質化です。公表の実質 GDP は、連鎖方式で、基準年を毎年取り替えながら計算するので、完全には一致しません。
+
 ### 実行結果
 
 ```bash
@@ -365,7 +465,7 @@ uv run pytest test/chapter11
 ```
 
 ```text
-18 passed
+26 passed
 ```
 
 ## 11.5 規則で言うと
