@@ -3,7 +3,9 @@ name = "getting-started-economics"
 version = "0.1.0"
 description = "経済学のためのプログラミング入門（Python 版）"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "matplotlib>=3.11.2",
+]
 
 # 手元・CI のどこでも同じ Python（.python-version）を使うため、uv が管理する Python に限定する
 [tool.uv]
