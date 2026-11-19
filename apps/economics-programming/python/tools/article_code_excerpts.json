@@ -1,0 +1,22 @@
+{
+  "01-preparation-and-first-test.md": [
+    "def quantity_demanded(price: float, intercept: float, slope: float) -> float:\n    return intercept - slope * price",
+    "def quantity_demanded(price: float, intercept: float, slope: float) -> float:\n    return max(intercept - slope * price, 0)"
+  ],
+  "04-functions-and-methods.md": [
+    "def total_cost(quantity: float, fixed_cost: float = 10) -> float:\n    return quantity**3 - 6 * quantity**2 + 15 * quantity + fixed_cost",
+    "def average_cost(quantity: float, fixed_cost: float = 10) -> float:\n    ...\n    return total_cost(quantity, fixed_cost) / quantity\n\n# average_cost の外から quantity を使うと NameError になる"
+  ],
+  "05-control-flow.md": [
+    "def demand(price: float) -> float:\n    return 100 - 2 * price\n\n\nwalras_path(demand, supply, initial_price=0, step=0.1)"
+  ],
+  "07-plotting-with-matplotlib.md": [
+    "@dataclass(frozen=True)\nclass TaxEquilibrium:\n    consumer_price: float\n    producer_price: float\n    quantity: float"
+  ],
+  "09-numpy-arrays.md": [
+    "# x + 2y = 5、3x + 4y = 11\ncoefficients = np.array([[1, 2], [3, 4]])\nconstants = np.array([5, 11])\nnp.linalg.solve(coefficients, constants)    # array([1., 2.])  x = 1、y = 2"
+  ],
+  "14-ad-as-and-major-theories.md": [
+    "def classical(price: float) -> float:\n    return classical_supply(price, full_employment_income=1250)"
+  ]
+}
