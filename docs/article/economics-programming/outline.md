@@ -157,7 +157,7 @@ py4basics の「Python 入門 I（基礎）→ II（NumPy・Pandas・Matplotlib�
 | 計画（本書。内部文書） | `docs/article/economics-programming/outline.md` |
 | 記事トップ・読み方 | `docs/article/economics-programming/index.md`、`how-to-read.md` |
 | 章・付録 | `docs/article/economics-programming/01-preparation-and-first-test.md` など、`appendix-a-bridge-to-regression.md` |
-| 図 | `docs/article/economics-programming/images/`（`tools/render_figures.py` で生成する。図のデータの指紋を `tools/figure_fingerprints.json` に保存して、古くなっていないかを検査する） |
+| 図 | `docs/article/economics-programming/images/`（`article_tools/render_figures.py` で生成する。図のデータの指紋を `tools/figure_fingerprints.json` に保存して、古くなっていないかを検査する） |
 | サンプル実装（完成形） | `apps/economics-programming/python/lib/chapterNN/`、`apps/economics-programming/python/test/chapterNN/` |
 | 読者が自分のコードを書く場所 | `apps/economics-programming/python/practice/chapterNN/`（`README.md` だけを管理する） |
 | 第 11・12 章のデータ | `apps/economics-programming/python/data/`（架空の国の統計） |
@@ -195,11 +195,11 @@ uv run tox -e articles
 | 記事のコード例と実装の照合 | 記事の関数・クラス・定数のコードが、`lib/` と `test/` のソースに含まれているかを調べる。練習問題の解答は対象外 |
 | 実行結果の件数の照合 | 各章の「実行結果」の `N passed` が、その章のテストの実際の件数と一致するかを調べる（同じ章に複数あれば、すべて） |
 | 解答のコードの実行 | 練習問題の解答に書いたコード（関数とテスト）を、実際に実行する |
-| 図の検査 | 図に描いたデータの指紋が、保存した値と一致するか、画像ファイルがあるか、孤立した画像がないか、記事から参照されているかを調べる（`uv run python -m tools.render_figures --check`） |
+| 図の検査 | 図に描いたデータの指紋が、保存した値と一致するか、画像ファイルがあるか、孤立した画像がないか、記事から参照されているかを調べる（`uv run python -m article_article_tools.render_figures --check`） |
 
 - **テストを足したとき:** その章の記事の「実行結果」の件数を、更新する（件数がずれると、検査が失敗する）。
 - **説明用の抜粋を書いたとき:** 完成形と違う、途中段階や省略した形のコードは、`apps/economics-programming/python/tools/article_code_excerpts.json` に、そのままの形で登録する。登録がないと、「ソースにないコード」として失敗する。抜粋の内容を変えたときも、登録を更新する。
-- **図を変えたとき:** `lib/` の関数やモデルの係数を変えて、図のデータが変わったときは、`uv run python -m tools.render_figures` で、画像と指紋を再生成して、一緒にコミットする。新しい図を足すときは、`tools/render_figures.py` の `FIGURES` に登録する（登録がない画像は、孤立として失敗する）。
+- **図を変えたとき:** `lib/` の関数やモデルの係数を変えて、図のデータが変わったときは、`uv run python -m article_article_tools.render_figures` で、画像と指紋を再生成して、一緒にコミットする。新しい図を足すときは、`article_tools/render_figures.py` の `FIGURES` に登録する（登録がない画像は、孤立として失敗する）。
 - **CI:** `.github/workflows/python-ci.yml` が、記事またはサンプル実装の変更で、テスト（カバレッジ 100% の強制）、静的解析、この検査を実行する。`.github/workflows/article-docs.yml` が、記事・マインドマップのページを、サイトとしてビルドして、リンク切れと、見つからないアンカーを検出する。
 
 ## 判断の記録

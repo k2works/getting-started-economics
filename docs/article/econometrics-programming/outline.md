@@ -290,7 +290,7 @@ py4etrics の流れ（統計の復習 → 回帰 → 推論 → 大標本 → �
 | 計画（本書。内部文書） | `docs/article/econometrics-programming/outline.md` |
 | 記事トップ・読み方 | `docs/article/econometrics-programming/index.md`、`how-to-read.md`（記号の表を含む） |
 | 章 | `docs/article/econometrics-programming/01-statistics-review.md` など（`NN-english-slug.md`） |
-| 図 | `docs/article/econometrics-programming/images/`（`tools/render_figures.py` で生成する） |
+| 図 | `docs/article/econometrics-programming/images/`（`article_tools/render_figures.py` で生成する） |
 | サンプル実装（完成形） | `apps/econometrics-programming/python/lib/chapterNN/`、`apps/econometrics-programming/python/test/chapterNN/` |
 | 読者が自分のコードを書く場所 | `apps/econometrics-programming/python/practice/chapterNN/`（`README.md` だけを管理する） |
 | データ | `apps/econometrics-programming/python/data/`（`README.md` と、必要なら乱数で作った小さな CSV） |
@@ -476,3 +476,4 @@ mypy は、`statsmodels.*`・`linearmodels.*`・`wooldridge.*` を、`ignore_mis
     - **章の長さ**: 第 14 章 762 行、第 15 章 895 行、第 16 章 769 行（第 10 章 981 行と合わせて、4 章が 750 行を超えた）。コード例の転記が、分量の大半を占める。全体レビューで、分割か、コード例の折りたたみを検討する
 11. 計画の更新: 各 Bolt の終わりに、この節に、結果（テスト件数・変異テストの結果・観測した値・見つけた問題）を記録する
 12. 完成後に、ほかのシリーズから、案内を足す（第 1 シリーズの付録 A の「この先へ」、第 2 シリーズの第 3 章）
+13. **U6（検査ツールの共通パッケージ化）— 完了**（レビュー対応）: 3 シリーズに複製していた `tools/`（`check_articles`・`render_figures`・`check_realdata`）を、共通パッケージ `apps/article-tools/`（`article_tools`）に移した。各シリーズは、dev グループから、uv の path 依存（`editable = true`）で参照する。シリーズ固有のデータ（図の登録 `figure_registry.py`・指紋・抜粋・解答の前置き）は、各シリーズの `tools/` に残し、`ARTICLE_APP_DIR`（既定は、実行したディレクトリ）で対象を決める。ツールのテストは、共通パッケージ側の 1 か所にまとめ（39 件）、CI に専用のジョブ `article-tools`（テスト・lint・型）を足した。複製が同一であることを確かめる `tools-sync` ジョブは、複製がなくなったので、役目を終えた。図の登録の検査（`test_figure_registry.py`）は、シリーズ側に残した

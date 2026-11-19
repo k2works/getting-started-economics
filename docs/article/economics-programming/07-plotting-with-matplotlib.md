@@ -426,7 +426,7 @@ cd apps/economics-programming/python
 uv run python -c "from lib.chapter07.plot import draw_market; draw_market(100, 2, 0, 3).savefig('practice/market.png')"
 ```
 
-この記事の図は、`lib/` の関数から、コマンド 1 つでまとめて作り直せます（`tools/render_figures.py`）。モデルの係数や関数を変えて、図のデータが変わったときに、記事の図が古いまま残らないように、検査（`tox -e articles`）でも確かめています。
+この記事の図は、`lib/` の関数から、コマンド 1 つでまとめて作り直せます（`article_tools/render_figures.py`）。モデルの係数や関数を変えて、図のデータが変わったときに、記事の図が古いまま残らないように、検査（`tox -e articles`）でも確かめています。
 
 ![需要曲線・供給曲線・均衡点](images/ch07-market.png)
 
