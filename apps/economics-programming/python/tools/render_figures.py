@@ -27,13 +27,16 @@ matplotlib.use("Agg")
 
 import numpy as np  # noqa: E402
 from matplotlib.figure import Figure  # noqa: E402
-from matplotlib.patches import Rectangle  # noqa: E402
+from matplotlib.patches import Polygon, Rectangle  # noqa: E402
 
-from lib.chapter07.plot import draw_market  # noqa: E402
+from lib.chapter04.plot import plot_cost_curves  # noqa: E402
+from lib.chapter07.plot import draw_market, draw_tax_wedge  # noqa: E402
 from lib.chapter08.simulation import plot_histogram, sample_means  # noqa: E402
+from lib.chapter09.plot import plot_keynesian_cross  # noqa: E402
 from lib.chapter11.economy import load_economy  # noqa: E402
 from lib.chapter12.charts import plot_gdp_chart, plot_growth_chart  # noqa: E402
 from lib.chapter13.islm import IsLmModel, plot_islm  # noqa: E402
+from lib.chapter15.plot import plot_monopoly  # noqa: E402
 
 APP_DIR = Path(__file__).resolve().parents[1]
 ARTICLE_DIR = APP_DIR.parents[2] / "docs" / "article" / "economics-programming"
@@ -42,9 +45,14 @@ FINGERPRINTS_FILE = Path(__file__).resolve().parent / "figure_fingerprints.json"
 
 # 記事に載せる図。名前が、画像のファイル名（名前.png）になる
 FIGURES: dict[str, Callable[[], Figure]] = {
+    "ch04-cost-curves": lambda: plot_cost_curves(),
     "ch07-market": lambda: draw_market(100, 2, 0, 3),
+    "ch07-tax-wedge": lambda: draw_tax_wedge(100, 2, 0, 3, 5),
     "ch08-sample-means": lambda: plot_histogram(
         sample_means(30, 1000, random.Random(0)), bins=20
+    ),
+    "ch09-keynesian-cross": lambda: plot_keynesian_cross(
+        20, 0.8, 30, new_investment=40
     ),
     "ch12-gdp": lambda: plot_gdp_chart(load_economy()),
     "ch12-growth": lambda: plot_growth_chart(load_economy()),
@@ -52,6 +60,7 @@ FIGURES: dict[str, Callable[[], Figure]] = {
     "ch13-islm-monetary": lambda: plot_islm(
         IsLmModel(), after=IsLmModel(money_supply=575)
     ),
+    "ch15-monopoly": lambda: plot_monopoly(100, 2, 10),
 }
 
 # 図の数値を丸める桁数（OS や数値計算の版による、ごく小さな誤差を無視する）
@@ -73,14 +82,20 @@ def fingerprint(fig: Figure) -> str:
             for p in ax.patches
             if isinstance(p, Rectangle)
         ]
-        axes.append(
-            {
-                "xlabel": ax.get_xlabel(),
-                "ylabel": ax.get_ylabel(),
-                "lines": lines,
-                "bars": bars,
-            }
-        )
+        entry: dict[str, Any] = {
+            "xlabel": ax.get_xlabel(),
+            "ylabel": ax.get_ylabel(),
+            "lines": lines,
+            "bars": bars,
+        }
+        polygons = [
+            np.round(p.get_xy(), _DIGITS).tolist()
+            for p in ax.patches
+            if isinstance(p, Polygon)
+        ]
+        if polygons:  # 多角形のない図の指紋は、これまでと同じ値のままにする
+            entry["polygons"] = polygons
+        axes.append(entry)
     text = json.dumps(axes, ensure_ascii=False, sort_keys=True)
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 

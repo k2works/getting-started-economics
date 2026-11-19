@@ -2,6 +2,7 @@
 
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
+from matplotlib.patches import Polygon
 
 from tools.render_figures import (
     FIGURES,
@@ -136,3 +137,14 @@ def test_記事が登録されていない図を参照していたら報告す�
         referenced={"a", "ghost"},
     )
     assert any("ghost" in p and "登録されていない" in p for p in problems)
+
+
+def test_塗りつぶした多角形の頂点が変わると指紋も変わる() -> None:
+    def make(x: float) -> Figure:
+        fig, ax = plt.subplots()
+        ax.add_patch(Polygon([(0, 0), (1, 0), (x, 1)]))
+        plt.close(fig)
+        return fig
+
+    assert fingerprint(make(0.5)) == fingerprint(make(0.5))
+    assert fingerprint(make(0.5)) != fingerprint(make(0.7))

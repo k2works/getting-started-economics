@@ -5,10 +5,11 @@ from typing import Any
 import pytest
 from matplotlib.figure import Figure
 from matplotlib.lines import Line2D
+from matplotlib.patches import Polygon, Rectangle
 
 from lib.chapter01.demand import quantity_demanded
 from lib.chapter06.bisection import NoEquilibriumError
-from lib.chapter07.plot import draw_market
+from lib.chapter07.plot import draw_market, draw_tax_wedge
 from lib.chapter07.surplus import (
     consumer_surplus,
     equilibrium,
@@ -252,3 +253,47 @@ def test_逆需要曲線は負の数量と傾き0以下を受け付けない() -
         inverse_demand(quantity=-1, intercept=100, slope=2)
     with pytest.raises(ValueError, match="傾き"):
         inverse_demand(quantity=10, intercept=100, slope=0)
+
+
+def polygon_area(polygon: Polygon) -> float:
+    vertices: Any = polygon.get_xy()
+    points = [(float(x), float(y)) for x, y in vertices]
+    pairs = zip(points, points[1:] + points[:1], strict=True)
+    return abs(sum(x1 * y2 - x2 * y1 for (x1, y1), (x2, y2) in pairs)) / 2
+
+
+def test_課税の図には需要_供給_税込みの供給の3本の線と2つの均衡点がある() -> None:
+    ax = draw_tax_wedge(**MARKET, tax=5).axes[0]
+    assert [line.get_label() for line in ax.lines] == [
+        "Demand",
+        "Supply",
+        "Supply + tax",
+        "Equilibrium (no tax)",
+        "Equilibrium (tax)",
+    ]
+
+
+def test_税込みの供給曲線は供給曲線を税額だけ上にずらしたもの() -> None:
+    ax = draw_tax_wedge(**MARKET, tax=5).axes[0]
+    supply = curve_points(ax.lines[1])
+    taxed = curve_points(ax.lines[2])
+    assert all(taxed[q] == pytest.approx(supply[q] + 5) for q in supply)
+
+
+def test_課税後の均衡点は取引量54で買い手の価格23() -> None:
+    ax = draw_tax_wedge(**MARKET, tax=5).axes[0]
+    assert curve_points(ax.lines[4]) == pytest.approx({54.0: 23.0})
+
+
+def test_死荷重の三角形の面積は課税の死荷重と等しい() -> None:
+    ax = draw_tax_wedge(**MARKET, tax=5).axes[0]
+    triangle = next(p for p in ax.patches if isinstance(p, Polygon))
+    result = equilibrium_with_tax(**MARKET, tax=5)
+    assert polygon_area(triangle) == pytest.approx(result.deadweight_loss)
+
+
+def test_税収の長方形の面積は税収と等しい() -> None:
+    ax = draw_tax_wedge(**MARKET, tax=5).axes[0]
+    box = next(p for p in ax.patches if isinstance(p, Rectangle))
+    result = equilibrium_with_tax(**MARKET, tax=5)
+    assert box.get_width() * box.get_height() == pytest.approx(result.tax_revenue)

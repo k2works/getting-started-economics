@@ -1,8 +1,12 @@
 {
+  "ch04-cost-curves": "f7eb4120936e6c1d083736ae2e9f9c22f414d412c4115174394d75b1e0c7ee58",
   "ch07-market": "c0142b95225f3912f4eba601d4e6067f70a8fc761e9c8decbb637388e327043a",
+  "ch07-tax-wedge": "2a6ea6f3770ef562409faa53719d0c86f22074f9e30fd4feff191a77832874d8",
   "ch08-sample-means": "b71c18ae5138b99f703ee94504b3d1c70f324deff553d6e33e360efa29ed6bba",
+  "ch09-keynesian-cross": "7b08fbf9a966e69b15e2f0d76258a10640d4b23d1e8b5fc73c30121a737eb0fd",
   "ch12-gdp": "eb8d14c6c07190a53eac2f9547d814e36f43e6d394eabc2fa45e7ec6ef96d1c3",
   "ch12-growth": "101642a165f846d007961c5e5c8560ddd10b3ba575db5d9283cc4e68c206286e",
   "ch13-islm-fiscal": "e0bb0f0183ed32f3be4456dceebf65d56fa95a5ffbd3185e21669b5d7eea805b",
-  "ch13-islm-monetary": "ba4492f3ba76d2ae34f02b96e49f04c96d254da1ea66affda0d4b2b5d21dc1e9"
+  "ch13-islm-monetary": "ba4492f3ba76d2ae34f02b96e49f04c96d254da1ea66affda0d4b2b5d21dc1e9",
+  "ch15-monopoly": "20631e634f17e5d52c06f203ee49fb98fbafdd3fabdd502c227ba91d7878e64a"
 }
