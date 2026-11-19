@@ -150,14 +150,15 @@ def test_不均一分散の標本の係数は真の値() -> None:
 
 def test_均一分散なら通常の標準誤差も頑健な標準誤差も実際のばらつきに近い() -> None:
     r = standard_error_comparison(50, 2000, False, np.random.default_rng(0))
-    assert r["classical"] == pytest.approx(r["sd"], rel=0.05)
-    assert r["hc1"] == pytest.approx(r["sd"], rel=0.05)
+    # 許容誤差: sd の推定誤差（約 1.6%）の 4 倍。HC1 は n = 50 で 5% ほど過小なので、その分を足す
+    assert r["classical"] == pytest.approx(r["sd"], rel=0.07)
+    assert r["hc1"] == pytest.approx(r["sd"], rel=0.12)
 
 
 def test_不均一分散なら通常の標準誤差は過小で頑健な標準誤差は近い() -> None:
     r = standard_error_comparison(50, 2000, True, np.random.default_rng(0))
     assert r["classical"] < 0.85 * r["sd"]
-    assert r["hc1"] == pytest.approx(r["sd"], rel=0.06)
+    assert r["hc1"] == pytest.approx(r["sd"], rel=0.12)
 
 
 def test_頑健な標準誤差の係数は通常の最小二乗法と同じ() -> None:
@@ -165,3 +166,20 @@ def test_頑健な標準誤差の係数は通常の最小二乗法と同じ() ->
     assert list(robust_standard_errors(y, x).index) == list(
         fit_ols(y, x).coefficients.index
     )
+
+
+@pytest.mark.filterwarnings(
+    "ignore::statsmodels.tools.sm_exceptions.SingularMatrixWarning"
+)
+def test_ダミー変数を含んでもWhite検定は_statsmodels_と一致する() -> None:
+    rng = np.random.default_rng(3)
+    n = 400
+    d = (rng.random(n) < 0.4).astype(float)
+    x = rng.standard_normal(n)
+    y = 1 + 2 * x + d + (0.5 + d) * rng.standard_normal(n)
+    frame = pd.DataFrame({"x": x, "d": d})
+    result = white_test(y, frame)
+    fit = sm.OLS(y, sm.add_constant(frame)).fit()
+    lm, p, _, _ = het_white(fit.resid, fit.model.exog)
+    assert result.statistic == pytest.approx(lm)
+    assert result.p_value == pytest.approx(p)

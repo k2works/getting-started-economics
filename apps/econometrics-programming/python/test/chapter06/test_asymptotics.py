@@ -130,9 +130,16 @@ def test_標本が大きければ誤差が歪んでいてもt値は標準正規�
     )
 
 
-def test_標本が小さく誤差が歪んでいると棄却率が5パーセントを超える() -> None:
-    t = t_value_distribution(10, 2000, True, np.random.default_rng(1))
-    assert np.mean(np.abs(t) > 1.96) > 0.065
+def test_小標本で臨界値1_96を使うと棄却率が超えるがt分布の臨界値なら5パーセントに近い() -> (
+    None
+):
+    critical = stats.t.ppf(0.975, 8)
+    for skewed in (False, True):
+        t = t_value_distribution(10, 2000, skewed, np.random.default_rng(1))
+        assert np.mean(np.abs(t) > 1.96) > 0.07
+        assert np.mean(np.abs(t) > critical) == pytest.approx(
+            0.05, abs=4 * (0.05 * 0.95 / 2000) ** 0.5
+        )
 
 
 def test_JB検定は歪んだ誤差を棄却し正規の誤差をほとんど棄却しない() -> None:

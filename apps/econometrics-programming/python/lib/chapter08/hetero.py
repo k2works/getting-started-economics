@@ -67,14 +67,20 @@ def breusch_pagan(y: ArrayLike, x: ArrayLike) -> TestResult:
 
 
 def white_test(y: ArrayLike, x: ArrayLike) -> TestResult:
-    """White 検定: 説明変数・その 2 乗・交差項で、残差の 2 乗を説明する。"""
+    """White 検定: 説明変数・その 2 乗・交差項で、残差の 2 乗を説明する。
+
+    ダミー変数は d² = d になるので、同じ値の列は 1 本にまとめる。
+    自由度は、まとめたあとの列数。
+    """
     frame = _frame(x)
     columns = {name: frame[name] for name in frame.columns}
     for name in frame.columns:
         columns[f"{name}^2"] = frame[name] ** 2
     for a, b in combinations(frame.columns, 2):
         columns[f"{a}*{b}"] = frame[a] * frame[b]
-    return _squared_residual_test(y, frame, pd.DataFrame(columns))
+    auxiliary = pd.DataFrame(columns)
+    auxiliary = auxiliary.loc[:, ~auxiliary.T.duplicated()]
+    return _squared_residual_test(y, frame, auxiliary)
 
 
 def reset_test(y: ArrayLike, x: ArrayLike) -> TestResult:

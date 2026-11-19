@@ -205,3 +205,9 @@ def test_相関がなければOLSも偏らない() -> None:
     se = table.std() / 200**0.5
     assert abs(table["ols_selected"].mean() - 2.0) < 4 * se["ols_selected"]
     assert abs(table["heckit"].mean() - 2.0) < 4 * se["heckit"]
+
+
+def test_逆ミルズ比は極端に小さい値でも有限で_c_の符号を変えた値に近い() -> None:
+    values = inverse_mills_ratio([-38.0, -40.0, -100.0])
+    assert np.all(np.isfinite(values))
+    assert values == pytest.approx([38.0, 40.0, 100.0], rel=0.01)

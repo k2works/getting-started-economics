@@ -25,7 +25,10 @@ class HeckitFit:
 def inverse_mills_ratio(c: ArrayLike) -> NDArray[np.float64]:
     """逆ミルズ比 λ(c) = φ(c) ÷ Φ(c)。選択された観測値の、誤差項の平均の補正に使う。"""
     values = np.asarray(c, dtype=float)
-    result: NDArray[np.float64] = stats.norm.pdf(values) / stats.norm.cdf(values)
+    # 対数の差から作る（c が非常に小さくても、0 ÷ 0 にならない）
+    result: NDArray[np.float64] = np.exp(
+        stats.norm.logpdf(values) - stats.norm.logcdf(values)
+    )
     return result
 
 

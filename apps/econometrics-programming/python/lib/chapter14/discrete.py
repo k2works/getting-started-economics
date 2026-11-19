@@ -58,7 +58,8 @@ def _score_and_weights(
     """x′β についての、対数尤度の 1 階微分（スコア）と、2 階微分の符号を変えたもの。"""
     dist = LINKS[link]
     q = 2 * y - 1
-    lam = q * dist.pdf(xb) / dist.cdf(q * xb)
+    # 比を、対数の差から作る（極端な x′β でも、0 ÷ 0 や 0 での除算にならない）
+    lam = q * np.exp(dist.logpdf(xb) - dist.logcdf(q * xb))
     if link == "logit":
         p = dist.cdf(xb)
         return lam, p * (1 - p)

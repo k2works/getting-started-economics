@@ -8,6 +8,7 @@ from scipy import stats
 
 from lib.chapter03.multiple import fit_ols
 from lib.chapter14.discrete import (
+    _score_and_weights,
     average_marginal_effects,
     draw_binary_sample,
     fit_binary,
@@ -209,3 +210,29 @@ def test_線形確率モデルは確率の範囲の外に出ることがある()
     assert (values > 1).any() or (values < 0).any()
     probabilities = predicted_probabilities(fit_binary(s["y"], x), x)
     assert ((probabilities > 0) & (probabilities < 1)).all()
+
+
+def test_極端な線形予測値でもスコアは有限() -> None:
+    y = np.array([1.0, 0.0, 1.0])
+    xb = np.array([-40.0, 40.0, -800.0])
+    for link in ("logit", "probit"):
+        score, weights = _score_and_weights(link, y, xb)
+        assert np.all(np.isfinite(score))
+        assert np.all(np.isfinite(weights))
+    # 外れた観測値のスコアは、ほぼ |x′β|（誤って予測した側）になる
+    probit_score, _ = _score_and_weights("probit", y, xb)
+    assert probit_score == pytest.approx([40.0, -40.0, 800.0], rel=0.01)
+
+
+def test_まれな外れ値があっても完全分離と誤報しない() -> None:
+    rng = np.random.default_rng(0)
+    x = rng.standard_normal(20000)
+    y = (4 * x + rng.standard_normal(20000) > 0).astype(float)
+    x = np.append(x, -6.0)
+    y = np.append(y, 1.0)
+    fit = fit_binary(y, x, "probit")
+    # 最大値では、スコアの合計が 0（statsmodels は確率を 2.2e-16 で切り詰めるので、照合に使わない）
+    design = sm.add_constant(x)
+    score, _ = _score_and_weights("probit", y, design @ fit.coefficients.to_numpy())
+    assert design.T @ score == pytest.approx([0.0, 0.0], abs=1e-6)
+    assert fit.coefficients["x1"] == pytest.approx(3.4944, abs=1e-3)
