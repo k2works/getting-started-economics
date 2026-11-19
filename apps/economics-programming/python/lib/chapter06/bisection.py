@@ -33,10 +33,15 @@ def find_equilibrium_price(
     tolerance: float = 1e-9,
     max_iterations: int = 100,
 ) -> float:
-    """区間 [low, high] を半分ずつに絞り、超過需要が 0 になる価格を返す。"""
+    """区間 [low, high] を半分ずつに絞り、超過需要が 0 になる価格を返す。
+
+    区間の幅が tolerance 未満になる前に、max_iterations 回の反復に達したときは、
+    収束していない値を返さず、RuntimeError にする。
+    """
     if low >= high:
         raise ValueError("下限は上限より小さくなければならない")
-    if excess_demand(low) * excess_demand(high) > 0:
+    excess_low = excess_demand(low)
+    if excess_low * excess_demand(high) > 0:
         raise NoEquilibriumError(
             "区間の両端で超過需要の符号が同じなので均衡が見つからない"
         )
@@ -44,8 +49,11 @@ def find_equilibrium_price(
         if high - low < tolerance:
             break
         middle = (low + high) / 2
-        if excess_demand(low) * excess_demand(middle) <= 0:
+        excess_middle = excess_demand(middle)
+        if excess_low * excess_middle <= 0:
             high = middle
         else:
-            low = middle
+            low, excess_low = middle, excess_middle
+    if high - low >= tolerance:
+        raise RuntimeError("区間が縮まらなかった。max_iterations を増やす")
     return (low + high) / 2

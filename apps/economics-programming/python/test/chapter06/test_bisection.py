@@ -49,3 +49,53 @@ def test_下限が上限以上なら区間として成り立たない() -> None:
     )
     with pytest.raises(ValueError):
         find_equilibrium_price(excess, low=50, high=10)
+
+
+def test_反復の上限までに区間が縮まらなければ例外になる() -> None:
+    excess = make_excess_demand(
+        demand_intercept=100, demand_slope=2, supply_intercept=0, supply_slope=3
+    )
+    with pytest.raises(RuntimeError):
+        find_equilibrium_price(excess, low=0, high=100, max_iterations=1)
+
+
+def test_区間の幅を1e_9未満にするには37回の反復が必要() -> None:
+    # 幅 100 を半分ずつにすると、36 回で約 1.46e-9、37 回で約 7.3e-10
+    excess = make_excess_demand(
+        demand_intercept=100, demand_slope=2, supply_intercept=0, supply_slope=3
+    )
+    assert find_equilibrium_price(
+        excess, low=0, high=100, max_iterations=37
+    ) == pytest.approx(20)
+    with pytest.raises(RuntimeError):
+        find_equilibrium_price(excess, low=0, high=100, max_iterations=36)
+
+
+def test_超過需要の評価は1回の反復につき1回だけ() -> None:
+    inner = make_excess_demand(
+        demand_intercept=100, demand_slope=2, supply_intercept=0, supply_slope=3
+    )
+    calls = 0
+
+    def counting(price: float) -> float:
+        nonlocal calls
+        calls += 1
+        return inner(price)
+
+    find_equilibrium_price(counting, low=0, high=100)
+    # 両端の符号の確認で 2 回、反復 37 回で 37 回
+    assert calls == 2 + 37
+
+
+def test_区間の下端がちょうど均衡ならその価格を返す() -> None:
+    excess = make_excess_demand(
+        demand_intercept=100, demand_slope=2, supply_intercept=0, supply_slope=3
+    )
+    assert find_equilibrium_price(excess, low=20, high=100) == pytest.approx(20)
+
+
+def test_区間の上端がちょうど均衡ならその価格を返す() -> None:
+    excess = make_excess_demand(
+        demand_intercept=100, demand_slope=2, supply_intercept=0, supply_slope=3
+    )
+    assert find_equilibrium_price(excess, low=0, high=20) == pytest.approx(20)
