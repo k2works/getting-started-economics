@@ -163,7 +163,13 @@ def income_elasticity(
 ```python
 @pytest.mark.parametrize(
     ("elasticity", "expected"),
-    [(3.0, "奢侈品"), (1.0, "奢侈品"), (0.5, "必需品"), (0.0, "必需品"), (-0.2, "下級財")],
+    [
+        (3.0, "奢侈品"),
+        (1.0, "奢侈品"),
+        (0.5, "必需品"),
+        (0.0, "必需品"),
+        (-0.2, "下級財"),
+    ],
 )
 def test_所得弾力性で財を分類する(elasticity: float, expected: str) -> None:
     assert classify_income_elasticity(elasticity) == expected
