@@ -18,7 +18,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 経済学の題材 | ワルラス調整（価格で調整）とマーシャル調整（数量で調整）（マインドマップ [5-3](<../経済学・経済政策 トピック別マインドマップ.md#t3>)） |
 | 使う Python の機能 | `if` / `elif` / `else`、`for`、`range`、`return` での途中終了、関数を引数に渡す（`Callable` の型ヒント）、`+=`、`abs`、切り出し（`[:3]`・`[-1]`） |
 | 完成形 | `market_state`、`walras_path`、`marshall_path` |
-| ファイル | 実装: `lib/chapter05/adjustment.py`／テスト: `test/chapter05/test_adjustment.py`（自分で書くときは、`practice/chapter05/` に、同じ名前で作ります） |
+| ファイル | 実装: `lib/chapter05/adjustment.py`、`lib/chapter05/plot.py`（調整経路の図）／テスト: `test/chapter05/test_adjustment.py`、`test/chapter05/test_plot.py`（自分で書くときは、`practice/chapter05/` に、同じ名前で作ります） |
 
 ### 経済学の式とコードの対応
 
@@ -184,6 +184,19 @@ def walras_path(
 
 実際に動かすと、価格は 0 → 10 → 15 → 17.5 → 18.75 と近づき、27 回の調整で 19.999999850988388 になります。
 
+ワルラス調整の結果を、図にします。調整の速さ k（コードの `step`）を変えると、経路が変わります。
+
+![ワルラス調整の価格の経路。調整の速さによる違い](images/ch05-price-paths.png)
+
+図の読み方:
+
+- 横軸が繰り返しの回数、縦軸が価格です。点線が均衡価格（20）です
+- `step = 0.1`（青）は、均衡に、単調に近づきます。1 回ごとに、均衡との差が半分になります
+- `step = 0.3`（オレンジ）は、1 回目で行き過ぎ（価格 30）、均衡の上下を往復しながら、近づきます
+- 均衡との差は、1 回ごとに、(1 − 5k) 倍になります。k = 0.1 では 0.5 倍、k = 0.3 では −0.5 倍です。k = 0.5 では −1.5 倍になって、差が広がり続け（発散）、`RuntimeError` になります
+
+この図は、`lib/chapter05/plot.py` の `plot_price_paths` が描きます。
+
 ### マーシャル調整
 
 ワルラス調整が「価格を動かす」のに対して、マーシャル調整は「数量を動かす」方法です。需要価格（その数量で買い手が払ってよい価格）が供給価格（売り手が受け取りたい価格）より高いと、数量が増えます。
@@ -235,7 +248,7 @@ uv run pytest test/chapter05
 ```
 
 ```text
-11 passed
+14 passed
 ```
 
 ## 5.5 規則で言うと

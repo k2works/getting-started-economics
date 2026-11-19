@@ -18,7 +18,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 経済学の題材 | 需要曲線 Q = a − bP（マインドマップ [5-1](<../経済学・経済政策 トピック別マインドマップ.md#t1>)） |
 | 使う Python の機能 | 関数、`if`、`max`、例外、型ヒント |
 | 完成形 | 価格を入れると需要量を返す `quantity_demanded` 関数と、6 つのテスト |
-| ファイル | 実装: `lib/chapter01/demand.py`／テスト: `test/chapter01/test_demand.py`（自分で書くときは、`practice/chapter01/` に、同じ名前で作ります） |
+| ファイル | 実装: `lib/chapter01/demand.py`、`lib/chapter01/plot.py`（需要曲線の図）／テスト: `test/chapter01/test_demand.py`、`test/chapter01/test_plot.py`（自分で書くときは、`practice/chapter01/` に、同じ名前で作ります） |
 
 ### 既に知っていることとの対応
 
@@ -44,6 +44,21 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 > **記号について**: この記事では、需要曲線を Q = a − bP、供給曲線を Q = c + dP と書きます（第 3 章以降で使います）。ただし、a・b・c などの記号は、章によって、別の意味で使うものがあります（たとえば、第 9 章の c は、限界消費性向です）。そのときは、その章の表の下に、注記があります。一覧は、[記号について](how-to-read.md#symbols) を参照してください。
 
 ## 1.2 環境を準備する
+
+### 需要曲線を図で見る
+
+この章で扱う需要曲線 Q = a − bP を、図にします。a = 100、b = 2 の場合です。
+
+![需要曲線とチョーク価格](images/ch01-demand.png)
+
+図の読み方:
+
+- 縦軸が価格、横軸が数量です。需要曲線は、右下がりの直線です
+- 横軸の切片（四角、数量 100）は、**価格が 0 のときの需要量** a です
+- 縦軸の切片（丸、価格 50）は、**需要量がちょうど 0 になる価格** a ÷ b（`choke_price`）です
+- 式の傾き b = 2 は、「価格が 1 上がると、需要量が 2 減る」ことです。図では、縦軸が価格なので、線の見かけの傾きは、b の逆数（−1 ÷ b = −0.5）になります。式の b と、図の傾きが逆になるので、注意してください
+
+この図は、`lib/chapter01/plot.py` の `plot_demand_curve` が描きます。図の生成の方法は、第 7 章にあります。
 
 ### 必要なもの
 
@@ -102,10 +117,10 @@ uv run pytest test/chapter01
 ```
 
 ```text
-6 passed
+9 passed
 ```
 
-`uv sync` は、必要なライブラリを用意します（初回は、時間がかかります）。6 つのテストが通れば、準備は完了です。
+`uv sync` は、必要なライブラリを用意します（初回は、時間がかかります）。9 つのテストが通れば、準備は完了です。
 
 各章のコマンドの最初の行 `cd apps/economics-programming/python` は、リポジトリの最上位（`getting-started-economics`）からの道のりです。すでにこのディレクトリにいるときは、その行を省略してください。
 
@@ -326,7 +341,7 @@ uv run pytest test/chapter01
 ```
 
 ```text
-6 passed
+9 passed
 ```
 
 章ごとにテストを実行するときは、`uv run pytest test/chapter02` のように、章のディレクトリを指定します。全章分をまとめて実行するときは、ディレクトリを指定せずに `uv run pytest` とします。

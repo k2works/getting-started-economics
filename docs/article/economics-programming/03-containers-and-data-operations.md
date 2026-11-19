@@ -18,7 +18,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 経済学の題材 | 需要表・供給表、超過需要、市場均衡（マインドマップ [5-3](<../経済学・経済政策 トピック別マインドマップ.md#t3>)） |
 | 使う Python の機能 | リスト、辞書（`.items()`）、内包表記（`if` つき）、`in`、`Mapping` の型ヒント |
 | 完成形 | `demand_schedule`、`supply_schedule`、`excess_demand`、`market_clearing_prices` |
-| ファイル | 実装: `lib/chapter03/schedule.py`／テスト: `test/chapter03/test_schedule.py`（自分で書くときは、`practice/chapter03/` に、同じ名前で作ります） |
+| ファイル | 実装: `lib/chapter03/schedule.py`、`lib/chapter03/plot.py`（需要表と供給表の図）／テスト: `test/chapter03/test_schedule.py`、`test/chapter03/test_plot.py`（自分で書くときは、`practice/chapter03/` に、同じ名前で作ります） |
 
 ### 経済学の式とコードの対応
 
@@ -146,6 +146,19 @@ def supply_schedule(
     return {p: quantity_supplied(p, intercept, slope) for p in prices}
 ```
 
+需要表と供給表を、図にします。表の 1 行が、図の 1 点です。
+
+![需要表と供給表の点、市場均衡](images/ch03-schedules.png)
+
+図の読み方:
+
+- 青い点が、需要表の（数量、価格）。価格が上がるほど、数量が減ります
+- オレンジの点が、供給表の（数量、価格）。価格が上がるほど、数量が増えます
+- 2 本の線が交わる、四角で囲んだ点（数量 60、価格 20）が、需要量と供給量が等しい**市場均衡**です
+- 価格が 20 より低いと、同じ価格で、需要の点のほうが右（需要量が多い）にあります。これが、次の節の**超過需要**（品不足）です
+
+この図は、`lib/chapter03/plot.py` の `plot_schedules` が描きます。
+
 ### 超過需要
 
 2 つの表から、価格ごとに引き算をします。
@@ -203,7 +216,7 @@ uv run pytest test/chapter03
 ```
 
 ```text
-7 passed
+11 passed
 ```
 
 ## 3.5 規則で言うと

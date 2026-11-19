@@ -18,7 +18,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | 経済学の題材 | 均衡価格を求める（マインドマップ [5-3](<../経済学・経済政策 トピック別マインドマップ.md#t3>)） |
 | 使う Python の機能 | `import`、モジュールとパッケージ、例外（`raise`・独自の例外）、クロージャ（`nonlocal`）、アルゴリズム |
 | 完成形 | `make_excess_demand`、`find_equilibrium_price`、`NoEquilibriumError` |
-| ファイル | 実装: `lib/chapter06/bisection.py`／テスト: `test/chapter06/test_bisection.py`（自分で書くときは、`practice/chapter06/` に、同じ名前で作ります） |
+| ファイル | 実装: `lib/chapter06/bisection.py`、`lib/chapter06/plot.py`（二分法の図）／テスト: `test/chapter06/test_bisection.py`、`test/chapter06/test_plot.py`（自分で書くときは、`practice/chapter06/` に、同じ名前で作ります） |
 
 ### 経済学の式とコードの対応
 
@@ -129,6 +129,19 @@ def make_excess_demand(
 ```
 
 内側の関数 `excess_demand` は、外側の引数（切片と傾き）を覚えています。このような仕組みを、クロージャと呼びます。第 5 章で関数を引数に渡したのと同じく、関数を値として扱う例です。
+
+二分法の動きを、図にします。超過需要の曲線が 0 になる価格を、区間を半分ずつに絞って探します。
+
+![二分法の中点。1 から 6 の順に、超過需要が 0 になる価格に近づく](images/ch06-bisection.png)
+
+図の読み方:
+
+- 青い線が、超過需要（需要量 − 供給量）です。価格が上がると下がり、価格 20 で 0 になります
+- 黒い点の番号が、中点を調べる順番です。区間 [0, 100] の中点 50（1 番）は、超過需要が負なので、均衡は左にあります。次は 25（2 番）、12.5（3 番、正なので右へ）、18.75（4 番）、21.875（5 番）、20.3125（6 番）と、0 の線の近くに集まります
+- 毎回、符号が変わる側の半分を残すので、6 回で区間の幅は 100 ÷ 64 ≈ 1.6 になります
+- 価格 50 で線の傾きが変わるのは、需要量が 0 で頭打ちになる（負にならない）ためです
+
+この図は、`lib/chapter06/plot.py` の `plot_bisection` が描きます。
 
 ### 二分法のテスト
 
@@ -281,7 +294,7 @@ uv run pytest test/chapter06
 ```
 
 ```text
-11 passed
+17 passed
 ```
 
 ## 6.5 規則で言うと
