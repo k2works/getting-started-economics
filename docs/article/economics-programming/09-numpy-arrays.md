@@ -211,14 +211,53 @@ def equilibrium_by_linear_algebra(
 
     Q + bP = a（需要曲線）
     Q - dP = c（供給曲線）
+
+    第 7 章の `equilibrium` と同じく、価格が負、または数量が 0 以下になる市場には、
+    均衡がないので、NoEquilibriumError にする。
     """
     coefficients = np.array([[1.0, demand_slope], [1.0, -supply_slope]])
     constants = np.array([demand_intercept, supply_intercept])
     quantity, price = np.linalg.solve(coefficients, constants)
+    check_equilibrium_exists(float(price), float(quantity))
     return float(price), float(quantity)
 ```
 
-第 7 章の `equilibrium` と同じ答え（価格 20、数量 60）になります。
+第 7 章の `equilibrium` と同じ答え（価格 20、数量 60）になります。均衡がない市場（価格が負、または数量が 0 以下）では、第 7 章の `check_equilibrium_exists` を呼んで、同じ `NoEquilibriumError` にします。連立方程式は、解けさえすれば値を返してしまうので、「その値が経済学の意味を持つか」の確認を、自分で足す必要があります。
+
+求め方の違う実装が、同じ答えになることは、テストで固定します。
+
+```python
+@pytest.mark.parametrize("supply_intercept", [0, 10, -30])
+def test_連立方程式の解は第7章の閉形式の解と一致する(supply_intercept: float) -> None:
+    market = {
+        "demand_intercept": 100,
+        "demand_slope": 2,
+        "supply_intercept": supply_intercept,
+        "supply_slope": 3,
+    }
+    assert equilibrium_by_linear_algebra(**market) == pytest.approx(
+        equilibrium(**market)
+    )
+
+
+def test_価格が負になる市場では3つの方法がそろって均衡なしと判断する() -> None:
+    market = {
+        "demand_intercept": 100,
+        "demand_slope": 2,
+        "supply_intercept": 120,
+        "supply_slope": 3,
+    }
+    with pytest.raises(NoEquilibriumError):
+        equilibrium(**market)
+    with pytest.raises(NoEquilibriumError):
+        equilibrium_by_linear_algebra(**market)
+    with pytest.raises(NoEquilibriumError):
+        find_equilibrium_price(make_excess_demand(**market), low=0, high=100)
+```
+
+供給曲線の切片が 0・10・−30 の 3 つの市場で、連立方程式の解が、第 7 章の閉形式の解と一致します。そして、価格が負になる市場では、閉形式、連立方程式、第 6 章の二分法の 3 つが、そろって `NoEquilibriumError` になります。
+
+ただし、二分法は、数量が負になる市場（需要が価格 10 でなくなり、供給が価格 30 まで始まらない）では、均衡なしと判断できません。需要も供給も 0 になる価格の範囲では、超過需要が 0 なので、その中の 1 点（価格 10）を「均衡」として返します。二分法は、価格だけから超過需要を計算する、汎用の方法なので、取引量が 0 であることには気づけません。
 
 ### 配列で需要量をまとめて計算する
 

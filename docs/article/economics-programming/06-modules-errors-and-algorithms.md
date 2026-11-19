@@ -77,10 +77,10 @@ except ValueError as error:
 
 ```python
 class NoEquilibriumError(ValueError):
-    """指定した区間に均衡価格が見つからないときの例外。"""
+    """均衡が見つからない（存在しない）ときの例外。"""
 ```
 
-`ValueError` の一種なので、`except ValueError` でも受け取れますが、`except NoEquilibriumError` と書けば、この場面だけを狙って処理できます。
+`ValueError` の一種なので、`except ValueError` でも受け取れますが、`except NoEquilibriumError` と書けば、この場面だけを狙って処理できます。この例外は、二分法だけでなく、第 7 章の `equilibrium` と第 9 章の連立方程式も、均衡がない市場で使います（第 7 章の 7.4 節で説明します）。
 
 ### アルゴリズム: 二分法
 

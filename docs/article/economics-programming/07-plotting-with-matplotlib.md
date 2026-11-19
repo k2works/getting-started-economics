@@ -116,15 +116,35 @@ def test_生産者余剰は価格と供給曲線の間の三角形の面積() ->
 `**MARKET` は、辞書の中身を、名前付きの引数として展開する書き方です。同じ需要曲線・供給曲線を、何度も書かずに済みます。
 
 ```python
+def check_equilibrium_exists(price: float, quantity: float) -> None:
+    """価格が 0 以上、数量が正の均衡があることを確かめる。なければ例外にする。
+
+    第 1 章の「価格も需要量も負にならない」を、均衡にも課す。
+    """
+    if price < 0:
+        raise NoEquilibriumError(
+            "均衡価格が負になる。価格が 0 でも供給が需要を上回るので、均衡がない"
+        )
+    if quantity <= 0:
+        raise NoEquilibriumError(
+            "均衡数量が 0 以下になる。取引が成立しないので、均衡がない"
+        )
+
+
 def equilibrium(
     demand_intercept: float,
     demand_slope: float,
     supply_intercept: float,
     supply_slope: float,
 ) -> tuple[float, float]:
-    """均衡価格と均衡数量を返す。a - bP = c + dP を P について解く。"""
+    """均衡価格と均衡数量を返す。a - bP = c + dP を P について解く。
+
+    価格が負、または数量が 0 以下になる市場には、均衡がないので、
+    NoEquilibriumError にする。
+    """
     price = (demand_intercept - supply_intercept) / (demand_slope + supply_slope)
     quantity = demand_intercept - demand_slope * price
+    check_equilibrium_exists(price, quantity)
     return price, quantity
 
 
@@ -161,6 +181,66 @@ def producer_surplus(
 `equilibrium` は、価格と数量の 2 つの値を、まとめて（タプルで）返します。`price, quantity = equilibrium(...)` のように、2 つの変数に分けて受け取れます。
 
 `producer_surplus` が、供給曲線の切片が正のときを受け付けないのは、そのとき価格が 0 でも供給量があり、三角形の面積では表せないからです。これは、この章の三角形による計算の限界です。
+
+### 均衡がない市場
+
+式を P について解けば、均衡価格は、どんな係数でも求まります。しかし、その値が経済学の意味を持つとは限りません。次の 2 つの市場で、確かめます。
+
+| 市場 | 需要曲線 | 供給曲線 | 解 | 何が起きているか |
+| :--- | :--- | :--- | :--- | :--- |
+| 価格が負になる | Q = 100 − 2P | Q = 120 + 3P | P = −4、Q = 108 | 価格が 0 でも、供給（120）が、需要（100）を上回る。価格は、0 より下がれない |
+| 数量が負になる | Q = 10 − P | Q = −30 + P | P = 20、Q = −10 | 需要は価格 10 でなくなり、供給は価格 30 まで始まらない。取引が成立しない |
+
+どちらも、式の解は出ますが、負の価格や負の数量は、第 1 章で決めた「価格も需要量も負にならない」に反します。均衡がない市場として、`NoEquilibriumError` にします。
+
+```python
+# 需要の切片が供給の切片より小さい市場: 価格が 0 でも供給が需要を上回る（P* = -4）
+MARKET_WITH_NEGATIVE_PRICE = {
+    "demand_intercept": 100,
+    "demand_slope": 2,
+    "supply_intercept": 120,
+    "supply_slope": 3,
+}
+
+# 価格は正でも取引量が負になる市場: 需要は価格 10 でなくなり、供給は価格 30 まで始まらない
+MARKET_WITH_NEGATIVE_QUANTITY = {
+    "demand_intercept": 10,
+    "demand_slope": 1,
+    "supply_intercept": -30,
+    "supply_slope": 1,
+}
+
+
+def test_価格が負になる市場では均衡を求められない() -> None:
+    with pytest.raises(NoEquilibriumError):
+        equilibrium(**MARKET_WITH_NEGATIVE_PRICE)
+
+
+def test_取引量が負になる市場では均衡を求められない() -> None:
+    with pytest.raises(NoEquilibriumError):
+        equilibrium(**MARKET_WITH_NEGATIVE_QUANTITY)
+
+
+def test_価格がちょうど0になる市場の均衡は許される() -> None:
+    # 100 - 2P = 100 + 3P から P = 0、Q = 100
+    assert equilibrium(100, 2, 100, 3) == pytest.approx((0, 100))
+```
+
+価格がちょうど 0 になる市場の均衡は、許します（価格は 0 以上であればよいからです）。余剰や図、従量税も、`equilibrium` を使っているので、均衡がない市場では、同じ例外になります。
+
+```python
+def test_均衡のない市場では余剰も図も求められない() -> None:
+    with pytest.raises(NoEquilibriumError):
+        consumer_surplus(**MARKET_WITH_NEGATIVE_PRICE)
+    with pytest.raises(NoEquilibriumError):
+        draw_market(**MARKET_WITH_NEGATIVE_PRICE)
+    with pytest.raises(NoEquilibriumError):
+        producer_surplus(**MARKET_WITH_NEGATIVE_QUANTITY)
+    with pytest.raises(NoEquilibriumError):
+        equilibrium_with_tax(**MARKET_WITH_NEGATIVE_PRICE, tax=5)
+```
+
+この確認を、`equilibrium` の 1 か所に置いたことで、第 9 章の連立方程式（後述）も、同じ関数 `check_equilibrium_exists` で確かめられます。均衡の求め方が違っても（式、連立方程式、二分法）、「均衡がない市場は、例外にする」という前提を、そろえるためです。
 
 ### 従量税と死荷重
 
