@@ -6380,7 +6380,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter04
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>16 passed
+<div class="highlight"><pre><span></span><code>17 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter04/</code> に、完成形と同じ名前（<code>diagnostics.py</code>・<code>test_diagnostics.py</code>）のファイルを作ります。</p>
 <h2 id="43">4.3 予想する<a class="headerlink" href="#43" title="Permanent link">&para;</a></h2>
@@ -6474,6 +6474,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">result</span><span class="p">:</span> <span class="n">OlsResult</span><span class="p">,</span> <span class="n">leverage</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""スチューデント化残差 e ÷ (σ̂ · √(1 − てこ比))。"""</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">leverage</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"てこ比が 1 の観測値があり、その観測値の残差は計算できない"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">residuals</span> <span class="o">/</span> <span class="p">(</span><span class="n">_sigma_hat</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">leverage</span><span class="p">))</span>
 
 
@@ -6633,6 +6635,12 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
         <span class="n">maxima</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">cooks_distance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">leverage</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
     <span class="k">assert</span> <span class="n">maxima</span><span class="p">[</span><span class="s2">"outlier"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">maxima</span><span class="p">[</span><span class="s2">"linear"</span><span class="p">]</span>
     <span class="k">assert</span> <span class="n">maxima</span><span class="p">[</span><span class="s2">"outlier"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_てこ比が1の観測値があればスチューデント化残差は計算できない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">])</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"てこ比"</span><span class="p">):</span>
+        <span class="n">studentized_residuals</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]))</span>
 </code></pre></div>
 <p><img alt="要約統計量が同じ 4 組のデータ。直線は、4 組とも同じ" src="../images/ch04-same-summary.png" /></p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -6765,7 +6773,7 @@ clustered 7.5 2.0 0.8 0.4848 0.176
 <h3 id="_7">実行結果<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter04
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>16 passed
+<div class="highlight"><pre><span></span><code>17 passed
 </code></pre></div>
 <h2 id="46">4.6 規則で言うと<a class="headerlink" href="#46" title="Permanent link">&para;</a></h2>
 <ol>

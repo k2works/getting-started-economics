@@ -6597,7 +6597,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter10
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>28 passed
+<div class="highlight"><pre><span></span><code>30 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter10/</code> に、完成形と同じ名前（<code>panel.py</code>・<code>test_panel.py</code>）のファイルを作ります。</p>
 <h2 id="103">10.3 予想する<a class="headerlink" href="#103" title="Permanent link">&para;</a></h2>
@@ -6923,6 +6923,8 @@ hausman 184.07 6.258411565090162e-42
 <span class="sd">    H = (b_fe − b_re)′ (V_fe − V_re)⁻¹ (b_fe − b_re) は、χ²(k) に従う。</span>
 <span class="sd">    2 つの推定で誤差の分散の推定値が違うと、H が負になることがある。</span>
 <span class="sd">    そこで、ランダム効果の共分散行列を、固定効果の σ² に、そろえて使う。</span>
+<span class="sd">    そろえても、V_fe − V_re が正定値になるとは限らない。H が負になる、または逆行列が</span>
+<span class="sd">    不安定になるときは、この検定を使わず、クラスター頑健な標準誤差で、係数を比べる。</span>
 <span class="sd">    """</span>
     <span class="n">diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">fixed</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">names</span><span class="p">]</span> <span class="o">-</span> <span class="n">random</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">names</span><span class="p">])</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
     <span class="n">scale</span> <span class="o">=</span> <span class="n">fixed</span><span class="o">.</span><span class="n">sigma2</span> <span class="o">/</span> <span class="n">random</span><span class="o">.</span><span class="n">sigma2</span>
@@ -6988,6 +6990,8 @@ hausman 184.07 6.258411565090162e-42
     <span class="k">assert</span> <span class="n">with_constant</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">fixed</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="_9">推定量の性質を、シミュレーションで<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<details class="note">
+<summary>詳しく見る（実装の細部と確認。必要なときに開く）</summary>
 <p>個人 200 人、5 期で、相関 0 と 1 を、300 回繰り返します（真の傾きは 1）。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">estimator_comparison</span><span class="p">(</span>
     <span class="n">entities</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
@@ -7070,6 +7074,7 @@ hausman 184.07 6.258411565090162e-42
 <li><strong>相関 1</strong>: 固定効果は偏らず（1.0013）、プーリング OLS は 1.4993（理論値 1.5）、ランダム効果は 1.2165 と中間です。Hausman 検定は、すべての標本で棄却します（1.0）</li>
 </ul>
 <p><img alt="推定値の分布（相関 1）。固定効果は真の値 1 に集まり、ランダム効果は偏り、プーリング OLS は、さらに偏る" src="../images/ch10-estimate-comparison.png" /></p>
+</details>
 <h3 id="_10">クラスター標準誤差<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">cluster_standard_errors</span><span class="p">(</span>
     <span class="n">y</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">groups</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>
@@ -7089,6 +7094,8 @@ hausman 184.07 6.258411565090162e-42
     <span class="p">)</span>
     <span class="n">meat</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">scores</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
     <span class="n">g</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">g</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"クラスターが 1 つしかなく、標準誤差を計算できない"</span><span class="p">)</span>
     <span class="n">bread</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">design</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">design</span><span class="p">)</span>
     <span class="n">variance</span> <span class="o">=</span> <span class="n">g</span> <span class="o">/</span> <span class="p">(</span><span class="n">g</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="n">bread</span> <span class="o">@</span> <span class="n">meat</span> <span class="o">@</span> <span class="n">bread</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">variance</span><span class="p">)),</span> <span class="n">index</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
@@ -7134,6 +7141,25 @@ hausman 184.07 6.258411565090162e-42
     <span class="n">r</span> <span class="o">=</span> <span class="n">pooled_standard_errors</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
     <span class="k">assert</span> <span class="n">r</span><span class="p">[</span><span class="s2">"classical"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">r</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">]</span>
     <span class="k">assert</span> <span class="n">r</span><span class="p">[</span><span class="s2">"clustered"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">],</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_クラスターが1つなら頑健な標準誤差は計算できない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"x"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">]})</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">])</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"クラスター"</span><span class="p">):</span>
+        <span class="n">cluster_standard_errors</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_期間の数がそろわないパネルでも固定効果はlinearmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="n">sample</span><span class="p">()</span>
+    <span class="n">unbalanced</span> <span class="o">=</span> <span class="n">panel</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">panel</span><span class="o">.</span><span class="n">index</span><span class="p">[::</span><span class="mi">7</span><span class="p">])</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">unbalanced</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"entity"</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">1</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fixed_effects</span><span class="p">(</span><span class="n">unbalanced</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">PanelOLS</span><span class="o">.</span><span class="n">from_formula</span><span class="p">(</span>
+        <span class="s2">"y ~ x + EntityEffects"</span><span class="p">,</span> <span class="n">unbalanced</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s2">"entity"</span><span class="p">,</span> <span class="s2">"time"</span><span class="p">])</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">std_errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter10.panel</span><span class="w"> </span><span class="kn">import</span> <span class="n">cluster_standard_errors</span><span class="p">,</span> <span class="n">pooled_standard_errors</span>
 
@@ -7234,7 +7260,7 @@ hausman 184.07 6.258411565090162e-42
 <h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter10
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>28 passed
+<div class="highlight"><pre><span></span><code>30 passed
 </code></pre></div>
 <h2 id="106">10.6 実際のデータで試す（賃金のパネル）<a class="headerlink" href="#106" title="Permanent link">&para;</a></h2>
 <p>ここまでは、乱数のパネルで試しました。最後に、<strong>実際のパネル・データ</strong>で、自分の関数を、そのまま使います。</p>

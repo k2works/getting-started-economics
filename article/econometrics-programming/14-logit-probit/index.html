@@ -6459,7 +6459,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter14
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>33 passed
+<div class="highlight"><pre><span></span><code>34 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter14/</code> に、完成形と同じ名前（<code>discrete.py</code>・<code>test_discrete.py</code>）のファイルを作ります。</p>
 <h2 id="143">14.3 予想する<a class="headerlink" href="#143" title="Permanent link">&para;</a></h2>
@@ -6515,6 +6515,19 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <h3 id="green-fit_binary">Green: fit_binary を実装する<a class="headerlink" href="#green-fit_binary" title="Permanent link">&para;</a></h3>
 <p>対数尤度のスコア（x′β についての 1 階微分）と、2 階微分の符号を変えたものを、リンク関数ごとに求め、ニュートン法を回します。</p>
+<p>コードに出てくる式（<code>lam = q·f ÷ F(q·x′β)</code> と、重み）が、どこから来るかを、先に手で微分して確かめます。η = x′β と書き、1 つの観測値の対数尤度を ℓ = y ln F(η) + (1 − y) ln(1 − F(η)) とします。F は、分布関数（ロジットは F = 1 ÷ (1 + e^(−η))、プロビットは F = Φ(η)）、f = F′ は密度です。</p>
+<p><strong>ロジット</strong>: f = F(1 − F) なので、</p>
+<ul>
+<li>1 階微分（スコア）: ∂ℓ/∂η = y · f ÷ F − (1 − y) · f ÷ (1 − F) = y(1 − F) − (1 − y)F = <strong>y − F</strong></li>
+<li>2 階微分: ∂²ℓ/∂η² = −f = <strong>−F(1 − F)</strong>（符号を変えたものが、重み w = F(1 − F)）</li>
+</ul>
+<p><strong>プロビット</strong>: y = 1 なら ∂ℓ/∂η = φ(η) ÷ Φ(η)、y = 0 なら −φ(η) ÷ (1 − Φ(η)) = −φ(η) ÷ Φ(−η) です。<strong>q = 2y − 1</strong>（y = 1 で 1、y = 0 で −1）を使うと、1 つの式にまとまります。</p>
+<ul>
+<li>スコア: λ = <strong>q · φ(η) ÷ Φ(q · η)</strong>（これが、コードの <code>lam</code>）</li>
+<li>2 階微分: ∂λ/∂η を計算すると（q² = 1 を使う）、−λ(λ + η)。重みは、<strong>w = λ(λ + η)</strong>（コードの <code>lam * (lam + xb)</code>）</li>
+</ul>
+<p>ロジットにも、同じ形の式が使えます。y = 1 なら、q = 1 で λ = f ÷ F(η) = 1 − F、y = 0 なら、q = −1 で λ = −f ÷ F(−η) = −F です。どちらも y − F に一致します。だから、コードは、ロジットとプロビットで、<strong>同じ式 <code>q * f / F(q * xb)</code></strong> を使えます。</p>
+<p><strong>ニュートン法の 1 歩</strong>: β ← β + (X′WX)⁻¹ X′s。定数項だけのロジット（割合 0.75）を、β = 0 から始めて手で追うと、F = 0.5 なので、スコアの平均は 0.75 − 0.5 = 0.25、重みは 0.5 × 0.5 = 0.25、1 歩の大きさは 0.25 ÷ 0.25 = <strong>1.0</strong>。次は F = 0.7311 なので、スコアの平均 0.0189 を、重み 0.1966 で割って（約 0.0963）、1.0 + 0.0963 = 1.0963。3 歩目で、ln 3 = 1.0986 に届きます（4 歩目以降は、小数第 4 位まで、変わりません）。</p>
 <div class="highlight"><pre><span></span><code><span class="n">LINKS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"logit"</span><span class="p">:</span> <span class="n">stats</span><span class="o">.</span><span class="n">logistic</span><span class="p">,</span> <span class="s2">"probit"</span><span class="p">:</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="p">}</span>
 
 
@@ -6575,6 +6588,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"知らないリンク関数: </span><span class="si">{</span><span class="n">link</span><span class="si">}</span><span class="s2">（logit か probit）"</span><span class="p">)</span>
     <span class="n">design</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="n">_design</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
     <span class="n">target</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">matrix_rank</span><span class="p">(</span><span class="n">design</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">design</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"多重共線性（説明変数の間に、完全な線形関係がある）"</span><span class="p">)</span>
     <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">design</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
     <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_iterations</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
         <span class="n">score</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">_score_and_weights</span><span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">design</span> <span class="o">@</span> <span class="n">beta</span><span class="p">)</span>
@@ -6753,6 +6768,8 @@ LPM {'const': 0.5841, 'x1': 0.1824, 'x2': -0.0977}
 </code></pre></div>
 <p>母集団の真の値は、ロジットの式で、定数項 0.5、x1 の係数 1、x2 の係数 −0.8 です。ロジットの推定値（0.4161、0.9386、−0.502）は、定数項と x1 では、真の値から標準誤差（0.10〜0.12）の 1 つ分以内ですが、x2 は、真の値 −0.8 から、約 2.7 標準誤差ずれています。1 つの標本では、このようなずれも起こります（n = 100000 では、真の値に近づきます）。<strong>係数の大きさは、ロジットとプロビットで違いますが</strong>（0.9386 と 0.5543）、<strong>平均限界効果は、ほぼ同じ</strong>です（0.1868 と 0.1839、−0.0999 と −0.0983）。線形確率モデルの係数（0.1824、−0.0977）も、平均限界効果に近い値です（予想 3）。<code>statsmodels</code> との一致は、テストで確認しています。</p>
 <h3 id="_9">反復と収束<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<details class="note">
+<summary>詳しく見る（実装の細部と確認。必要なときに開く）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_完全に分離できるデータは収束しない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"完全分離"</span><span class="p">):</span>
         <span class="n">fit_binary</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
@@ -6818,6 +6835,7 @@ LPM {'const': 0.5841, 'x1': 0.1824, 'x2': -0.0977}
 <div class="highlight"><pre><span></span><code>収束しない（完全分離の可能性がある）
 </code></pre></div>
 <p>x = 1、2、3 で y = 0、x = 4、5、6 で y = 1 は、完全に分離できます。尤度は、係数を大きくするほど増え続けるので、収束せず、エラーにします（情報行列が、特異になる）。</p>
+</details>
 <h3 id="_10">尤度比検定<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">likelihood_ratio_test</span><span class="p">(</span>
     <span class="n">log_likelihood_full</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">log_likelihood_restricted</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">restrictions</span><span class="p">:</span> <span class="nb">int</span>
@@ -6871,6 +6889,8 @@ LPM {'const': 0.5841, 'x1': 0.1824, 'x2': -0.0977}
 </code></pre></div>
 <p>定数項だけのモデルの対数尤度は −339.14、説明変数 2 つを入れたモデルは −290.5 です。LR 統計量は 97.27、p 値は 10⁻²¹ で、「2 つの係数が両方 0」を、強く棄却します。</p>
 <h3 id="_11">標本が大きいと: ロジットとプロビットの違い<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<details class="note">
+<summary>詳しく見る（実装の細部と確認。必要なときに開く）</summary>
 <p>n = 100000 の標本を、ロジットの母集団と、プロビットの母集団の、両方から作って、ロジットとプロビットで、推定します。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_ロジットの標本は標準ロジスティック分布の誤差</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">draw_binary_sample</span><span class="p">(</span><span class="mi">100000</span><span class="p">,</span> <span class="s2">"logit"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
@@ -6914,6 +6934,7 @@ probit {'const': 0.846, 'x1': 1.717, 'x2': -1.372} {'const': 0.49, 'x1': 0.993, 
 <li><strong>プロビットの母集団</strong>（2 ブロック目）: プロビットの推定値が、真の値に近い（0.49、0.993、−0.793）。ロジットは、約 1.7 倍（比 1.729）</li>
 <li><strong>どちらの母集団でも、平均限界効果は、ロジット・プロビット・線形確率モデルで、ほぼ同じ</strong>（x1 で 0.1834〜0.1839、および 0.2339〜0.2351）。<strong>モデルの選択は、係数の大きさを変えますが、確率への効果は、ほとんど変えません。</strong></li>
 </ul>
+</details>
 <h3 id="_12">線形確率モデルは、範囲の外に出る<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_線形確率モデルは確率の範囲の外に出ることがある</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
@@ -6931,6 +6952,14 @@ probit {'const': 0.846, 'x1': 1.717, 'x2': -1.372} {'const': 0.49, 'x1': 0.993, 
     <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">fit_binary</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"const"</span><span class="p">,</span> <span class="s2">"educ"</span><span class="p">]</span>
     <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">fit_binary</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="kc">None</span><span class="p">))</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"const"</span><span class="p">,</span> <span class="s2">"x1"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_説明変数が完全に共線ならエラーにする</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">x1</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"多重共線性"</span><span class="p">):</span>
+        <span class="n">fit_binary</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x1</span><span class="p">]))</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter03.multiple</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_ols</span>
 
@@ -7025,7 +7054,7 @@ probit {'const': 0.846, 'x1': 1.717, 'x2': -1.372} {'const': 0.49, 'x1': 0.993, 
 <h3 id="_14">実行結果<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter14
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>33 passed
+<div class="highlight"><pre><span></span><code>34 passed
 </code></pre></div>
 <h2 id="146">14.6 規則で言うと<a class="headerlink" href="#146" title="Permanent link">&para;</a></h2>
 <ol>

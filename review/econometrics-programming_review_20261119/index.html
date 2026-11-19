@@ -6356,10 +6356,70 @@
 <td style="text-align: left;">済み</td>
 <td style="text-align: left;"><code>test/tools/test_lib_names.py</code>：章をまたいで公開名が重複しないことのテスト</td>
 </tr>
+<tr>
+<td style="text-align: left;">18</td>
+<td style="text-align: left;">一部済み</td>
+<td style="text-align: left;">確認用・実装の細部の 4 節（第 10 章のシミュレーション、第 14 章の反復と収束・ロジットとプロビットの違い、第 15 章の解析的な勾配）を、折りたたみにした。章の分割・付録化は、番号に結びつく箇所が多いので、しなかった</td>
+</tr>
+<tr>
+<td style="text-align: left;">19</td>
+<td style="text-align: left;">済み</td>
+<td style="text-align: left;">第 6 章に、ブートストラップ標準誤差（<code>bootstrap_standard_error</code>）を追加し、第 16 章から参照した</td>
+</tr>
+<tr>
+<td style="text-align: left;">20</td>
+<td style="text-align: left;">済み</td>
+<td style="text-align: left;">第 14 章に、スコアと重みを手で微分する小節と、ニュートン法の 1 歩の手計算を追加した</td>
+</tr>
+<tr>
+<td style="text-align: left;">21</td>
+<td style="text-align: left;">済み</td>
+<td style="text-align: left;">第 13 章の実データで、頑健な標準誤差（<code>linearmodels</code>・<code>statsmodels</code>）でも結論が変わらないことを確かめて書いた。第 10 章は、クラスター標準誤差を、すでに示している</td>
+</tr>
+<tr>
+<td style="text-align: left;">24</td>
+<td style="text-align: left;">済み</td>
+<td style="text-align: left;">0 除算になる退化した入力（F 検定の検定列なし、てこ比 1、クラスター 1 つ、定数の被説明変数、ばらつきのない列、完全に共線なロジット）を、分かるエラーにした</td>
+</tr>
+<tr>
+<td style="text-align: left;">26</td>
+<td style="text-align: left;">済み</td>
+<td style="text-align: left;"><code>Array</code> と <code>ArrayLike</code> の使い分けを、<code>statistics.py</code> に注記した</td>
+</tr>
+<tr>
+<td style="text-align: left;">27</td>
+<td style="text-align: left;">済み</td>
+<td style="text-align: left;">完全に共線な説明変数のロジットを、「多重共線性」のエラーにした（「完全分離」と誤報していた）</td>
+</tr>
+<tr>
+<td style="text-align: left;">29</td>
+<td style="text-align: left;">済み</td>
+<td style="text-align: left;">アンバランスなパネルの固定効果（<code>linearmodels</code> と一致）と、下限が 0 でないトービットのテストを追加した</td>
+</tr>
+<tr>
+<td style="text-align: left;">30</td>
+<td style="text-align: left;">済み</td>
+<td style="text-align: left;">計画に、依存の分類の基準を書いた</td>
+</tr>
+<tr>
+<td style="text-align: left;">31</td>
+<td style="text-align: left;">済み</td>
+<td style="text-align: left;">第 12 章のテスト名、第 2 章の標準誤差の定義、第 15 章の補助関数名を直した</td>
+</tr>
+<tr>
+<td style="text-align: left;">32</td>
+<td style="text-align: left;">済み</td>
+<td style="text-align: left;"><code>hausman_test</code> の docstring に、負になりうることと、その場合の対処を書いた</td>
+</tr>
 </tbody>
 </table>
-<h3 id="_14">未対応（中・低）<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
-<h1 id="181920-14-21-se-2432-bolt-25matrix_rank-9-2-unitu6">18（長い章の折りたたみ・付録化）、#19（ブートストラップの先出し）、#20（第 14 章のスコアの導出）、#21（実データのクラスター SE の確認）、#24〜#32 のうち、上記以外。いずれも、記事の構成や、新しい節の執筆を伴うため、別の Bolt で扱う。#25（<code>matrix_rank</code> を設計行列に）は、挙動が変わるため、保留した。#9 の第 2 段（共通パッケージ化）は、別の Unit（U6）。<a class="headerlink" href="#181920-14-21-se-2432-bolt-25matrix_rank-9-2-unitu6" title="Permanent link">&para;</a></h1>
+<h3 id="_14">未対応・保留<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>#25</strong>（<code>matrix_rank</code> を設計行列に）: 判定の挙動が変わるため、保留した</li>
+<li><strong>#28</strong>（第 16 章の naive SE の、外部の固定値での照合）: R の <code>sampleSelection</code> など、外部の結果を、この環境では得られていない</li>
+<li><strong>#11</strong> の設計行列の組み立ての完全な共通化、<strong>#9</strong> の第 2 段（共通パッケージ化。別の Unit）</li>
+<li>実データの利用条件の確認、トービットとヘックマンの外部ソフトウェアでの照合</li>
+</ul>
 
 
 

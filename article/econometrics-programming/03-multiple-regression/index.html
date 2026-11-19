@@ -6439,7 +6439,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter03
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>27 passed
+<div class="highlight"><pre><span></span><code>28 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter03/</code> に、完成形と同じ名前（<code>multiple.py</code>・<code>test_multiple.py</code>）のファイルを作ります。</p>
 <h2 id="33">3.3 予想する<a class="headerlink" href="#33" title="Permanent link">&para;</a></h2>
@@ -6536,6 +6536,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">sigma2</span> <span class="o">=</span> <span class="n">rss</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span>
     <span class="n">errors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sigma2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">gram</span><span class="p">)))</span>
     <span class="n">tss</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">target</span> <span class="o">-</span> <span class="n">target</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">tss</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"被説明変数が定数なので、決定係数を計算できない"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">OlsResult</span><span class="p">(</span>
         <span class="n">coefficients</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">coefficients</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">names</span><span class="p">),</span>
         <span class="n">standard_errors</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">errors</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">names</span><span class="p">),</span>
@@ -6803,6 +6805,11 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">"educ"</span><span class="p">)</span>
     <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">4.1</span><span class="p">,</span> <span class="mf">5.9</span><span class="p">,</span> <span class="mf">8.2</span><span class="p">,</span> <span class="mf">12.1</span><span class="p">]</span>
     <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"const"</span><span class="p">,</span> <span class="s2">"educ"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_被説明変数が定数なら決定係数は計算できない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"定数"</span><span class="p">):</span>
+        <span class="n">fit_ols</span><span class="p">([</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">])</span>
 </code></pre></div>
 <p>係数 0.1 は 10.5171%、−0.1 は −9.5163% です。符号によって、近似の誤差の向きが違います。</p>
 <h3 id="_11">図<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
@@ -6855,7 +6862,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter03
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>27 passed
+<div class="highlight"><pre><span></span><code>28 passed
 </code></pre></div>
 <h2 id="36">3.6 規則で言うと<a class="headerlink" href="#36" title="Permanent link">&para;</a></h2>
 <ol>
