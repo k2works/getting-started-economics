@@ -38,5 +38,6 @@ def plot_growth_chart(df: pd.DataFrame) -> Figure:
     growth.plot.bar(ax=ax)
     ax.set_xlabel("Year")
     ax.set_ylabel("Real growth rate (%)")
+    fig.tight_layout()
     plt.close(fig)
     return fig
