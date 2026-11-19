@@ -1577,6 +1577,89 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="1.2 環境を準備する">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        必要なもの
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        コマンドの実行のしかた
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#uv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        uv をインストールする
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        サンプルコードを入手する
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        テストが動くことを確かめる
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        完成形と、自分のコード
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        対話モードで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1603,6 +1686,17 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        コードの読み方（最小限）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#red" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1625,7 +1719,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         次のテストを足す
@@ -4760,6 +4854,10 @@
 <td style="text-align: left;">完成形</td>
 <td style="text-align: left;">価格を入れると需要量を返す <code>quantity_demanded</code> 関数と、5 つのテスト</td>
 </tr>
+<tr>
+<td style="text-align: left;">ファイル</td>
+<td style="text-align: left;">実装: <code>lib/chapter01/demand.py</code>／テスト: <code>test/chapter01/test_demand.py</code>（自分で書くときは、<code>practice/chapter01/</code> に、同じ名前で作ります）</td>
+</tr>
 </tbody>
 </table>
 <h3 id="_1">既に知っていることとの対応<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
@@ -4820,12 +4918,106 @@
 </tbody>
 </table>
 <h2 id="12">1.2 環境を準備する<a class="headerlink" href="#12" title="Permanent link">&para;</a></h2>
-<p>必要なものは、Python のパッケージ管理ツール <a href="https://docs.astral.sh/uv/">uv</a> です。次のコマンドで、サンプルコードのテストが動く状態にします。</p>
+<h3 id="_3">必要なもの<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">必要なもの</th>
+<th style="text-align: left;">説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">ターミナル</td>
+<td style="text-align: left;">コマンドを打ち込む画面。Windows は「PowerShell」、macOS は「ターミナル」を、検索して開きます</td>
+</tr>
+<tr>
+<td style="text-align: left;">Git</td>
+<td style="text-align: left;">サンプルコードを入手するための道具。無いときは、ZIP ファイルでも入手できます（後述）</td>
+</tr>
+<tr>
+<td style="text-align: left;">uv</td>
+<td style="text-align: left;">Python と、必要なライブラリを用意する道具。次の手順でインストールします</td>
+</tr>
+<tr>
+<td style="text-align: left;">エディタ</td>
+<td style="text-align: left;">コードを書くための道具。メモ帳でも書けますが、<a href="https://code.visualstudio.com/">VS Code</a> などをお勧めします</td>
+</tr>
+</tbody>
+</table>
+<p>Python 本体を、先に入れておく必要はありません。uv が、必要な版（Python 3.12）を、自動で用意します。初回は、ダウンロードのために、インターネットへの接続が必要で、時間がかかります。</p>
+<h3 id="_4">コマンドの実行のしかた<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>この本のコマンドは、コードブロックの内容を、そのままターミナルに貼り付けて、Enter キーを押して実行します。<code>$</code> や <code>&gt;</code> のようなプロンプトの記号は、書いていません。</p>
+<h3 id="uv">uv をインストールする<a class="headerlink" href="#uv" title="Permanent link">&para;</a></h3>
+<p>Windows の PowerShell では、次のコマンドを実行します。</p>
+<div class="highlight"><pre><span></span><code>powershell<span class="w"> </span>-ExecutionPolicy<span class="w"> </span>ByPass<span class="w"> </span>-c<span class="w"> </span><span class="s2">"irm https://astral.sh/uv/install.ps1 | iex"</span>
+</code></pre></div>
+<p>macOS と Linux では、次のコマンドを実行します。</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-LsSf<span class="w"> </span>https://astral.sh/uv/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
+</code></pre></div>
+<p>インストールしたら、ターミナルを開き直して、バージョンが表示されることを確かめます。</p>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>--version
+</code></pre></div>
+<p>最新のインストール方法は、公式の案内（<a href="https://docs.astral.sh/uv/getting-started/installation/">https://docs.astral.sh/uv/getting-started/installation/</a>）で確認できます。インターネット上のスクリプトを実行するコマンドなので、実行する前に、公式の案内に、同じコマンドが書かれていることを確かめてください。</p>
+<h3 id="_5">サンプルコードを入手する<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/k2works/getting-started-economics.git
+<span class="nb">cd</span><span class="w"> </span>getting-started-economics
+</code></pre></div>
+<p>Git が無いときは、GitHub のリポジトリのページ（<a href="https://github.com/k2works/getting-started-economics">https://github.com/k2works/getting-started-economics</a>）で、「Code」ボタンから「Download ZIP」を選んで入手します。ZIP を展開したフォルダを、ターミナルで開きます（<code>cd 展開したフォルダの名前</code>）。</p>
+<h3 id="_6">テストが動くことを確かめる<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>サンプルコードは、リポジトリの <code>apps/economics-programming/python/</code> にあります。そこで、ライブラリを用意して、第 1 章の完成形のテストを実行します。</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>sync
-uv<span class="w"> </span>run<span class="w"> </span>pytest
+uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter01
 </code></pre></div>
-<p>サンプルコードは <code>apps/economics-programming/python/</code> にあります。実装は <code>lib/chapter01/</code>、テストは <code>test/chapter01/</code> です。</p>
+<div class="highlight"><pre><span></span><code>5 passed
+</code></pre></div>
+<p><code>uv sync</code> は、必要なライブラリを用意します（初回は、時間がかかります）。5 つのテストが通れば、準備は完了です。</p>
+<p>各章のコマンドの最初の行 <code>cd apps/economics-programming/python</code> は、リポジトリの最上位（<code>getting-started-economics</code>）からの道のりです。すでにこのディレクトリにいるときは、その行を省略してください。</p>
+<h3 id="_7">完成形と、自分のコード<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>準備の確認で、テストが<strong>最初から通った</strong>のは、リポジトリに、完成した実装とテストが入っているからです。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">ディレクトリ</th>
+<th style="text-align: left;">中身</th>
+<th style="text-align: left;">使い方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>lib/chapterNN/</code></td>
+<td style="text-align: left;">各章の完成した実装</td>
+<td style="text-align: left;">答え合わせ用。自分のコードを書き終えてから開く</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>test/chapterNN/</code></td>
+<td style="text-align: left;">各章の完成したテスト</td>
+<td style="text-align: left;">答え合わせ用。<code>uv run pytest test/chapterNN</code> で、完成形が動くことを確かめる</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>practice/chapterNN/</code></td>
+<td style="text-align: left;"><strong>自分のコードを書く場所</strong></td>
+<td style="text-align: left;">章ごとに、自分で作る</td>
+</tr>
+</tbody>
+</table>
+<p>この本の「予想する」「Red → Green → Refactor」「練習問題」は、<strong>自分で <code>practice/</code> に書いて体験する</strong>ための手順です。完成形を写すだけでは、テストを先に書く体験になりません。先に自分で考えて、書いてから、<code>lib/</code> と <code>test/</code> を開いて、答え合わせをしてください。</p>
+<p>前の章の関数を使うときは、自分で作ったもの（<code>practice.chapter01.demand</code> など）でも、用意してある完成形（<code>lib.chapter01.demand</code> など）でも、かまいません。</p>
+<h3 id="_8">対話モードで試す<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>コードを 1 行ずつ打ち込んで、結果をすぐに見る方法があります。<code>apps/economics-programming/python/</code> で、次のコマンドを実行します。</p>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>python
+</code></pre></div>
+<p><code>&gt;&gt;&gt;</code> という記号が表示されたら、式や関数の呼び出しを打ち込んで、Enter キーを押します。</p>
+<div class="highlight"><pre><span></span><code>&gt;&gt;&gt; 1 + 1
+2
+&gt;&gt;&gt; from lib.chapter01.demand import quantity_demanded
+&gt;&gt;&gt; quantity_demanded(price=10, intercept=100, slope=2)
+80
+&gt;&gt;&gt; exit()
+</code></pre></div>
+<p><code>#</code> から後ろは、コメント（人間への注釈）なので、打ち込まなくてかまいません。終わるときは、<code>exit()</code> と打ち込みます（Windows では、Ctrl キーを押しながら Z を押して Enter、macOS・Linux では、Ctrl キーを押しながら D でも終われます）。</p>
+<p>この本のコード片は、対話モードに 1 行ずつ打ち込んで、試せます。テストに書く前に、「この式は、どんな値になるか」を確かめたいときに、便利です。</p>
 <h2 id="13">1.3 予想する<a class="headerlink" href="#13" title="Permanent link">&para;</a></h2>
 <p>コードを読む前に、次の問いに自分で答えてみてください。紙に書くのがお勧めです。</p>
 <ul>
@@ -4835,21 +5027,133 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </ul>
 <p>3 つ目で「マイナスになる」と気づいたら、経済学の感覚が働いています。需要量は負にならないので、コードでこの場面を扱う必要があります。</p>
 <h2 id="14-red-green-refactor">1.4 Red → Green → Refactor<a class="headerlink" href="#14-red-green-refactor" title="Permanent link">&para;</a></h2>
+<h3 id="_9">コードの読み方（最小限）<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>これから、Python のコードが出てきます。読むために、最低限の対応を、先に表にします。<strong>全部を覚える必要はありません。</strong> コードを読んでいて、分からなくなったときに、この表に戻ってきてください。詳しい説明は、表の右の章にあります。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">書き方</th>
+<th style="text-align: left;">意味</th>
+<th style="text-align: left;">詳しくは</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>def 名前(引数):</code></td>
+<td style="text-align: left;">関数を作る。「引数を受け取って、結果を返す処理」に、名前を付ける</td>
+<td style="text-align: left;">第 4 章</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>return 値</code></td>
+<td style="text-align: left;">関数の結果を返す</td>
+<td style="text-align: left;">第 4 章</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>price: float</code></td>
+<td style="text-align: left;">引数 <code>price</code> は、小数（<code>float</code>）を渡す、という<strong>型ヒント</strong>。Python は、実行するときには、チェックしない。エディタや検査の道具が、間違いに気づく助けにする。今は、読み飛ばしてかまいません</td>
+<td style="text-align: left;">第 2 章</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>-&gt; float</code></td>
+<td style="text-align: left;">関数が返す値の型ヒント。<code>-&gt; None</code> は、「何も返さない」。テストの関数には、<code>-&gt; None</code> を付ける</td>
+<td style="text-align: left;">第 2 章</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>if 条件:</code></td>
+<td style="text-align: left;">条件が成り立つときだけ、字下げした中の処理を実行する</td>
+<td style="text-align: left;">第 5 章</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>raise ValueError(...)</code></td>
+<td style="text-align: left;">「この入力は、おかしい」と、エラーを起こして知らせる</td>
+<td style="text-align: left;">第 6 章</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>max(a, b)</code></td>
+<td style="text-align: left;">2 つの値の、大きい方を返す（Python に最初から入っている関数）</td>
+<td style="text-align: left;">第 4 章</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>import</code> / <code>from ... import ...</code></td>
+<td style="text-align: left;">他のファイルで作った関数や、道具を、読み込む</td>
+<td style="text-align: left;">第 6 章</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code># ...</code></td>
+<td style="text-align: left;">コメント。人間への注釈で、実行には影響しない</td>
+<td style="text-align: left;">—</td>
+</tr>
+</tbody>
+</table>
+<p>テストのコードには、次の書き方が出てきます。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">書き方</th>
+<th style="text-align: left;">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>def test_名前() -&gt; None:</code></td>
+<td style="text-align: left;">テストを 1 つ作る。pytest は、<code>test_</code> で始まる名前の関数を、テストとして見つけて、実行する。名前は日本語でよい。「何を確かめるか」を、文章で書く</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>assert 式</code></td>
+<td style="text-align: left;">式が成り立つ（<code>True</code> になる）ことを、確かめる。成り立たなければ、そのテストは失敗する</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>==</code></td>
+<td style="text-align: left;">左と右が、等しいかどうかを調べる（<code>=</code> は、値を名前に結び付ける別の意味なので、混同しない）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>with pytest.raises(ValueError):</code></td>
+<td style="text-align: left;">「この中の処理で、<code>ValueError</code> が起きること」を、確かめる。起きれば成功で、起きなければ、テストは失敗する</td>
+</tr>
+</tbody>
+</table>
 <h3 id="red">Red: 最初のテストを書く<a class="headerlink" href="#red" title="Permanent link">&para;</a></h3>
-<p>最初に、実装がまだない関数のテストを書きます。価格が 0 なら、需要量は切片 a と等しいはずです。</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_価格が0なら需要量は切片と等しい</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<p>最初に、実装がまだない関数のテストを書きます。価格が 0 なら、需要量は切片 a と等しいはずです。次の手順で、自分のコードを書く場所を作ります。</p>
+<ol>
+<li>
+<p><code>apps/economics-programming/python/</code> で、章のディレクトリを作ります。</p>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>practice/chapter01
+</code></pre></div>
+</li>
+<li>
+<p><code>practice/chapter01/test_demand.py</code> を作って、次の内容を書きます。ファイル名は、<code>test_</code> で始めます（pytest が、この名前のファイルを、テストとして見つけます）。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">practice.chapter01.demand</span><span class="w"> </span><span class="kn">import</span> <span class="n">quantity_demanded</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_価格が0なら需要量は切片と等しい</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">quantity_demanded</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">100</span>
 </code></pre></div>
-<p>実行すると、関数がないので失敗します。失敗を確かめることが大切です。</p>
-<div class="highlight"><pre><span></span><code>ModuleNotFoundError: No module named 'lib.chapter01.demand'
+<p>1 行目の <code>pytest</code> は、テストの道具です（後の節で使います）。3 行目は、これから作る関数 <code>quantity_demanded</code> を、<code>practice/chapter01/demand.py</code> から読み込む、という意味です。まだ、そのファイルがありません。</p>
+</li>
+<li>
+<p>テストを実行します。</p>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>practice/chapter01
 </code></pre></div>
+</li>
+</ol>
+<p>実行すると、関数がないので失敗します。失敗を確かめることが大切です。</p>
+<div class="highlight"><pre><span></span><code>ModuleNotFoundError: No module named 'practice.chapter01.demand'
+</code></pre></div>
+<p>画面には、<code>ERROR practice/chapter01/test_demand.py</code> と、<code>1 error</code> も表示されます。</p>
 <h3 id="green">Green: 最小の実装で通す<a class="headerlink" href="#green" title="Permanent link">&para;</a></h3>
-<p>テストを通す最小の実装は、式をそのまま書くことです。</p>
+<p>テストを通す最小の実装は、式をそのまま書くことです。<code>practice/chapter01/demand.py</code> を作って、次の内容を書きます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">quantity_demanded</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">intercept</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">slope</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">intercept</span> <span class="o">-</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">price</span>
 </code></pre></div>
-<h3 id="_3">次のテストを足す<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
-<p>予想した 2 つ目と 3 つ目の問いを、テストにします。</p>
+<p>もう一度、テストを実行します。</p>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>practice/chapter01
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>1 passed
+</code></pre></div>
+<h3 id="_10">次のテストを足す<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>予想した 2 つ目と 3 つ目の問いを、テストにします。<code>test_demand.py</code> の末尾に、次のテストを書き足します。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_価格が上がると需要量は傾きの分だけ減る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">quantity_demanded</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">80</span>
 
@@ -4857,17 +5161,17 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 <span class="k">def</span><span class="w"> </span><span class="nf">test_価格が高すぎると需要量は0になる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">quantity_demanded</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mi">60</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 </code></pre></div>
-<p>3 つ目のテストは、式のとおりだと −20 になるので失敗します。需要量が負にならないよう、<code>max</code> で 0 を下限にします。</p>
+<p>3 つ目のテストは、式のとおりだと −20 になるので失敗します（実行して、確かめてください）。需要量が負にならないよう、<code>demand.py</code> を、<code>max</code> で 0 を下限にする形に書き換えます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">quantity_demanded</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">intercept</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">slope</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">intercept</span> <span class="o">-</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">price</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 </code></pre></div>
-<p>価格が負の入力は、経済学の意味がありません。これもテストで先に決めます。</p>
+<p>価格が負の入力は、経済学の意味がありません。これもテストで先に決めます。次のテストを、<code>test_demand.py</code> の末尾に書き足します。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_負の価格は受け付けない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
         <span class="n">quantity_demanded</span><span class="p">(</span><span class="n">price</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="refactor">Refactor: 完成した実装<a class="headerlink" href="#refactor" title="Permanent link">&para;</a></h3>
-<p>テストがすべて通ったら、名前と説明を整えます。需要量がちょうど 0 になる価格（<code>choke_price</code>）も、同じ手順で追加します。</p>
+<p>テストがすべて通ったら、名前と説明を整えます。需要量がちょうど 0 になる価格（<code>choke_price</code>）も、同じ手順（テストを先に書く）で追加します。<code>demand.py</code> を、次の完成形にします。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">quantity_demanded</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">intercept</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">slope</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""価格 P のときの需要量 Q = a - bP を返す。需要量は負にならない。"""</span>
     <span class="k">if</span> <span class="n">price</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
@@ -4882,12 +5186,19 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_需要が0になる最低の価格を求める</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">choke_price</span><span class="p">(</span><span class="n">intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">50</span>
 </code></pre></div>
-<p>テストを実行すると、5 つのテストがすべて通ります。</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
-uv<span class="w"> </span>run<span class="w"> </span>pytest
+<p>テストの追加では、<code>test_demand.py</code> の <code>import</code> の行を、<code>from practice.chapter01.demand import choke_price, quantity_demanded</code> に書き換えます。また、<code>ValueError</code> のテストで使う <code>pytest</code> を、この <code>import</code> で読み込んでいます。</p>
+<p>自分のコードで、テストを実行します。5 つのテストがすべて通ります。</p>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>practice/chapter01
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>5 passed
 </code></pre></div>
+<p>最後に、答え合わせをします。<code>lib/chapter01/demand.py</code> を開いて、自分の実装と見比べてください。完成形のテストも、実行できます。</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
+uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter01
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>5 passed
+</code></pre></div>
+<p>章ごとにテストを実行するときは、<code>uv run pytest test/chapter02</code> のように、章のディレクトリを指定します。全章分をまとめて実行するときは、ディレクトリを指定せずに <code>uv run pytest</code> とします。</p>
 <h2 id="15">1.5 規則で言うと<a class="headerlink" href="#15" title="Permanent link">&para;</a></h2>
 <p>この章で身につけたことを、原則にまとめます。</p>
 <ol>
@@ -4925,11 +5236,11 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 <tbody>
 <tr>
 <td style="text-align: left;">想起</td>
-<td style="text-align: left;">本文を閉じて、<code>quantity_demanded</code> を自分で書いてください。その後、本文と見比べて違いを確かめます</td>
+<td style="text-align: left;">本文を閉じて、<code>quantity_demanded</code> を、<code>practice/chapter01/demand.py</code> に、自分で書いてください。その後、本文と見比べて違いを確かめます</td>
 </tr>
 <tr>
 <td style="text-align: left;">生成</td>
-<td style="text-align: left;">供給曲線 Q = c + dP の関数 <code>quantity_supplied</code> を、解説を見る前に、テストから書いてください。価格が 0 のときの供給量は c です</td>
+<td style="text-align: left;">供給曲線 Q = c + dP の関数 <code>quantity_supplied</code> を、解説を見る前に、<code>practice/chapter01/</code> に、テストから書いてください。価格が 0 のときの供給量は c です</td>
 </tr>
 <tr>
 <td style="text-align: left;">多様</td>
@@ -4937,10 +5248,72 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
-<td style="text-align: left;">需要曲線と供給曲線を使って、需要量と供給量が等しくなる価格を、紙の上で求めてください（第 5 章で、コードで求めます）</td>
+<td style="text-align: left;">需要曲線 Q = 100 − 2P と、供給曲線 Q = 3P を使って、需要量と供給量が等しくなる価格を、紙の上で求めてください（第 5 章で、コードで求めます）</td>
 </tr>
 </tbody>
 </table>
+<details class="note">
+<summary>解答（先に自分で取り組んでから、開いてください）</summary>
+<p><strong>想起</strong>: 本文の完成形（<code>lib/chapter01/demand.py</code>）と見比べます。次の 3 点を確かめてください。</p>
+<ul>
+<li>価格が負のときに <code>ValueError</code> を出しているか</li>
+<li><code>max(..., 0)</code> で、需要量が負にならないようにしているか</li>
+<li>引数と戻り値に、型ヒントを付けているか</li>
+</ul>
+<p><strong>生成</strong>: 実装は、<code>quantity_demanded</code> の <code>-</code> を <code>+</code> にした形です。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">quantity_supplied</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">intercept</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">slope</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">price</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"価格は 0 以上でなければならない"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">intercept</span> <span class="o">+</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">price</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
+<p>テストの例です（先に書きます）。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_価格が0なら供給量は切片と等しい</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">quantity_supplied</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">10</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_価格が上がると供給量は傾きの分だけ増える</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">quantity_supplied</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">40</span>
+</code></pre></div>
+<p>同じ関数が、第 3 章の <code>lib/chapter03/schedule.py</code> にあります。</p>
+<p><strong>多様</strong>: 需要曲線 Q = 50 − 5P の期待値です。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">テスト</th>
+<th style="text-align: right;">価格</th>
+<th style="text-align: right;">需要量</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">価格が 0</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">50（切片と等しい）</td>
+</tr>
+<tr>
+<td style="text-align: left;">価格が上がる</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr>
+<td style="text-align: left;">価格 10</td>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0（本文の例では 80 だった所が 0 に変わる）</td>
+</tr>
+<tr>
+<td style="text-align: left;">価格が高すぎる</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">0（式のとおりでは −250）</td>
+</tr>
+<tr>
+<td style="text-align: left;">需要が 0 になる最低の価格 <code>choke_price</code></td>
+<td style="text-align: right;">—</td>
+<td style="text-align: right;">10（= 50 ÷ 5）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>交互</strong>: 100 − 2P = 3P から、5P = 100 で、P = 20 です。そのとき、需要量は 100 − 2 × 20 = 60、供給量は 3 × 20 = 60 で、等しくなります。</p>
+</details>
 <h2 id="17">1.7 振り返り<a class="headerlink" href="#17" title="Permanent link">&para;</a></h2>
 <p>次の 3 つを、短くノートに書いてください。</p>
 <ul>

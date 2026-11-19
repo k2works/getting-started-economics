@@ -4810,6 +4810,10 @@
 <td style="text-align: left;">完成形</td>
 <td style="text-align: left;"><code>aggregate_demand</code>、<code>classical_supply</code>、<code>keynesian_supply</code>、<code>equilibrium_price_and_income</code>、<code>phillips_inflation</code>、<code>output_gap</code>、<code>okun_unemployment</code>、<code>real_interest_rate</code>、<code>price_level_by_quantity_theory</code></td>
 </tr>
+<tr>
+<td style="text-align: left;">ファイル</td>
+<td style="text-align: left;">実装: <code>lib/chapter14/adas.py</code>、<code>lib/chapter14/indicators.py</code>／テスト: <code>test/chapter14/test_adas.py</code>、<code>test/chapter14/test_indicators.py</code>（自分で書くときは、<code>practice/chapter14/</code> に、同じ名前で作ります）</td>
+</tr>
 </tbody>
 </table>
 <h3 id="_1">経済学の式とコードの対応<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
@@ -5198,9 +5202,9 @@
 <p>貨幣数量説では、貨幣量が 2 倍（525 → 1050）になると、実質所得と貨幣の流通速度が変わらなければ、物価も 2 倍（1 → 2）になります。</p>
 <h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
-uv<span class="w"> </span>run<span class="w"> </span>pytest
+uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter14
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>174 passed
+<div class="highlight"><pre><span></span><code>22 passed
 </code></pre></div>
 <h2 id="145">14.5 規則で言うと<a class="headerlink" href="#145" title="Permanent link">&para;</a></h2>
 <ol>
@@ -5252,18 +5256,98 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 <tr>
 <td style="text-align: left;">生成</td>
-<td style="text-align: left;">解説を見る前に、「貨幣供給を 525 から 1050 に 2 倍にしたとき、古典派の均衡の物価が、いくつになるか」を予想して、テストを書いてください（2 倍の 2.0 になります。貨幣数量説と同じ関係です）</td>
+<td style="text-align: left;">解説を見る前に、「貨幣供給を 525 から 1050 に 2 倍にしたとき、古典派の均衡の物価が、いくつになるか」を予想して、テストを書いてください</td>
 </tr>
 <tr>
 <td style="text-align: left;">多様</td>
-<td style="text-align: left;">ケインズの総供給の傾き（<code>slope</code>）を 500 から 1000 に変えて、政府支出 +20 の効果を比べてください。傾きが大きいほど、物価より所得が増えます</td>
+<td style="text-align: left;">ケインズの総供給の傾き（<code>slope</code>）を 500 から 1000 に変えて、政府支出 +20 の効果を比べてください（<code>slope</code> は、物価が 1 下がるごとに減る所得です。縦軸が物価の図では、<code>slope</code> が大きいほど総供給の曲線は、緩やかに見えます）</td>
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
-<td style="text-align: left;">第 13 章の流動性のわな（<code>interest_floor=2</code>、<code>money_supply=2000</code>）で、総需要曲線がどうなるかを調べてください。物価が下がっても、利子率が下限で動けないので、総需要は変わりにくくなります</td>
+<td style="text-align: left;">第 13 章の流動性のわな（<code>interest_floor=2</code>、<code>money_supply=2000</code>）で、総需要曲線がどうなるかを調べてください</td>
 </tr>
 </tbody>
 </table>
+<details class="note">
+<summary>解答（先に自分で取り組んでから、開いてください）</summary>
+<p><strong>想起</strong>: 本文と見比べて、<code>aggregate_demand</code> が <code>dataclasses.replace</code> で物価だけを変えているか、<code>keynesian_supply</code> が <code>min</code> で完全雇用所得に抑えているかを確かめます。</p>
+<p><strong>生成</strong>: 古典派では、所得は 1250 で決まり、総需要が 1250 になるには、実質貨幣供給 M ÷ P が 525 でなければなりません。M = 1050 なら、P = 2 です。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_貨幣供給が2倍なら古典派の均衡の物価も2倍</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">price</span><span class="p">,</span> <span class="n">income</span> <span class="o">=</span> <span class="n">equilibrium_price_and_income</span><span class="p">(</span>
+        <span class="n">IsLmModel</span><span class="p">(</span><span class="n">money_supply</span><span class="o">=</span><span class="mi">1050</span><span class="p">),</span> <span class="n">classical</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">price</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">income</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1250</span><span class="p">)</span>
+</code></pre></div>
+<p>貨幣数量説（MV = PY）と同じ関係です。貨幣量が 2 倍になると、物価も 2 倍になります。</p>
+<p><strong>多様</strong>: 政府支出 100 → 120 の効果です。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">傾き</th>
+<th style="text-align: left;">均衡（政策前）</th>
+<th style="text-align: left;">均衡（政策後）</th>
+<th style="text-align: right;">所得の増加</th>
+<th style="text-align: right;">物価の上昇</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">500</td>
+<td style="text-align: left;">物価 0.9550、所得 1277.49</td>
+<td style="text-align: left;">物価 0.9949、所得 1297.44</td>
+<td style="text-align: right;">+19.95</td>
+<td style="text-align: right;">+0.0399</td>
+</tr>
+<tr>
+<td style="text-align: right;">1000</td>
+<td style="text-align: left;">物価 0.9688、所得 1268.79</td>
+<td style="text-align: left;">物価 0.9965、所得 1296.50</td>
+<td style="text-align: right;">+27.70</td>
+<td style="text-align: right;">+0.0277</td>
+</tr>
+</tbody>
+</table>
+<p>傾きが大きいほど、同じ需要の増加が、物価の上昇より、所得の増加になりやすくなります。傾きが大きい総供給は、物価が少し上がるだけで、所得が大きく増える（供給が、物価の変化に敏感に反応する）ためです。</p>
+<p><strong>交互</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">trap</span> <span class="o">=</span> <span class="n">IsLmModel</span><span class="p">(</span><span class="n">interest_floor</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">money_supply</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+<span class="p">[</span><span class="n">aggregate_demand</span><span class="p">(</span><span class="n">trap</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)]</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">物価</th>
+<th style="text-align: right;">0.5</th>
+<th style="text-align: right;">0.8</th>
+<th style="text-align: right;">1.0</th>
+<th style="text-align: right;">1.2</th>
+<th style="text-align: right;">1.5</th>
+<th style="text-align: right;">2.0</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">総需要（流動性のわな）</td>
+<td style="text-align: right;">1400</td>
+<td style="text-align: right;">1400</td>
+<td style="text-align: right;">1400</td>
+<td style="text-align: right;">1400</td>
+<td style="text-align: right;">1400</td>
+<td style="text-align: right;">1400</td>
+</tr>
+<tr>
+<td style="text-align: left;">総需要（標準のモデル）</td>
+<td style="text-align: right;">1833.3</td>
+<td style="text-align: right;">1395.8</td>
+<td style="text-align: right;">1250.0</td>
+<td style="text-align: right;">1152.8</td>
+<td style="text-align: right;">1055.6</td>
+<td style="text-align: right;">958.3</td>
+</tr>
+</tbody>
+</table>
+<p>標準のモデルでは、物価が下がるほど、総需要が増えます。流動性のわなでは、利子率が下限の 2 に張り付いていて、物価が下がっても（実質貨幣供給が増えても）、利子率が下がらないので、総需要は 1400 のまま動かず、総需要曲線が垂直になります。</p>
+</details>
 <h2 id="147">14.7 振り返り<a class="headerlink" href="#147" title="Permanent link">&para;</a></h2>
 <ul>
 <li>古典派とケインズで、政策の効果が違う理由を、自分の言葉で説明できますか</li>

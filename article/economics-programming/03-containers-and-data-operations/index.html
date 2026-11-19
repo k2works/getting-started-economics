@@ -4816,6 +4816,10 @@
 <td style="text-align: left;">完成形</td>
 <td style="text-align: left;"><code>demand_schedule</code>、<code>supply_schedule</code>、<code>excess_demand</code>、<code>market_clearing_prices</code></td>
 </tr>
+<tr>
+<td style="text-align: left;">ファイル</td>
+<td style="text-align: left;">実装: <code>lib/chapter03/schedule.py</code>／テスト: <code>test/chapter03/test_schedule.py</code>（自分で書くときは、<code>practice/chapter03/</code> に、同じ名前で作ります）</td>
+</tr>
 </tbody>
 </table>
 <h3 id="_1">経済学の式とコードの対応<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
@@ -4878,7 +4882,7 @@
 </code></pre></div>
 <h2 id="34-red-green-refactor">3.4 Red → Green → Refactor<a class="headerlink" href="#34-red-green-refactor" title="Permanent link">&para;</a></h2>
 <h3 id="red">Red: 供給量のテスト<a class="headerlink" href="#red" title="Permanent link">&para;</a></h3>
-<p>供給関数 Q = c + dP は、第 1 章の練習問題で作った需要関数と同じ形です。</p>
+<p>供給関数 Q = c + dP は、第 1 章の需要関数と同じ形です。第 1 章の練習問題「生成」で作る <code>quantity_supplied</code> と同じものを、この章の実装として用意してあります。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_供給量は価格に比例して増える</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">quantity_supplied</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="mi">30</span>
 
@@ -4955,9 +4959,9 @@
 </code></pre></div>
 <h3 id="_8">実行結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
-uv<span class="w"> </span>run<span class="w"> </span>pytest
+uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter03
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>22 passed
+<div class="highlight"><pre><span></span><code>7 passed
 </code></pre></div>
 <h2 id="35">3.5 規則で言うと<a class="headerlink" href="#35" title="Permanent link">&para;</a></h2>
 <ol>
@@ -5001,11 +5005,11 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 <tr>
 <td style="text-align: left;">生成</td>
-<td style="text-align: left;">解説を見る前に、超過需要が正の価格だけを取り出す <code>shortage_prices</code> を、テストから書いてください（上の例では <code>[0, 10]</code>）</td>
+<td style="text-align: left;">解説を見る前に、超過需要が正の価格だけを取り出す <code>shortage_prices</code> を、テストから書いてください（本文の例の、需要 Q = 100 − 2P、供給 Q = 3P、価格 0・10・20・30 で試します）</td>
 </tr>
 <tr>
 <td style="text-align: left;">多様</td>
-<td style="text-align: left;">需要を Q = 120 − 2P に変えて、均衡の価格を手計算し、テストで確かめてください（P = 24 は価格 <code>[0, 12, 24, 36]</code> に含まれます）</td>
+<td style="text-align: left;">需要を Q = 120 − 2P に変えて、均衡の価格を手計算し、テストで確かめてください。価格のリストは <code>[0, 12, 24, 36]</code> にします</td>
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
@@ -5013,6 +5017,76 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 </tbody>
 </table>
+<details class="note">
+<summary>解答（先に自分で取り組んでから、開いてください）</summary>
+<p><strong>想起</strong>: 関数の本体は、次の 1 行です。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">demand_schedule</span><span class="p">(</span>
+    <span class="n">prices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">intercept</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">slope</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">quantity_demanded</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">slope</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">prices</span><span class="p">}</span>
+</code></pre></div>
+<p><strong>生成</strong>: <code>excess_demand</code> で、価格ごとの超過需要を求めて、正のものだけを残します。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">shortage_prices</span><span class="p">(</span>
+    <span class="n">demand</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">supply</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">gap</span> <span class="ow">in</span> <span class="n">excess_demand</span><span class="p">(</span><span class="n">demand</span><span class="p">,</span> <span class="n">supply</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">gap</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">]</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_超過需要が正の価格は0と10</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">demand</span> <span class="o">=</span> <span class="n">demand_schedule</span><span class="p">(</span><span class="n">PRICES</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">supply</span> <span class="o">=</span> <span class="n">supply_schedule</span><span class="p">(</span><span class="n">PRICES</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">shortage_prices</span><span class="p">(</span><span class="n">demand</span><span class="p">,</span> <span class="n">supply</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+</code></pre></div>
+<p>超過需要は、価格 0・10・20・30 で、100・50・0・−50 です。正なのは、価格 0 と 10 です（価格 20 は 0 なので、含みません）。</p>
+<p><strong>多様</strong>: 価格ごとの表です。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">価格</th>
+<th style="text-align: right;">需要量</th>
+<th style="text-align: right;">供給量</th>
+<th style="text-align: right;">超過需要</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">120</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">120</td>
+</tr>
+<tr>
+<td style="text-align: right;">12</td>
+<td style="text-align: right;">96</td>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">60</td>
+</tr>
+<tr>
+<td style="text-align: right;">24</td>
+<td style="text-align: right;">72</td>
+<td style="text-align: right;">72</td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td style="text-align: right;">36</td>
+<td style="text-align: right;">48</td>
+<td style="text-align: right;">108</td>
+<td style="text-align: right;">−60</td>
+</tr>
+</tbody>
+</table>
+<p>120 − 2P = 3P から、P = 24 です。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_需要が120_2Pのときの均衡価格は24</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">prices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">36</span><span class="p">]</span>
+    <span class="n">demand</span> <span class="o">=</span> <span class="n">demand_schedule</span><span class="p">(</span><span class="n">prices</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">supply</span> <span class="o">=</span> <span class="n">supply_schedule</span><span class="p">(</span><span class="n">prices</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">market_clearing_prices</span><span class="p">(</span><span class="n">demand</span><span class="p">,</span> <span class="n">supply</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="mi">24</span><span class="p">]</span>
+</code></pre></div>
+<p><strong>交互</strong>: 需要表から、価格 10 と 20 の需要量（80 と 60）を取り出して、渡します。</p>
+<div class="highlight"><pre><span></span><code><span class="n">demand</span> <span class="o">=</span> <span class="n">demand_schedule</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">price_elasticity</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="n">demand</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="n">demand</span><span class="p">[</span><span class="mi">20</span><span class="p">])</span>   <span class="c1"># 0.25</span>
+</code></pre></div>
+<p>価格が 100%（10 → 20）上がり、需要量が 25%（80 → 60）減るので、弾力性は 0.25 です。</p>
+</details>
 <h2 id="37">3.7 振り返り<a class="headerlink" href="#37" title="Permanent link">&para;</a></h2>
 <ul>
 <li>予想した表と、テストの期待値は一致しましたか</li>

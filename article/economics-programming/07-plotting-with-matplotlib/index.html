@@ -1855,7 +1855,7 @@
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        従量税と死荷重
+        均衡がない市場
       
     </span>
   </a>
@@ -1866,7 +1866,7 @@
   <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
-        図を描く
+        従量税と死荷重
       
     </span>
   </a>
@@ -1875,6 +1875,17 @@
         
           <li class="md-nav__item">
   <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        図を描く
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -1902,7 +1913,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -4809,6 +4820,10 @@
 <td style="text-align: left;">完成形</td>
 <td style="text-align: left;"><code>equilibrium</code>、<code>consumer_surplus</code>、<code>producer_surplus</code>、<code>equilibrium_with_tax</code>、<code>draw_market</code></td>
 </tr>
+<tr>
+<td style="text-align: left;">ファイル</td>
+<td style="text-align: left;">実装: <code>lib/chapter07/plot.py</code>、<code>lib/chapter07/surplus.py</code>／テスト: <code>test/chapter07/test_surplus_and_plot.py</code>（自分で書くときは、<code>practice/chapter07/</code> に、同じ名前で作ります）</td>
+</tr>
 </tbody>
 </table>
 <h3 id="_1">経済学の式とコードの対応<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
@@ -4915,15 +4930,35 @@
     <span class="k">assert</span> <span class="n">producer_surplus</span><span class="p">(</span><span class="o">**</span><span class="n">MARKET</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">600</span><span class="p">)</span>
 </code></pre></div>
 <p><code>**MARKET</code> は、辞書の中身を、名前付きの引数として展開する書き方です。同じ需要曲線・供給曲線を、何度も書かずに済みます。</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">equilibrium</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">check_equilibrium_exists</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">quantity</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""価格が 0 以上、数量が正の均衡があることを確かめる。なければ例外にする。</span>
+
+<span class="sd">    第 1 章の「価格も需要量も負にならない」を、均衡にも課す。</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">price</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoEquilibriumError</span><span class="p">(</span>
+            <span class="s2">"均衡価格が負になる。価格が 0 でも供給が需要を上回るので、均衡がない"</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">quantity</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">NoEquilibriumError</span><span class="p">(</span>
+            <span class="s2">"均衡数量が 0 以下になる。取引が成立しないので、均衡がない"</span>
+        <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">equilibrium</span><span class="p">(</span>
     <span class="n">demand_intercept</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">demand_slope</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">supply_intercept</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">supply_slope</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""均衡価格と均衡数量を返す。a - bP = c + dP を P について解く。"""</span>
+<span class="w">    </span><span class="sd">"""均衡価格と均衡数量を返す。a - bP = c + dP を P について解く。</span>
+
+<span class="sd">    価格が負、または数量が 0 以下になる市場には、均衡がないので、</span>
+<span class="sd">    NoEquilibriumError にする。</span>
+<span class="sd">    """</span>
     <span class="n">price</span> <span class="o">=</span> <span class="p">(</span><span class="n">demand_intercept</span> <span class="o">-</span> <span class="n">supply_intercept</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">demand_slope</span> <span class="o">+</span> <span class="n">supply_slope</span><span class="p">)</span>
     <span class="n">quantity</span> <span class="o">=</span> <span class="n">demand_intercept</span> <span class="o">-</span> <span class="n">demand_slope</span> <span class="o">*</span> <span class="n">price</span>
+    <span class="n">check_equilibrium_exists</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="n">quantity</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">price</span><span class="p">,</span> <span class="n">quantity</span>
 
 
@@ -4958,7 +4993,80 @@
 </code></pre></div>
 <p><code>equilibrium</code> は、価格と数量の 2 つの値を、まとめて（タプルで）返します。<code>price, quantity = equilibrium(...)</code> のように、2 つの変数に分けて受け取れます。</p>
 <p><code>producer_surplus</code> が、供給曲線の切片が正のときを受け付けないのは、そのとき価格が 0 でも供給量があり、三角形の面積では表せないからです。これは、この章の三角形による計算の限界です。</p>
-<h3 id="_5">従量税と死荷重<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<h3 id="_5">均衡がない市場<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>式を P について解けば、均衡価格は、どんな係数でも求まります。しかし、その値が経済学の意味を持つとは限りません。次の 2 つの市場で、確かめます。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">市場</th>
+<th style="text-align: left;">需要曲線</th>
+<th style="text-align: left;">供給曲線</th>
+<th style="text-align: left;">解</th>
+<th style="text-align: left;">何が起きているか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">価格が負になる</td>
+<td style="text-align: left;">Q = 100 − 2P</td>
+<td style="text-align: left;">Q = 120 + 3P</td>
+<td style="text-align: left;">P = −4、Q = 108</td>
+<td style="text-align: left;">価格が 0 でも、供給（120）が、需要（100）を上回る。価格は、0 より下がれない</td>
+</tr>
+<tr>
+<td style="text-align: left;">数量が負になる</td>
+<td style="text-align: left;">Q = 10 − P</td>
+<td style="text-align: left;">Q = −30 + P</td>
+<td style="text-align: left;">P = 20、Q = −10</td>
+<td style="text-align: left;">需要は価格 10 でなくなり、供給は価格 30 まで始まらない。取引が成立しない</td>
+</tr>
+</tbody>
+</table>
+<p>どちらも、式の解は出ますが、負の価格や負の数量は、第 1 章で決めた「価格も需要量も負にならない」に反します。均衡がない市場として、<code>NoEquilibriumError</code> にします。</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 需要の切片が供給の切片より小さい市場: 価格が 0 でも供給が需要を上回る（P* = -4）</span>
+<span class="n">MARKET_WITH_NEGATIVE_PRICE</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"demand_intercept"</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s2">"demand_slope"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="s2">"supply_intercept"</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
+    <span class="s2">"supply_slope"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="c1"># 価格は正でも取引量が負になる市場: 需要は価格 10 でなくなり、供給は価格 30 まで始まらない</span>
+<span class="n">MARKET_WITH_NEGATIVE_QUANTITY</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"demand_intercept"</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s2">"demand_slope"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">"supply_intercept"</span><span class="p">:</span> <span class="o">-</span><span class="mi">30</span><span class="p">,</span>
+    <span class="s2">"supply_slope"</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_価格が負になる市場では均衡を求められない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">NoEquilibriumError</span><span class="p">):</span>
+        <span class="n">equilibrium</span><span class="p">(</span><span class="o">**</span><span class="n">MARKET_WITH_NEGATIVE_PRICE</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_取引量が負になる市場では均衡を求められない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">NoEquilibriumError</span><span class="p">):</span>
+        <span class="n">equilibrium</span><span class="p">(</span><span class="o">**</span><span class="n">MARKET_WITH_NEGATIVE_QUANTITY</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_価格がちょうど0になる市場の均衡は許される</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># 100 - 2P = 100 + 3P から P = 0、Q = 100</span>
+    <span class="k">assert</span> <span class="n">equilibrium</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+</code></pre></div>
+<p>価格がちょうど 0 になる市場の均衡は、許します（価格は 0 以上であればよいからです）。余剰や図、従量税も、<code>equilibrium</code> を使っているので、均衡がない市場では、同じ例外になります。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_均衡のない市場では余剰も図も求められない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">NoEquilibriumError</span><span class="p">):</span>
+        <span class="n">consumer_surplus</span><span class="p">(</span><span class="o">**</span><span class="n">MARKET_WITH_NEGATIVE_PRICE</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">NoEquilibriumError</span><span class="p">):</span>
+        <span class="n">draw_market</span><span class="p">(</span><span class="o">**</span><span class="n">MARKET_WITH_NEGATIVE_PRICE</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">NoEquilibriumError</span><span class="p">):</span>
+        <span class="n">producer_surplus</span><span class="p">(</span><span class="o">**</span><span class="n">MARKET_WITH_NEGATIVE_QUANTITY</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">NoEquilibriumError</span><span class="p">):</span>
+        <span class="n">equilibrium_with_tax</span><span class="p">(</span><span class="o">**</span><span class="n">MARKET_WITH_NEGATIVE_PRICE</span><span class="p">,</span> <span class="n">tax</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</code></pre></div>
+<p>この確認を、<code>equilibrium</code> の 1 か所に置いたことで、第 9 章の連立方程式（後述）も、同じ関数 <code>check_equilibrium_exists</code> で確かめられます。均衡の求め方が違っても（式、連立方程式、二分法）、「均衡がない市場は、例外にする」という前提を、そろえるためです。</p>
+<h3 id="_6">従量税と死荷重<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <p>売り手に 1 単位あたり 5 の税を課します。買い手の払う価格を P とすると、売り手の受取は P − 5 です。需要量と供給量が等しい条件 a − bP = c + d(P − t) を、P について解きます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_従量税を課すと買い手の価格は上がり売り手の受取は下がる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">equilibrium_with_tax</span><span class="p">(</span><span class="o">**</span><span class="n">MARKET</span><span class="p">,</span> <span class="n">tax</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
@@ -5029,7 +5137,7 @@
     <span class="k">assert</span> <span class="n">before</span> <span class="o">-</span> <span class="n">after</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">deadweight_loss</span><span class="p">)</span>
 </code></pre></div>
 <p>課税前の余剰の合計は 900 + 600 = 1500 です。課税後は、消費者余剰 729、生産者余剰 486、税収 270 で合計 1485 となり、差の 15 が死荷重と一致します。</p>
-<h3 id="_6">図を描く<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<h3 id="_7">図を描く<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>図そのものは、ピクセルを比べるのではなく、「描いた線のデータが正しいか」をテストします。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">curve_points</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Line2D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""線の (数量, 価格) の組を、数量をキーにした辞書にする。"""</span>
@@ -5083,13 +5191,12 @@
 uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"from lib.chapter07.plot import draw_market; draw_market(100, 2, 0, 3).savefig('market.png')"</span>
 </code></pre></div>
 <p><img alt="需要曲線・供給曲線・均衡点" src="../images/ch07-market.png" /></p>
-<h3 id="_7">実行結果<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h3 id="_8">実行結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
-uv<span class="w"> </span>run<span class="w"> </span>pytest
+uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter07
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>77 passed
+<div class="highlight"><pre><span></span><code>23 passed
 </code></pre></div>
-<p>この 77 件には、第 1〜8 章のテストを含みます。</p>
 <h2 id="75">7.5 規則で言うと<a class="headerlink" href="#75" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>図を描く関数は、図（<code>Figure</code>）を返す。</strong> 画面に出す・ファイルに保存する、は呼び出す側が決める。こうすると、テストもできる</li>
@@ -5120,7 +5227,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tbody>
 </table>
 <p>死荷重は、税額の 2 乗に比例して増えます。税額 5 のとき 15 ですが、税額を 2 倍の 10 にすると、取引量は 48 になり、死荷重は 60（4 倍）になります。</p>
-<h3 id="_8">このモデルが成り立たない場面<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_9">このモデルが成り立たない場面<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>この章の余剰は、需要曲線と供給曲線が直線であることを使った、三角形の面積です。曲線の形が直線でなければ、面積は積分で求めます。また、課税で買い手の行動が変わらない（需要が完全に非弾力的）なら、死荷重は 0 になります。需要が完全に非弾力的な場面では、この章の式（b &gt; 0）が成り立ちません。</p>
 <h2 id="76">7.6 練習問題<a class="headerlink" href="#76" title="Permanent link">&para;</a></h2>
 <table>
@@ -5137,18 +5244,49 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 <tr>
 <td style="text-align: left;">生成</td>
-<td style="text-align: left;">解説を見る前に、税額 10 のときの買い手の価格・取引量・死荷重を、手計算してから、テストを書いてください（26、48、60 になります）</td>
+<td style="text-align: left;">解説を見る前に、税額 10 のときの買い手の価格・取引量・死荷重を、手計算してから、テストを書いてください</td>
 </tr>
 <tr>
 <td style="text-align: left;">多様</td>
-<td style="text-align: left;">需要を Q = 120 − 2P に変えて、均衡と余剰を手計算し、テストで確かめてください（価格 24、数量 72、消費者余剰 1296、生産者余剰 864）。余裕があれば、日本語のフォントを設定して、ラベルを日本語にしてみてください</td>
+<td style="text-align: left;">需要を Q = 120 − 2P に変えて、均衡と余剰を手計算し、テストで確かめてください。余裕があれば、日本語のフォントを設定して、ラベルを日本語にしてみてください</td>
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
-<td style="text-align: left;">第 2 章の弾力性を使って、均衡点（価格 20、数量 60）での、需要の価格弾力性（b × P ÷ Q）と供給の価格弾力性（d × P ÷ Q）を求め、買い手の負担割合（60%）との関係を説明してください（0.67 と 1 です）</td>
+<td style="text-align: left;">第 2 章の弾力性を使って、均衡点（価格 20、数量 60）での、需要の価格弾力性（b × P ÷ Q）と供給の価格弾力性（d × P ÷ Q）を求め、買い手の負担割合との関係を説明してください</td>
 </tr>
 </tbody>
 </table>
+<details class="note">
+<summary>解答（先に自分で取り組んでから、開いてください）</summary>
+<p><strong>想起</strong>: 本文と見比べて、<code>ax.set_xlabel</code>・<code>ax.set_ylabel</code>・<code>ax.legend()</code> があるか、<code>plt.close(fig)</code> で図を閉じてから返しているかを確かめます。</p>
+<p><strong>生成</strong>: 買い手の価格は (100 + 3 × 10) ÷ 5 = 26、売り手の受取は 26 − 10 = 16、取引量は 100 − 2 × 26 = 48 です。税収は 10 × 48 = 480、死荷重は 0.5 × 10 × (60 − 48) = 60 です。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_税額10のときの均衡</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">equilibrium_with_tax</span><span class="p">(</span><span class="o">**</span><span class="n">MARKET</span><span class="p">,</span> <span class="n">tax</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">consumer_price</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">26</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">producer_price</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">quantity</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">48</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">deadweight_loss</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
+</code></pre></div>
+<p>税額を 5 から 10 に 2 倍にすると、死荷重は 15 から 60 に 4 倍になります（税額の 2 乗に比例します）。</p>
+<p><strong>多様</strong>: 120 − 2P = 3P から、P = 24、Q = 120 − 2 × 24 = 72 です。需要曲線の縦軸の切片は 120 ÷ 2 = 60 なので、消費者余剰は 0.5 × 72 × (60 − 24) = 1296、生産者余剰は 0.5 × 72 × (24 − 0) = 864 です。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_需要が120_2Pのときの均衡と余剰</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">market</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"demand_intercept"</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
+        <span class="s2">"demand_slope"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">"supply_intercept"</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">"supply_slope"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">assert</span> <span class="n">equilibrium</span><span class="p">(</span><span class="o">**</span><span class="n">market</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">((</span><span class="mi">24</span><span class="p">,</span> <span class="mi">72</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">consumer_surplus</span><span class="p">(</span><span class="o">**</span><span class="n">market</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1296</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">producer_surplus</span><span class="p">(</span><span class="o">**</span><span class="n">market</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">864</span><span class="p">)</span>
+</code></pre></div>
+<p>日本語のラベルは、図を描く前に、フォントを指定して表示できます。使えるフォントの名前は、お使いの環境によって違います（Windows の例: <code>MS Gothic</code>、macOS の例: <code>Hiragino Sans</code>）。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s2">"font.family"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"MS Gothic"</span>
+</code></pre></div>
+<p><strong>交互</strong>: 需要の価格弾力性は 2 × 20 ÷ 60 = 0.67、供給の価格弾力性は 3 × 20 ÷ 60 = 1.0 です。買い手の負担割合は、供給の弾力性 ÷ (需要の弾力性 + 供給の弾力性) = 1 ÷ (0.67 + 1) = 0.6 で、第 7 章で求めた 60% と一致します。弾力性が小さい（価格が変わっても行動を変えにくい）側が、税を多く負担します。</p>
+</details>
 <h2 id="77">7.7 振り返り<a class="headerlink" href="#77" title="Permanent link">&para;</a></h2>
 <ul>
 <li>税の負担についての予想は、当たりましたか。当たらなかったなら、どこで考え違いをしましたか</li>

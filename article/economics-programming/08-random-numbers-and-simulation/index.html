@@ -4805,6 +4805,10 @@
 <td style="text-align: left;">完成形</td>
 <td style="text-align: left;"><code>simulate_demand</code>、<code>running_means</code>、<code>roll_dice</code>、<code>sample_means</code>、<code>plot_histogram</code></td>
 </tr>
+<tr>
+<td style="text-align: left;">ファイル</td>
+<td style="text-align: left;">実装: <code>lib/chapter08/simulation.py</code>／テスト: <code>test/chapter08/test_simulation.py</code>（自分で書くときは、<code>practice/chapter08/</code> に、同じ名前で作ります）</td>
+</tr>
 </tbody>
 </table>
 <h3 id="_1">経済学の式とコードの対応<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
@@ -5026,9 +5030,9 @@
 <p><img alt="標本平均のヒストグラム（サイコロ 30 回の平均を 1,000 回）" src="../images/ch08-sample-means.png" /></p>
 <h3 id="_8">実行結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
-uv<span class="w"> </span>run<span class="w"> </span>pytest
+uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>77 passed
+<div class="highlight"><pre><span></span><code>12 passed
 </code></pre></div>
 <h2 id="85">8.5 規則で言うと<a class="headerlink" href="#85" title="Permanent link">&para;</a></h2>
 <ol>
@@ -5076,7 +5080,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 <tr>
 <td style="text-align: left;">生成</td>
-<td style="text-align: left;">解説を見る前に、1 回の標本の大きさ（サイコロを振る回数）を 10、30、100 に変えたとき、標本平均の標準偏差がどうなるか予想し、実行して確かめてください（理論値は 0.540、0.312、0.171）</td>
+<td style="text-align: left;">解説を見る前に、1 回の標本の大きさ（サイコロを振る回数）を 10、30、100 に変えたとき、標本平均の標準偏差がどうなるか予想し、実行して確かめてください（サイコロ 1 回の標準偏差は約 1.708 で、理論値は、それを √n で割った値です）</td>
 </tr>
 <tr>
 <td style="text-align: left;">多様</td>
@@ -5084,10 +5088,118 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
-<td style="text-align: left;">第 2 章の <code>price_elasticity</code> を使い、価格 10 と 12 のそれぞれで、<code>simulate_demand</code> の平均を求めて、価格弾力性を計算してください（理論値は 0.25 ですが、観測値が少ないと大きくずれます）</td>
+<td style="text-align: left;">第 2 章の <code>price_elasticity</code> を使い、価格 10 と 12 のそれぞれで、<code>simulate_demand</code> の平均を求めて、価格弾力性を計算してください（理論値は 0.25 ですが、観測値が少ないと、大きくずれます）</td>
 </tr>
 </tbody>
 </table>
+<details class="note">
+<summary>解答（先に自分で取り組んでから、開いてください）</summary>
+<p><strong>想起</strong>: 先頭から足し込んで、そこまでの個数で割ります。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">running_means</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+        <span class="n">total</span> <span class="o">+=</span> <span class="n">value</span>
+        <span class="n">means</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">total</span> <span class="o">/</span> <span class="n">count</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">means</span>
+</code></pre></div>
+<p><strong>生成</strong>: 標本の大きさ n を大きくするほど、標本平均のばらつきは、1 ÷ √n で小さくなります。</p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">100</span><span class="p">):</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="n">sample_means</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">statistics</span><span class="o">.</span><span class="n">stdev</span><span class="p">(</span><span class="n">means</span><span class="p">),</span> <span class="mi">3</span><span class="p">))</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">n</th>
+<th style="text-align: right;">実測値（種 0）</th>
+<th style="text-align: right;">理論値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">0.541</td>
+<td style="text-align: right;">0.540</td>
+</tr>
+<tr>
+<td style="text-align: right;">30</td>
+<td style="text-align: right;">0.314</td>
+<td style="text-align: right;">0.312</td>
+</tr>
+<tr>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">0.171</td>
+<td style="text-align: right;">0.171</td>
+</tr>
+</tbody>
+</table>
+<p>n が 10 倍になると、標準偏差は約 1 ÷ √10（約 0.32 倍）になります。</p>
+<p><strong>多様</strong>: 累積平均の、80 からの差です（種 0）。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">観測値の個数</th>
+<th style="text-align: right;">σ = 10</th>
+<th style="text-align: right;">σ = 20</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">3.62</td>
+<td style="text-align: right;">7.24</td>
+</tr>
+<tr>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">0.84</td>
+<td style="text-align: right;">1.67</td>
+</tr>
+<tr>
+<td style="text-align: right;">1,000</td>
+<td style="text-align: right;">0.18</td>
+<td style="text-align: right;">0.36</td>
+</tr>
+<tr>
+<td style="text-align: right;">10,000</td>
+<td style="text-align: right;">0.01</td>
+<td style="text-align: right;">0.02</td>
+</tr>
+</tbody>
+</table>
+<p>σ が 2 倍になると、差もおよそ 2 倍になります（標準誤差 σ ÷ √n が、σ に比例するためです）。同じ精度を得るには、観測値がおよそ 4 倍必要です。</p>
+<p><strong>交互</strong>: 価格 10 と 12 で、同じ乱数の列から、平均を求めます。</p>
+<div class="highlight"><pre><span></span><code><span class="n">rng</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">at_10</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">simulate_demand</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10_000</span><span class="p">,</span> <span class="n">rng</span><span class="p">))</span>
+<span class="n">at_12</span> <span class="o">=</span> <span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">simulate_demand</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10_000</span><span class="p">,</span> <span class="n">rng</span><span class="p">))</span>
+<span class="n">price_elasticity</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">at_10</span><span class="p">,</span> <span class="n">at_12</span><span class="p">)</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">観測値の個数</th>
+<th style="text-align: right;">価格 10 の平均</th>
+<th style="text-align: right;">価格 12 の平均</th>
+<th style="text-align: right;">価格弾力性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">10,000</td>
+<td style="text-align: right;">79.992</td>
+<td style="text-align: right;">76.100</td>
+<td style="text-align: right;">0.243</td>
+</tr>
+<tr>
+<td style="text-align: right;">10</td>
+<td style="text-align: right;">76.380</td>
+<td style="text-align: right;">76.251</td>
+<td style="text-align: right;">0.008</td>
+</tr>
+</tbody>
+</table>
+<p>観測値が 10,000 個なら、理論値 0.25 に近くなりますが、10 個では、ばらつきに隠れて、0.008 まで、大きくずれます。</p>
+</details>
 <h2 id="87">8.7 振り返り<a class="headerlink" href="#87" title="Permanent link">&para;</a></h2>
 <ul>
 <li>予想した標準偏差は、実測値と合っていましたか</li>

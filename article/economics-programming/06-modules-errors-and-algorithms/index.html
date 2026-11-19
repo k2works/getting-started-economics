@@ -1853,7 +1853,7 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
-        エラーの扱いをテストで決める
+        収束しないときの扱い
       
     </span>
   </a>
@@ -1862,6 +1862,17 @@
         
           <li class="md-nav__item">
   <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        エラーの扱いをテストで決める
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -1889,7 +1900,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -1939,7 +1950,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -1950,7 +1961,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -4866,6 +4877,10 @@
 <td style="text-align: left;">完成形</td>
 <td style="text-align: left;"><code>make_excess_demand</code>、<code>find_equilibrium_price</code>、<code>NoEquilibriumError</code></td>
 </tr>
+<tr>
+<td style="text-align: left;">ファイル</td>
+<td style="text-align: left;">実装: <code>lib/chapter06/bisection.py</code>／テスト: <code>test/chapter06/test_bisection.py</code>（自分で書くときは、<code>practice/chapter06/</code> に、同じ名前で作ります）</td>
+</tr>
 </tbody>
 </table>
 <h3 id="_1">経済学の式とコードの対応<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
@@ -4925,9 +4940,9 @@
 <h3 id="_4">独自の例外<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
 <p>「均衡が見つからない」という経済学の意味を持つ例外は、<code>ValueError</code> から派生させて名前を付けます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">NoEquilibriumError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">"""指定した区間に均衡価格が見つからないときの例外。"""</span>
+<span class="w">    </span><span class="sd">"""均衡が見つからない（存在しない）ときの例外。"""</span>
 </code></pre></div>
-<p><code>ValueError</code> の一種なので、<code>except ValueError</code> でも受け取れますが、<code>except NoEquilibriumError</code> と書けば、この場面だけを狙って処理できます。</p>
+<p><code>ValueError</code> の一種なので、<code>except ValueError</code> でも受け取れますが、<code>except NoEquilibriumError</code> と書けば、この場面だけを狙って処理できます。この例外は、二分法だけでなく、第 7 章の <code>equilibrium</code> と第 9 章の連立方程式も、均衡がない市場で使います（第 7 章の 7.4 節で説明します）。</p>
 <h3 id="_5">アルゴリズム: 二分法<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>均衡が含まれる区間を、半分ずつに絞っていく方法です。真ん中の点で超過需要を調べ、符号が変わる側の半分を残します。</p>
 <table>
@@ -4978,7 +4993,7 @@
 </tr>
 </tbody>
 </table>
-<p>このように区間が縮み、均衡の 20 を含んだまま狭まります。幅が 1 つの回ごとに半分になるので、幅 100 を 10 億分の 1 まで縮めるのに、約 37 回です。</p>
+<p>このように区間が縮み、均衡の 20 を含んだまま狭まります。幅が 1 回ごとに半分になるので、幅 100 を 1e-9 未満にするのに、37 回かかります（36 回では、約 1.46e-9 で、まだ足りません）。</p>
 <h2 id="64-red-green-refactor">6.4 Red → Green → Refactor<a class="headerlink" href="#64-red-green-refactor" title="Permanent link">&para;</a></h2>
 <h3 id="_6">超過需要の関数を作る<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <p>価格を受け取り、超過需要を返す関数を、関数として返す関数が、<code>make_excess_demand</code> です。</p>
@@ -5027,10 +5042,15 @@
     <span class="n">tolerance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-9</span><span class="p">,</span>
     <span class="n">max_iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""区間 [low, high] を半分ずつに絞り、超過需要が 0 になる価格を返す。"""</span>
+<span class="w">    </span><span class="sd">"""区間 [low, high] を半分ずつに絞り、超過需要が 0 になる価格を返す。</span>
+
+<span class="sd">    区間の幅が tolerance 未満になる前に、max_iterations 回の反復に達したときは、</span>
+<span class="sd">    収束していない値を返さず、RuntimeError にする。</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">low</span> <span class="o">&gt;=</span> <span class="n">high</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"下限は上限より小さくなければならない"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">excess_demand</span><span class="p">(</span><span class="n">low</span><span class="p">)</span> <span class="o">*</span> <span class="n">excess_demand</span><span class="p">(</span><span class="n">high</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">excess_low</span> <span class="o">=</span> <span class="n">excess_demand</span><span class="p">(</span><span class="n">low</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">excess_low</span> <span class="o">*</span> <span class="n">excess_demand</span><span class="p">(</span><span class="n">high</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="n">NoEquilibriumError</span><span class="p">(</span>
             <span class="s2">"区間の両端で超過需要の符号が同じなので均衡が見つからない"</span>
         <span class="p">)</span>
@@ -5038,14 +5058,63 @@
         <span class="k">if</span> <span class="n">high</span> <span class="o">-</span> <span class="n">low</span> <span class="o">&lt;</span> <span class="n">tolerance</span><span class="p">:</span>
             <span class="k">break</span>
         <span class="n">middle</span> <span class="o">=</span> <span class="p">(</span><span class="n">low</span> <span class="o">+</span> <span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
-        <span class="k">if</span> <span class="n">excess_demand</span><span class="p">(</span><span class="n">low</span><span class="p">)</span> <span class="o">*</span> <span class="n">excess_demand</span><span class="p">(</span><span class="n">middle</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">excess_middle</span> <span class="o">=</span> <span class="n">excess_demand</span><span class="p">(</span><span class="n">middle</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">excess_low</span> <span class="o">*</span> <span class="n">excess_middle</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">high</span> <span class="o">=</span> <span class="n">middle</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">low</span> <span class="o">=</span> <span class="n">middle</span>
+            <span class="n">low</span><span class="p">,</span> <span class="n">excess_low</span> <span class="o">=</span> <span class="n">middle</span><span class="p">,</span> <span class="n">excess_middle</span>
+    <span class="k">if</span> <span class="n">high</span> <span class="o">-</span> <span class="n">low</span> <span class="o">&gt;=</span> <span class="n">tolerance</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"区間が縮まらなかった。max_iterations を増やす"</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">low</span> <span class="o">+</span> <span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
 </code></pre></div>
 <p>2 つの数をかけて負（または 0）なら、符号が逆（または片方が 0）なので、その間に均衡があります。実際に動かすと、均衡が 20 のとき 20.00000000007276、18 のとき 17.999999999665306 を返し、どちらも許容誤差 1e-9 の範囲に収まっています。</p>
-<h3 id="_9">エラーの扱いをテストで決める<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>超過需要は、反復 1 回につき 1 回だけ計算します。下端の値 <code>excess_low</code> を覚えておき、区間の下端を動かしたときだけ更新するので、同じ価格の超過需要を、何度も計算しません。第 14 章では、1 回の評価ごとに IS-LM の連立方程式を解くので、この差は、そのまま計算時間の差になります。</p>
+<h3 id="_9">収束しないときの扱い<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>反復の上限（<code>max_iterations</code>）までに、区間が縮まらなかったとき、収束していない値を返してはいけません。第 5 章の調整過程と同じように、<code>RuntimeError</code> にします。「入力が不正」は <code>ValueError</code>、「計算が収束しない」は <code>RuntimeError</code> と使い分けます。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_反復の上限までに区間が縮まらなければ例外になる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">excess</span> <span class="o">=</span> <span class="n">make_excess_demand</span><span class="p">(</span>
+        <span class="n">demand_intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">demand_slope</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">supply_intercept</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">supply_slope</span><span class="o">=</span><span class="mi">3</span>
+    <span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+        <span class="n">find_equilibrium_price</span><span class="p">(</span><span class="n">excess</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_iterations</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_区間の幅を1e_9未満にするには37回の反復が必要</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># 幅 100 を半分ずつにすると、36 回で約 1.46e-9、37 回で約 7.3e-10</span>
+    <span class="n">excess</span> <span class="o">=</span> <span class="n">make_excess_demand</span><span class="p">(</span>
+        <span class="n">demand_intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">demand_slope</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">supply_intercept</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">supply_slope</span><span class="o">=</span><span class="mi">3</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">find_equilibrium_price</span><span class="p">(</span>
+        <span class="n">excess</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_iterations</span><span class="o">=</span><span class="mi">37</span>
+    <span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+        <span class="n">find_equilibrium_price</span><span class="p">(</span><span class="n">excess</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">max_iterations</span><span class="o">=</span><span class="mi">36</span><span class="p">)</span>
+</code></pre></div>
+<p>1 つ目は、上限が 1 回では、区間が縮まらないので例外になることを、2 つ目は、ちょうど 37 回で収束し、36 回では足りないという境目を、確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_超過需要の評価は1回の反復につき1回だけ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">inner</span> <span class="o">=</span> <span class="n">make_excess_demand</span><span class="p">(</span>
+        <span class="n">demand_intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">demand_slope</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">supply_intercept</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">supply_slope</span><span class="o">=</span><span class="mi">3</span>
+    <span class="p">)</span>
+    <span class="n">calls</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">counting</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">nonlocal</span> <span class="n">calls</span>
+        <span class="n">calls</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">return</span> <span class="n">inner</span><span class="p">(</span><span class="n">price</span><span class="p">)</span>
+
+    <span class="n">find_equilibrium_price</span><span class="p">(</span><span class="n">counting</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+    <span class="c1"># 両端の符号の確認で 2 回、反復 37 回で 37 回</span>
+    <span class="k">assert</span> <span class="n">calls</span> <span class="o">==</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">37</span>
+</code></pre></div>
+<p>超過需要の関数を、呼び出した回数を数える関数で包んで、評価の回数も、テストで固定します（両端の確認で 2 回、反復で 37 回）。</p>
+<p>端点がちょうど均衡のときも、テストで確かめています。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_区間の下端がちょうど均衡ならその価格を返す</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">excess</span> <span class="o">=</span> <span class="n">make_excess_demand</span><span class="p">(</span>
+        <span class="n">demand_intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">demand_slope</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">supply_intercept</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">supply_slope</span><span class="o">=</span><span class="mi">3</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">find_equilibrium_price</span><span class="p">(</span><span class="n">excess</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="_10">エラーの扱いをテストで決める<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p>均衡が区間に含まれないときと、区間の指定が不正なときを、テストで決めます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_区間の両端で超過需要の符号が同じなら均衡は見つからない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">excess</span> <span class="o">=</span> <span class="n">make_excess_demand</span><span class="p">(</span>
@@ -5067,16 +5136,16 @@
         <span class="n">find_equilibrium_price</span><span class="p">(</span><span class="n">excess</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </code></pre></div>
 <p>区間 [30, 100] は、どちらの端も超過需要が負（−50 と −300）です。このとき、間に均衡があるかどうかは、この方法では判断できないので、例外にします。</p>
-<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
-uv<span class="w"> </span>run<span class="w"> </span>pytest
+uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter06
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>52 passed
+<div class="highlight"><pre><span></span><code>11 passed
 </code></pre></div>
 <h2 id="65">6.5 規則で言うと<a class="headerlink" href="#65" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>ファイルを分けて、<code>import</code> で再利用する。</strong> 同じ式は、1 か所にだけ書く</li>
-<li><strong>起きてはいけない入力は、意味の分かる例外にする。</strong> 経済学の意味を持つ場面（均衡が見つからない）は、独自の例外にする</li>
+<li><strong>起きてはいけない入力は、意味の分かる例外にする。</strong> 経済学の意味を持つ場面（均衡が見つからない）は、独自の例外にする。計算が収束しないときは、値を返さず <code>RuntimeError</code> にする</li>
 <li><strong>アルゴリズムは、「何を保ったまま、何を縮めるか」で理解する。</strong> 二分法では、「均衡を含む」ことを保ったまま、区間を半分にする</li>
 </ol>
 <p>混同しやすい点を、表にまとめます。</p>
@@ -5098,7 +5167,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 </tbody>
 </table>
-<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p>二分法は、区間の両端で超過需要の符号が逆のときだけ使えます。均衡が複数あるモデル（需要や供給が複雑な形のとき）では、区間に均衡が 2 つ以上含まれ、どの均衡が見つかるかは、区間の取り方で決まります。また、超過需要が途中でとびとびになる場合は、符号が変わっても 0 になる点がないことがあります。</p>
 <h2 id="66">6.6 練習問題<a class="headerlink" href="#66" title="Permanent link">&para;</a></h2>
 <table>
@@ -5115,18 +5184,77 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 <tr>
 <td style="text-align: left;">生成</td>
-<td style="text-align: left;">解説を見る前に、二分法が何回で終わったかを数える関数を、テストから書いてください（区間 [0, 100]、許容誤差 1 のとき、幅 100 が 1 未満になるのは 7 回です）</td>
+<td style="text-align: left;">解説を見る前に、二分法が何回で終わるかを数える関数を、テストから書いてください（区間の幅 100、許容誤差 1 のとき、幅が 1 未満になる回数を、手計算してから、テストにします）</td>
 </tr>
 <tr>
 <td style="text-align: left;">多様</td>
-<td style="text-align: left;">需要を Q = 150 − 2P、供給を Q = 20 + 3P に変えて、均衡価格を手計算し（26）、テストで確かめてください</td>
+<td style="text-align: left;">需要を Q = 150 − 2P、供給を Q = 20 + 3P に変えて、均衡価格を手計算し、テストで確かめてください</td>
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
-<td style="text-align: left;">第 5 章のワルラス調整と二分法で、同じ均衡を求め、答えと、かかった回数を比べてください（ワルラス調整は 27 回、二分法は約 37 回です）</td>
+<td style="text-align: left;">第 5 章のワルラス調整と二分法で、同じ均衡を求め、答えと、かかった回数を比べてください。ただし、止める条件が違います。ワルラス調整は超過需要が 1e-6 未満、二分法は区間の幅が 1e-9 未満なので、回数の単純な比較には注意してください</td>
 </tr>
 </tbody>
 </table>
+<details class="note">
+<summary>解答（先に自分で取り組んでから、開いてください）</summary>
+<p><strong>想起</strong>: 本文と見比べて、次の 3 点を確かめます。</p>
+<ul>
+<li>区間の両端の符号が同じとき、<code>NoEquilibriumError</code> を出しているか</li>
+<li>区間の下端を覚えて、超過需要を反復 1 回につき 1 回だけ評価しているか</li>
+<li>反復の上限までに縮まらないとき、<code>RuntimeError</code> にしているか</li>
+</ul>
+<p><strong>生成</strong>: 幅が 1 回ごとに半分になるので、「半分にして、許容誤差未満になるまでの回数」を数えます。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">count_iterations</span><span class="p">(</span><span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">width</span> <span class="o">&gt;=</span> <span class="n">tolerance</span><span class="p">:</span>
+        <span class="n">width</span> <span class="o">/=</span> <span class="mi">2</span>
+        <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">return</span> <span class="n">count</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_幅100を1未満にするには7回</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># 100 → 50 → 25 → 12.5 → 6.25 → 3.125 → 1.5625 → 0.78125</span>
+    <span class="k">assert</span> <span class="n">count_iterations</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">7</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_幅100を1e_9未満にするには37回</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">count_iterations</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mf">1e-9</span><span class="p">)</span> <span class="o">==</span> <span class="mi">37</span>
+</code></pre></div>
+<p><code>while</code> は、条件が成り立つ間、繰り返します。<code>math.ceil(math.log2(幅 ÷ 許容誤差))</code> でも、7 と 37 になります（幅 ÷ 許容誤差が、ちょうど 2 のべき乗になる場合を除きます）。</p>
+<p><strong>多様</strong>: 150 − 2P = 20 + 3P から、5P = 130 で、P = 26 です（そのときの数量は 98）。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_需要が150_2Pで供給が20_3Pのときの均衡価格は26</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">excess</span> <span class="o">=</span> <span class="n">make_excess_demand</span><span class="p">(</span>
+        <span class="n">demand_intercept</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">demand_slope</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">supply_intercept</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">supply_slope</span><span class="o">=</span><span class="mi">3</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">find_equilibrium_price</span><span class="p">(</span><span class="n">excess</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">26</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>交互</strong>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">方法</th>
+<th style="text-align: right;">答え</th>
+<th style="text-align: right;">回数</th>
+<th style="text-align: left;">止める条件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">ワルラス調整（k = 0.1）</td>
+<td style="text-align: right;">19.999999850988388</td>
+<td style="text-align: right;">27 回</td>
+<td style="text-align: left;">超過需要が 1e-6 未満</td>
+</tr>
+<tr>
+<td style="text-align: left;">二分法</td>
+<td style="text-align: right;">20.00000000007276</td>
+<td style="text-align: right;">37 回</td>
+<td style="text-align: left;">区間の幅が 1e-9 未満</td>
+</tr>
+</tbody>
+</table>
+<p>どちらも 20 に近づきます。回数が違うのは、止める条件の厳しさが違うためで、二分法が遅いとは言えません。二分法は、区間が必ず半分になるので、回数が事前に分かり（37 回）、調整の速さ k を選ぶ必要もありません。</p>
+</details>
 <h2 id="67">6.7 振り返り<a class="headerlink" href="#67" title="Permanent link">&para;</a></h2>
 <ul>
 <li>二分法の回数の予想は当たりましたか</li>
@@ -5161,14 +5289,14 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 </tbody>
 </table>
-<h3 id="_12">時間を決めて書く課題<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">時間を決めて書く課題<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、次を書いてください。</p>
 <ol>
 <li>需要曲線 Q = 120 − 2P と供給曲線 Q = 20 + 3P の、超過需要の関数を作る（10 分）</li>
 <li>二分法で均衡価格を求め、20 になることを確かめるテストを書く（15 分）</li>
 </ol>
 <p>詰まった所は、その章に戻ってください。</p>
-<h3 id="_13">誤りの原因の分類<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">誤りの原因の分類<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <p>テストが通らなかったときは、原因を次のように分けると、戻る先が分かります。</p>
 <table>
 <thead>

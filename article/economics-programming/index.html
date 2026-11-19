@@ -1463,15 +1463,54 @@
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        開発環境
+        この記事の読み方
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="この記事の読み方">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        対象読者と前提
       
     </span>
   </a>
   
 </li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        進め方
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        使う道具
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
       
         <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         サンプルコード
@@ -1482,7 +1521,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         章構成
@@ -1538,7 +1577,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         付録
@@ -1554,7 +1593,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         参照
@@ -4679,42 +4718,80 @@
 <h1 id="_1">経済学のためのプログラミング入門<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h1>
 <p>経済学の基本モデル（需要と供給、市場均衡、IS-LM など）を題材に、Python の基礎とデータ分析を学ぶ記事シリーズです。式や曲線を自分の手でコードにして、テストで確かめながら、経済学とプログラミングを同時に身につけます。</p>
 <p>執筆計画は <a href="outline/">執筆計画アウトライン</a> を参照してください。</p>
-<h2 id="_2">開発環境<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_2">この記事の読み方<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h3 id="_3">対象読者と前提<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<ul>
+<li>経済学を学び始めた学部生・社会人で、ミクロ・マクロ経済学の入門（需要曲線・供給曲線、IS-LM の図を見たことがある程度）を学んだ方</li>
+<li>プログラミングの経験は、不要です。第 1 章で、環境の準備から説明します</li>
+</ul>
+<h3 id="_4">進め方<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>各章は、次の順で進みます。</p>
+<ol>
+<li><strong>予想する</strong>: コードを見る前に、紙で、手計算の答えを予想します</li>
+<li><strong>自分で書く</strong>: <code>practice/</code> に、テストを先に書いて、実装を書きます（Red → Green → Refactor）</li>
+<li><strong>答え合わせ</strong>: 完成形（<code>lib/</code> と <code>test/</code>）と見比べます</li>
+<li><strong>練習問題・振り返り</strong>: 条件を変えて試し、つまずいた所を確かめます。練習問題の解答（コードと手計算の答え）は、各章の練習問題の下に、折りたたんで置いてあります。先に自分で取り組んでから、開いてください</li>
+</ol>
+<p>完成形が、手元に入っているので、写すだけで終わらないように、<strong>先に自分で考えて、書いてから、答え合わせをしてください</strong>。</p>
+<h3 id="_5">使う道具<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>読者が使うのは、<strong>uv</strong>（Python とライブラリの用意）と、<strong>pytest</strong>（テストの実行）だけです。インストールの手順は、<a href="01-preparation-and-first-test/">第 1 章</a> にあります。</p>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">ツール</th>
 <th style="text-align: left;">用途</th>
+<th style="text-align: left;">読者が使うか</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;"><a href="https://docs.astral.sh/uv/">uv</a></td>
-<td style="text-align: left;">パッケージ管理</td>
+<td style="text-align: left;">Python とライブラリの用意</td>
+<td style="text-align: left;">使う</td>
 </tr>
 <tr>
 <td style="text-align: left;"><a href="https://docs.pytest.org/">pytest</a></td>
-<td style="text-align: left;">テスト</td>
+<td style="text-align: left;">テストの実行</td>
+<td style="text-align: left;">使う</td>
 </tr>
 <tr>
-<td style="text-align: left;"><a href="https://docs.astral.sh/ruff/">Ruff</a>・<a href="https://mypy-lang.org/">mypy</a></td>
-<td style="text-align: left;">静的解析</td>
-</tr>
-<tr>
-<td style="text-align: left;"><a href="https://tox.wiki/">tox</a></td>
-<td style="text-align: left;">タスクランナー</td>
+<td style="text-align: left;"><a href="https://docs.astral.sh/ruff/">Ruff</a>・<a href="https://mypy-lang.org/">mypy</a>・<a href="https://tox.wiki/">tox</a></td>
+<td style="text-align: left;">コードの検査（静的解析）、タスクの実行</td>
+<td style="text-align: left;">使わない（サンプルコードの品質を保つための道具です）</td>
 </tr>
 </tbody>
 </table>
 <p>数値計算とデータ分析のライブラリは、初めて使う章で導入します（matplotlib は第 7 章、NumPy と SciPy は第 9・10 章、pandas は第 11 章）。第 11・12 章のデータは、<code>apps/economics-programming/python/data/</code> にある架空の国の統計です。</p>
-<h2 id="_3">サンプルコード<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h2>
+<h2 id="_6">サンプルコード<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
 <p>サンプルコードは <code>apps/economics-programming/python/</code> にあります。</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
-uv<span class="w"> </span>sync
-uv<span class="w"> </span>run<span class="w"> </span>pytest
-</code></pre></div>
-<p>各章の実装は <code>lib/chapterNN/</code>、テストは <code>test/chapterNN/</code> にあります。</p>
-<h2 id="_4">章構成<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">ディレクトリ</th>
+<th style="text-align: left;">中身</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>practice/chapterNN/</code></td>
+<td style="text-align: left;"><strong>自分のコードを書く場所</strong>（章ごとに、自分で作ります）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>lib/chapterNN/</code></td>
+<td style="text-align: left;">各章の完成した実装（答え合わせ用）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>test/chapterNN/</code></td>
+<td style="text-align: left;">各章の完成したテスト（答え合わせ用）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>data/</code></td>
+<td style="text-align: left;">第 11・12 章で使う、架空の国の統計</td>
+</tr>
+</tbody>
+</table>
+<p>準備と、最初のテストの実行は、<a href="01-preparation-and-first-test/">第 1 章</a> の 1.2 節を参照してください。</p>
+<h2 id="_7">章構成<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
 <h3 id="1-python">第 1 部: Python の基礎と最初のテスト<a class="headerlink" href="#1-python" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -4838,7 +4915,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 </tbody>
 </table>
-<h3 id="_5">付録<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<h3 id="_8">付録<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -4856,7 +4933,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tbody>
 </table>
 <p>全 15 章と付録 A が、執筆済みです。学び終えたら、姉妹サイト（<a href="https://py4etrics.github.io">Pythonで学ぶ入門計量経済学</a>、<a href="https://py4macro.github.io">Pythonで学ぶマクロ経済学</a>）に進んでください。</p>
-<h2 id="_6">参照<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<h2 id="_9">参照<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="https://py4basics.github.io/">Python 入門（py4basics）</a>・書籍『経済学のためのPython入門』（新世社）— 学ぶ順序の参考にしました。本文とコードは、本シリーズで新たに書いています</li>
 <li><a href="../%E7%B5%8C%E6%B8%88%E5%AD%A6%E3%83%BB%E7%B5%8C%E6%B8%88%E6%94%BF%E7%AD%96%20%E5%85%A8%E4%BD%93%E3%83%9E%E3%82%A4%E3%83%B3%E3%83%89%E3%83%9E%E3%83%83%E3%83%97/">経済学・経済政策 全体マインドマップ</a> — 7 冊のテキストの全体像です。各章の題材が、どのテキストに対応するかを、章末の表で確かめられます</li>

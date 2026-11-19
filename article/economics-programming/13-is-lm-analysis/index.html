@@ -4838,6 +4838,10 @@
 <td style="text-align: left;">完成形</td>
 <td style="text-align: left;"><code>IsLmModel</code>、<code>is_income</code>、<code>lm_interest</code>、<code>solve_equilibrium</code>、<code>plot_islm</code></td>
 </tr>
+<tr>
+<td style="text-align: left;">ファイル</td>
+<td style="text-align: left;">実装: <code>lib/chapter13/islm.py</code>／テスト: <code>test/chapter13/test_islm.py</code>（自分で書くときは、<code>practice/chapter13/</code> に、同じ名前で作ります）</td>
+</tr>
 </tbody>
 </table>
 <h3 id="_1">経済学の式とコードの対応<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
@@ -5101,7 +5105,7 @@
 </table>
 <p>IS 曲線が緩やか（投資が利子率に敏感）だと、金融政策で利子率が下がったときの、投資の増え方が大きいので、効果が大きくなります。LM 曲線が緩やか（貨幣需要が利子率に敏感）だと、政府支出で所得が増えても、利子率があまり上がらず、クラウディングアウトが小さくなるので、財政政策の効果が大きくなります。</p>
 <h3 id="_8">流動性のわな<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
-<p>利子率には、下限があります。下限に達すると、貨幣は債券と同じ価値になり、人々はいくらでも貨幣を持とうとするので、LM 曲線が水平になります。モデルには、<code>interest_floor</code>（利子率の下限）で表します。</p>
+<p>利子率には、下限があります。利子率が下限に達すると、債券の価格はこれ以上上がらず、むしろ下がると予想されるので、人々は債券を買わず、追加の貨幣をそのまま持とうとします。貨幣需要が、利子率に対して無限に弾力的になり、LM 曲線が水平になります。モデルには、<code>interest_floor</code>（利子率の下限）で表します。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_流動性のわなで金融政策を強めても所得は増えない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">trap</span> <span class="o">=</span> <span class="n">IsLmModel</span><span class="p">(</span><span class="n">interest_floor</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
     <span class="c1"># 通常の範囲では、下限は効かない</span>
@@ -5175,11 +5179,10 @@
 <p>図を描く部分は、曲線を描く処理を <code>_draw_curves</code> に分け、元のモデルと政策後のモデルの両方に使っています（先頭の <code>_</code> は、この中だけで使う関数という印です）。</p>
 <h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
-uv<span class="w"> </span>run<span class="w"> </span>pytest
+uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter13
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>174 passed
+<div class="highlight"><pre><span></span><code>25 passed
 </code></pre></div>
-<p>この 174 件には、第 1〜14 章のテストを含みます。</p>
 <h2 id="135">13.5 規則で言うと<a class="headerlink" href="#135" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>係数が多いモデルは、データクラスにまとめて、既定値を標準の値にする。</strong> 政策は、「係数を 1 つ変えたモデル」を作って、元と並べて比べる</li>
@@ -5230,18 +5233,59 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 <tr>
 <td style="text-align: left;">生成</td>
-<td style="text-align: left;">解説を見る前に、「政府支出を 20 増やすと同時に、貨幣供給を増やして、利子率を元の 5 に保つには、貨幣供給をいくつにすればよいか」を考えて、テストを書いてください（IS から、利子率 5 のとき所得は 1350。LM から、M = 0.5 × 1350 − 20 × 5 = 575）</td>
+<td style="text-align: left;">解説を見る前に、「政府支出を 20 増やすと同時に、貨幣供給を増やして、利子率を元の 5 に保つには、貨幣供給をいくつにすればよいか」を考えて、テストを書いてください</td>
 </tr>
 <tr>
 <td style="text-align: left;">多様</td>
-<td style="text-align: left;">限界消費性向を 0.8 から 0.6 に変えて、均衡と、政府支出 +20 の効果を、手計算とテストで確かめてください。乗数が小さくなるので、効果も小さくなります</td>
+<td style="text-align: left;">限界消費性向を 0.8 から 0.6 に、基礎投資 <code>autonomous_investment</code> を 140 から 340 に変えて、均衡と、政府支出 +20 の効果を、手計算とテストで確かめてください。続けて、基礎投資を 140 のまま、限界消費性向だけを 0.6 にすると、均衡の利子率が負になります。なぜ負になるのかを、IS 曲線と LM 曲線の図で説明してください</td>
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
-<td style="text-align: left;">第 9 章の乗数 1 ÷ (1 − c) と、この章の政府支出 +20 の効果（+44.44）を比べ、その差（約 56）が、クラウディングアウトの大きさになることを、説明してください</td>
+<td style="text-align: left;">第 9 章の乗数 1 ÷ (1 − c) と、この章の政府支出 +20 の効果を比べ、その差が、クラウディングアウトの大きさになることを、説明してください</td>
 </tr>
 </tbody>
 </table>
+<details class="note">
+<summary>解答（先に自分で取り組んでから、開いてください）</summary>
+<p><strong>想起</strong>: 本文と見比べて、<code>__post_init__</code> の検証、係数の行列 <code>[[1 - c, b], [k, -h]]</code>、定数 <code>[A, M / P]</code> を確かめます。</p>
+<p><strong>生成</strong>: 政府支出 120 で、IS 曲線は 0.2Y + 10r = 320 です。利子率 5 のとき、Y = (320 − 50) ÷ 0.2 = 1350 です。LM 曲線で、M ÷ P = 0.5 × 1350 − 20 × 5 = 575 です。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_政府支出を増やしても貨幣供給を575にすれば利子率は5のまま</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">income</span><span class="p">,</span> <span class="n">rate</span> <span class="o">=</span> <span class="n">solve_equilibrium</span><span class="p">(</span><span class="n">IsLmModel</span><span class="p">(</span><span class="n">government</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span> <span class="n">money_supply</span><span class="o">=</span><span class="mi">575</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">income</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1350</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">rate</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</code></pre></div>
+<p>財政政策だけなら、利子率は 5 から 6.11 に上がります。金融政策（貨幣供給を 525 から 575 に）を組み合わせると、利子率が上がらず、クラウディングアウトなしに、所得が 1350（+100）まで増えます。</p>
+<p><strong>多様</strong>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;"></th>
+<th style="text-align: right;">所得</th>
+<th style="text-align: right;">利子率</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">限界消費性向 0.6、基礎投資 340</td>
+<td style="text-align: right;">1188.46</td>
+<td style="text-align: right;">3.46</td>
+</tr>
+<tr>
+<td style="text-align: left;">政府支出 +20</td>
+<td style="text-align: right;">1219.23</td>
+<td style="text-align: right;">4.23</td>
+</tr>
+<tr>
+<td style="text-align: left;">限界消費性向 0.6、基礎投資 140（利子率が負）</td>
+<td style="text-align: right;">880.77</td>
+<td style="text-align: right;">−4.23</td>
+</tr>
+</tbody>
+</table>
+<p>政府支出 +20 で、所得は 30.77 増えます。乗数は 1 ÷ (1 − 0.6) = 2.5 なので、利子率が一定なら +50 のはずです。差は、クラウディングアウトです。</p>
+<p>利子率が負になる理由: 限界消費性向 0.6、基礎投資 140 のとき、IS 曲線は 0.4Y + 10r = 310 で、r = 0 のとき Y = 775 です。LM 曲線は 0.5Y − 20r = 525 で、r = 0 のとき Y = 1050 です。IS 曲線が、LM 曲線の r = 0 の点（Y = 1050）より、左にあるので、交点は r &lt; 0 の側にできます。需要が小さい（乗数が小さく、基礎投資も小さい）のに、貨幣が余っている状況です。このモデルは、利子率に下限（0）を置いていないので、負の利子率が出ます。利子率の下限は、<code>interest_floor</code> で表せます（流動性のわなの節を参照）。</p>
+<p><strong>交互</strong>: 利子率が一定なら、所得は 20 × 5 = 100 増えるはずです。実際は +44.44 なので、差は 55.56 です。この差は、利子率が 5 から 6.11 に上がり（+1.11）、投資が 10 × 1.11 = 11.1 減って、それに乗数 5 を掛けた値（11.1 × 5 = 55.6）と一致します。</p>
+</details>
 <h2 id="137">13.7 振り返り<a class="headerlink" href="#137" title="Permanent link">&para;</a></h2>
 <ul>
 <li>クラウディングアウトで、所得の増加が小さくなることを、予想できましたか</li>

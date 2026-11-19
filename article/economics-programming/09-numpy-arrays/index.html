@@ -4842,6 +4842,10 @@
 <td style="text-align: left;">完成形</td>
 <td style="text-align: left;"><code>multiplier</code>、<code>spending_rounds</code>、<code>income_determination</code>、<code>equilibrium_by_linear_algebra</code>、<code>demand_quantities</code></td>
 </tr>
+<tr>
+<td style="text-align: left;">ファイル</td>
+<td style="text-align: left;">実装: <code>lib/chapter09/linear.py</code>／テスト: <code>test/chapter09/test_linear.py</code>（自分で書くときは、<code>practice/chapter09/</code> に、同じ名前で作ります）</td>
+</tr>
 </tbody>
 </table>
 <h3 id="_1">経済学の式とコードの対応<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
@@ -5014,7 +5018,7 @@
 </code></pre></div>
 <p>結果は、Y = 250.00000000000006、C = 220.00000000000006 です。第 2 章で学んだとおり、小数の計算には誤差があるので、<code>pytest.approx</code> で確かめます。Y = (C0 + I) ÷ (1 − c) = (20 + 30) × 5 = 250 と、乗数の式で求めた値と一致します。</p>
 <h3 id="_9">需要・供給の連立方程式<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
-<p>第 7 章では、均衡の式を、手で P について解きました。連立方程式にすると、式の形が変わっても、同じ関数で解けます。</p>
+<p>第 7 章では、均衡の式を、手で P について解きました。連立方程式にすると、係数（切片や傾き）が変わっても、式を解き直さずに、同じ関数で解けます（ただし、直線の式に限ります）。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_連立方程式で均衡価格20と均衡数量60を求める</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">price</span><span class="p">,</span> <span class="n">quantity</span> <span class="o">=</span> <span class="n">equilibrium_by_linear_algebra</span><span class="p">(</span>
         <span class="n">demand_intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">demand_slope</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">supply_intercept</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">supply_slope</span><span class="o">=</span><span class="mi">3</span>
@@ -5032,13 +5036,47 @@
 
 <span class="sd">    Q + bP = a（需要曲線）</span>
 <span class="sd">    Q - dP = c（供給曲線）</span>
+
+<span class="sd">    第 7 章の `equilibrium` と同じく、価格が負、または数量が 0 以下になる市場には、</span>
+<span class="sd">    均衡がないので、NoEquilibriumError にする。</span>
 <span class="sd">    """</span>
     <span class="n">coefficients</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">demand_slope</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="n">supply_slope</span><span class="p">]])</span>
     <span class="n">constants</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">demand_intercept</span><span class="p">,</span> <span class="n">supply_intercept</span><span class="p">])</span>
     <span class="n">quantity</span><span class="p">,</span> <span class="n">price</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">coefficients</span><span class="p">,</span> <span class="n">constants</span><span class="p">)</span>
+    <span class="n">check_equilibrium_exists</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">price</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">quantity</span><span class="p">))</span>
     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">price</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">quantity</span><span class="p">)</span>
 </code></pre></div>
-<p>第 7 章の <code>equilibrium</code> と同じ答え（価格 20、数量 60）になります。</p>
+<p>第 7 章の <code>equilibrium</code> と同じ答え（価格 20、数量 60）になります。均衡がない市場（価格が負、または数量が 0 以下）では、第 7 章の <code>check_equilibrium_exists</code> を呼んで、同じ <code>NoEquilibriumError</code> にします。連立方程式は、解けさえすれば値を返してしまうので、「その値が経済学の意味を持つか」の確認を、自分で足す必要があります。</p>
+<p>求め方の違う実装が、同じ答えになることは、テストで固定します。</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">"supply_intercept"</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">30</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_連立方程式の解は第7章の閉形式の解と一致する</span><span class="p">(</span><span class="n">supply_intercept</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">market</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"demand_intercept"</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="s2">"demand_slope"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">"supply_intercept"</span><span class="p">:</span> <span class="n">supply_intercept</span><span class="p">,</span>
+        <span class="s2">"supply_slope"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">assert</span> <span class="n">equilibrium_by_linear_algebra</span><span class="p">(</span><span class="o">**</span><span class="n">market</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">equilibrium</span><span class="p">(</span><span class="o">**</span><span class="n">market</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_価格が負になる市場では3つの方法がそろって均衡なしと判断する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">market</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"demand_intercept"</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+        <span class="s2">"demand_slope"</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span>
+        <span class="s2">"supply_intercept"</span><span class="p">:</span> <span class="mi">120</span><span class="p">,</span>
+        <span class="s2">"supply_slope"</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">NoEquilibriumError</span><span class="p">):</span>
+        <span class="n">equilibrium</span><span class="p">(</span><span class="o">**</span><span class="n">market</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">NoEquilibriumError</span><span class="p">):</span>
+        <span class="n">equilibrium_by_linear_algebra</span><span class="p">(</span><span class="o">**</span><span class="n">market</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="n">NoEquilibriumError</span><span class="p">):</span>
+        <span class="n">find_equilibrium_price</span><span class="p">(</span><span class="n">make_excess_demand</span><span class="p">(</span><span class="o">**</span><span class="n">market</span><span class="p">),</span> <span class="n">low</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+</code></pre></div>
+<p>供給曲線の切片が 0・10・−30 の 3 つの市場で、連立方程式の解が、第 7 章の閉形式の解と一致します。そして、価格が負になる市場では、閉形式、連立方程式、第 6 章の二分法の 3 つが、そろって <code>NoEquilibriumError</code> になります。</p>
+<p>ただし、二分法は、数量が負になる市場（需要が価格 10 でなくなり、供給が価格 30 まで始まらない）では、均衡なしと判断できません。需要も供給も 0 になる価格の範囲では、超過需要が 0 なので、その中の 1 点（価格 10）を「均衡」として返します。二分法は、価格だけから超過需要を計算する、汎用の方法なので、取引量が 0 であることには気づけません。</p>
 <h3 id="_10">配列で需要量をまとめて計算する<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p>第 3 章の需要表（辞書と内包表記）を、配列で書き直します。結果が、1 つずつ計算した結果と一致することを、テストで確かめます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_配列で需要量をまとめて計算できる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -5068,15 +5106,14 @@
 <p><code>np.maximum</code> は、配列の各要素と 0 の大きい方を取ります。第 1 章の <code>max(..., 0)</code> を、配列に広げたものです。<code>np.any(prices &lt; 0)</code> は、1 つでも負の価格があれば <code>True</code> です。</p>
 <h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
-uv<span class="w"> </span>run<span class="w"> </span>pytest
+uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter09
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>103 passed
+<div class="highlight"><pre><span></span><code>22 passed
 </code></pre></div>
-<p>この 103 件には、第 1〜10 章のテストを含みます。</p>
 <h2 id="95">9.5 規則で言うと<a class="headerlink" href="#95" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>たくさんの数の同じ計算は、配列にして、式を 1 回だけ書く。</strong> 繰り返しの <code>for</code> を書かずに済む</li>
-<li><strong>未知数が複数ある連立方程式は、係数の行列と定数の配列にして <code>solve</code> で解く。</strong> 式の形が変わっても、同じ関数で解ける</li>
+<li><strong>未知数が複数ある連立方程式は、係数の行列と定数の配列にして <code>solve</code> で解く。</strong> 係数が変わっても、同じ関数で解ける。ただし、直線（線形）の式に限る</li>
 <li><strong>同じ答えを、別の方法で求めて、突き合わせる。</strong> 手で解いた式と、連立方程式で解いた答えが一致すれば、どちらも正しい可能性が高い</li>
 </ol>
 <p>混同しやすい点を、表にまとめます。</p>
@@ -5103,7 +5140,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tbody>
 </table>
 <h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
-<p>乗数効果は、供給能力に余裕があり、物価が変わらない前提です。完全雇用に近い経済では、需要が増えても、生産が増えずに、物価が上がります。また、国民所得の決定のモデルは、税や輸入を考えていません。税や輸入があると、所得が増えたときに、消費に回る割合が下がり、乗数が小さくなります。</p>
+<p>連立方程式で解く方法は、式が直線（線形）のときに使えます。曲線の式には、第 6 章の二分法や、第 10 章の SciPy の方法が必要です。乗数効果は、供給能力に余裕があり、物価が変わらない前提です。完全雇用に近い経済では、需要が増えても、生産が増えずに、物価が上がります。また、国民所得の決定のモデルは、税や輸入を考えていません。税や輸入があると、所得が増えたときに、消費に回る割合が下がり、乗数が小さくなります。</p>
 <h2 id="96">9.6 練習問題<a class="headerlink" href="#96" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -5119,18 +5156,46 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 <tr>
 <td style="text-align: left;">生成</td>
-<td style="text-align: left;">解説を見る前に、税率 t を加えて、乗数が 1 ÷ (1 − c(1 − t)) になる <code>multiplier_with_tax(mpc, tax_rate)</code> を、テストから書いてください。c = 0.8、t = 0.25 のとき、乗数は 1 ÷ 0.4 = 2.5 です</td>
+<td style="text-align: left;">解説を見る前に、税率 t を加えて、乗数が 1 ÷ (1 − c(1 − t)) になる <code>multiplier_with_tax(mpc, tax_rate)</code> を、テストから書いてください。c = 0.8、t = 0.25 のときの乗数を、手計算してから、テストにします</td>
 </tr>
 <tr>
 <td style="text-align: left;">多様</td>
-<td style="text-align: left;">限界消費性向を 0.5 と 0.9 に変えて、波及の合計（100 回分）が 200 と 1000 に近づくことを確かめてください</td>
+<td style="text-align: left;">限界消費性向を 0.5 と 0.9 に変えて、波及の合計（100 回分）が、乗数 × 初期支出に近づくことを確かめてください</td>
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
-<td style="text-align: left;">第 6 章の二分法と、この章の連立方程式で、同じ均衡価格を求め、どちらが式の形に依存するかを説明してください（二分法は式の形に依存せず、連立方程式は、直線の式でしか使えません）</td>
+<td style="text-align: left;">第 6 章の二分法と、この章の連立方程式で、同じ均衡価格を求め、どちらが式の形に依存するかを説明してください</td>
 </tr>
 </tbody>
 </table>
+<details class="note">
+<summary>解答（先に自分で取り組んでから、開いてください）</summary>
+<p><strong>想起</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">coefficients</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]])</span>
+<span class="n">constants</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">11</span><span class="p">])</span>
+<span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">coefficients</span><span class="p">,</span> <span class="n">constants</span><span class="p">)</span>   <span class="c1"># array([1., 2.])  x = 1、y = 2</span>
+</code></pre></div>
+<p><strong>生成</strong>: 税を考えると、増えた所得のうち、消費に回る割合が c(1 − t) になります。これを、「税込みの限界消費性向」とみなして、第 9 章の <code>multiplier</code> を再利用できます。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">multiplier_with_tax</span><span class="p">(</span><span class="n">mpc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">tax_rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">multiplier</span><span class="p">(</span><span class="n">mpc</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">tax_rate</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_税率を加えると乗数は小さくなる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># c(1 - t) = 0.8 × 0.75 = 0.6 なので、1 ÷ (1 - 0.6) = 2.5</span>
+    <span class="k">assert</span> <span class="n">multiplier_with_tax</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">2.5</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_税率が0なら税のない乗数と同じ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">multiplier_with_tax</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">multiplier</span><span class="p">(</span><span class="mf">0.8</span><span class="p">))</span>
+</code></pre></div>
+<p>税のない乗数は 5 でした。税率 25% で、2.5 に半減します。</p>
+<p><strong>多様</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_波及の合計は乗数かける初期支出に近づく</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">spending_rounds</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">spending_rounds</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+</code></pre></div>
+<p>c = 0.5 のとき、乗数は 2 で、合計は 200 です。c = 0.9 のとき、乗数は 10 で、100 回分の合計は 999.97 です（1000 に、0.9 の 100 乗の分だけ足りません）。c が 1 に近いほど、波及が長く続くので、100 回では足りなくなります。</p>
+<p><strong>交互</strong>: 二分法は、超過需要を計算できて、区間の両端で符号が逆なら、<strong>式の形に依存せず</strong>使えます（需要が Q = 100 − 2P² のような曲線でも使えます）。連立方程式は、式を「係数の行列と定数の配列」にできる、直線（線形）の式でしか使えません。連立方程式は、1 回の計算で、答えが（反復なしに）求まるのが長所で、二分法は、曲線にも使えるのが長所です。</p>
+</details>
 <h2 id="97">9.7 振り返り<a class="headerlink" href="#97" title="Permanent link">&para;</a></h2>
 <ul>
 <li>波及の合計と乗数の関係を、予想できましたか</li>

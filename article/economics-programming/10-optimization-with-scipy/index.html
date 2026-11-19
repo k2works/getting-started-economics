@@ -4859,6 +4859,10 @@
 <td style="text-align: left;">完成形</td>
 <td style="text-align: left;"><code>maximize_utility</code>、<code>profit_maximizing_quantity</code>、<code>minimize_cost</code></td>
 </tr>
+<tr>
+<td style="text-align: left;">ファイル</td>
+<td style="text-align: left;">実装: <code>lib/chapter10/optimization.py</code>／テスト: <code>test/chapter10/test_optimization.py</code>（自分で書くときは、<code>practice/chapter10/</code> に、同じ名前で作ります）</td>
+</tr>
 </tbody>
 </table>
 <h3 id="_1">経済学の式とコードの対応<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
@@ -5092,9 +5096,9 @@
 <p>最適化の結果が、見かけ上は数値でも、収束していないことがあります。そのため、<code>result.success</code> を、必ず確かめます。</p>
 <h3 id="_8">実行結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
-uv<span class="w"> </span>run<span class="w"> </span>pytest
+uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter10
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>103 passed
+<div class="highlight"><pre><span></span><code>13 passed
 </code></pre></div>
 <h2 id="105">10.5 規則で言うと<a class="headerlink" href="#105" title="Permanent link">&para;</a></h2>
 <ol>
@@ -5142,18 +5146,41 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 <tr>
 <td style="text-align: left;">生成</td>
-<td style="text-align: left;">解説を見る前に、価格 20 のときの利潤を最大にする生産量を、手計算してから、テストを書いてください（3q² − 12q + 15 = 20 から q² − 4q − 5/3 = 0 になり、q = 2 + √(4 + 5/3) = 約 4.38 です）</td>
+<td style="text-align: left;">解説を見る前に、価格 20 のときの利潤を最大にする生産量を、手計算してから、テストを書いてください（P = MC を解きます）</td>
 </tr>
 <tr>
 <td style="text-align: left;">多様</td>
-<td style="text-align: left;">賃金を 4、資本の価格を 1 に入れ替えて、<code>minimize_cost</code> を実行してください。労働と資本の使う量は、入れ替わります（L = 5、K = 20）</td>
+<td style="text-align: left;">賃金を 4、資本の価格を 1 に入れ替えて、<code>minimize_cost</code> を実行してください。労働と資本の使う量が、どうなるかを予想してから、確かめます</td>
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
-<td style="text-align: left;">第 7 章の <code>equilibrium</code> と、この章の <code>profit_maximizing_quantity</code> を組み合わせて、企業が 1 社だけの市場の供給量が、市場の価格 20 のときいくつになるか求めてください（手計算で 3q² − 12q + 15 = 20 を解きます）</td>
+<td style="text-align: left;">第 7 章の <code>equilibrium</code> と、この章の <code>profit_maximizing_quantity</code> を組み合わせて、市場の価格が 20 のとき、価格を所与とする 1 社の供給量がいくつになるかを求めて、市場全体の供給量と比べてください</td>
 </tr>
 </tbody>
 </table>
+<details class="note">
+<summary>解答（先に自分で取り組んでから、開いてください）</summary>
+<p><strong>想起</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span>
+    <span class="n">constraints</span><span class="o">=</span><span class="p">{</span><span class="s2">"type"</span><span class="p">:</span> <span class="s2">"eq"</span><span class="p">,</span> <span class="s2">"fun"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">},</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">"SLSQP"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>   <span class="c1"># [1. 1.]</span>
+</code></pre></div>
+<p><strong>生成</strong>: P = MC は、3q² − 12q + 15 = 20 で、q² − 4q − 5/3 = 0 になります。解のうち、限界費用が右上がりの側（q ≥ 2）は、q = 2 + √(4 + 5/3) = 2 + √(17/3) で、約 4.38 です。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_価格20のとき利潤を最大にする生産量</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">quantity</span> <span class="o">=</span> <span class="n">profit_maximizing_quantity</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">quantity</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">17</span> <span class="o">/</span> <span class="mi">3</span><span class="p">))</span>
+</code></pre></div>
+<p><strong>多様</strong>: 賃金と資本の価格を入れ替えると、使う量も入れ替わります。</p>
+<div class="highlight"><pre><span></span><code><span class="n">labor</span><span class="p">,</span> <span class="n">capital</span><span class="p">,</span> <span class="n">cost</span> <span class="o">=</span> <span class="n">minimize_cost</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">wage</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">rental</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># labor ≈ 5、capital ≈ 20、cost ≈ 40</span>
+</code></pre></div>
+<p>賃金 1、資本の価格 4 のとき（L = 20、K = 5）と、使う量が入れ替わり、費用は同じ 40 です。高い要素を少なく、安い要素を多く使います。</p>
+<p><strong>交互</strong>: 市場の均衡価格は、第 7 章の <code>equilibrium</code> で、20 と求まります（数量は 60）。価格受容者の 1 社は、P = MC で、<code>profit_maximizing_quantity(20)</code> が約 4.38 です。市場全体の供給量 60 を満たすには、同じ費用の企業が、60 ÷ 4.38 ≒ 13.7 社、必要になります（市場全体の供給曲線は、企業の数の分だけ、個々の企業の供給量を足したものです）。</p>
+</details>
 <h2 id="107">10.7 振り返り<a class="headerlink" href="#107" title="Permanent link">&para;</a></h2>
 <ul>
 <li>手計算の答えと、数値の答えは、どこまで一致しましたか。違いが出た桁は、何桁目でしたか</li>

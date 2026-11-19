@@ -4805,6 +4805,10 @@
 <td style="text-align: left;">完成形</td>
 <td style="text-align: left;"><code>market_state</code>、<code>walras_path</code>、<code>marshall_path</code></td>
 </tr>
+<tr>
+<td style="text-align: left;">ファイル</td>
+<td style="text-align: left;">実装: <code>lib/chapter05/adjustment.py</code>／テスト: <code>test/chapter05/test_adjustment.py</code>（自分で書くときは、<code>practice/chapter05/</code> に、同じ名前で作ります）</td>
+</tr>
 </tbody>
 </table>
 <h3 id="_1">経済学の式とコードの対応<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
@@ -4978,9 +4982,9 @@
 <p>同じ k = 0.1 でも、数量が 0 → 5 → 9.58 → 13.78 と動き、収束まで 204 回かかり、最後の値は 59.99999882703561 です。ワルラス調整の 27 回より、ずっと遅くなります。</p>
 <h3 id="_6">実行結果<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
-uv<span class="w"> </span>run<span class="w"> </span>pytest
+uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter05
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>52 passed
+<div class="highlight"><pre><span></span><code>11 passed
 </code></pre></div>
 <h2 id="55">5.5 規則で言うと<a class="headerlink" href="#55" title="Permanent link">&para;</a></h2>
 <ol>
@@ -5025,11 +5029,11 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 <tr>
 <td style="text-align: left;">生成</td>
-<td style="text-align: left;">解説を見る前に、価格が均衡の 20 に最初に近づく（差が 1 未満になる）までの回数を返す関数を、テストから書いてください。初期価格 0、k = 0.1 のとき、手計算で 5 回です（0 → 10 → 15 → 17.5 → 18.75 → 19.375）</td>
+<td style="text-align: left;">解説を見る前に、価格が均衡の 20 に最初に近づく（差が 1 未満になる）までの回数を返す関数を、テストから書いてください。初期価格 0、k = 0.1 で、回数を手計算してから、テストにします</td>
 </tr>
 <tr>
 <td style="text-align: left;">多様</td>
-<td style="text-align: left;">k を 0.2 と 0.4 にしたとき、何回で収束するか、または収束しないか、実行して確かめてください（k = 0.4 は境界で、1 − 5k = −1 なので収束しません）</td>
+<td style="text-align: left;">k を 0.2 と 0.4 にしたとき、何回で収束するか、または収束しないか、実行して確かめてください</td>
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
@@ -5037,6 +5041,46 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 </tbody>
 </table>
+<details class="note">
+<summary>解答（先に自分で取り組んでから、開いてください）</summary>
+<p><strong>想起</strong>: 本文と見比べて、許容誤差 <code>tolerance</code> で「均衡」を判定しているか、<code>if</code> の順序（均衡 → 品不足 → 売れ残り）を確かめます。</p>
+<p><strong>生成</strong>: 価格の推移（<code>walras_path</code> の戻り値）を、先頭から調べます。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rounds_until_close</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">target</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">price</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">price</span> <span class="o">-</span> <span class="n">target</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">width</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">count</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"近づかなかった"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_均衡に最初に近づくまでは5回</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">path</span> <span class="o">=</span> <span class="n">walras_path</span><span class="p">(</span><span class="n">demand</span><span class="p">,</span> <span class="n">supply</span><span class="p">,</span> <span class="n">initial_price</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">rounds_until_close</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span>
+</code></pre></div>
+<p>価格は 0 → 10 → 15 → 17.5 → 18.75 → 19.375 と動き、20 との差は 20、10、5、2.5、1.25、0.625 です。差が初めて 1 未満になるのは、5 回目（19.375）です。</p>
+<p><strong>多様</strong>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">k</th>
+<th style="text-align: right;">1 − 5k</th>
+<th style="text-align: left;">結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">0.2</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: left;">1 回で収束する（価格は 0 → 20。1 回の調整で、超過需要が 0 になる）</td>
+</tr>
+<tr>
+<td style="text-align: right;">0.4</td>
+<td style="text-align: right;">−1</td>
+<td style="text-align: left;">収束しない（価格は 0 → 40 → 0 → 40 … と振動し続けて、<code>RuntimeError</code> になる）</td>
+</tr>
+</tbody>
+</table>
+<p>差が毎回 (1 − 5k) 倍になるので、|1 − 5k| &lt; 1 のときだけ収束します。k = 0.2 は、差が一気に 0 倍になり、k = 0.4 は、ちょうど −1 倍で、縮みも広がりもしません。</p>
+<p><strong>交互</strong>: 需要表は、表に載せた価格（0・10・20・30）の上でしか、超過需要を調べません。たとえば、需要 Q = 100 − 2P、供給 Q = 10 + 3P の均衡価格は 18 で、表の価格に含まれないので、<code>market_clearing_prices</code> は <code>[]</code> を返します。ワルラス調整は、価格を連続的に動かして、超過需要が 0 に近づくまで続けるので、表にない価格 18 の均衡も見つけます（k = 0.1、初期価格 0 で、27 回の調整で 18 になります）。</p>
+</details>
 <h2 id="57">5.7 振り返り<a class="headerlink" href="#57" title="Permanent link">&para;</a></h2>
 <ul>
 <li>k = 0.5 の予想は当たりましたか。当たらなかったなら、どこで計算が違いましたか</li>

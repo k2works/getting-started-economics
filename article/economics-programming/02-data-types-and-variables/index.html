@@ -1663,6 +1663,17 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
+        型ヒント
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         計算の精度
       
     </span>
@@ -1710,7 +1721,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         所得弾力性と財の分類
@@ -1721,7 +1732,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -1749,7 +1760,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -4827,6 +4838,10 @@
 <td style="text-align: left;">完成形</td>
 <td style="text-align: left;"><code>price_elasticity</code>、<code>income_elasticity</code>、<code>classify_income_elasticity</code>、<code>is_price_elastic</code> の 4 つの関数</td>
 </tr>
+<tr>
+<td style="text-align: left;">ファイル</td>
+<td style="text-align: left;">実装: <code>lib/chapter02/elasticity.py</code>／テスト: <code>test/chapter02/test_elasticity.py</code>（自分で書くときは、<code>practice/chapter02/</code> に、同じ名前で作ります）</td>
+</tr>
 </tbody>
 </table>
 <h3 id="_1">経済学の式とコードの対応<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
@@ -4867,6 +4882,7 @@
 <p>答えは、価格が +20%、需要量が −5% で、価格弾力性は 0.25 です。1 より小さいので「非弾力的」、つまり価格が上がっても需要量があまり減らない財です。</p>
 <h2 id="23">2.3 データ型と変数<a class="headerlink" href="#23" title="Permanent link">&para;</a></h2>
 <h3 id="int-float">数値: int と float<a class="headerlink" href="#int-float" title="Permanent link">&para;</a></h3>
+<p>この節のコード片は、第 1 章で紹介した対話モード（<code>uv run python</code>）に、1 行ずつ打ち込んで、試せます。<code>#</code> から後ろは、結果の説明（コメント）なので、打ち込まなくてかまいません。</p>
 <p>Python の数値には、整数 <code>int</code> と小数 <code>float</code> があります。</p>
 <div class="highlight"><pre><span></span><code><span class="mi">7</span> <span class="o">/</span> <span class="mi">2</span>    <span class="c1"># 3.5   割り算の結果は、割り切れても float になる</span>
 <span class="mi">7</span> <span class="o">//</span> <span class="mi">2</span>   <span class="c1"># 3     商（切り捨て）</span>
@@ -4888,7 +4904,15 @@
 <p>比較の結果は、<code>True</code> か <code>False</code> の真偽値になります。</p>
 <div class="highlight"><pre><span></span><code><span class="mf">0.25</span> <span class="o">&gt;</span> <span class="mi">1</span>   <span class="c1"># False</span>
 </code></pre></div>
-<h3 id="_3">計算の精度<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<h3 id="_3">型ヒント<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>関数の引数や戻り値に、<code>: float</code> や <code>-&gt; float</code> と書くのが、型ヒントです。第 1 章から、すでに使ってきました。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">is_price_elastic</span><span class="p">(</span><span class="n">elasticity</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""価格弾力性が 1 より大きければ弾力的。"""</span>
+    <span class="k">return</span> <span class="n">elasticity</span> <span class="o">&gt;</span> <span class="mi">1</span>
+</code></pre></div>
+<p>この関数は、「引数 <code>elasticity</code> は小数（<code>float</code>）で、結果は真偽値（<code>bool</code>）」という、人間と道具へのヒントです。Python は、実行するときには、型ヒントをチェックしません（整数を渡しても、動きます）。型ヒントが役に立つのは、エディタや mypy のような検査の道具が、型の合わない呼び出しを、実行する前に、教えてくれるときです。</p>
+<p><code>int</code>・<code>float</code>・<code>str</code>・<code>bool</code> のほかに、<code>list[int]</code>（整数のリスト）や <code>dict[int, float]</code>（整数をキー、小数を値にした辞書）のような書き方も、第 3 章から出てきます。<code>-&gt; None</code> は、「何も返さない」という意味で、テストの関数に付けます。</p>
+<h3 id="_4">計算の精度<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
 <p>小数の計算には、わずかな誤差があります。</p>
 <div class="highlight"><pre><span></span><code><span class="mf">0.1</span> <span class="o">+</span> <span class="mf">0.2</span>          <span class="c1"># 0.30000000000000004</span>
 <span class="mf">0.1</span> <span class="o">+</span> <span class="mf">0.2</span> <span class="o">==</span> <span class="mf">0.3</span>   <span class="c1"># False</span>
@@ -4928,7 +4952,7 @@
             <span class="n">price_before</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">price_after</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">quantity_before</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">quantity_after</span><span class="o">=</span><span class="mi">80</span>
         <span class="p">)</span>
 </code></pre></div>
-<h3 id="_4">所得弾力性と財の分類<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<h3 id="_5">所得弾力性と財の分類<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>所得弾力性は、符号が逆になるだけで価格弾力性とほぼ同じ形です。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">income_elasticity</span><span class="p">(</span>
     <span class="n">income_before</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -4957,6 +4981,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">test_所得弾力性で財を分類する</span><span class="p">(</span><span class="n">elasticity</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">expected</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">classify_income_elasticity</span><span class="p">(</span><span class="n">elasticity</span><span class="p">)</span> <span class="o">==</span> <span class="n">expected</span>
 </code></pre></div>
+<p><code>@pytest.mark.parametrize</code> は、同じテストを、値の組を変えて、繰り返し実行する書き方です。ここでは、<code>elasticity</code> と <code>expected</code> の組が 5 つあるので、同じテストが 5 回実行されます。1 つの組で失敗したときは、どの組で失敗したかが、表示されます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">classify_income_elasticity</span><span class="p">(</span><span class="n">elasticity</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""所得弾力性から財を分類する。</span>
 
@@ -4973,13 +4998,12 @@
 <span class="w">    </span><span class="sd">"""価格弾力性が 1 より大きければ弾力的。"""</span>
     <span class="k">return</span> <span class="n">elasticity</span> <span class="o">&gt;</span> <span class="mi">1</span>
 </code></pre></div>
-<h3 id="_5">実行結果<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<h3 id="_6">実行結果<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
-uv<span class="w"> </span>run<span class="w"> </span>pytest
+uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter02
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>22 passed
+<div class="highlight"><pre><span></span><code>10 passed
 </code></pre></div>
-<p>この 22 件には、第 1 章と第 3 章のテストを含みます。</p>
 <h2 id="25">2.5 規則で言うと<a class="headerlink" href="#25" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>式の記号と同じ意味の名前を変数に付ける。</strong> <code>price_change_rate</code> のように付けると、式とコードを見比べられる</li>
@@ -5009,7 +5033,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 </tbody>
 </table>
-<h3 id="_6">このモデルが成り立たない場面<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<h3 id="_7">このモデルが成り立たない場面<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>弾力性は、小さな変化を前提にした値です。価格が大きく変わる場面では、変化前を基準にするか変化後を基準にするかで、値が変わります。また、需要曲線が直線のとき、曲線上の場所によって弾力性が変わります。たとえば Q = 100 − 2P で価格が 10 のときの弾力性は 2 × 10 ÷ 80 = 0.25 ですが、価格が 40 では 2 × 40 ÷ 20 = 4 です。</p>
 <h2 id="26">2.6 練習問題<a class="headerlink" href="#26" title="Permanent link">&para;</a></h2>
 <table>
@@ -5030,7 +5054,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 <tr>
 <td style="text-align: left;">多様</td>
-<td style="text-align: left;">価格が 40 → 42 のとき、需要量は 20 → 16 になります。価格弾力性を手計算し、テストで確かめてください（結果は 4 になります）</td>
+<td style="text-align: left;">価格が 40 → 42 のとき、需要量は 20 → 16 になります。価格弾力性を手計算し、テストで確かめてください</td>
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
@@ -5038,6 +5062,42 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 </tbody>
 </table>
+<details class="note">
+<summary>解答（先に自分で取り組んでから、開いてください）</summary>
+<p><strong>想起</strong>: 本文と見比べて、所得が変わらないときに <code>ValueError</code> を出しているか、変化率の式（変化後 − 変化前）÷ 変化前になっているかを確かめます。</p>
+<p><strong>生成</strong>: <code>==</code> で比べると、誤差のある値が <code>False</code> になるので、<code>math.isclose</code>（ごく近いかどうか）を使います。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">is_unit_elastic</span><span class="p">(</span><span class="n">elasticity</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">elasticity</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_弾力性が1なら単位弾力的</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">is_unit_elastic</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_弾力性が1でなければ単位弾力的ではない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">is_unit_elastic</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span>
+    <span class="k">assert</span> <span class="n">is_unit_elastic</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_小数の誤差は許す</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">is_unit_elastic</span><span class="p">(</span><span class="mf">0.9999999999999999</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">True</span>
+</code></pre></div>
+<p><strong>多様</strong>: 価格は 40 → 42 で +5%、需要量は 20 → 16 で −20% なので、価格弾力性は −(−20%) ÷ 5% = 4 です。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_価格が40から42のときの価格弾力性は4</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">price_elasticity</span><span class="p">(</span>
+        <span class="n">price_before</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">price_after</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">quantity_before</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">quantity_after</span><span class="o">=</span><span class="mi">16</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+</code></pre></div>
+<p>第 1 章の需要曲線 Q = 100 − 2P では、価格が高い所ほど、弾力性が大きくなります（価格 10 のとき 0.25、価格 40 のとき 4）。</p>
+<p><strong>交互</strong>: 需要量は、第 1 章の関数から求めます。</p>
+<div class="highlight"><pre><span></span><code><span class="n">before</span> <span class="o">=</span> <span class="n">quantity_demanded</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>   <span class="c1"># 80</span>
+<span class="n">after</span> <span class="o">=</span> <span class="n">quantity_demanded</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>    <span class="c1"># 76</span>
+<span class="n">price_elasticity</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">before</span><span class="p">,</span> <span class="n">after</span><span class="p">)</span>                        <span class="c1"># 0.25</span>
+</code></pre></div>
+</details>
 <h2 id="27">2.7 振り返り<a class="headerlink" href="#27" title="Permanent link">&para;</a></h2>
 <ul>
 <li>予想した弾力性と、テストの結果は一致しましたか</li>

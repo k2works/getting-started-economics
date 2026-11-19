@@ -4838,6 +4838,10 @@
 <td style="text-align: left;">完成形</td>
 <td style="text-align: left;"><code>total_cost</code>、<code>marginal_cost</code>、<code>average_cost</code>、<code>average_variable_cost</code>、<code>cobb_douglas_utility</code>、<code>marginal_rate_of_substitution</code></td>
 </tr>
+<tr>
+<td style="text-align: left;">ファイル</td>
+<td style="text-align: left;">実装: <code>lib/chapter04/cost.py</code>、<code>lib/chapter04/utility.py</code>／テスト: <code>test/chapter04/test_cost_and_utility.py</code>（自分で書くときは、<code>practice/chapter04/</code> に、同じ名前で作ります）</td>
+</tr>
 </tbody>
 </table>
 <h3 id="_1">経済学の式とコードの対応<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
@@ -4925,8 +4929,8 @@
 </table>
 <h3 id="_3">引数の渡し方<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
 <p>位置で渡す方法と、名前で渡す方法があります。</p>
-<div class="highlight"><pre><span></span><code><span class="n">total_cost</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>                  <span class="c1"># 24.0  固定費用は既定値の 10</span>
-<span class="n">total_cost</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">fixed_cost</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>    <span class="c1"># 14.0  名前を付けて渡す</span>
+<div class="highlight"><pre><span></span><code><span class="n">total_cost</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>                  <span class="c1"># 24  固定費用は既定値の 10</span>
+<span class="n">total_cost</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">fixed_cost</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>    <span class="c1"># 14  名前を付けて渡す</span>
 </code></pre></div>
 <p>名前を付けて渡すと、<code>total_cost(2, 0)</code> よりも、0 が何を表すか分かりやすくなります。</p>
 <h3 id="_4">組み込み関数<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
@@ -5067,11 +5071,10 @@
 <p>財 y を多く持つほど（y が大きいほど）、財 x を 1 単位得るために手放してよい財 y の量が増えます。一方、財 x が増える（x が大きくなる）と MRS は小さくなり、これがマインドマップの「限界代替率逓減（無差別曲線が原点に凸）」です。</p>
 <h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
-uv<span class="w"> </span>run<span class="w"> </span>pytest
+uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter04
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>52 passed
+<div class="highlight"><pre><span></span><code>13 passed
 </code></pre></div>
-<p>この 52 件には、第 1〜6 章のテストを含みます。</p>
 <h2 id="45">4.5 規則で言うと<a class="headerlink" href="#45" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>経済学の式 1 つを、関数 1 つにする。</strong> 総費用・限界費用・平均費用のように、関連する式は別々の関数にして、必要なときに組み合わせる</li>
@@ -5118,18 +5121,48 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 <tr>
 <td style="text-align: left;">生成</td>
-<td style="text-align: left;">解説を見る前に、利潤 = 価格 × 生産量 − 総費用 を返す <code>profit(price, quantity)</code> を、テストから書いてください。価格 15、生産量 4 のとき、総費用は 38 なので、利潤は 60 − 38 = 22 です</td>
+<td style="text-align: left;">解説を見る前に、利潤 = 価格 × 生産量 − 総費用 を返す <code>profit(price, quantity)</code> を、テストから書いてください。価格 15、生産量 4 のときの利潤を、手計算で求めて、テストにします（総費用は、第 4 章の <code>total_cost</code> で求められます）</td>
 </tr>
 <tr>
 <td style="text-align: left;">多様</td>
-<td style="text-align: left;">固定費用を 0 と 20 に変えて、q = 2 のときの <code>average_cost</code> を手計算し、テストで確かめてください（それぞれ 7 と 17）</td>
+<td style="text-align: left;">固定費用を 0 と 20 に変えて、q = 2 のときの <code>average_cost</code> を手計算し、テストで確かめてください</td>
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
-<td style="text-align: left;">第 2 章の <code>price_elasticity</code> と、この章の <code>marginal_cost</code> を組み合わせて、生産量が 2 から 3 に増えたときの限界費用の変化率を求めてください</td>
+<td style="text-align: left;">第 2 章の <code>income_elasticity</code> と、この章の <code>marginal_cost</code> を組み合わせて、生産量が 2 から 3 に増えたときの、限界費用の生産量に対する弾力性を求めてください。引数の名前は「所得」ですが、式は「ある量の変化率 ÷ 別の量の変化率」なので、生産量（2 → 3）を所得の位置に、限界費用（3 → 6）を需要量の位置に渡せます</td>
 </tr>
 </tbody>
 </table>
+<details class="note">
+<summary>解答（先に自分で取り組んでから、開いてください）</summary>
+<p><strong>想起</strong>: 本文と見比べて、<code>total_cost</code> が負の生産量で <code>ValueError</code> を出しているか、<code>marginal_cost</code> が 3q² − 12q + 15 になっているかを確かめます。</p>
+<p><strong>生成</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">profit</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">quantity</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">price</span> <span class="o">*</span> <span class="n">quantity</span> <span class="o">-</span> <span class="n">total_cost</span><span class="p">(</span><span class="n">quantity</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_価格15で生産量4のときの利潤は22</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># 収入 15 × 4 = 60、総費用 38</span>
+    <span class="k">assert</span> <span class="n">profit</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">quantity</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span> <span class="o">==</span> <span class="mi">22</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_生産しなくても固定費用は払うので利潤はマイナス</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">profit</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">quantity</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">10</span>
+</code></pre></div>
+<p><strong>多様</strong>: 固定費用 0 のとき、C(2) = 8 − 24 + 30 + 0 = 14 なので、AC = 14 ÷ 2 = 7 です。固定費用 20 のとき、C(2) = 34 なので、AC = 34 ÷ 2 = 17 です。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_固定費用を変えたときの平均費用</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">average_cost</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">fixed_cost</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">7</span>
+    <span class="k">assert</span> <span class="n">average_cost</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">fixed_cost</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span> <span class="o">==</span> <span class="mi">17</span>
+</code></pre></div>
+<p><strong>交互</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">income_elasticity</span><span class="p">(</span>
+    <span class="n">income_before</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span>
+    <span class="n">income_after</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
+    <span class="n">quantity_before</span><span class="o">=</span><span class="n">marginal_cost</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span>   <span class="c1"># 3</span>
+    <span class="n">quantity_after</span><span class="o">=</span><span class="n">marginal_cost</span><span class="p">(</span><span class="mi">3</span><span class="p">),</span>    <span class="c1"># 6</span>
+<span class="p">)</span>   <span class="c1"># 2.0</span>
+</code></pre></div>
+<p>生産量は 2 → 3 で +50%、限界費用は 3 → 6 で +100% なので、弾力性は 2.0 です。生産量が 1% 増えると、限界費用は 2% 増えます。</p>
+</details>
 <h2 id="47">4.7 振り返り<a class="headerlink" href="#47" title="Permanent link">&para;</a></h2>
 <ul>
 <li>予想した C(2)・MC(2)・AC(2)・AVC(2) は、テストの結果と一致しましたか</li>

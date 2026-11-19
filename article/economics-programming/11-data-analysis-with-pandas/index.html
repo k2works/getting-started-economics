@@ -4886,6 +4886,10 @@
 <td style="text-align: left;">完成形</td>
 <td style="text-align: left;"><code>load_economy</code>、<code>production_gdp</code>、<code>income_gdp</code>、<code>expenditure_gdp</code>、<code>statistical_discrepancy</code>、<code>real_gdp</code>、<code>growth_rates</code>、<code>recession_years</code>、<code>expenditure_shares</code>、<code>laspeyres_index</code>、<code>paasche_index</code></td>
 </tr>
+<tr>
+<td style="text-align: left;">ファイル</td>
+<td style="text-align: left;">実装: <code>lib/chapter11/economy.py</code>／テスト: <code>test/chapter11/test_economy.py</code>（自分で書くときは、<code>practice/chapter11/</code> に、同じ名前で作ります）</td>
+</tr>
 </tbody>
 </table>
 <h3 id="_1">この章のデータについて<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
@@ -5186,11 +5190,10 @@ year
 <p>2 つの財の価格が 100 → 110 と 200 → 190 に変わったとき、ラスパイレス指数は 102.5、パーシェ指数は 101.0 です。値が違うのは、重みの数量が違うからです。この例では、値上がりした財 1 の数量が、基準年（10）から比較年（8）に減り、値下がりした財 2 の数量が増えた（5 → 6）ので、パーシェ指数の方が小さくなっています。</p>
 <h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
-uv<span class="w"> </span>run<span class="w"> </span>pytest
+uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter11
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>131 passed
+<div class="highlight"><pre><span></span><code>18 passed
 </code></pre></div>
-<p>この 131 件には、第 1〜12 章のテストを含みます。</p>
 <h2 id="115">11.5 規則で言うと<a class="headerlink" href="#115" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>表の列は、列の名前で選ぶ。</strong> 列の番号ではなく名前で選べば、列の順序が変わっても壊れない</li>
@@ -5241,11 +5244,11 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 <tr>
 <td style="text-align: left;">生成</td>
-<td style="text-align: left;">解説を見る前に、名目 GDP の成長率の関数を、テストから書いてください。2013 年は、名目が 510 で前年と同じなので、成長率は 0 です</td>
+<td style="text-align: left;">解説を見る前に、名目 GDP の成長率の関数を、テストから書いてください。2013 年は、名目 GDP が前年と同じなので、成長率が何になるかを予想します</td>
 </tr>
 <tr>
 <td style="text-align: left;">多様</td>
-<td style="text-align: left;"><code>.loc</code> を使って、2018〜2021 年の <code>consumption</code> の列だけを取り出し、前年からの増加率を求めてください（2020 年は 319 ÷ 329 − 1 = −3.0%）</td>
+<td style="text-align: left;"><code>.loc</code> を使って、2018〜2021 年の <code>consumption</code> の列だけを取り出し、前年からの増加率を求めてください</td>
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
@@ -5253,6 +5256,57 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 </tbody>
 </table>
+<details class="note">
+<summary>解答（先に自分で取り組んでから、開いてください）</summary>
+<p><strong>想起</strong>: 本文と見比べて、<code>production_gdp</code> が列の名前（<code>primary</code> など）で選んでいるか、<code>real_gdp</code> が <code>名目 ÷ デフレーター × 100</code> になっているかを確かめます。</p>
+<p><strong>生成</strong>: 第 11 章の <code>growth_rates</code> を、名目 GDP に使います。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">nominal_growth_rates</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">growth_rates</span><span class="p">(</span><span class="n">production_gdp</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_名目GDPが前年と同じ2013年の成長率は0</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">nominal_growth_rates</span><span class="p">(</span><span class="n">load_economy</span><span class="p">())[</span><span class="mi">2013</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_2020年の名目成長率は約マイナス3_17パーセント</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># 2019 年の 599 から、2020 年の 580 へ</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">nominal_growth_rates</span><span class="p">(</span><span class="n">load_economy</span><span class="p">())[</span><span class="mi">2020</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">result</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="o">-</span><span class="mf">3.17</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+</code></pre></div>
+<p>2020 年は、実質成長率（−2.98%）より名目成長率（−3.17%）の方が低くなっています。デフレーター（103.2 → 103.0）が、わずかに下がったためです。</p>
+<p><strong>多様</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">consumption</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">2018</span><span class="p">:</span><span class="mi">2021</span><span class="p">,</span> <span class="s2">"consumption"</span><span class="p">]</span>
+<span class="p">(</span><span class="n">consumption</span><span class="o">.</span><span class="n">pct_change</span><span class="p">()</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">年</th>
+<th style="text-align: right;">増加率（%）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">2018</td>
+<td style="text-align: right;">欠損値（前年がない）</td>
+</tr>
+<tr>
+<td style="text-align: right;">2019</td>
+<td style="text-align: right;">2.81</td>
+</tr>
+<tr>
+<td style="text-align: right;">2020</td>
+<td style="text-align: right;">−3.04</td>
+</tr>
+<tr>
+<td style="text-align: right;">2021</td>
+<td style="text-align: right;">2.82</td>
+</tr>
+</tbody>
+</table>
+<p><code>.loc[2018:2021]</code> は、終わりの 2021 年も含みます。</p>
+<p><strong>交互</strong>: <code>recession_years</code> は、「実質 GDP が前年より減った年」を返します。手計算では、名目 GDP ÷ デフレーター × 100 で実質 GDP を求めて、前年と比べます。2013 年は、名目 GDP が 510 で 2012 年と同じですが、デフレーターが 97.1 から 98.0 に上がったので、実質 GDP は 525.2 から 520.4 に減ります。2020 年は、実質 GDP が 580.4 から 563.1 に減ります。ほかの年は、すべて前年より増えているので、結果は <code>[2013, 2020]</code> です。</p>
+<p>実際の統計では、取得した表の単位（十億円など）と、文字コード（Shift_JIS など）、基準年の違いに、注意してください。結果は、データによって変わるので、答えは決まっていません。</p>
+</details>
 <h2 id="117">11.7 振り返り<a class="headerlink" href="#117" title="Permanent link">&para;</a></h2>
 <ul>
 <li>三面等価が成り立つかどうかの予想は、当たりましたか</li>

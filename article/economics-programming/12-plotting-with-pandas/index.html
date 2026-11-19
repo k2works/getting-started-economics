@@ -4866,6 +4866,10 @@
 <td style="text-align: left;">完成形</td>
 <td style="text-align: left;"><code>moving_average</code>、<code>diffusion_index</code>、<code>plot_gdp_chart</code>、<code>plot_growth_chart</code></td>
 </tr>
+<tr>
+<td style="text-align: left;">ファイル</td>
+<td style="text-align: left;">実装: <code>lib/chapter12/charts.py</code>／テスト: <code>test/chapter12/test_charts.py</code>（自分で書くときは、<code>practice/chapter12/</code> に、同じ名前で作ります）</td>
+</tr>
 </tbody>
 </table>
 <p>データは、第 11 章と同じ、架空の国の統計（<code>apps/economics-programming/python/data/economy.csv</code>）です。</p>
@@ -5037,9 +5041,9 @@
 <p><code>dropna()</code> は、欠損値の行を除きます。<code>fig.tight_layout()</code> は、軸のラベルが図からはみ出さないように、余白を調整します（最初に描いたとき、横軸のラベルが切れていたので、足しました）。</p>
 <h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
-uv<span class="w"> </span>run<span class="w"> </span>pytest
+uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter12
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>131 passed
+<div class="highlight"><pre><span></span><code>10 passed
 </code></pre></div>
 <h2 id="125">12.5 規則で言うと<a class="headerlink" href="#125" title="Permanent link">&para;</a></h2>
 <ol>
@@ -5087,7 +5091,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 <tr>
 <td style="text-align: left;">生成</td>
-<td style="text-align: left;">解説を見る前に、窓の幅を 5 にした移動平均が、何年目から計算できるか予想し（5 年目から）、確かめてください</td>
+<td style="text-align: left;">解説を見る前に、窓の幅を 5 にした移動平均が、何年目から計算できるかを予想し、確かめてください</td>
 </tr>
 <tr>
 <td style="text-align: left;">多様</td>
@@ -5095,10 +5099,71 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
-<td style="text-align: left;">第 11 章の <code>expenditure_shares</code> を、年ごとに求めて、消費の構成比の推移を、棒グラフまたは線グラフにしてください。第 7 章の <code>Figure</code> を返す作りに、そろえてください</td>
+<td style="text-align: left;">第 11 章の <code>expenditure_shares</code> を、年ごとに求めて、消費の構成比の推移を、線グラフにしてください。第 7 章の <code>Figure</code> を返す作りに、そろえてください</td>
 </tr>
 </tbody>
 </table>
+<details class="note">
+<summary>解答（先に自分で取り組んでから、開いてください）</summary>
+<p><strong>想起</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">diffusion_index</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+    <span class="n">increased</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">increased</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+</code></pre></div>
+<p><strong>生成</strong>: 5 年目からです。最初の 4 個（窓の幅 − 1 個）は、5 個そろわないので、欠損値になります。</p>
+<div class="highlight"><pre><span></span><code><span class="n">ma</span> <span class="o">=</span> <span class="n">moving_average</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">13</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span> <span class="n">window</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">ma</span><span class="o">.</span><span class="n">first_valid_index</span><span class="p">()</span>   <span class="c1"># 4（0 から数えて 5 番目）</span>
+</code></pre></div>
+<p><strong>多様</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">items</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"consumption"</span><span class="p">,</span> <span class="s2">"investment"</span><span class="p">,</span> <span class="s2">"government"</span><span class="p">,</span> <span class="s2">"exports"</span><span class="p">,</span> <span class="s2">"imports"</span><span class="p">]</span>
+<span class="n">diffusion_index</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">items</span><span class="p">])</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: right;">年</th>
+<th style="text-align: right;">4 項目</th>
+<th style="text-align: right;">5 項目（輸入を加える）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: right;">2012</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">80（輸入が前年と同じで、増えていない）</td>
+</tr>
+<tr>
+<td style="text-align: right;">2013</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">20（4 項目は前年と同じで、輸入だけが増えた）</td>
+</tr>
+<tr>
+<td style="text-align: right;">2020</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0（5 項目すべてが減った）</td>
+</tr>
+<tr>
+<td style="text-align: right;">2021</td>
+<td style="text-align: right;">100</td>
+<td style="text-align: right;">80（輸入が前年と同じ）</td>
+</tr>
+</tbody>
+</table>
+<p>輸入が加わると、「景気後退の年でも 0 にならない」「好況の年でも 100 にならない」年が出ます。DI は、どの系列を選ぶかで、結果が変わります。</p>
+<p><strong>交互</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_consumption_share</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+    <span class="n">shares</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span>
+        <span class="p">{</span><span class="n">year</span><span class="p">:</span> <span class="n">expenditure_shares</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">year</span><span class="p">)[</span><span class="s2">"consumption"</span><span class="p">]</span> <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">shares</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Year"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Consumption share (%)"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+</code></pre></div>
+<p>消費の構成比は、12 年間で、およそ 54.9% から 55.1% の間で、ほとんど動きません。この架空のデータでは、消費が、GDP の約 55% になるように作ってあるためです。</p>
+</details>
 <h2 id="127">12.7 振り返り<a class="headerlink" href="#127" title="Permanent link">&para;</a></h2>
 <ul>
 <li>名目と実質の線が交わる位置の予想は、当たりましたか</li>
@@ -5109,7 +5174,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest
 <ul>
 <li><code>DataFrame.plot</code> と <code>Series.plot.bar</code> で、図を描いた</li>
 <li>移動平均と景気動向指数を、手計算できる小さな表でテストしてから、データに使った</li>
-<li>景気後退の年が、実質成長率でも DI でも、同じ年に見つかることを確かめた</li>
+<li>実質成長率がマイナスの年（2013 年と 2020 年）が、DI が 0（前の年より増えた系列がない）の年と一致することを確かめた</li>
 </ul>
 <p>次の第 4 部では、これまでの道具を組み合わせて、IS-LM 分析などのマクロ経済モデルを実装します。</p>
 <h2 id="129-3">12.9 第 3 部の到達チェック<a class="headerlink" href="#129-3" title="Permanent link">&para;</a></h2>
