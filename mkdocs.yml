@@ -120,6 +120,8 @@ nav:
           - 第 1 章 発展会計: article/macro-programming/01-development-accounting.md
           - 第 2 章 成長会計: article/macro-programming/02-growth-accounting.md
           - 第 3 章 回帰分析: article/macro-programming/03-regression.md
+          - 第 4 章 差分方程式と経済分析: article/macro-programming/04-difference-equations.md
+          - 第 5 章 ソロー・モデル: article/macro-programming/05-solow-model.md
   - リファレンス:
       - 概要: reference/index.md
       - よいソフトウェアとは: reference/よいソフトウェアとは.md
