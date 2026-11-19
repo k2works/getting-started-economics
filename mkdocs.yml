@@ -91,6 +91,9 @@ nav:
           - 第 1 章 準備とはじめてのテスト: article/economics-programming/01-preparation-and-first-test.md
           - 第 2 章 データ型と変数: article/economics-programming/02-data-types-and-variables.md
           - 第 3 章 コンテナとデータの操作: article/economics-programming/03-containers-and-data-operations.md
+          - 第 4 章 関数とメソッド: article/economics-programming/04-functions-and-methods.md
+          - 第 5 章 制御フロー: article/economics-programming/05-control-flow.md
+          - 第 6 章 モジュール・エラー・アルゴリズム: article/economics-programming/06-modules-errors-and-algorithms.md
   - リファレンス:
       - 概要: reference/index.md
       - よいソフトウェアとは: reference/よいソフトウェアとは.md

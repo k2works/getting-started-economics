@@ -45,9 +45,9 @@ uv run pytest
 | [第 1 章](01-preparation-and-first-test.md) | 準備とはじめてのテスト | 執筆済み |
 | [第 2 章](02-data-types-and-variables.md) | データ型と変数 | 執筆済み |
 | [第 3 章](03-containers-and-data-operations.md) | コンテナとデータの操作 | 執筆済み |
-| 第 4 章 | 関数とメソッド | 計画中 |
-| 第 5 章 | 制御フロー | 計画中 |
-| 第 6 章 | モジュール・エラー・アルゴリズム | 計画中 |
+| [第 4 章](04-functions-and-methods.md) | 関数とメソッド | 執筆済み |
+| [第 5 章](05-control-flow.md) | 制御フロー | 執筆済み |
+| [第 6 章](06-modules-errors-and-algorithms.md) | モジュール・エラー・アルゴリズム | 執筆済み |
 
 第 2 部以降は、[執筆計画アウトライン](outline.md) の章構成を参照してください。
 
