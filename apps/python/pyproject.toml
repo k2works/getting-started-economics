@@ -5,6 +5,8 @@ description = "経済学のためのプログラミング入門（Python 版）"
 requires-python = ">=3.12"
 dependencies = [
     "matplotlib>=3.11.2",
+    "numpy>=2.5.5",
+    "scipy>=1.18.1",
 ]
 
 # 手元・CI のどこでも同じ Python（.python-version）を使うため、uv が管理する Python に限定する
@@ -30,6 +32,11 @@ python_version = "3.12"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
+
+# 型情報（スタブ）を持たないライブラリ
+[[tool.mypy.overrides]]
+module = ["scipy.*"]
+ignore_missing_imports = true
 
 [dependency-groups]
 dev = [
