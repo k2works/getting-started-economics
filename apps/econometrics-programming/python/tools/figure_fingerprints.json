@@ -7,5 +7,12 @@
   "ch04-diagnostics": "b1e16f103fb8db541e0e292c574696d9019efdfa9faf086469700d92332751eb",
   "ch04-same-summary": "aed5f3131ce9399fa4f0682f28b772f000ffa84b97205870c4f5a952f3f7bb12",
   "ch05-confidence-intervals": "69dbceeaf5c73ebdc29e71f81356a88ad207b3393126dcb924df87fdbb693287",
-  "ch06-estimate-distributions": "2fcac1cc932e59f6025aa9015405c6fccf3aa6762209edee72d77bc9f9e2bfee"
+  "ch06-estimate-distributions": "2fcac1cc932e59f6025aa9015405c6fccf3aa6762209edee72d77bc9f9e2bfee",
+  "ch07-interaction": "c454331f21e8bebe750dc87faa0f466990349a26a318fca64fdd8cb4c3520422",
+  "ch07-intercept-shift": "1c85569200de6a49bf31107ba883ff86d7e5f602d8d05d464ba21b0625e6988a",
+  "ch08-fan-regression": "7c3f631eda7a293b28a4ea5225363a6664079e1524a59a73af8fae5bb0d2f59d",
+  "ch08-standard-errors": "6ac2d28ddaae5bb4adc3c2799f7a0d01c6f63b0101728a6656857e3a9ec1b147",
+  "ch09-did": "129be32211a7c16257390324f80bfae49b6edddd9bb7b7fe8e6ccd859af49de8",
+  "ch10-entity-lines": "30eaa6c269b1ea317caeb8f92497027217159d820d293caa409e8ae61a10aa6f",
+  "ch10-estimate-comparison": "0fe931f5613ac3a55a39bb3f3ea86244a6a1b149c06711e9935113f63cafcca4"
 }

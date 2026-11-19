@@ -31,6 +31,24 @@ from lib.chapter05.inference import slope_intervals  # noqa: E402
 from lib.chapter05.plot import plot_confidence_intervals  # noqa: E402
 from lib.chapter06.asymptotics import consistency_experiment  # noqa: E402
 from lib.chapter06.plot import plot_estimate_distributions  # noqa: E402
+from lib.chapter07.dummies import draw_wage_sample  # noqa: E402
+from lib.chapter07.plot import plot_group_lines  # noqa: E402
+from lib.chapter08.hetero import (  # noqa: E402
+    draw_fan_sample,
+    standard_error_comparison,
+)
+from lib.chapter08.plot import plot_standard_errors  # noqa: E402
+from lib.chapter09.did import (  # noqa: E402
+    draw_did_sample,
+    draw_panel,
+    group_period_means,
+)
+from lib.chapter09.plot import plot_did  # noqa: E402
+from lib.chapter10.panel import estimator_comparison  # noqa: E402
+from lib.chapter10.plot import (  # noqa: E402
+    plot_entity_lines,
+    plot_estimate_comparison,
+)
 
 
 def _correlated_regressors() -> pd.DataFrame:
@@ -54,6 +72,32 @@ def _fan_shaped_data() -> tuple[np.ndarray, np.ndarray]:
     rng = np.random.default_rng(0)
     x = rng.uniform(0, 4, 100)
     return x, 1 + 2 * x + (0.1 + 0.5 * x) * rng.standard_normal(100)
+
+
+def _wage_figure(interaction: bool) -> Figure:
+    df = draw_wage_sample(80, np.random.default_rng(0))
+    return plot_group_lines(
+        df["educ"].to_numpy(dtype=float),
+        df["lwage"].to_numpy(),
+        df["female"].to_numpy(dtype=float),
+        interaction,
+    )
+
+
+def _fan_regression() -> Figure:
+    x, y = draw_fan_sample(100, np.random.default_rng(0), True)
+    return plot_regression_line(x, y, fit_simple(x, y))
+
+
+def _standard_error_figure() -> Figure:
+    r = standard_error_comparison(50, 2000, True, np.random.default_rng(0))
+    return plot_standard_errors(
+        {
+            "Actual (SD of estimates)": r["sd"],
+            "Classical": r["classical"],
+            "Robust (HC1)": r["hc1"],
+        }
+    )
 
 
 # 記事に載せる図。名前が、画像のファイル名（名前.png）になる
@@ -85,5 +129,18 @@ FIGURES: dict[str, Callable[[], Figure]] = {
     "ch06-estimate-distributions": lambda: plot_estimate_distributions(
         consistency_experiment([30, 100, 250, 500], 1000, np.random.default_rng(0)),
         0.5,
+    ),
+    "ch07-intercept-shift": lambda: _wage_figure(False),
+    "ch07-interaction": lambda: _wage_figure(True),
+    "ch08-fan-regression": _fan_regression,
+    "ch08-standard-errors": _standard_error_figure,
+    "ch09-did": lambda: plot_did(
+        group_period_means(draw_did_sample(200, 1.5, np.random.default_rng(0)))
+    ),
+    "ch10-entity-lines": lambda: plot_entity_lines(
+        draw_panel(30, 5, 1.0, np.random.default_rng(0)), 5
+    ),
+    "ch10-estimate-comparison": lambda: plot_estimate_comparison(
+        estimator_comparison(200, 5, 1.0, 300, np.random.default_rng(0)), 1.0
     ),
 }
