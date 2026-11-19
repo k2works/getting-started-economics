@@ -31,6 +31,7 @@ markdown_extensions:
           class: plantuml
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed
+  - pymdownx.details
   - pymdownx.tasklist
   - pymdownx.emoji
   - admonition

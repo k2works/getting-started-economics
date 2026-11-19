@@ -335,7 +335,49 @@ uv run pytest test/chapter01
 | 想起 | 本文を閉じて、`quantity_demanded` を、`practice/chapter01/demand.py` に、自分で書いてください。その後、本文と見比べて違いを確かめます |
 | 生成 | 供給曲線 Q = c + dP の関数 `quantity_supplied` を、解説を見る前に、`practice/chapter01/` に、テストから書いてください。価格が 0 のときの供給量は c です |
 | 多様 | `intercept=100, slope=2` を `intercept=50, slope=5` に変えて、5 つのテストの期待値を手計算で作り直してください |
-| 交互 | 需要曲線と供給曲線を使って、需要量と供給量が等しくなる価格を、紙の上で求めてください（第 5 章で、コードで求めます） |
+| 交互 | 需要曲線 Q = 100 − 2P と、供給曲線 Q = 3P を使って、需要量と供給量が等しくなる価格を、紙の上で求めてください（第 5 章で、コードで求めます） |
+
+??? note "解答（先に自分で取り組んでから、開いてください）"
+
+    **想起**: 本文の完成形（`lib/chapter01/demand.py`）と見比べます。次の 3 点を確かめてください。
+
+    - 価格が負のときに `ValueError` を出しているか
+    - `max(..., 0)` で、需要量が負にならないようにしているか
+    - 引数と戻り値に、型ヒントを付けているか
+
+    **生成**: 実装は、`quantity_demanded` の `-` を `+` にした形です。
+
+    ```python
+    def quantity_supplied(price: float, intercept: float, slope: float) -> float:
+        if price < 0:
+            raise ValueError("価格は 0 以上でなければならない")
+        return max(intercept + slope * price, 0)
+    ```
+
+    テストの例です（先に書きます）。
+
+    ```python
+    def test_価格が0なら供給量は切片と等しい() -> None:
+        assert quantity_supplied(price=0, intercept=10, slope=3) == 10
+
+
+    def test_価格が上がると供給量は傾きの分だけ増える() -> None:
+        assert quantity_supplied(price=10, intercept=10, slope=3) == 40
+    ```
+
+    同じ関数が、第 3 章の `lib/chapter03/schedule.py` にあります。
+
+    **多様**: 需要曲線 Q = 50 − 5P の期待値です。
+
+    | テスト | 価格 | 需要量 |
+    | :--- | ---: | ---: |
+    | 価格が 0 | 0 | 50（切片と等しい） |
+    | 価格が上がる | 5 | 25 |
+    | 価格 10 | 10 | 0（本文の例では 80 だった所が 0 に変わる） |
+    | 価格が高すぎる | 60 | 0（式のとおりでは −250） |
+    | 需要が 0 になる最低の価格 `choke_price` | — | 10（= 50 ÷ 5） |
+
+    **交互**: 100 − 2P = 3P から、5P = 100 で、P = 20 です。そのとき、需要量は 100 − 2 × 20 = 60、供給量は 3 × 20 = 60 で、等しくなります。
 
 ## 1.7 振り返り
 

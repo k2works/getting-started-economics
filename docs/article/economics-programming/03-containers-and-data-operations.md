@@ -211,9 +211,66 @@ uv run pytest test/chapter03
 | 種類 | 問題 |
 | :--- | :--- |
 | 想起 | 本文を閉じて、`demand_schedule` を内包表記で書いてください |
-| 生成 | 解説を見る前に、超過需要が正の価格だけを取り出す `shortage_prices` を、テストから書いてください（上の例では `[0, 10]`） |
-| 多様 | 需要を Q = 120 − 2P に変えて、均衡の価格を手計算し、テストで確かめてください（P = 24 は価格 `[0, 12, 24, 36]` に含まれます） |
+| 生成 | 解説を見る前に、超過需要が正の価格だけを取り出す `shortage_prices` を、テストから書いてください（本文の例の、需要 Q = 100 − 2P、供給 Q = 3P、価格 0・10・20・30 で試します） |
+| 多様 | 需要を Q = 120 − 2P に変えて、均衡の価格を手計算し、テストで確かめてください。価格のリストは `[0, 12, 24, 36]` にします |
 | 交互 | 第 2 章の `price_elasticity` を使い、需要表の隣り合う 2 点（価格 10 → 20）の価格弾力性を求めてください |
+
+??? note "解答（先に自分で取り組んでから、開いてください）"
+
+    **想起**: 関数の本体は、次の 1 行です。
+
+    ```python
+    def demand_schedule(
+        prices: list[int], intercept: float, slope: float
+    ) -> dict[int, float]:
+        return {p: quantity_demanded(p, intercept, slope) for p in prices}
+    ```
+
+    **生成**: `excess_demand` で、価格ごとの超過需要を求めて、正のものだけを残します。
+
+    ```python
+    def shortage_prices(
+        demand: Mapping[int, float], supply: Mapping[int, float]
+    ) -> list[int]:
+        return [p for p, gap in excess_demand(demand, supply).items() if gap > 0]
+    ```
+
+    ```python
+    def test_超過需要が正の価格は0と10() -> None:
+        demand = demand_schedule(PRICES, intercept=100, slope=2)
+        supply = supply_schedule(PRICES, intercept=0, slope=3)
+        assert shortage_prices(demand, supply) == [0, 10]
+    ```
+
+    超過需要は、価格 0・10・20・30 で、100・50・0・−50 です。正なのは、価格 0 と 10 です（価格 20 は 0 なので、含みません）。
+
+    **多様**: 価格ごとの表です。
+
+    | 価格 | 需要量 | 供給量 | 超過需要 |
+    | ---: | ---: | ---: | ---: |
+    | 0 | 120 | 0 | 120 |
+    | 12 | 96 | 36 | 60 |
+    | 24 | 72 | 72 | 0 |
+    | 36 | 48 | 108 | −60 |
+
+    120 − 2P = 3P から、P = 24 です。
+
+    ```python
+    def test_需要が120_2Pのときの均衡価格は24() -> None:
+        prices = [0, 12, 24, 36]
+        demand = demand_schedule(prices, intercept=120, slope=2)
+        supply = supply_schedule(prices, intercept=0, slope=3)
+        assert market_clearing_prices(demand, supply) == [24]
+    ```
+
+    **交互**: 需要表から、価格 10 と 20 の需要量（80 と 60）を取り出して、渡します。
+
+    ```python
+    demand = demand_schedule([0, 10, 20, 30], intercept=100, slope=2)
+    price_elasticity(10, 20, demand[10], demand[20])   # 0.25
+    ```
+
+    価格が 100%（10 → 20）上がり、需要量が 25%（80 → 60）減るので、弾力性は 0.25 です。
 
 ## 3.7 振り返り
 

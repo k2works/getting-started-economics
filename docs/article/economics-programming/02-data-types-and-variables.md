@@ -250,8 +250,56 @@ uv run pytest test/chapter02
 | :--- | :--- |
 | 想起 | 本文を閉じて、`income_elasticity` を自分で書いてください。その後、本文と見比べます |
 | 生成 | 解説を見る前に、「価格弾力性が 1 のとき（単位弾力的）」を `True` で返す関数 `is_unit_elastic` を、テストから書いてください。小数の比較に注意します |
-| 多様 | 価格が 40 → 42 のとき、需要量は 20 → 16 になります。価格弾力性を手計算し、テストで確かめてください（結果は 4 になります） |
+| 多様 | 価格が 40 → 42 のとき、需要量は 20 → 16 になります。価格弾力性を手計算し、テストで確かめてください |
 | 交互 | 第 1 章の `quantity_demanded` を使い、価格が 10 → 12 のときの需要量を関数から求めて、`price_elasticity` に渡してください |
+
+??? note "解答（先に自分で取り組んでから、開いてください）"
+
+    **想起**: 本文と見比べて、所得が変わらないときに `ValueError` を出しているか、変化率の式（変化後 − 変化前）÷ 変化前になっているかを確かめます。
+
+    **生成**: `==` で比べると、誤差のある値が `False` になるので、`math.isclose`（ごく近いかどうか）を使います。
+
+    ```python
+    import math
+
+
+    def is_unit_elastic(elasticity: float) -> bool:
+        return math.isclose(elasticity, 1)
+    ```
+
+    ```python
+    def test_弾力性が1なら単位弾力的() -> None:
+        assert is_unit_elastic(1.0) is True
+
+
+    def test_弾力性が1でなければ単位弾力的ではない() -> None:
+        assert is_unit_elastic(0.25) is False
+        assert is_unit_elastic(1.5) is False
+
+
+    def test_小数の誤差は許す() -> None:
+        assert is_unit_elastic(0.9999999999999999) is True
+    ```
+
+    **多様**: 価格は 40 → 42 で +5%、需要量は 20 → 16 で −20% なので、価格弾力性は −(−20%) ÷ 5% = 4 です。
+
+    ```python
+    def test_価格が40から42のときの価格弾力性は4() -> None:
+        result = price_elasticity(
+            price_before=40, price_after=42, quantity_before=20, quantity_after=16
+        )
+        assert result == pytest.approx(4)
+    ```
+
+    第 1 章の需要曲線 Q = 100 − 2P では、価格が高い所ほど、弾力性が大きくなります（価格 10 のとき 0.25、価格 40 のとき 4）。
+
+    **交互**: 需要量は、第 1 章の関数から求めます。
+
+    ```python
+    before = quantity_demanded(price=10, intercept=100, slope=2)   # 80
+    after = quantity_demanded(price=12, intercept=100, slope=2)    # 76
+    price_elasticity(10, 12, before, after)                        # 0.25
+    ```
 
 ## 2.7 振り返り
 

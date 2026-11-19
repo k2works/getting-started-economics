@@ -244,9 +244,51 @@ uv run pytest test/chapter04
 | 種類 | 問題 |
 | :--- | :--- |
 | 想起 | 本文を閉じて、`total_cost` と `marginal_cost` を自分で書いてください |
-| 生成 | 解説を見る前に、利潤 = 価格 × 生産量 − 総費用 を返す `profit(price, quantity)` を、テストから書いてください。価格 15、生産量 4 のとき、総費用は 38 なので、利潤は 60 − 38 = 22 です |
-| 多様 | 固定費用を 0 と 20 に変えて、q = 2 のときの `average_cost` を手計算し、テストで確かめてください（それぞれ 7 と 17） |
-| 交互 | 第 2 章の `income_elasticity` と、この章の `marginal_cost` を組み合わせて、生産量が 2 から 3 に増えたときの、限界費用の生産量に対する弾力性を求めてください。引数の名前は「所得」ですが、式は「ある量の変化率 ÷ 別の量の変化率」なので、生産量（2 → 3）を所得の位置に、限界費用（3 → 6）を需要量の位置に渡せます（結果は 2.0 です。生産量が 1% 増えると、限界費用は 2% 増えます） |
+| 生成 | 解説を見る前に、利潤 = 価格 × 生産量 − 総費用 を返す `profit(price, quantity)` を、テストから書いてください。価格 15、生産量 4 のときの利潤を、手計算で求めて、テストにします（総費用は、第 4 章の `total_cost` で求められます） |
+| 多様 | 固定費用を 0 と 20 に変えて、q = 2 のときの `average_cost` を手計算し、テストで確かめてください |
+| 交互 | 第 2 章の `income_elasticity` と、この章の `marginal_cost` を組み合わせて、生産量が 2 から 3 に増えたときの、限界費用の生産量に対する弾力性を求めてください。引数の名前は「所得」ですが、式は「ある量の変化率 ÷ 別の量の変化率」なので、生産量（2 → 3）を所得の位置に、限界費用（3 → 6）を需要量の位置に渡せます |
+
+??? note "解答（先に自分で取り組んでから、開いてください）"
+
+    **想起**: 本文と見比べて、`total_cost` が負の生産量で `ValueError` を出しているか、`marginal_cost` が 3q² − 12q + 15 になっているかを確かめます。
+
+    **生成**:
+
+    ```python
+    def profit(price: float, quantity: float) -> float:
+        return price * quantity - total_cost(quantity)
+    ```
+
+    ```python
+    def test_価格15で生産量4のときの利潤は22() -> None:
+        # 収入 15 × 4 = 60、総費用 38
+        assert profit(price=15, quantity=4) == 22
+
+
+    def test_生産しなくても固定費用は払うので利潤はマイナス() -> None:
+        assert profit(price=15, quantity=0) == -10
+    ```
+
+    **多様**: 固定費用 0 のとき、C(2) = 8 − 24 + 30 + 0 = 14 なので、AC = 14 ÷ 2 = 7 です。固定費用 20 のとき、C(2) = 34 なので、AC = 34 ÷ 2 = 17 です。
+
+    ```python
+    def test_固定費用を変えたときの平均費用() -> None:
+        assert average_cost(2, fixed_cost=0) == 7
+        assert average_cost(2, fixed_cost=20) == 17
+    ```
+
+    **交互**:
+
+    ```python
+    income_elasticity(
+        income_before=2,
+        income_after=3,
+        quantity_before=marginal_cost(2),   # 3
+        quantity_after=marginal_cost(3),    # 6
+    )   # 2.0
+    ```
+
+    生産量は 2 → 3 で +50%、限界費用は 3 → 6 で +100% なので、弾力性は 2.0 です。生産量が 1% 増えると、限界費用は 2% 増えます。
 
 ## 4.7 振り返り
 

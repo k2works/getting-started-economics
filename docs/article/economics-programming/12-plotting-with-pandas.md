@@ -255,9 +255,59 @@ DI は、系列の増減の「数」しか見ないので、少し減った系�
 | 種類 | 問題 |
 | :--- | :--- |
 | 想起 | 本文を閉じて、`diffusion_index` を自分で書いてください。`diff` と `iloc[1:]` と `mean(axis=1)` を使います |
-| 生成 | 解説を見る前に、窓の幅を 5 にした移動平均が、何年目から計算できるか予想し（5 年目から）、確かめてください |
+| 生成 | 解説を見る前に、窓の幅を 5 にした移動平均が、何年目から計算できるかを予想し、確かめてください |
 | 多様 | 支出の 4 項目に、輸入を加えた 5 項目で DI を求め、結果がどう変わるかを調べてください（輸入は、景気がよいと増えます） |
-| 交互 | 第 11 章の `expenditure_shares` を、年ごとに求めて、消費の構成比の推移を、棒グラフまたは線グラフにしてください。第 7 章の `Figure` を返す作りに、そろえてください |
+| 交互 | 第 11 章の `expenditure_shares` を、年ごとに求めて、消費の構成比の推移を、線グラフにしてください。第 7 章の `Figure` を返す作りに、そろえてください |
+
+??? note "解答（先に自分で取り組んでから、開いてください）"
+
+    **想起**:
+
+    ```python
+    def diffusion_index(df: pd.DataFrame) -> pd.Series:
+        increased = df.diff().iloc[1:] > 0
+        return increased.mean(axis=1) * 100
+    ```
+
+    **生成**: 5 年目からです。最初の 4 個（窓の幅 − 1 個）は、5 個そろわないので、欠損値になります。
+
+    ```python
+    ma = moving_average(pd.Series(range(1, 13), dtype=float), window=5)
+    ma.first_valid_index()   # 4（0 から数えて 5 番目）
+    ```
+
+    **多様**:
+
+    ```python
+    items = ["consumption", "investment", "government", "exports", "imports"]
+    diffusion_index(df[items])
+    ```
+
+    | 年 | 4 項目 | 5 項目（輸入を加える） |
+    | ---: | ---: | ---: |
+    | 2012 | 100 | 80（輸入が前年と同じで、増えていない） |
+    | 2013 | 0 | 20（4 項目は前年と同じで、輸入だけが増えた） |
+    | 2020 | 0 | 0（5 項目すべてが減った） |
+    | 2021 | 100 | 80（輸入が前年と同じ） |
+
+    輸入が加わると、「景気後退の年でも 0 にならない」「好況の年でも 100 にならない」年が出ます。DI は、どの系列を選ぶかで、結果が変わります。
+
+    **交互**:
+
+    ```python
+    def plot_consumption_share(df: pd.DataFrame) -> Figure:
+        shares = pd.Series(
+            {year: expenditure_shares(df, year)["consumption"] for year in df.index}
+        )
+        fig, ax = plt.subplots()
+        shares.plot(ax=ax)
+        ax.set_xlabel("Year")
+        ax.set_ylabel("Consumption share (%)")
+        plt.close(fig)
+        return fig
+    ```
+
+    消費の構成比は、12 年間で、およそ 54.9% から 55.1% の間で、ほとんど動きません。この架空のデータでは、消費が、GDP の約 55% になるように作ってあるためです。
 
 ## 12.7 振り返り
 
