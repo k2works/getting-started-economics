@@ -118,6 +118,8 @@ nav:
           - 概要: article/macro-programming/index.md
           - この記事の読み方: article/macro-programming/how-to-read.md
           - 第 1 章 発展会計: article/macro-programming/01-development-accounting.md
+          - 第 2 章 成長会計: article/macro-programming/02-growth-accounting.md
+          - 第 3 章 回帰分析: article/macro-programming/03-regression.md
   - リファレンス:
       - 概要: reference/index.md
       - よいソフトウェアとは: reference/よいソフトウェアとは.md
