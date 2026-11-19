@@ -1,0 +1,8 @@
+{
+  "3": "PRICES = [0, 10, 20, 30]\n",
+  "5": "def demand(price): return 100 - 2 * price\n\ndef supply(price): return 3 * price\n",
+  "7": "MARKET = {\"demand_intercept\": 100, \"demand_slope\": 2, \"supply_intercept\": 0, \"supply_slope\": 3}\n",
+  "11": "df = load_economy()\n",
+  "12": "df = load_economy()\n",
+  "14": "def classical(price): return classical_supply(price, full_employment_income=1250)\n"
+}

@@ -1,5 +1,7 @@
 """図の生成ツール（tools/render_figures.py）のテスト。"""
 
+import re
+
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.patches import Polygon
@@ -58,8 +60,8 @@ def test_指紋は16進数の文字列() -> None:
 
 
 def test_記事の図の名前は画像ファイル名と対応している() -> None:
-    assert "ch07-market" in FIGURES
-    assert all(name.startswith("ch") for name in FIGURES)
+    assert FIGURES
+    assert all(re.fullmatch(r"ch\d{2}-[a-z0-9-]+", name) for name in FIGURES)
 
 
 def test_Markdownから画像のファイル名を取り出す() -> None:

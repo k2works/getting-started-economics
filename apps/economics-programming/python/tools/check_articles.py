@@ -7,7 +7,7 @@
 2. 各章の「実行結果」の件数が、その章のテストの件数と一致しているか
 3. 各章の練習問題の「解答」に書いたコードが、実際に実行できるか
 
-使い方（`apps/economics-programming/python/` で）:
+使い方（`apps/<シリーズ名>/python/` で）:
 
     uv run python -m tools.check_articles
 """
@@ -21,7 +21,9 @@ import textwrap
 from pathlib import Path
 
 APP_DIR = Path(__file__).resolve().parents[1]
-DOCS_DIR = APP_DIR.parents[2] / "docs" / "article" / "economics-programming"
+# apps/<シリーズ名>/python/ の「シリーズ名」が、記事のディレクトリ名
+SERIES = APP_DIR.parent.name
+DOCS_DIR = APP_DIR.parents[2] / "docs" / "article" / SERIES
 EXCERPTS_FILE = Path(__file__).resolve().parent / "article_code_excerpts.json"
 
 # 完成形として照合する、トップレベルの定義の書き出し
@@ -31,18 +33,16 @@ _COUNT_PATTERN = re.compile(
     r"uv run pytest test/chapter(\d{2})\n```\n\n```text\n(\d+) passed\n```"
 )
 
-# 解答のコードを実行するときに、章ごとに前もって用意する定義
-_ANSWER_PRELUDE = {
-    3: "PRICES = [0, 10, 20, 30]\n",
-    5: "def demand(price): return 100 - 2 * price\n\n"
-    "def supply(price): return 3 * price\n",
-    7: 'MARKET = {"demand_intercept": 100, "demand_slope": 2, '
-    '"supply_intercept": 0, "supply_slope": 3}\n',
-    11: "df = load_economy()\n",
-    12: "df = load_economy()\n",
-    14: "def classical(price): "
-    "return classical_supply(price, full_employment_income=1250)\n",
-}
+# 解答のコードを実行するときに、章ごとに前もって用意する定義（章の番号 -> コード）
+PRELUDES_FILE = Path(__file__).resolve().parent / "answer_preludes.json"
+
+
+def load_preludes() -> dict[str, str]:
+    """章ごとの、解答の前に置く定義を読み込む。ファイルがなければ、空。"""
+    if not PRELUDES_FILE.exists():
+        return {}
+    data: dict[str, str] = json.loads(PRELUDES_FILE.read_text(encoding="utf-8"))
+    return data
 
 
 def extract_python_blocks(markdown: str) -> list[str]:
@@ -174,7 +174,11 @@ def _answer_module(chapter: int, markdown: str) -> str | None:
         "from collections.abc import Mapping\n"
     )
     return (
-        header + imports + "\n" + _ANSWER_PRELUDE.get(chapter, "") + "\n\n".join(blocks)
+        header
+        + imports
+        + "\n"
+        + load_preludes().get(str(chapter), "")
+        + "\n\n".join(blocks)
     )
 
 
