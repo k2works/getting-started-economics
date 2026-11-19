@@ -100,6 +100,8 @@ nav:
           - 第 10 章 SciPy による最適化: article/economics-programming/10-optimization-with-scipy.md
           - 第 11 章 Pandas によるデータ分析: article/economics-programming/11-data-analysis-with-pandas.md
           - 第 12 章 Pandas による図示: article/economics-programming/12-plotting-with-pandas.md
+          - 第 13 章 IS-LM 分析: article/economics-programming/13-is-lm-analysis.md
+          - 第 14 章 AD-AS 分析と主要理論: article/economics-programming/14-ad-as-and-major-theories.md
   - リファレンス:
       - 概要: reference/index.md
       - よいソフトウェアとは: reference/よいソフトウェアとは.md

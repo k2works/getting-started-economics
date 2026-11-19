@@ -65,7 +65,15 @@ uv run pytest
 | [第 11 章](11-data-analysis-with-pandas.md) | Pandas によるデータ分析 | 執筆済み |
 | [第 12 章](12-plotting-with-pandas.md) | Pandas による図示 | 執筆済み |
 
-第 4 部以降は、[執筆計画アウトライン](outline.md) の章構成を参照してください。
+### 第 4 部: マクロ経済モデルの実装
+
+| 章 | テーマ | 状況 |
+| :--- | :--- | :--- |
+| [第 13 章](13-is-lm-analysis.md) | IS-LM 分析 | 執筆済み |
+| [第 14 章](14-ad-as-and-major-theories.md) | AD-AS 分析と主要理論 | 執筆済み |
+| 第 15 章 | 不完全競争とゲーム理論 | 計画中 |
+
+付録は、[執筆計画アウトライン](outline.md) の章構成を参照してください。
 
 ## 参照
 
