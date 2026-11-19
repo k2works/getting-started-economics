@@ -129,6 +129,8 @@ nav:
           - 第 10 章 オークンの法則とフィリップス曲線: article/macro-programming/10-okun-and-phillips.md
           - 第 11 章 インフレとマネーストック: article/macro-programming/11-inflation-and-money-stock.md
           - 第 12 章 貨幣の中立性と金融政策: article/macro-programming/12-money-neutrality.md
+          - 第 13 章 動学的 AD-AS モデルとカリブレーション: article/macro-programming/13-adas-calibration.md
+          - 第 14 章 インパルス反応と確率的シミュレーション: article/macro-programming/14-adas-simulation.md
   - リファレンス:
       - 概要: reference/index.md
       - よいソフトウェアとは: reference/よいソフトウェアとは.md
