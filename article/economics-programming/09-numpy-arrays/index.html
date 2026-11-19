@@ -4844,7 +4844,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">ファイル</td>
-<td style="text-align: left;">実装: <code>lib/chapter09/linear.py</code>／テスト: <code>test/chapter09/test_linear.py</code>（自分で書くときは、<code>practice/chapter09/</code> に、同じ名前で作ります）</td>
+<td style="text-align: left;">実装: <code>lib/chapter09/linear.py</code>、<code>lib/chapter09/plot.py</code>（45 度線の図）／テスト: <code>test/chapter09/test_linear.py</code>、<code>test/chapter09/test_plot.py</code>（自分で書くときは、<code>practice/chapter09/</code> に、同じ名前で作ります）</td>
 </tr>
 </tbody>
 </table>
@@ -5020,6 +5020,16 @@
     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">income</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">consumption</span><span class="p">)</span>
 </code></pre></div>
 <p>結果は、Y = 250.00000000000006、C = 220.00000000000006 です。第 2 章で学んだとおり、小数の計算には誤差があるので、<code>pytest.approx</code> で確かめます。Y = (C0 + I) ÷ (1 − c) = (20 + 30) × 5 = 250 と、乗数の式で求めた値と一致します。</p>
+<p>連立方程式の解は、グラフでは、2 本の線の交点です。45 度線分析（ケインズの交差図）で確かめます。</p>
+<p><img alt="45 度線と総支出の線。投資が増えると、均衡所得は乗数倍に増える" src="../images/ch09-keynesian-cross.png" /></p>
+<p>図の読み方:</p>
+<ul>
+<li>横軸が所得 Y、縦軸が総支出。青い線（45 度線）は、「支出 = 所得」になる点の集まり</li>
+<li>オレンジの線は、総支出 C0 + cY + I = 20 + 0.8Y + 30。切片が C0 + I = 50、傾きが限界消費性向 0.8</li>
+<li>2 本の交点（黒い丸）が均衡で、Y = 250。連立方程式の解と同じ</li>
+<li>投資が 30 から 40 に増えると、総支出の線（緑）が、10 だけ上にずれる。均衡は、黒い四角（Y = 300）に移り、所得は 50 増える。増加分 10 の 5 倍（乗数 5）</li>
+</ul>
+<p>傾きが 1 に近い（0.8）ので、線が少し上にずれるだけで、交点が横に大きく動きます。これが、乗数が大きい理由です。テストでは、均衡点が連立方程式の解と一致することと、所得の増加が投資の増加 × 乗数に等しいことを確かめています。この図は、<code>lib/chapter09/plot.py</code> の <code>plot_keynesian_cross</code> が描きます。</p>
 <h3 id="_9">需要・供給の連立方程式<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>第 7 章では、均衡の式を、手で P について解きました。連立方程式にすると、係数（切片や傾き）が変わっても、式を解き直さずに、同じ関数で解けます（ただし、直線の式に限ります）。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_連立方程式で均衡価格20と均衡数量60を求める</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -5111,7 +5121,7 @@
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter09
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>22 passed
+<div class="highlight"><pre><span></span><code>28 passed
 </code></pre></div>
 <h2 id="95">9.5 規則で言うと<a class="headerlink" href="#95" title="Permanent link">&para;</a></h2>
 <ol>

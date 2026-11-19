@@ -4851,7 +4851,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">ファイル</td>
-<td style="text-align: left;">実装: <code>lib/chapter15/externality.py</code>、<code>lib/chapter15/game.py</code>、<code>lib/chapter15/monopoly.py</code>、<code>lib/chapter15/oligopoly.py</code>／テスト: <code>test/chapter15/test_externality.py</code>、<code>test/chapter15/test_monopoly.py</code>、<code>test/chapter15/test_oligopoly_and_game.py</code>（自分で書くときは、<code>practice/chapter15/</code> に、同じ名前で作ります）</td>
+<td style="text-align: left;">実装: <code>lib/chapter15/externality.py</code>、<code>lib/chapter15/game.py</code>、<code>lib/chapter15/monopoly.py</code>、<code>lib/chapter15/oligopoly.py</code>、<code>lib/chapter15/plot.py</code>（独占の図）／テスト: <code>test/chapter15/test_externality.py</code>、<code>test/chapter15/test_monopoly.py</code>、<code>test/chapter15/test_oligopoly_and_game.py</code>、<code>test/chapter15/test_plot.py</code>（自分で書くときは、<code>practice/chapter15/</code> に、同じ名前で作ります）</td>
 </tr>
 </tbody>
 </table>
@@ -5063,6 +5063,16 @@
 </tbody>
 </table>
 <p>完全競争の総余剰（1600）は、独占では、消費者余剰（400）、企業の利潤（800）、死荷重（400）に分かれます。消費者から企業に移った分（800）と、誰にも渡らず失われた分（400）があります。</p>
+<p>独占と完全競争の違いは、図で見ると、すぐに分かります。</p>
+<p><img alt="独占の需要曲線・限界収入・限界費用、利潤と死荷重" src="../images/ch15-monopoly.png" /></p>
+<p>図の読み方:</p>
+<ul>
+<li>青い線が需要曲線、オレンジの線が限界収入（MR）。MR は、需要曲線の<strong>2 倍の傾き</strong>で、数量 50 で 0 になる</li>
+<li>緑の水平線が限界費用（MC = 10）。独占は、MR と MC が交わる点（数量 40）で数量を決め、価格は、その数量での<strong>需要曲線の上</strong>（30、黒い丸）で決まる</li>
+<li>完全競争は、価格と MC が等しい点（数量 80、価格 10、黒い四角）。独占は、数量が半分で、価格が 3 倍</li>
+<li>薄い緑の長方形が<strong>利潤</strong>（40 × 20 = 800）。赤い三角形が<strong>死荷重</strong>（0.5 × 40 × 20 = 400）。取引されなくなった分で、誰にも渡らない</li>
+</ul>
+<p>テストでは、長方形の面積が利潤、三角形の面積が死荷重と一致することを確かめています。この図は、<code>lib/chapter15/plot.py</code> の <code>plot_monopoly</code> が描きます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_完全競争の総余剰は独占の消費者余剰と利潤と死荷重の合計</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">monopoly_outcome</span><span class="p">(</span><span class="o">**</span><span class="n">DEMAND</span><span class="p">,</span> <span class="n">marginal_cost</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
     <span class="c1"># 完全競争の消費者余剰: 底辺 80、高さ 50 - 10 = 1600</span>
@@ -5207,6 +5217,16 @@
 </tbody>
 </table>
 <p>均衡は、各社 80 ÷ 3 = 26.667、合計 53.33、価格 23.33、各社の利潤 355.56 です。初期値を (80, 0) に変えても、同じ均衡に収束します。</p>
+<p>クールノー均衡を、図にします。2 社が、お互いの生産量に最適に反応する点です。</p>
+<p><img alt="クールノー競争の最適反応曲線と均衡" src="../images/ch15-cournot.png" /></p>
+<p>図の読み方:</p>
+<ul>
+<li>横軸が企業 1 の生産量、縦軸が企業 2 の生産量です</li>
+<li>青い線は、企業 2 の生産量が決まっているとき、企業 1 が選ぶ最適な生産量です。企業 2 が 0 なら、企業 1 は独占の数量（40）を選び、企業 2 が多いほど、少なく選びます。企業 2 が 80（完全競争の数量）なら、企業 1 は 0 です</li>
+<li>オレンジの線は、企業 1 に対する、企業 2 の最適反応です（対称です）</li>
+<li><strong>2 本の線の交点</strong>（黒い丸）が、クールノー均衡で、各社 80 ÷ 3 ≈ 26.67 です。お互いに、相手の生産量を前提に、最適な生産量を選んでいる点です</li>
+</ul>
+<p>この図は、<code>lib/chapter15/plot.py</code> の <code>plot_cournot</code> が描きます。</p>
 <h3 id="_5">企業の数と競争<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>企業が n 社の対称なクールノー競争には、閉じた式があります。各社の生産量は q = (A − MC) ÷ (B × (n + 1)) です（A = 50、B = 0.5）。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_企業が1社なら独占と同じ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -5465,11 +5485,21 @@
     <span class="p">)</span>
 </code></pre></div>
 <p>第 7 章では、税が死荷重（15）を生みました。外部費用があるときは、同じ税が、放任で生じる死荷重（15）を解消します。税そのものが悪いのではなく、<strong>税額が外部費用と一致しているか</strong>が、重要です。</p>
+<p>外部不経済を、図にします。</p>
+<p><img alt="外部不経済。社会的な供給曲線は私的な供給曲線の上にあり、放任では過剰に取引される" src="../images/ch15-externality.png" /></p>
+<p>図の読み方:</p>
+<ul>
+<li>オレンジの線が、企業にとっての費用（私的な供給曲線）、緑の線が、外部費用 5 を足した、社会にとっての費用（社会的な供給曲線）です。緑は、オレンジを 5 だけ上にずらしたものです</li>
+<li>放任の市場は、需要曲線と私的な供給曲線の交点（黒い丸、数量 60、価格 20）で取引します</li>
+<li>社会的に最適なのは、需要曲線と社会的な供給曲線の交点（黒い四角、数量 54、価格 23）です</li>
+<li>数量が 54 から 60 の間は、買い手の価値（需要曲線）より、社会の費用（緑の線）が高い取引です。この差でできる赤い三角形が<strong>死荷重</strong>で、面積は 0.5 × 5 × 6 = 15 です</li>
+</ul>
+<p>この図は、<code>lib/chapter15/plot.py</code> の <code>plot_externality</code> が描きます。第 7 章の課税の図と、同じ形です。外部費用と同額のピグー税で、供給曲線が緑の線に移り、均衡が黒い四角に動きます。</p>
 <h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter15
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>42 passed
+<div class="highlight"><pre><span></span><code>55 passed
 </code></pre></div>
 <h2 id="155">15.5 規則で言うと<a class="headerlink" href="#155" title="Permanent link">&para;</a></h2>
 <ol>

@@ -4818,7 +4818,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">ファイル</td>
-<td style="text-align: left;">実装: <code>lib/chapter03/schedule.py</code>／テスト: <code>test/chapter03/test_schedule.py</code>（自分で書くときは、<code>practice/chapter03/</code> に、同じ名前で作ります）</td>
+<td style="text-align: left;">実装: <code>lib/chapter03/schedule.py</code>、<code>lib/chapter03/plot.py</code>（需要表と供給表の図）／テスト: <code>test/chapter03/test_schedule.py</code>、<code>test/chapter03/test_plot.py</code>（自分で書くときは、<code>practice/chapter03/</code> に、同じ名前で作ります）</td>
 </tr>
 </tbody>
 </table>
@@ -4934,6 +4934,16 @@
 <span class="w">    </span><span class="sd">"""価格ごとの供給量を並べた供給表を返す。"""</span>
     <span class="k">return</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">quantity_supplied</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">slope</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">prices</span><span class="p">}</span>
 </code></pre></div>
+<p>需要表と供給表を、図にします。表の 1 行が、図の 1 点です。</p>
+<p><img alt="需要表と供給表の点、市場均衡" src="../images/ch03-schedules.png" /></p>
+<p>図の読み方:</p>
+<ul>
+<li>青い点が、需要表の（数量、価格）。価格が上がるほど、数量が減ります</li>
+<li>オレンジの点が、供給表の（数量、価格）。価格が上がるほど、数量が増えます</li>
+<li>2 本の線が交わる、四角で囲んだ点（数量 60、価格 20）が、需要量と供給量が等しい<strong>市場均衡</strong>です</li>
+<li>価格が 20 より低いと、同じ価格で、需要の点のほうが右（需要量が多い）にあります。これが、次の節の<strong>超過需要</strong>（品不足）です</li>
+</ul>
+<p>この図は、<code>lib/chapter03/plot.py</code> の <code>plot_schedules</code> が描きます。</p>
 <h3 id="_6">超過需要<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <p>2 つの表から、価格ごとに引き算をします。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_超過需要は需要量から供給量を引いたもの</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -4971,7 +4981,7 @@
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter03
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>7 passed
+<div class="highlight"><pre><span></span><code>11 passed
 </code></pre></div>
 <h2 id="35">3.5 規則で言うと<a class="headerlink" href="#35" title="Permanent link">&para;</a></h2>
 <ol>

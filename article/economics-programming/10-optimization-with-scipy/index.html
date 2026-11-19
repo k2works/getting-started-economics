@@ -4872,7 +4872,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">ファイル</td>
-<td style="text-align: left;">実装: <code>lib/chapter10/optimization.py</code>／テスト: <code>test/chapter10/test_optimization.py</code>（自分で書くときは、<code>practice/chapter10/</code> に、同じ名前で作ります）</td>
+<td style="text-align: left;">実装: <code>lib/chapter10/optimization.py</code>、<code>lib/chapter10/plot.py</code>（効用最大化・利潤最大化の図）／テスト: <code>test/chapter10/test_optimization.py</code>、<code>test/chapter10/test_plot.py</code>（自分で書くときは、<code>practice/chapter10/</code> に、同じ名前で作ります）</td>
 </tr>
 </tbody>
 </table>
@@ -5043,6 +5043,16 @@
     <span class="k">assert</span> <span class="n">best</span> <span class="o">&gt;</span> <span class="n">cobb_douglas_utility</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">best</span> <span class="o">&gt;</span> <span class="n">cobb_douglas_utility</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
 </code></pre></div>
+<p>効用最大化を、図にします。予算のもとで、最も満足の高い点は、どこでしょうか。</p>
+<p><img alt="予算線と無差別曲線。最適点で接する" src="../images/ch10-utility.png" /></p>
+<p>図の読み方:</p>
+<ul>
+<li>青い線が<strong>予算線</strong> 2x + 4y = 40 です。財 x だけなら 20 個、財 y だけなら 10 個買えます</li>
+<li>オレンジの曲線が<strong>無差別曲線</strong>です。この曲線の上の点は、効用が同じ（ここでは、最適点の効用）です。右上にあるほど、効用が高くなります</li>
+<li>最適点（黒い丸、x = 10、y = 5）で、無差別曲線が予算線に<strong>接します</strong>。曲線のどの点も、予算線の上か外側にあり、内側の点には、同じ効用の点がありません</li>
+<li>接するとは、2 つの傾きが等しいことです。無差別曲線の傾き（限界代替率）が、価格の比 2 ÷ 4 に等しい、という、上のテストの条件です</li>
+</ul>
+<p>この図は、<code>lib/chapter10/plot.py</code> の <code>plot_utility_maximization</code> が描きます。</p>
 <h3 id="_6">利潤最大化と操業停止点<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <p>利潤最大化の条件 P = MC を、<code>brentq</code> で解きます。ただし、限界費用は U 字型なので、P = MC を満たす q が 2 つあります。利潤が最大になるのは、限界費用が右上がりの側（q ≥ 2）です。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_価格が15のとき利潤を最大にする生産量は4</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -5096,6 +5106,15 @@
 <p>操業を停止するかどうかは、P = MC で求めた生産量で、価格が平均可変費用を下回るかどうかで決めます。価格が平均可変費用を下回れば、売るほど損が増えるので、生産しません。限界費用の最低値以下の価格のときは、解を探すまでもなく、生産しません。価格が高すぎて、探索範囲（0〜10）の上限での限界費用を超えるときは、解を探せないので、<code>ValueError</code> にします（SciPy の英語のエラーにしない）。</p>
 <p>結果は、価格 15 のとき生産量 3.9999999999996683（≈ 4）、最大利潤は 22 です。第 4 章の練習問題「価格 15、生産量 4 のとき利潤 22」と一致します。価格 6 のとき 3.0、価格 30 のとき 4.999999999999528（≈ 5）、価格 5 のときは生産しないので 0 です。</p>
 <p>価格が高いほど、生産量が増えます。マインドマップの「供給曲線は MC の右上がりの部分」が、数値で確かめられました。</p>
+<p>利潤最大化を、図にします。価格 15 のとき、企業は、どれだけ生産するでしょうか。</p>
+<p><img alt="価格 15 のときの利潤最大化。MC が価格に等しい点で、利潤の長方形ができる" src="../images/ch10-profit.png" /></p>
+<p>図の読み方:</p>
+<ul>
+<li>点線が価格（15）です。企業は、価格が限界費用（MC）に等しい点（黒い丸、生産量 4）まで、生産します。MC が価格より低い間は、1 つ作るほど利益が増えるからです</li>
+<li>緑の長方形が<strong>利潤</strong>です。高さは、価格と平均費用（AC）の差（15 − 9.5 = 5.5）、幅は生産量 4 で、面積は 22 になります（テストの値と一致します）</li>
+<li>価格が、AVC の最低点（6）を下回ると、長方形も黒い丸も描かれません。生産しないからです</li>
+</ul>
+<p>この図は、<code>lib/chapter10/plot.py</code> の <code>plot_profit_maximization</code> が描きます。第 4 章の費用曲線の図と、同じ曲線です。</p>
 <h3 id="_7">費用最小化<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>産出量 Q を作る費用 w·L + r·K を最小にします。生産関数は、効用関数と同じ形（コブ・ダグラス型）の L^0.5 · K^0.5 で、産出量が Q に等しいことが制約です。形が同じでも、効用と産出量は別のものなので、効用関数を流用せず、生産関数 <code>production</code> を別に定義しています。賃金 w = 1、資本の価格 r = 4、産出量 10 のとき、手計算では L = 10 × √(4 ÷ 1) = 20、K = 10 × √(1 ÷ 4) = 5、費用は 20 + 20 = 40 です。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_費用最小化では生産要素の価格が高い要素を少なく使う</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -5171,7 +5190,7 @@
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter10
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>20 passed
+<div class="highlight"><pre><span></span><code>29 passed
 </code></pre></div>
 <h2 id="105">10.5 規則で言うと<a class="headerlink" href="#105" title="Permanent link">&para;</a></h2>
 <ol>

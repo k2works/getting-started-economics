@@ -5135,6 +5135,16 @@
 </code></pre></div>
 <p><code>equilibrium_with_tax</code> は、新しい式を導くのではなく、<code>equilibrium</code> を呼んでいます。売り手が税を払うと、買い手の価格 P のときの売り手の受取は P − t です。式 a − bP = c + d(P − t) は、c + dP − d·t と変形できるので、<strong>供給曲線の切片を c − d·t にずらした市場の均衡</strong>と同じです。税が大きく、ずらした市場で取引が成立しないとき（税額が 100 のときなど）は、<code>equilibrium</code> が <code>NoEquilibriumError</code> にします。</p>
 <p>結果は、買い手の価格が 23（税なしより 3 上がる）、売り手の受取が 18（2 下がる）、取引量が 54（6 減る）、税収が 270、死荷重が 15 です。</p>
+<p>税の効果は、式よりも図のほうが分かりやすいので、図にします。</p>
+<p><img alt="従量税による供給曲線のずれ、税収、死荷重" src="../images/ch07-tax-wedge.png" /></p>
+<p>図の読み方:</p>
+<ul>
+<li>緑の線（Supply + tax）は、供給曲線（オレンジ）を、税額 5 だけ<strong>上にずらした</strong>線。売り手は、税の分だけ高い価格でないと売らない</li>
+<li>取引は、税なしの均衡（黒い丸、数量 60・価格 20）から、税ありの均衡（黒い四角、数量 54）に移る。買い手の価格は 23、売り手の受取は 18 で、その差が税額 5</li>
+<li>薄い緑の長方形が<strong>税収</strong>。底辺が取引量 54、高さが税額 5 で、面積は 270</li>
+<li>赤い三角形が<strong>死荷重</strong>。取引が 60 から 54 に減って、失われた余剰で、面積は 0.5 × 6 × 5 = 15</li>
+</ul>
+<p>テストでは、長方形の面積が税収（270）、三角形の面積が死荷重（15）と一致することを確かめています。この図は、<code>lib/chapter07/plot.py</code> の <code>draw_tax_wedge</code> が描きます。</p>
 <p>予想した問いの答えは、「買い手の負担が 3、売り手の負担が 2」です。税を課した側（売り手）より、買い手の方が多く負担していることに注意してください。誰に課税しても、負担の割合は同じです。需要の傾き b = 2 と供給の傾き d = 3 の比で決まり、買い手の負担割合は d ÷ (b + d) = 3 ÷ 5 = 60% です。</p>
 <p>死荷重は、税のせいで失われた取引から生まれるはずだった余剰です。次のテストで、「課税前の余剰の合計」と「課税後の余剰の合計と税収の合計」の差が、死荷重と等しいことを確かめます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_余剰の合計と税収の合計は課税前より死荷重の分だけ減る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -5216,7 +5226,7 @@ uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </sp
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter07
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>28 passed
+<div class="highlight"><pre><span></span><code>33 passed
 </code></pre></div>
 <h2 id="75">7.5 規則で言うと<a class="headerlink" href="#75" title="Permanent link">&para;</a></h2>
 <ol>

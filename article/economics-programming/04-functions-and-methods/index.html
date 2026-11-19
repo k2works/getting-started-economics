@@ -4840,7 +4840,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">ファイル</td>
-<td style="text-align: left;">実装: <code>lib/chapter04/cost.py</code>、<code>lib/chapter04/utility.py</code>／テスト: <code>test/chapter04/test_cost_and_utility.py</code>（自分で書くときは、<code>practice/chapter04/</code> に、同じ名前で作ります）</td>
+<td style="text-align: left;">実装: <code>lib/chapter04/cost.py</code>、<code>lib/chapter04/utility.py</code>、<code>lib/chapter04/plot.py</code>（費用曲線の図）／テスト: <code>test/chapter04/test_cost_and_utility.py</code>、<code>test/chapter04/test_plot.py</code>（自分で書くときは、<code>practice/chapter04/</code> に、同じ名前で作ります）</td>
 </tr>
 </tbody>
 </table>
@@ -5048,6 +5048,16 @@
 </tbody>
 </table>
 <p>q = 3 で MC と AVC が等しくなり、そこが AVC の最低点（6）です。価格がこの 6 を下回ると、企業は生産しない方が損失が小さくなります。</p>
+<p>式や表の数値だけでは、3 本の曲線の関係は見えにくいので、図にします。</p>
+<p><img alt="限界費用・平均可変費用・平均費用の曲線と操業停止点" src="../images/ch04-cost-curves.png" /></p>
+<p>図の読み方:</p>
+<ul>
+<li>青い線（MC）は、最初に下がり、q = 2 で最低（3）になり、そのあと急に上がる</li>
+<li>オレンジの線（AVC）の<strong>最低点</strong>を、青い線（MC）が下から横切る。その交点（黒い点、q = 3、価格 6）が、操業停止点</li>
+<li>緑の線（AC）は、AVC より常に上にある。固定費用の分だけ高い。MC は、AC の最低点（q ≈ 3.4）も横切る</li>
+<li>価格が 6 を下回ると、売るほど損が増えるので、生産しない。価格が 6 以上なら、MC が右上がりの部分（q ≥ 3）が、企業の供給曲線になる</li>
+</ul>
+<p>この図は、<code>lib/chapter04/plot.py</code> の <code>plot_cost_curves</code> が、第 4 章の費用関数から描きます（図の生成の方法は、第 7 章にあります）。テストでは、3 本の線の値が費用関数と同じこと、MC と AVC が q = 3 で交わることを確かめています。</p>
 <h3 id="_8">効用関数<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>効用関数も、同じ形で書きます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_コブ_ダグラス型の効用は4と9で6</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -5076,7 +5086,7 @@
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter04
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>13 passed
+<div class="highlight"><pre><span></span><code>18 passed
 </code></pre></div>
 <h2 id="45">4.5 規則で言うと<a class="headerlink" href="#45" title="Permanent link">&para;</a></h2>
 <ol>

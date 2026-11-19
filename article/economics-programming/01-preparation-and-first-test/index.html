@@ -1584,7 +1584,7 @@
   <a href="#_3" class="md-nav__link">
     <span class="md-ellipsis">
       
-        必要なもの
+        需要曲線を図で見る
       
     </span>
   </a>
@@ -1593,6 +1593,17 @@
         
           <li class="md-nav__item">
   <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        必要なもの
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         コマンドの実行のしかた
@@ -1614,7 +1625,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         サンプルコードを入手する
@@ -1625,7 +1636,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         テストが動くことを確かめる
@@ -1636,7 +1647,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         完成形と、自分のコード
@@ -1647,7 +1658,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         対話モードで試す
@@ -1686,7 +1697,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         コードの読み方（最小限）
@@ -1719,7 +1730,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         次のテストを足す
@@ -4856,7 +4867,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">ファイル</td>
-<td style="text-align: left;">実装: <code>lib/chapter01/demand.py</code>／テスト: <code>test/chapter01/test_demand.py</code>（自分で書くときは、<code>practice/chapter01/</code> に、同じ名前で作ります）</td>
+<td style="text-align: left;">実装: <code>lib/chapter01/demand.py</code>、<code>lib/chapter01/plot.py</code>（需要曲線の図）／テスト: <code>test/chapter01/test_demand.py</code>、<code>test/chapter01/test_plot.py</code>（自分で書くときは、<code>practice/chapter01/</code> に、同じ名前で作ります）</td>
 </tr>
 </tbody>
 </table>
@@ -4921,7 +4932,18 @@
 <p><strong>記号について</strong>: この記事では、需要曲線を Q = a − bP、供給曲線を Q = c + dP と書きます（第 3 章以降で使います）。ただし、a・b・c などの記号は、章によって、別の意味で使うものがあります（たとえば、第 9 章の c は、限界消費性向です）。そのときは、その章の表の下に、注記があります。一覧は、<a href="../how-to-read/#symbols">記号について</a> を参照してください。</p>
 </blockquote>
 <h2 id="12">1.2 環境を準備する<a class="headerlink" href="#12" title="Permanent link">&para;</a></h2>
-<h3 id="_3">必要なもの<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<h3 id="_3">需要曲線を図で見る<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>この章で扱う需要曲線 Q = a − bP を、図にします。a = 100、b = 2 の場合です。</p>
+<p><img alt="需要曲線とチョーク価格" src="../images/ch01-demand.png" /></p>
+<p>図の読み方:</p>
+<ul>
+<li>縦軸が価格、横軸が数量です。需要曲線は、右下がりの直線です</li>
+<li>横軸の切片（四角、数量 100）は、<strong>価格が 0 のときの需要量</strong> a です</li>
+<li>縦軸の切片（丸、価格 50）は、<strong>需要量がちょうど 0 になる価格</strong> a ÷ b（<code>choke_price</code>）です</li>
+<li>式の傾き b = 2 は、「価格が 1 上がると、需要量が 2 減る」ことです。図では、縦軸が価格なので、線の見かけの傾きは、b の逆数（−1 ÷ b = −0.5）になります。式の b と、図の傾きが逆になるので、注意してください</li>
+</ul>
+<p>この図は、<code>lib/chapter01/plot.py</code> の <code>plot_demand_curve</code> が描きます。図の生成の方法は、第 7 章にあります。</p>
+<h3 id="_4">必要なもの<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -4949,7 +4971,7 @@
 </tbody>
 </table>
 <p>Python 本体を、先に入れておく必要はありません。uv が、必要な版（Python 3.12）を、自動で用意します。初回は、ダウンロードのために、インターネットへの接続が必要で、時間がかかります。</p>
-<h3 id="_4">コマンドの実行のしかた<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<h3 id="_5">コマンドの実行のしかた<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>この本のコマンドは、コードブロックの内容を、そのままターミナルに貼り付けて、Enter キーを押して実行します。<code>$</code> や <code>&gt;</code> のようなプロンプトの記号は、書いていません。</p>
 <h3 id="uv">uv をインストールする<a class="headerlink" href="#uv" title="Permanent link">&para;</a></h3>
 <p>Windows の PowerShell では、次のコマンドを実行します。</p>
@@ -4962,22 +4984,22 @@
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>--version
 </code></pre></div>
 <p>最新のインストール方法は、公式の案内（<a href="https://docs.astral.sh/uv/getting-started/installation/">https://docs.astral.sh/uv/getting-started/installation/</a>）で確認できます。インターネット上のスクリプトを実行するコマンドなので、実行する前に、公式の案内に、同じコマンドが書かれていることを確かめてください。</p>
-<h3 id="_5">サンプルコードを入手する<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<h3 id="_6">サンプルコードを入手する<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/k2works/getting-started-economics.git
 <span class="nb">cd</span><span class="w"> </span>getting-started-economics
 </code></pre></div>
 <p>Git が無いときは、GitHub のリポジトリのページ（<a href="https://github.com/k2works/getting-started-economics">https://github.com/k2works/getting-started-economics</a>）で、「Code」ボタンから「Download ZIP」を選んで入手します。ZIP を展開したフォルダを、ターミナルで開きます（<code>cd 展開したフォルダの名前</code>）。</p>
-<h3 id="_6">テストが動くことを確かめる<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<h3 id="_7">テストが動くことを確かめる<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>サンプルコードは、リポジトリの <code>apps/economics-programming/python/</code> にあります。そこで、ライブラリを用意して、第 1 章の完成形のテストを実行します。</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter01
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>6 passed
+<div class="highlight"><pre><span></span><code>9 passed
 </code></pre></div>
-<p><code>uv sync</code> は、必要なライブラリを用意します（初回は、時間がかかります）。6 つのテストが通れば、準備は完了です。</p>
+<p><code>uv sync</code> は、必要なライブラリを用意します（初回は、時間がかかります）。9 つのテストが通れば、準備は完了です。</p>
 <p>各章のコマンドの最初の行 <code>cd apps/economics-programming/python</code> は、リポジトリの最上位（<code>getting-started-economics</code>）からの道のりです。すでにこのディレクトリにいるときは、その行を省略してください。</p>
-<h3 id="_7">完成形と、自分のコード<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h3 id="_8">完成形と、自分のコード<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>準備の確認で、テストが<strong>最初から通った</strong>のは、リポジトリに、完成した実装とテストが入っているからです。</p>
 <table>
 <thead>
@@ -5007,7 +5029,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </table>
 <p>この本の「予想する」「Red → Green → Refactor」「練習問題」は、<strong>自分で <code>practice/</code> に書いて体験する</strong>ための手順です。完成形を写すだけでは、テストを先に書く体験になりません。先に自分で考えて、書いてから、<code>lib/</code> と <code>test/</code> を開いて、答え合わせをしてください。</p>
 <p>前の章の関数を使うときは、自分で作ったもの（<code>practice.chapter01.demand</code> など）でも、用意してある完成形（<code>lib.chapter01.demand</code> など）でも、かまいません。</p>
-<h3 id="_8">対話モードで試す<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_9">対話モードで試す<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>コードを 1 行ずつ打ち込んで、結果をすぐに見る方法があります。<code>apps/economics-programming/python/</code> で、次のコマンドを実行します。</p>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>python
 </code></pre></div>
@@ -5030,7 +5052,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </ul>
 <p>3 つ目で「マイナスになる」と気づいたら、経済学の感覚が働いています。需要量は負にならないので、コードでこの場面を扱う必要があります。</p>
 <h2 id="14-red-green-refactor">1.4 Red → Green → Refactor<a class="headerlink" href="#14-red-green-refactor" title="Permanent link">&para;</a></h2>
-<h3 id="_9">コードの読み方（最小限）<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_10">コードの読み方（最小限）<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p>これから、Python のコードが出てきます。読むために、最低限の対応を、先に表にします。<strong>全部を覚える必要はありません。</strong> コードを読んでいて、分からなくなったときに、この表に戻ってきてください。詳しい説明は、表の右の章にあります。</p>
 <table>
 <thead>
@@ -5155,7 +5177,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>1 passed
 </code></pre></div>
-<h3 id="_10">次のテストを足す<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">次のテストを足す<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>予想した 2 つ目と 3 つ目の問いを、テストにします。<code>test_demand.py</code> の末尾に、次のテストを書き足します。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_価格が上がると需要量は傾きの分だけ減る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">quantity_demanded</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">80</span>
@@ -5214,7 +5236,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter01
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>6 passed
+<div class="highlight"><pre><span></span><code>9 passed
 </code></pre></div>
 <p>章ごとにテストを実行するときは、<code>uv run pytest test/chapter02</code> のように、章のディレクトリを指定します。全章分をまとめて実行するときは、ディレクトリを指定せずに <code>uv run pytest</code> とします。</p>
 <h2 id="15">1.5 規則で言うと<a class="headerlink" href="#15" title="Permanent link">&para;</a></h2>

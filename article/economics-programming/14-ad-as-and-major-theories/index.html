@@ -4812,7 +4812,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">ファイル</td>
-<td style="text-align: left;">実装: <code>lib/chapter14/adas.py</code>、<code>lib/chapter14/indicators.py</code>／テスト: <code>test/chapter14/test_adas.py</code>、<code>test/chapter14/test_indicators.py</code>（自分で書くときは、<code>practice/chapter14/</code> に、同じ名前で作ります）</td>
+<td style="text-align: left;">実装: <code>lib/chapter14/adas.py</code>、<code>lib/chapter14/indicators.py</code>、<code>lib/chapter14/plot.py</code>（AD-AS・フィリップス曲線の図）／テスト: <code>test/chapter14/test_adas.py</code>、<code>test/chapter14/test_indicators.py</code>、<code>test/chapter14/test_plot.py</code>（自分で書くときは、<code>practice/chapter14/</code> に、同じ名前で作ります）</td>
 </tr>
 </tbody>
 </table>
@@ -5054,6 +5054,16 @@
 </tbody>
 </table>
 <p>所得は変わらず、物価だけが上がります。これが、マインドマップの「古典派: 拡張政策は物価だけ上げる」です。貨幣供給を増やしたときの物価の上昇率が、貨幣供給の増加率（575 ÷ 525）と同じになるのは、後で見る貨幣数量説と同じ関係です。</p>
+<p>古典派の、拡張政策の効果を、図にします。</p>
+<p><img alt="AD-AS 分析。政府支出を増やすと、総需要曲線が右にずれ、物価だけが上がる" src="../images/ch14-adas.png" /></p>
+<p>図の読み方:</p>
+<ul>
+<li>横軸が所得 Y、縦軸が物価水準 P です。青い線が総需要（AD）です。物価が上がると、実質貨幣供給 M ÷ P が減って、所得が減るので、右下がりです</li>
+<li>オレンジの縦線が、古典派の総供給です。物価によらず、完全雇用の所得（1250）で垂直です</li>
+<li>交点（黒い丸）が、均衡で、物価 1.0、所得 1250 です</li>
+<li>政府支出を 20 増やすと、総需要曲線が右にずれます（緑）。新しい均衡（黒い四角）は、供給の縦線の上を動き、<strong>所得は 1250 のまま、物価だけが 1.0825 に上がります</strong></li>
+</ul>
+<p>この図は、<code>lib/chapter14/plot.py</code> の <code>plot_adas</code> が描きます。</p>
 <h3 id="_6">ケインズ: 右上がりの部分と垂直の部分<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <p>完全雇用所得が 1300 で、現在の経済が 1250 の近くにある（需要不足の）状況を考えます。物価が 1 下がるごとに、所得が 500 減る総供給です。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">keynesian_recession</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -5172,6 +5182,15 @@
 </code></pre></div>
 <p>自然失業率 4%、期待物価上昇率 2%、傾き 0.5 のとき、失業率が 3% なら物価上昇率は 2.5%、4% なら 2.0%（期待と同じ）、5% なら 1.5% です。短期のフィリップス曲線は右下がりで、失業率が自然失業率に等しいとき、物価上昇率は期待物価上昇率に等しい（長期は垂直）、というマインドマップの内容が、数値で見えます。</p>
 <p>需給ギャップは、実際の所得 1200、潜在所得（完全雇用所得）1250 のとき −4%（需要不足）です。オークンの法則で、失業率は 4 + 0.5 × 4 = 6% と推定されます。</p>
+<p>フィリップス曲線を、図にします。自然失業率 4%、期待物価上昇率 2%、傾き a = 0.5 の場合です。</p>
+<p><img alt="フィリップス曲線。期待物価上昇率が上がると、曲線が上にずれる" src="../images/ch14-phillips.png" /></p>
+<p>図の読み方:</p>
+<ul>
+<li>青い線が、π = 2 − 0.5 × (u − 4) です。失業率が高いほど、物価上昇率が低い、右下がりの関係です</li>
+<li>自然失業率の点（黒い丸、失業率 4%）では、物価上昇率が、期待物価上昇率（2%）に等しくなります</li>
+<li>期待物価上昇率が 3% に上がると、曲線全体が、1 だけ<strong>上にずれます</strong>（オレンジ）。同じ失業率でも、物価上昇率が高くなります</li>
+</ul>
+<p>失業率と物価上昇率の関係は、期待が変わると、変わります。この図は、<code>lib/chapter14/plot.py</code> の <code>plot_phillips_curve</code> が描きます。</p>
 <h3 id="_8">フィッシャー方程式と貨幣数量説<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_実質利子率は名目利子率からインフレ率を引いた値</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">real_interest_rate</span><span class="p">(</span><span class="n">nominal</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">inflation</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
@@ -5207,7 +5226,7 @@
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter14
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>22 passed
+<div class="highlight"><pre><span></span><code>30 passed
 </code></pre></div>
 <h2 id="145">14.5 規則で言うと<a class="headerlink" href="#145" title="Permanent link">&para;</a></h2>
 <ol>

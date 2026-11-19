@@ -1724,7 +1724,7 @@
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        所得弾力性と財の分類
+        弾力性は、需要曲線の上で場所によって変わる
       
     </span>
   </a>
@@ -1733,6 +1733,17 @@
         
           <li class="md-nav__item">
   <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        所得弾力性と財の分類
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -1760,7 +1771,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -4840,7 +4851,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">ファイル</td>
-<td style="text-align: left;">実装: <code>lib/chapter02/elasticity.py</code>／テスト: <code>test/chapter02/test_elasticity.py</code>（自分で書くときは、<code>practice/chapter02/</code> に、同じ名前で作ります）</td>
+<td style="text-align: left;">実装: <code>lib/chapter02/elasticity.py</code>、<code>lib/chapter02/plot.py</code>（弾力性の図）／テスト: <code>test/chapter02/test_elasticity.py</code>、<code>test/chapter02/test_plot.py</code>（自分で書くときは、<code>practice/chapter02/</code> に、同じ名前で作ります）</td>
 </tr>
 </tbody>
 </table>
@@ -4952,7 +4963,18 @@
             <span class="n">price_before</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">price_after</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">quantity_before</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">quantity_after</span><span class="o">=</span><span class="mi">80</span>
         <span class="p">)</span>
 </code></pre></div>
-<h3 id="_5">所得弾力性と財の分類<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<h3 id="_5">弾力性は、需要曲線の上で場所によって変わる<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>価格弾力性を、需要曲線 Q = 100 − 2P の上で、図にします。直線の傾きは一定ですが、弾力性は一定ではありません。</p>
+<p><img alt="需要曲線上の弾力的な部分と非弾力的な部分" src="../images/ch02-elasticity.png" /></p>
+<p>図の読み方:</p>
+<ul>
+<li>曲線の上の 1 点での価格弾力性は、b × P ÷ Q で表せます（変化が小さいときの値）</li>
+<li>真ん中の点（黒い丸、価格 25、数量 50）で、2 × 25 ÷ 50 = 1 になります</li>
+<li>それより<strong>価格が高い</strong>部分（青）は、弾力性が 1 より大きい（弾力的）。価格が 1% 上がると、需要量が 1% より多く減ります</li>
+<li>価格が低い部分（オレンジ）は、弾力性が 1 より小さい（非弾力的）。価格が上がっても、需要量はあまり減りません</li>
+</ul>
+<p><code>price_elasticity</code> は、2 点の間の変化率で求めます。2 点が近いほど、この図の 1 点での値に近づきます。この図は、<code>lib/chapter02/plot.py</code> の <code>plot_elasticity_regions</code> が描きます。</p>
+<h3 id="_6">所得弾力性と財の分類<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <p>所得弾力性は、符号が逆になるだけで価格弾力性とほぼ同じ形です。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">income_elasticity</span><span class="p">(</span>
     <span class="n">income_before</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -4998,11 +5020,11 @@
 <span class="w">    </span><span class="sd">"""価格弾力性が 1 より大きければ弾力的。"""</span>
     <span class="k">return</span> <span class="n">elasticity</span> <span class="o">&gt;</span> <span class="mi">1</span>
 </code></pre></div>
-<h3 id="_6">実行結果<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<h3 id="_7">実行結果<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter02
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>10 passed
+<div class="highlight"><pre><span></span><code>13 passed
 </code></pre></div>
 <h2 id="25">2.5 規則で言うと<a class="headerlink" href="#25" title="Permanent link">&para;</a></h2>
 <ol>
@@ -5033,7 +5055,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_7">このモデルが成り立たない場面<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h3 id="_8">このモデルが成り立たない場面<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>弾力性は、小さな変化を前提にした値です。価格が大きく変わる場面では、変化前を基準にするか変化後を基準にするかで、値が変わります。また、需要曲線が直線のとき、曲線上の場所によって弾力性が変わります。たとえば Q = 100 − 2P で価格が 10 のときの弾力性は 2 × 10 ÷ 80 = 0.25 ですが、価格が 40 では 2 × 40 ÷ 20 = 4 です。</p>
 <h2 id="26">2.6 練習問題<a class="headerlink" href="#26" title="Permanent link">&para;</a></h2>
 <table>

@@ -4818,7 +4818,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">ファイル</td>
-<td style="text-align: left;">実装: <code>lib/chapter05/adjustment.py</code>／テスト: <code>test/chapter05/test_adjustment.py</code>（自分で書くときは、<code>practice/chapter05/</code> に、同じ名前で作ります）</td>
+<td style="text-align: left;">実装: <code>lib/chapter05/adjustment.py</code>、<code>lib/chapter05/plot.py</code>（調整経路の図）／テスト: <code>test/chapter05/test_adjustment.py</code>、<code>test/chapter05/test_plot.py</code>（自分で書くときは、<code>practice/chapter05/</code> に、同じ名前で作ります）</td>
 </tr>
 </tbody>
 </table>
@@ -5002,6 +5002,16 @@
 </code></pre></div>
 <p><code>for</code> の繰り返しの中で、均衡に達したら <code>return</code> で途中で終わります。<code>max_iterations</code> で回数に上限を付けているのは、収束しない場合に、永久に終わらなくなるのを避けるためです。</p>
 <p>実際に動かすと、価格は 0 → 10 → 15 → 17.5 → 18.75 と近づき、27 回の調整で 19.999999850988388 になります。</p>
+<p>ワルラス調整の結果を、図にします。調整の速さ k（コードの <code>step</code>）を変えると、経路が変わります。</p>
+<p><img alt="ワルラス調整の価格の経路。調整の速さによる違い" src="../images/ch05-price-paths.png" /></p>
+<p>図の読み方:</p>
+<ul>
+<li>横軸が繰り返しの回数、縦軸が価格です。点線が均衡価格（20）です</li>
+<li><code>step = 0.1</code>（青）は、均衡に、単調に近づきます。1 回ごとに、均衡との差が半分になります</li>
+<li><code>step = 0.3</code>（オレンジ）は、1 回目で行き過ぎ（価格 30）、均衡の上下を往復しながら、近づきます</li>
+<li>均衡との差は、1 回ごとに、(1 − 5k) 倍になります。k = 0.1 では 0.5 倍、k = 0.3 では −0.5 倍です。k = 0.5 では −1.5 倍になって、差が広がり続け（発散）、<code>RuntimeError</code> になります</li>
+</ul>
+<p>この図は、<code>lib/chapter05/plot.py</code> の <code>plot_price_paths</code> が描きます。</p>
 <h3 id="_6">マーシャル調整<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <p>ワルラス調整が「価格を動かす」のに対して、マーシャル調整は「数量を動かす」方法です。需要価格（その数量で買い手が払ってよい価格）が供給価格（売り手が受け取りたい価格）より高いと、数量が増えます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">demand_price</span><span class="p">(</span><span class="n">quantity</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -5042,7 +5052,7 @@
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter05
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>11 passed
+<div class="highlight"><pre><span></span><code>14 passed
 </code></pre></div>
 <h2 id="55">5.5 規則で言うと<a class="headerlink" href="#55" title="Permanent link">&para;</a></h2>
 <ol>
