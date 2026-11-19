@@ -155,10 +155,11 @@ def test_定常状態から遠いほど近似の誤差は大きい() -> None:
     assert errors[0] < errors[1] < errors[2]
 
 
-def test_厳密な経路も定常状態に戻る() -> None:
+def test_厳密な経路は単調に減って定常状態に近づく() -> None:
     df = capital_paths(PARAMS, initial_deviation=0.5, periods=400)
-    assert df["exact"].iloc[-1] == pytest.approx(0.0, abs=1e-1)
-    assert df["exact"].iloc[-1] < df["exact"].iloc[0]
+    assert df["exact"].is_monotonic_decreasing
+    assert df["exact"].iloc[-1] > 0
+    assert df["exact"].iloc[-1] < 0.01 * df["exact"].iloc[0]
 
 
 def test_複素数の固有値でも不安定でなければ遷移行列がそのまま解() -> None:
@@ -185,3 +186,9 @@ def test_絶対値がちょうど1の固有値は不安定とは数えない() -
     policy, transition = solve_saddle_path(np.eye(1), -np.eye(1), n_state=1)
     assert policy.shape == (0, 1)
     assert transition == pytest.approx(np.eye(1))
+
+
+@pytest.mark.parametrize("n_state", [-1, 3])
+def test_状態変数の数が範囲外なら受け付けない(n_state: int) -> None:
+    with pytest.raises(ValueError, match="状態変数"):
+        solve_saddle_path(np.eye(2), -np.eye(2) * 0.5, n_state=n_state)

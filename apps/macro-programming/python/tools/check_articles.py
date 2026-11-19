@@ -13,6 +13,7 @@
 """
 
 import json
+import os
 import re
 import subprocess
 import sys
@@ -127,7 +128,9 @@ def _actual_counts() -> dict[int, int]:
     result = subprocess.run(
         [sys.executable, "-m", "pytest", "--collect-only", "-q",
          "-p", "no:cacheprovider", "test"],
-        cwd=APP_DIR, capture_output=True, text=True, encoding="utf-8", check=False,
+        cwd=APP_DIR, capture_output=True, text=True, encoding="utf-8",
+        errors="replace", check=False,
+        env={**os.environ, "PYTHONUTF8": "1"},
     )  # fmt: skip
     counts: dict[int, int] = {}
     for line in result.stdout.splitlines():

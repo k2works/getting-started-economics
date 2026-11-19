@@ -85,6 +85,8 @@ def solve_saddle_path(
     それらに直交する経路（W·x̂ = 0）が、爆発しない唯一の解。
     """
     n = a_matrix.shape[0]
+    if not 0 <= n_state <= n:
+        raise ValueError("状態変数の数は、0 以上、変数の数以下でなければならない")
     n_jump = n - n_state
     m = linear_transition(a_matrix, b_matrix)
     values, vectors = np.linalg.eig(m.T)

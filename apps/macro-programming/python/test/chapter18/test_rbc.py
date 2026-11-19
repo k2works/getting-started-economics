@@ -32,7 +32,11 @@ THIRD = RbcParameters(alpha=1 / 3)
     "kwargs",
     [
         {"alpha": 0.0},
+        {"alpha": 1.0},
+        {"beta": 0.0},
         {"beta": 1.0},
+        {"rho": -1.0},
+        {"theta": -1.0},
         {"delta": 0.0},
         {"rho": 1.0},
         {"sigma": -0.1},
@@ -296,3 +300,30 @@ def test_減耗率が1ならパラメーターとして受け付けない() -> N
 
 def test_ショックの標準偏差が0でも受け付ける() -> None:
     assert RbcParameters(sigma=0.0).sigma == 0.0
+
+
+@pytest.mark.parametrize("theta", [0.5, 2.0, 5.0])
+def test_危険回避度が1でなくても内生的労働供給の定常状態は均衡条件を満たす(
+    theta: float,
+) -> None:
+    params = RbcParameters(theta=theta)
+    ss = steady_state(params, endogenous_labour=True)
+    state = np.array([ss["a"], ss["k"], ss["c"]])
+    residual = equilibrium_equations(params, True)(state, state)
+    assert residual == pytest.approx(np.zeros(3), abs=1e-10)
+    assert (1 - ss["l"]) * ss["w"] == pytest.approx(
+        params.leisure_weight * ss["c"] ** theta
+    )
+
+
+def test_危険回避度が1でなくても余暇の重みから目標の労働時間になる() -> None:
+    base = RbcParameters(theta=2.0)
+    m = calibrate_leisure_weight(base, target_hours=1 / 3)
+    params = RbcParameters(theta=2.0, leisure_weight=m)
+    assert steady_state(params, True)["l"] == pytest.approx(1 / 3)
+
+
+@pytest.mark.parametrize("target", [0.0, 1.0, -0.1, 1.5])
+def test_目標の労働時間が0と1の間になければ受け付けない(target: float) -> None:
+    with pytest.raises(ValueError, match="労働時間"):
+        calibrate_leisure_weight(BASIC, target_hours=target)

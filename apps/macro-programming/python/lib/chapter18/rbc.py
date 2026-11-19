@@ -66,25 +66,35 @@ def _capital_labour_ratio(params: RbcParameters) -> float:
 
 
 def _steady_hours(params: RbcParameters) -> float:
-    """内生的労働供給の定常状態の労働時間 L = (1-α)·y ÷ ((1-α)·y + m·(y - δ·z))。
+    """内生的労働供給の定常状態の労働時間（労働供給の条件を、二分法で解く）。
 
-    z = K ÷ L、y = z^α（1 人当たりの産出量）。
+    z = K ÷ L、y = z^α（1 人当たりの産出量）、W = (1-α)·y、C = L·(y - δ·z)。
+    条件 (1 - L)·W = m·C^θ は、L について単調に減少するので、一意に決まる。
+    θ = 1 のときは、L = W ÷ (W + m·(y - δ·z)) の閉じた形になる。
     """
     z = _capital_labour_ratio(params)
     y = z**params.alpha
     wage = (1 - params.alpha) * y
-    return float(wage / (wage + params.leisure_weight * (y - params.delta * z)))
+    low, high = 1e-12, 1 - 1e-12
+    for _ in range(100):
+        mid = (low + high) / 2
+        consumption = mid * (y - params.delta * z)
+        if (1 - mid) * wage > params.leisure_weight * consumption**params.theta:
+            low = mid
+        else:
+            high = mid
+    return (low + high) / 2
 
 
 def calibrate_leisure_weight(params: RbcParameters, target_hours: float) -> float:
     """定常状態の労働時間が target_hours になる、余暇の重み m。"""
+    if not 0 < target_hours < 1:
+        raise ValueError("目標の労働時間は、0 と 1 の間でなければならない")
     z = _capital_labour_ratio(params)
     y = z**params.alpha
+    consumption = target_hours * (y - params.delta * z)
     return float(
-        (1 - target_hours)
-        * (1 - params.alpha)
-        * y
-        / (target_hours * (y - params.delta * z))
+        (1 - target_hours) * (1 - params.alpha) * y / consumption**params.theta
     )
 
 
