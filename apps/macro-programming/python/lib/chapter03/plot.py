@@ -9,7 +9,11 @@ from lib.chapter03.regression import fit_ols
 
 
 def plot_regression(
-    x: pd.Series, y: pd.Series, xlabel: str = "x", ylabel: str = "y"
+    x: pd.Series,
+    y: pd.Series,
+    xlabel: str = "x",
+    ylabel: str = "y",
+    label: str = "Countries",
 ) -> Figure:
     """点の散布図と、最小二乗法の回帰直線を描く。"""
     result = fit_ols(y, pd.DataFrame({"x": x}))
@@ -17,7 +21,7 @@ def plot_regression(
     line = result.coefficients["const"] + result.coefficients["x"] * ends
 
     fig, ax = plt.subplots()
-    ax.plot(x, y, "o", label="Countries")
+    ax.plot(x, y, "o", label=label)
     ax.plot(ends, line, label="OLS line")
     ax.set_xlabel(xlabel)
     ax.set_ylabel(ylabel)

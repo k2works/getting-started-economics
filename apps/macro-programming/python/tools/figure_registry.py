@@ -41,6 +41,25 @@ from lib.chapter07.ppp import (  # noqa: E402
     load_prices,
     relative_price_levels,
 )
+from lib.chapter08.plot import plot_acf, plot_series  # noqa: E402
+from lib.chapter08.stochastic import (  # noqa: E402
+    ar1_autocorrelation,
+    ar1_series,
+    autocorrelation_function,
+)
+from lib.chapter09.cycles import (  # noqa: E402
+    cycle,
+    cycle_statistics,
+    load_quarterly,
+    log_cycle,
+)
+from lib.chapter09.plot import (  # noqa: E402
+    plot_cycle,
+    plot_trend,
+    plot_volatility,
+)
+from lib.chapter10.okun_phillips import rolling_slope  # noqa: E402
+from lib.chapter10.plot import plot_rolling_slope  # noqa: E402
 
 # 記事に載せる図。名前が、画像のファイル名（名前.png）になる
 FIGURES: dict[str, Callable[[], Figure]] = {
@@ -85,6 +104,49 @@ FIGURES: dict[str, Callable[[], Figure]] = {
         np.log(relative_price_levels(load_prices())),
         xlabel="Income per capita (log)",
         ylabel="Relative price level (log)",
+    ),
+    "ch08-ar1-paths": lambda: plot_series(
+        {
+            f"rho = {rho}": ar1_series(rho, 1.0, 100, np.random.default_rng(0))
+            for rho in (0.0, 0.5, 0.95)
+        }
+    ),
+    "ch08-acf": lambda: plot_acf(
+        autocorrelation_function(
+            ar1_series(0.8, 1.0, 5000, np.random.default_rng(1)), 10
+        ),
+        [ar1_autocorrelation(0.8, lag) for lag in range(11)],
+    ),
+    "ch09-gdp-trend": lambda: plot_trend(pd.Series(load_quarterly()["gdp"])),
+    "ch09-cycles": lambda: plot_cycle(
+        pd.DataFrame(
+            {
+                name: log_cycle(pd.Series(load_quarterly()[name]))
+                for name in ("gdp", "consumption", "investment")
+            }
+        )
+    ),
+    "ch09-volatility": lambda: plot_volatility(cycle_statistics(load_quarterly())),
+    "ch10-okun": lambda: plot_regression(
+        log_cycle(pd.Series(load_quarterly()["gdp"])),
+        cycle(pd.Series(load_quarterly()["unemployment"])),
+        xlabel="GDP cycle (%)",
+        ylabel="Unemployment cycle (pp)",
+        label="Quarters",
+    ),
+    "ch10-phillips": lambda: plot_regression(
+        cycle(pd.Series(load_quarterly()["unemployment"])),
+        pd.Series(load_quarterly()["inflation"]),
+        xlabel="Unemployment cycle (pp)",
+        ylabel="Inflation (%)",
+        label="Quarters",
+    ),
+    "ch10-rolling-slope": lambda: plot_rolling_slope(
+        rolling_slope(
+            cycle(pd.Series(load_quarterly()["unemployment"])),
+            pd.Series(load_quarterly()["inflation"]),
+            window=40,
+        )
     ),
     "ch03-regression": lambda: plot_regression(
         np.log(load_countries()["k"]),

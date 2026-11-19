@@ -47,6 +47,12 @@ def test_回帰直線の傾きは最小二乗法の傾き() -> None:
     )
 
 
+def test_点の名前を指定できる() -> None:
+    x, y = data()
+    ax = plot_regression(x, y, label="Quarters").axes[0]
+    assert ax.lines[0].get_label() == "Quarters"
+
+
 def test_軸の名前を指定できる() -> None:
     x, y = data()
     ax = plot_regression(x, y, xlabel="ln k", ylabel="ln y").axes[0]
