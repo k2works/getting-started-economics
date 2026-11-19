@@ -1408,14 +1408,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../../article/economics-programming/outline/" class="md-nav__link">
+      <a href="../../article/economics-programming/how-to-read/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    執筆計画
+    この記事の読み方
   
 
     
@@ -1425,7 +1425,7 @@
     
   
   
-    <span class="md-status md-status--stable"></span>
+    <span class="md-status md-status--draft"></span>
   
 
   
@@ -5084,6 +5084,66 @@
 <td style="text-align: left;">対応済み（2026-11-19。案 A: 各章の末尾に折りたたみ）</td>
 <td style="text-align: left;">第 1〜15 章の練習問題（各 4 問、計 60 問）に、折りたたみの解答を足した（<code>mkdocs.yml</code> に <code>pymdownx.details</code> を追加し、<code>???</code> の記法で書く）。「想起」は、完成形の何を確かめるか、「生成」は、コードとテスト、「多様」「交互」は、手計算の答えと表とコードを載せた。問題文に先に見えていた答え（括弧の中の値）は、解答に移して、問題文から外した。<strong>確認:</strong> 解答の数値は、すべて、ライブラリを実行して確かめた。解答に書いたコード（関数とテスト）は、章ごとに取り出して実行し、14 章で通ることを確かめた（第 8・12 章は、テストを含まない関数・コード片で、実行時のエラーがないことを確認）。サイトのビルドは成功（警告は 8 件のまま）で、15 章すべてに、解答の折りたたみが描画される。<strong>直した誤り:</strong> 第 15 章の解答の <code>MARKET</code> が、第 7 章系と第 15 章系で別の辞書を指し得たので、明示的な引数に直した。第 3 章の「想起」の 1 行コード片は、関数の形に直した。<strong>未対応:</strong> 練習用の「最初は skip のテスト」を <code>practice/</code> に用意する案は、範囲が大きいので見送った</td>
 <td style="text-align: left;"><code>494d545</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">M8</td>
+<td style="text-align: left;">対応済み（2026-11-19）。ただし、GitHub 上での実行は未確認</td>
+<td style="text-align: left;">(1) CI の <code>uv sync</code> を <code>uv sync --locked</code> にした（<code>uv.lock</code> と <code>pyproject.toml</code> がずれたら失敗する。手元で <code>uv sync --locked</code> が通ることを確認）。(2) カバレッジ 100% を <code>--cov-fail-under=100</code> で強制した（<code>tox -e test</code> と <code>tox -e all</code>）。(3) 記事とサンプル実装のずれを検出する検査 <code>tools/check_articles.py</code> を追加した（<code>tox -e articles</code>）。記事のコード例とソースの照合（説明用の抜粋 8 件は <code>tools/article_code_excerpts.json</code> に登録）、各章の「実行結果」の件数の照合（同じ章に複数あれば、すべて）、解答のコードの実行の 3 つ。先にテスト（<code>test/tools/</code>、13 件）を書いて Red を確認してから実装した。実行は 1 回の pytest 起動にまとめ、113 秒から 9 秒にした。<strong>確認:</strong> 記事のコード例のずれ、件数のずれ、解答のコードの誤りを、わざと混ぜて、いずれも検出できることを確かめた（最初の確認で、件数のずれを検出できない不具合を見つけ、直した）。(4) <code>.github/workflows/article-docs.yml</code> を新設し、記事・マインドマップのページに関するサイトのビルドの警告とリンクの通知（WARNING / INFO）を検出するようにした（既存の <code>docs/template/</code> などの警告では失敗させない）。手元のビルドのログで、成功する場合と、わざと問題を混ぜた場合の両方を確かめた。(5) <code>python-ci.yml</code> の対象に、記事の変更を加え、記事の検査の手順を足した。<strong>未確認:</strong> GitHub 上での初回の実行（プッシュが必要）。ワークフローの構文は、actionlint（Docker の外部イメージ）の実行が許可されず、手元に YAML の解析器もなかったので、機械的な検査ができていない。<code>npm ci</code> のドライランと <code>uv sync --locked</code> は、手元で通った。</td>
+<td style="text-align: left;"><code>dad268e</code>、<code>7b7e55d</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">M7</td>
+<td style="text-align: left;">対応済み（2026-11-19）</td>
+<td style="text-align: left;">読者向けに <code>how-to-read.md</code>（「この記事の読み方」: 章の型 8 節、練習問題 4 種と解答の使い方、到達チェックの使い方、完成形の使い方、参考にした資料）を新設し、<code>mkdocs.yml</code> のナビゲーションの「執筆計画」を置き換え、索引からのリンクも付け替えた。<code>outline.md</code> は、執筆者向けの内部文書として、<code>mkdocs.yml</code> の <code>exclude_docs</code> でサイトから除外した（ビルドで、サイトに含まれないことを確認。警告は 8 件のまま、記事ページの警告もなし）。<code>outline.md</code> を実態に合わせて直した: 承認事項 4（<code>tmp/</code> と <code>py4*</code> は <code>.gitignore</code> と <code>exclude_docs</code> に追加済み）、存在しない <code>workflow.md</code> と <code>notebooks/</code> の削除と、<code>practice/</code>・<code>data/</code>・<code>tools/</code> などの追記、章の型を 6 節から実際の 8 節に、第 3 部の検証方法を架空データの方針に合わせて「手計算の値と一致する」に、開発環境の表（JupyterLab を削除し、読者が使うかの列を追加）、解答の置き場所、次のステップ。新しく「判断の記録」の節（9 件: Python のみ、ライブラリの導入順と第 8 章を標準ライブラリにしたこと、架空データ、<code>practice/</code>、Notebook を使わないこと、解答の折りたたみ、外部不経済の追加、整合の検査、参照元の除外）を足した。ADR は作成せず、その旨と理由（<code>adr/&lt;project&gt;/</code> の構成にまだ登録していない）を明記した。<code>status</code> は、記事 18 ファイルすべてを <code>draft</code> にそろえた（<code>outline.md</code> の <code>stable</code> を <code>draft</code> に変更。人による <code>verified</code> の後に、<code>stable</code> にする）。</td>
+<td style="text-align: left;"><code>e0b1237</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">M5</td>
+<td style="text-align: left;">対応済み（2026-11-19）</td>
+<td style="text-align: left;"><code>how-to-read.md</code> に「記号について」（アンカー <code>#symbols</code>）を新設した。全章に共通する記号（P・Q・q・Y）、需要・供給の係数（a・b・c・d）、<strong>章によって意味が変わる記号</strong>（a・b・c・k・r・L・C・A・n・t と T・P の 11 件。各記号の意味を、章とともに列挙）、1 つの章で使うそのほかの記号（α・w・K・m・σ・B・e・π など）の 4 つの表。意味が変わる 9 つの章（第 1・4・5・7・9・10・13・14・15 章）の「式とコードの対応」の表の下に、その章の記号の注記を足した。第 9 章は、同じ章の中で、c が「供給曲線の切片」と「限界消費性向」の 2 つの意味で出てくるので、特に明記した。索引からも、記号表へリンクした。記号の意味は、各章の表と本文から洗い出した。ビルドで、アンカー <code>#symbols</code> が解決でき、記事ページの警告もないことを確認した（警告は 8 件のまま）。記事の検査（<code>tox -e articles</code>）も OK</td>
+<td style="text-align: left;"><code>bad68f5</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">M4</td>
+<td style="text-align: left;">対応済み（2026-11-19）。ただし、GitHub 上での実行は未確認</td>
+<td style="text-align: left;">記事の図 6 点を、<code>lib/</code> の関数から生成するツール <code>tools/render_figures.py</code> を追加した（<code>uv run python -m tools.render_figures</code>）。図に描いたデータ（線の座標・棒の高さ・軸の名前）から「指紋」（ハッシュ）を作り、<code>tools/figure_fingerprints.json</code> に保存する。PNG のピクセルは、OS や版で変わるので比べず、データの指紋で、図が古くなっていないかを検査する（<code>--check</code>。<code>tox -e articles</code> と <code>tox -e all</code> に組み込み、CI も実行する）。検査は、指紋のずれ（画像が古い）、画像ファイルがない、登録されていない画像（孤立）、記事から参照されていない図、記事が参照している図が未登録、の 5 種類を検出する。孤立していた <code>ch08-dice.png</code> は削除した。第 7 章の図の保存コマンドは、保存先を <code>practice/market.png</code>（Git の管理から外れている）にして、誤ってコミットされないようにした。先にテスト（15 件、全体 275 件）を書いて Red を確認してから実装した（lint の複雑度の指摘で、関数を分けた）。<strong>確認:</strong> 生成した 6 つの PNG は、これまで手作業で作ってコミットしていた画像と、バイト単位で一致した（再現できている）。わざと混ぜて検出を確かめた: モデルの既定値の変更（第 13 章の 2 点が古いと報告）、孤立した画像、記事からの参照の削除。いずれも検出し、元に戻して OK を確認した。<code>tox -e all</code> は、275 件・カバレッジ 100%・Ruff と mypy 指摘ゼロ・記事の検査と図の検査が OK。<strong>注意:</strong> 図を変えたときは、<code>tools.render_figures</code> で再生成して、画像と指紋を一緒にコミットする。新しい図は <code>FIGURES</code> に登録する（使い方は <code>outline.md</code>）。<strong>未確認:</strong> GitHub 上での初回の実行</td>
+<td style="text-align: left;"><code>1fa4b4d</code>、<code>0583fc4</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">M6</td>
+<td style="text-align: left;">対応済み（2026-11-19）</td>
+<td style="text-align: left;">説明より先に出てきていた構文の補足を、8 つの章に足した（各章の「使う Python の機能」の行にも追記）。第 3 章: 辞書の <code>.items()</code>（メソッドの導入）、組を 2 つの変数で受け取る <code>for</code>、内包表記の <code>if</code>。第 5 章: 「読み方の補足」の表（<code>+=</code>、<code>abs</code>、<code>for _ in range(n)</code>、切り出し <code>[:3]</code>・負の添字 <code>[-1]</code>、<code>Callable[[float], float]</code>、<code>raise RuntimeError</code>）。第 6 章: <code>nonlocal</code>（なければ <code>UnboundLocalError</code> になること）。第 8 章: <code>10_000</code> の区切りと集合（<code>set</code>）。第 10 章: 「読み方の補足」の表（f 文字列、最適化の結果の属性、<code>bounds</code>、先頭が <code>_</code> の名前）。第 11 章: <code>Path(__file__)</code> の <code>.resolve()</code> と <code>.parents[2]</code>、<code>zip(..., strict=True)</code> とジェネレータ式 <code>sum(p * q for ...)</code>。第 13 章: 型ヒント <code>float | None</code>。第 15 章: <code>TypedDict</code>（なぜ使うか）、型の別名 <code>Payoffs</code>、<code>dict.fromkeys</code>、<code>all(...)</code>、2 重の内包表記。<strong>確認:</strong> 説明に使った例（<code>.items()</code>、切り出し、<code>set</code>、f 文字列、<code>zip</code>、<code>dict.fromkeys</code>、<code>nonlocal</code>、<code>parents</code> の対応）は、すべて実行して、書いた結果になることを確かめた。記事の検査（コード例・件数・解答・図）は OK、サイトのビルドも成功（警告は 8 件のまま、記事ページの問題なし）。<strong>未対応（M6 の範囲外）:</strong> 第 9 章以降の <code>@</code>（行列の積）などは、該当の章で説明済み。型ヒントの網羅的な解説はしていない</td>
+<td style="text-align: left;"><code>a6ddd2b</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">M1</td>
+<td style="text-align: left;">対応済み（2026-11-19）</td>
+<td style="text-align: left;">従量税（第 7 章）と外部不経済の最適数量（第 15 章）を、「供給曲線の切片を c − d·t にずらした <code>equilibrium</code>」に集約した。<code>equilibrium_with_tax</code> と <code>social_optimum_quantity</code> は、新しい式を持たず、<code>equilibrium</code> を呼ぶ。「ピグー税 = 外部費用と同額の税」が、コードの構造に現れる。<code>choke_price</code> を、<code>surplus</code>・<code>monopoly</code>・<code>oligopoly</code> から再利用し、逆需要曲線は <code>inverse_demand</code>（<code>surplus.py</code>）にまとめて、<code>draw_market</code> と独占で使う。第 1・7・15 章の記事を書き換えた。</td>
+<td style="text-align: left;"><code>36aef25</code>、<code>aa56cf4</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">M2</td>
+<td style="text-align: left;">対応済み（2026-11-19）</td>
+<td style="text-align: left;">傾き 0 以下は <code>check_slope</code>（第 1 章）で、意味のある <code>ValueError</code> にした（<code>choke_price</code>・<code>equilibrium</code>・<code>inverse_demand</code>・独占・寡占）。税額・外部費用が大きく取引が成立しないときは、<code>equilibrium</code> の <code>NoEquilibriumError</code> になる（外部費用 100 で死荷重 6000 を返していた問題は解消）。第 10 章は、価格・所得・産出量が 0 以下を、ソルバーに渡す前に <code>ValueError</code> にし、価格 300 は、探索範囲を超えるとして <code>ValueError</code> にした（SciPy の英語の例外を出さない）。ソルバーの収束失敗の <code>RuntimeError</code> は、ソルバーを偽物に差し替えて、テストした。</td>
+<td style="text-align: left;"><code>36aef25</code>、<code>aa56cf4</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">M3</td>
+<td style="text-align: left;">対応済み（2026-11-19）</td>
+<td style="text-align: left;">第 10 章の <code>_MC_MINIMUM_QUANTITY = 2</code>（第 4 章の係数から導いた値）を廃止し、限界費用の最低点を <code>minimize_scalar</code> で求める。操業停止点の判定は、平均可変費用の最小化と <code>_EPSILON</code> の差による分岐をやめ、P = MC の生産量で、価格が平均可変費用を下回るかで決める。生産関数は、効用関数の流用をやめて、<code>production</code> を別に定義した。第 4 章の費用関数の係数に依存する値は、第 10 章のコードに残っていない（探索範囲の上限 10 は、定数として残る）。</td>
+<td style="text-align: left;"><code>36aef25</code>、<code>aa56cf4</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">M1〜M3 の確認</td>
+<td style="text-align: left;">2026-11-19</td>
+<td style="text-align: left;">先にテストを書いて Red を確認した（収集の失敗と、検証のテスト）。全体は 292 件、カバレッジ 100%、Ruff と mypy の指摘ゼロ、記事の検査（コード例・件数・解答・図）OK。新しいロジックの変異 10 件（<code>&lt;=</code> を <code>&lt;</code> に、検証の削除、税や外部費用のずらしの符号、操業停止の判定、境界値）は、すべてテストで検出した。サイトのビルドも成功（警告 8 件のまま）。</td>
+<td style="text-align: left;">—</td>
+</tr>
+<tr>
+<td style="text-align: left;">M10</td>
+<td style="text-align: left;">対応済み（2026-11-19）</td>
+<td style="text-align: left;">第 11 章に「実際の統計で試す」を足した。内閣府・経済社会総合研究所の「四半期別 GDP 速報」の統計表一覧から、「国内総生産(支出側)及び各需要項目」の「名目暦年」と「暦年デフレーター」の 2 つの CSV を取得し、<code>lib/chapter11/sna.py</code> の <code>load_sna_expenditure</code> で、この章の表（消費・投資・政府支出・輸出・輸入・デフレーター）に直す。<strong>実物で確かめた事実:</strong> 文字コードは cp932（UTF-8 では読めない）、見出しは 7 行、年の行は <code>2020/1-12.</code>、数値は 3 桁区切りの文字列、金額の単位は 10 億円（兆円に直すには 1000 で割る）、デフレーターの基準は 2020 年 = 100。支出側の項目の合計は、公表の名目 GDP と、全年で 0.0002 兆円以内で一致した。デフレーターで実質化した成長率は、公表の実質暦年（連鎖方式）と、マイナス成長の年が同じで、差は最大 0.09 ポイントだった。テストは、公式と同じ構造の小さな CSV をテスト内で作って確かめる（8 件、変異 8 件を検出）。実統計の CSV は、改定されるので、リポジトリに入れない。生産面・分配面の列がないので、<code>real_gdp</code> などは使えないことも、記事に書いた。<strong>未確認:</strong> 統計の利用規約の条文（記事は「利用条件を確認し、出典と取得日を明記する」と書くにとどめた）。公表の回が変わると、URL とファイル名が変わる（記事に明記）</td>
+<td style="text-align: left;"><code>89d6ed6</code>、<code>12011f5</code></td>
 </tr>
 </tbody>
 </table>

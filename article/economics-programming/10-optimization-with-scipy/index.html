@@ -1421,14 +1421,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../outline/" class="md-nav__link">
+      <a href="../how-to-read/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    執筆計画
+    この記事の読み方
   
 
     
@@ -1438,7 +1438,7 @@
     
   
   
-    <span class="md-status md-status--stable"></span>
+    <span class="md-status md-status--draft"></span>
   
 
   
@@ -1928,6 +1928,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        読み方の補足
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1946,7 +1957,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         効用最大化
@@ -1957,7 +1968,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         利潤最大化と操業停止点
@@ -1968,7 +1979,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         費用最小化
@@ -1979,7 +1990,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         解がないときの扱い
@@ -1990,7 +2001,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -2018,7 +2029,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -2079,7 +2090,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -2090,7 +2101,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -4849,7 +4860,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">使う Python の機能</td>
-<td style="text-align: left;"><code>scipy.optimize</code> の <code>minimize</code>（制約付き）、<code>minimize_scalar</code>、<code>brentq</code>（解を求める）、無名関数（<code>lambda</code>）</td>
+<td style="text-align: left;"><code>scipy.optimize</code> の <code>minimize</code>（制約付き）、<code>minimize_scalar</code>、<code>brentq</code>（解を求める）、無名関数（<code>lambda</code>）、f 文字列、結果の属性（<code>.x</code>・<code>.success</code>）</td>
 </tr>
 <tr>
 <td style="text-align: left;">新しく導入するライブラリ</td>
@@ -4902,6 +4913,9 @@
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>記号について</strong>: この章の r は、資本の価格（資本を使う費用）です。第 13 章の r は、利子率で、別のものです。L は労働量（第 13 章の L は、貨幣需要）、Q は産出量（市場の数量ではありません）、m は消費者の所得（予算）、w は賃金、K は資本量です。一覧は、<a href="../how-to-read/#symbols">記号について</a> を参照してください。</p>
+</blockquote>
 <p>第 4 章で作った、費用関数と効用関数を、そのまま使います。</p>
 <h2 id="102">10.2 予想する<a class="headerlink" href="#102" title="Permanent link">&para;</a></h2>
 <p>手計算で、次の問いに答えてください。</p>
@@ -4940,8 +4954,39 @@
 <span class="n">result</span><span class="o">.</span><span class="n">x</span>    <span class="c1"># array([1., 1.])</span>
 </code></pre></div>
 <p><code>"eq"</code> は、制約の関数が 0 になる、という等式制約です。</p>
+<h3 id="_4">読み方の補足<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>この章のコードに出てくる、小さな書き方です。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">書き方</th>
+<th style="text-align: left;">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>f"利子率は {rate}% です"</code></td>
+<td style="text-align: left;">f 文字列。文字列の前に <code>f</code> を付けると、<code>{ }</code> の中の式が、値に置き換わる</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>result.x</code>・<code>result.fun</code>・<code>result.success</code>・<code>result.message</code></td>
+<td style="text-align: left;">最適化の結果。解、最小値、成功したか、メッセージ</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>bounds=[(a, b), ...]</code></td>
+<td style="text-align: left;">変数ごとの、下限と上限。<code>None</code> は、制限なし</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>_EPSILON</code> のように、先頭が <code>_</code> の名前</td>
+<td style="text-align: left;">そのファイルの中だけで使う、という約束（外から使わない）</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="n">rate</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="sa">f</span><span class="s2">"利子率は </span><span class="si">{</span><span class="n">rate</span><span class="si">}</span><span class="s2">% です"</span>   <span class="c1"># '利子率は 5% です'</span>
+</code></pre></div>
 <h2 id="104-red-green-refactor">10.4 Red → Green → Refactor<a class="headerlink" href="#104-red-green-refactor" title="Permanent link">&para;</a></h2>
-<h3 id="_4">効用最大化<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<h3 id="_5">効用最大化<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>予想した答えを、テストにします。さらに、「最適な点では、限界代替率が価格比に等しい」という経済学の性質も、テストで確かめます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_効用最大化の消費点は所得の半分ずつを使う点</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># 価格 (2, 4)、所得 40、alpha = 0.5。x* = 0.5 * 40 / 2 = 10、y* = 0.5 * 40 / 4 = 5</span>
@@ -4963,6 +5008,10 @@
     <span class="n">price_x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">price_y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">income</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""予算 price_x·x + price_y·y = income のもとで、効用を最大にする (x, y) を返す。"""</span>
+    <span class="k">if</span> <span class="n">price_x</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">price_y</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"財の価格は正でなければならない"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">income</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"所得は正でなければならない"</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span>
         <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="o">-</span><span class="n">cobb_douglas_utility</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">alpha</span><span class="p">),</span>
         <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="n">income</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">price_x</span><span class="p">),</span> <span class="n">income</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">price_y</span><span class="p">)],</span>
@@ -4994,7 +5043,7 @@
     <span class="k">assert</span> <span class="n">best</span> <span class="o">&gt;</span> <span class="n">cobb_douglas_utility</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">best</span> <span class="o">&gt;</span> <span class="n">cobb_douglas_utility</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="_5">利潤最大化と操業停止点<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<h3 id="_6">利潤最大化と操業停止点<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <p>利潤最大化の条件 P = MC を、<code>brentq</code> で解きます。ただし、限界費用は U 字型なので、P = MC を満たす q が 2 つあります。利潤が最大になるのは、限界費用が右上がりの側（q ≥ 2）です。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_価格が15のとき利潤を最大にする生産量は4</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># P = MC: 15 = 3q^2 - 12q + 15 を解くと q = 4（q = 0 は MC が右下がりの側）</span>
@@ -5015,9 +5064,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">test_価格が操業停止点の6ちょうどなら生産量は3</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">profit_maximizing_quantity</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="c1"># 限界費用が最低になる生産量。これより右では限界費用が右上がり</span>
-<span class="n">_MC_MINIMUM_QUANTITY</span> <span class="o">=</span> <span class="mi">2</span>
-<span class="c1"># 生産量を探す範囲の上限</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># 生産量を探す範囲の上限（下限は 0）</span>
 <span class="n">_MAX_QUANTITY</span> <span class="o">=</span> <span class="mi">10</span>
 <span class="c1"># 数値計算の誤差を許す幅</span>
 <span class="n">_EPSILON</span> <span class="o">=</span> <span class="mf">1e-9</span>
@@ -5026,27 +5073,31 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">profit_maximizing_quantity</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""価格 price のとき、利潤を最大にする生産量を返す。</span>
 
-<span class="sd">    価格が平均可変費用の最低値（操業停止点）を下回れば、生産しない。</span>
-<span class="sd">    そうでなければ、P = MC（限界費用が右上がりの部分）を満たす生産量を求める。</span>
+<span class="sd">    P = MC（限界費用が右上がりの部分）を満たす生産量を求める。その生産量で</span>
+<span class="sd">    価格が平均可変費用を下回るなら、操業を停止して、生産しない。</span>
+<span class="sd">    探索範囲（0〜10）の上限での限界費用より高い価格は、受け付けない。</span>
 <span class="sd">    """</span>
-    <span class="n">shutdown_price</span> <span class="o">=</span> <span class="n">minimize_scalar</span><span class="p">(</span>
-        <span class="n">average_variable_cost</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">_MAX_QUANTITY</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">"bounded"</span>
-    <span class="p">)</span><span class="o">.</span><span class="n">fun</span>
-    <span class="k">if</span> <span class="n">price</span> <span class="o">&lt;</span> <span class="n">shutdown_price</span> <span class="o">-</span> <span class="n">_EPSILON</span><span class="p">:</span>
-        <span class="k">return</span> <span class="mi">0</span>
-    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span>
-        <span class="n">brentq</span><span class="p">(</span>
-            <span class="k">lambda</span> <span class="n">q</span><span class="p">:</span> <span class="n">marginal_cost</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="o">-</span> <span class="n">price</span><span class="p">,</span>
-            <span class="n">_MC_MINIMUM_QUANTITY</span><span class="p">,</span>
-            <span class="n">_MAX_QUANTITY</span><span class="p">,</span>
-        <span class="p">)</span>
+    <span class="c1"># 限界費用が最低になる生産量。これより右では、限界費用が右上がり</span>
+    <span class="n">rising_start</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+        <span class="n">minimize_scalar</span><span class="p">(</span><span class="n">marginal_cost</span><span class="p">,</span> <span class="n">bounds</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">_MAX_QUANTITY</span><span class="p">),</span> <span class="n">method</span><span class="o">=</span><span class="s2">"bounded"</span><span class="p">)</span><span class="o">.</span><span class="n">x</span>
     <span class="p">)</span>
+    <span class="k">if</span> <span class="n">price</span> <span class="o">&lt;=</span> <span class="n">marginal_cost</span><span class="p">(</span><span class="n">rising_start</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">price</span> <span class="o">&gt;</span> <span class="n">marginal_cost</span><span class="p">(</span><span class="n">_MAX_QUANTITY</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"価格が高すぎて、生産量の探索範囲（0〜10）に解がない"</span><span class="p">)</span>
+    <span class="n">quantity</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span>
+        <span class="n">brentq</span><span class="p">(</span><span class="k">lambda</span> <span class="n">q</span><span class="p">:</span> <span class="n">marginal_cost</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="o">-</span> <span class="n">price</span><span class="p">,</span> <span class="n">rising_start</span><span class="p">,</span> <span class="n">_MAX_QUANTITY</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">price</span> <span class="o">&lt;</span> <span class="n">average_variable_cost</span><span class="p">(</span><span class="n">quantity</span><span class="p">)</span> <span class="o">-</span> <span class="n">_EPSILON</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">0</span>
+    <span class="k">return</span> <span class="n">quantity</span>
 </code></pre></div>
-<p>操業停止点の価格は、<code>minimize_scalar</code> で平均可変費用の最低値を探して求めています（結果は 6.0）。第 4 章では、q = 3 で MC と AVC が交わることを、テストで確かめました。ここでは、その値を式に書かずに、数値で探しています。</p>
-<p>結果は、価格 15 のとき生産量 3.9999999999996683（≈ 4）、最大利潤は 22 です。第 4 章の練習問題「価格 15、生産量 4 のとき利潤 22」と一致します。価格 6 のとき 2.9999999999999996（≈ 3）、価格 30 のとき 4.999999999999528（≈ 5）、価格 5 のときは生産しないので 0 です。</p>
+<p>限界費用の右上がりの部分は、限界費用が最低になる生産量から始まります。その生産量は、第 4 章の係数から手計算で求められます（q = 2）が、ここでは値を式に書かず、<code>minimize_scalar</code> で限界費用の最低点を探しています。第 4 章の費用関数を変えても、第 10 章のコードは変えずに済みます。</p>
+<p>操業を停止するかどうかは、P = MC で求めた生産量で、価格が平均可変費用を下回るかどうかで決めます。価格が平均可変費用を下回れば、売るほど損が増えるので、生産しません。限界費用の最低値以下の価格のときは、解を探すまでもなく、生産しません。価格が高すぎて、探索範囲（0〜10）の上限での限界費用を超えるときは、解を探せないので、<code>ValueError</code> にします（SciPy の英語のエラーにしない）。</p>
+<p>結果は、価格 15 のとき生産量 3.9999999999996683（≈ 4）、最大利潤は 22 です。第 4 章の練習問題「価格 15、生産量 4 のとき利潤 22」と一致します。価格 6 のとき 3.0、価格 30 のとき 4.999999999999528（≈ 5）、価格 5 のときは生産しないので 0 です。</p>
 <p>価格が高いほど、生産量が増えます。マインドマップの「供給曲線は MC の右上がりの部分」が、数値で確かめられました。</p>
-<h3 id="_6">費用最小化<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
-<p>産出量 Q を作る費用 w·L + r·K を最小にします。生産関数は、第 4 章の効用関数と同じ形の L^0.5 · K^0.5 で、産出量が Q に等しいことが制約です。賃金 w = 1、資本の価格 r = 4、産出量 10 のとき、手計算では L = 10 × √(4 ÷ 1) = 20、K = 10 × √(1 ÷ 4) = 5、費用は 20 + 20 = 40 です。</p>
+<h3 id="_7">費用最小化<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>産出量 Q を作る費用 w·L + r·K を最小にします。生産関数は、効用関数と同じ形（コブ・ダグラス型）の L^0.5 · K^0.5 で、産出量が Q に等しいことが制約です。形が同じでも、効用と産出量は別のものなので、効用関数を流用せず、生産関数 <code>production</code> を別に定義しています。賃金 w = 1、資本の価格 r = 4、産出量 10 のとき、手計算では L = 10 × √(4 ÷ 1) = 20、K = 10 × √(1 ÷ 4) = 5、費用は 20 + 20 = 40 です。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_費用最小化では生産要素の価格が高い要素を少なく使う</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># 賃金 1、資本の価格 4、産出量 10: L* = 10 * sqrt(4 / 1) = 20、K* = 10 * sqrt(1 / 4) = 5</span>
     <span class="n">labor</span><span class="p">,</span> <span class="n">capital</span><span class="p">,</span> <span class="n">cost</span> <span class="o">=</span> <span class="n">minimize_cost</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">wage</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rental</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
@@ -5057,22 +5108,40 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_費用最小化の解は目標の産出量を満たす</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">labor</span><span class="p">,</span> <span class="n">capital</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">minimize_cost</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">wage</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rental</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">cobb_douglas_utility</span><span class="p">(</span><span class="n">labor</span><span class="p">,</span> <span class="n">capital</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">production</span><span class="p">(</span><span class="n">labor</span><span class="p">,</span> <span class="n">capital</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># 生産量を探す範囲の上限（下限は 0）</span>
+<span class="n">_MAX_QUANTITY</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="c1"># 数値計算の誤差を許す幅</span>
+<span class="n">_EPSILON</span> <span class="o">=</span> <span class="mf">1e-9</span>
+<span class="c1"># 生産関数 Q = L^0.5 · K^0.5 の、労働の指数</span>
+<span class="n">_LABOR_SHARE</span> <span class="o">=</span> <span class="mf">0.5</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">production</span><span class="p">(</span><span class="n">labor</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">capital</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""生産関数 Q = L^0.5 · K^0.5（コブ・ダグラス型）。第 4 章の効用関数とは別。"""</span>
+    <span class="k">if</span> <span class="n">labor</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">capital</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"生産要素の量は 0 以上でなければならない"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">labor</span><span class="o">**</span><span class="n">_LABOR_SHARE</span> <span class="o">*</span> <span class="n">capital</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">_LABOR_SHARE</span><span class="p">))</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">minimize_cost</span><span class="p">(</span>
     <span class="n">output</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">wage</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rental</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""産出量 output を作る費用 wage·L + rental·K を最小にする (L, K, 費用) を返す。</span>
 
-<span class="sd">    生産関数は、コブ・ダグラス型 Q = L^0.5 · K^0.5（第 4 章の関数と同じ形）。</span>
+<span class="sd">    生産関数は、コブ・ダグラス型 Q = L^0.5 · K^0.5（上の `production`）。</span>
 <span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">output</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"産出量は正でなければならない"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">wage</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">rental</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"生産要素の価格は正でなければならない"</span><span class="p">)</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">minimize</span><span class="p">(</span>
         <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">wage</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">rental</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
         <span class="n">x0</span><span class="o">=</span><span class="p">[</span><span class="n">output</span><span class="p">,</span> <span class="n">output</span><span class="p">],</span>
         <span class="n">bounds</span><span class="o">=</span><span class="p">[(</span><span class="n">_EPSILON</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="p">(</span><span class="n">_EPSILON</span><span class="p">,</span> <span class="kc">None</span><span class="p">)],</span>
         <span class="n">constraints</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">"type"</span><span class="p">:</span> <span class="s2">"eq"</span><span class="p">,</span>
-            <span class="s2">"fun"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">cobb_douglas_utility</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="n">output</span><span class="p">,</span>
+            <span class="s2">"fun"</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">production</span><span class="p">(</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">-</span> <span class="n">output</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="n">method</span><span class="o">=</span><span class="s2">"SLSQP"</span><span class="p">,</span>
         <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">"ftol"</span><span class="p">:</span> <span class="mf">1e-12</span><span class="p">},</span>
@@ -5082,23 +5151,27 @@
     <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">fun</span><span class="p">)</span>
 </code></pre></div>
 <p>結果は、(19.999999881893576, 5.00000002952655, 39.99999999999977) で、手計算の (20, 5, 40) と一致します。価格が高い資本（r = 4）を少なく、安い労働（w = 1）を多く使っています。</p>
-<h3 id="_7">解がないときの扱い<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
-<p>実行可能な点がないとき（所得や産出量が負のとき）は、最適化が収束しません。その場合は、結果を返さず、<code>RuntimeError</code> にします。</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_所得が負なら効用最大化はできない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<h3 id="_8">解がないときの扱い<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>実行可能な点がない入力（所得や産出量が 0 以下、価格が 0 以下）は、ソルバーに渡す前に、<code>ValueError</code> にします。SciPy の収束の失敗に任せると、原因が分かりにくく、SciPy のバージョンで挙動も変わりうるためです。価格が高すぎて、探索範囲に解がない場合も、同じです。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_所得が0以下なら効用最大化はできない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"所得"</span><span class="p">):</span>
         <span class="n">maximize_utility</span><span class="p">(</span><span class="n">price_x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">price_y</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">income</span><span class="o">=-</span><span class="mi">40</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"所得"</span><span class="p">):</span>
+        <span class="n">maximize_utility</span><span class="p">(</span><span class="n">price_x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">price_y</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">income</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">test_産出量が負なら費用最小化はできない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_産出量が0以下なら費用最小化はできない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"産出量"</span><span class="p">):</span>
         <span class="n">minimize_cost</span><span class="p">(</span><span class="n">output</span><span class="o">=-</span><span class="mi">10</span><span class="p">,</span> <span class="n">wage</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rental</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"産出量"</span><span class="p">):</span>
+        <span class="n">minimize_cost</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">wage</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rental</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </code></pre></div>
-<p>最適化の結果が、見かけ上は数値でも、収束していないことがあります。そのため、<code>result.success</code> を、必ず確かめます。</p>
-<h3 id="_8">実行結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>入力が正しくても、最適化が収束しないことがあります。見かけ上は数値でも、収束していない結果を返さないために、<code>result.success</code> を、必ず確かめて、収束しなかったときは <code>RuntimeError</code> にします（テストでは、ソルバーを、失敗を返す偽物に差し替えて、確かめています）。</p>
+<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter10
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>13 passed
+<div class="highlight"><pre><span></span><code>20 passed
 </code></pre></div>
 <h2 id="105">10.5 規則で言うと<a class="headerlink" href="#105" title="Permanent link">&para;</a></h2>
 <ol>
@@ -5129,7 +5202,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_9">このモデルが成り立たない場面<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p>数値の最適化は、探し始める点によって、違う解（局所的な最適解）に行き着くことがあります。この章の問題は、効用関数が凹で、制約が直線なので、解が 1 つしかありません。しかし、費用関数や効用関数が複雑になると、解が複数あり、探し始める点を変えて確かめる必要があります。また、この章の SLSQP は、関数が滑らかな場合に使えます。折れ線のような関数では、別の方法が必要です。</p>
 <h2 id="106">10.6 練習問題<a class="headerlink" href="#106" title="Permanent link">&para;</a></h2>
 <table>
@@ -5221,13 +5294,13 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_10">時間を決めて書く課題<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">時間を決めて書く課題<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、次を書いてください。</p>
 <ol>
 <li>需要 Q = 120 − 2P、供給 Q = 20 + 3P の均衡を、<code>np.linalg.solve</code> で求める（10 分）</li>
 <li>所得 60、価格 (3, 2) の消費者が、U = x^0.5 · y^0.5 を最大にする点を、<code>minimize</code> で求め、手計算の (10, 15) と比べる（15 分）</li>
 </ol>
-<h3 id="_11">誤りの原因の分類<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">誤りの原因の分類<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>

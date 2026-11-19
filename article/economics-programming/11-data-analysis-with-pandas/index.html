@@ -1421,14 +1421,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../outline/" class="md-nav__link">
+      <a href="../how-to-read/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    執筆計画
+    この記事の読み方
   
 
     
@@ -1438,7 +1438,7 @@
     
   
   
-    <span class="md-status md-status--stable"></span>
+    <span class="md-status md-status--draft"></span>
   
 
   
@@ -2094,6 +2094,67 @@
   <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
+        実際の統計で試す
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="実際の統計で試す">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-csv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        取得する 2 つの CSV
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#csv" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CSV の形（読む前に確かめたこと）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        読み込む関数
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        分析する
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2119,7 +2180,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_16" class="md-nav__link">
     <span class="md-ellipsis">
       
         このデータと実際の統計の違い
@@ -4876,7 +4937,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">使う Python の機能</td>
-<td style="text-align: left;">pandas の <code>DataFrame</code> と <code>Series</code>、CSV の読み込み、列と行の選択、条件による行の抽出、<code>pytest.fixture</code></td>
+<td style="text-align: left;">pandas の <code>DataFrame</code> と <code>Series</code>、CSV の読み込み、列と行の選択、条件による行の抽出、<code>pytest.fixture</code>、<code>Path</code>、<code>zip</code>、ジェネレータ式</td>
 </tr>
 <tr>
 <td style="text-align: left;">新しく導入するライブラリ</td>
@@ -4884,17 +4945,17 @@
 </tr>
 <tr>
 <td style="text-align: left;">完成形</td>
-<td style="text-align: left;"><code>load_economy</code>、<code>production_gdp</code>、<code>income_gdp</code>、<code>expenditure_gdp</code>、<code>statistical_discrepancy</code>、<code>real_gdp</code>、<code>growth_rates</code>、<code>recession_years</code>、<code>expenditure_shares</code>、<code>laspeyres_index</code>、<code>paasche_index</code></td>
+<td style="text-align: left;"><code>load_economy</code>、<code>production_gdp</code>、<code>income_gdp</code>、<code>expenditure_gdp</code>、<code>statistical_discrepancy</code>、<code>real_gdp</code>、<code>growth_rates</code>、<code>recession_years</code>、<code>expenditure_shares</code>、<code>laspeyres_index</code>、<code>paasche_index</code>、<code>load_sna_expenditure</code>（実際の統計の読み込み）</td>
 </tr>
 <tr>
 <td style="text-align: left;">ファイル</td>
-<td style="text-align: left;">実装: <code>lib/chapter11/economy.py</code>／テスト: <code>test/chapter11/test_economy.py</code>（自分で書くときは、<code>practice/chapter11/</code> に、同じ名前で作ります）</td>
+<td style="text-align: left;">実装: <code>lib/chapter11/economy.py</code>・<code>lib/chapter11/sna.py</code>／テスト: <code>test/chapter11/test_economy.py</code>・<code>test/chapter11/test_sna.py</code>（自分で書くときは、<code>practice/chapter11/</code> に、同じ名前で作ります）</td>
 </tr>
 </tbody>
 </table>
 <h3 id="_1">この章のデータについて<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
 <p>使うデータは、<code>apps/economics-programming/python/data/economy.csv</code> にある、<strong>架空の国</strong>の 2010〜2021 年の統計です。実在の国や年の統計ではありません。構造だけを、実際の国民経済計算（生産・分配・支出の 3 面、統計上の不突合、GDP デフレーター）にそろえてあります。</p>
-<p>実際の公開統計（内閣府の国民経済計算など）で試したいときは、同じ列の形に整えれば、この章の関数がそのまま使えます（<code>apps/economics-programming/python/data/README.md</code> と練習問題を参照）。</p>
+<p>実際の公開統計（内閣府の国民経済計算）で試す手順は、11.4 節の「実際の統計で試す」にあります（取得する表、CSV の形、読み込む関数、分析の例）。<code>apps/economics-programming/python/data/README.md</code> にも、要点があります。</p>
 <h3 id="_2">経済学の式とコードの対応<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -5012,6 +5073,7 @@ year
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="s2">"year"</span><span class="p">)</span>
 </code></pre></div>
 <p><code>Path(__file__)</code> は、このファイルの場所です。そこから、<code>data</code> ディレクトリのファイルの場所を求めているので、どのディレクトリから実行しても読めます。</p>
+<p><code>.resolve()</code> は、絶対パスにします。<code>.parents[2]</code> は、2 つ上のディレクトリです（このファイルは <code>lib/chapter11/economy.py</code> なので、<code>[0]</code> が <code>lib/chapter11/</code>、<code>[1]</code> が <code>lib/</code>、<code>[2]</code> が、その上の <code>apps/economics-programming/python/</code> です）。<code>/</code> は、パスをつなぐ演算子です。</p>
 <h3 id="gdp">GDP の三面等価<a class="headerlink" href="#gdp" title="Permanent link">&para;</a></h3>
 <p>予想した値を、テストにします。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_生産面のGDPは3つの産業の付加価値の合計</span><span class="p">(</span><span class="n">economy</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -5187,12 +5249,136 @@ year
     <span class="n">base</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">q</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">base_prices</span><span class="p">,</span> <span class="n">current_quantities</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">current</span> <span class="o">/</span> <span class="n">base</span> <span class="o">*</span> <span class="mi">100</span>
 </code></pre></div>
+<p><code>zip(a, b, strict=True)</code> は、2 つの列を、先頭から順に組にします（ここでは、財ごとの価格と数量の組を作ります）。<code>strict=True</code> は、長さが違うときに、<code>ValueError</code> にします。<code>sum(p * q for p, q in zip(...))</code> は、各組の積（価格 × 数量）を、足し合わせる書き方です（内包表記に似た、ジェネレータ式です）。</p>
 <p>2 つの財の価格が 100 → 110 と 200 → 190 に変わったとき、ラスパイレス指数は 102.5、パーシェ指数は 101.0 です。値が違うのは、重みの数量が違うからです。この例では、値上がりした財 1 の数量が、基準年（10）から比較年（8）に減り、値下がりした財 2 の数量が増えた（5 → 6）ので、パーシェ指数の方が小さくなっています。</p>
-<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_12">実際の統計で試す<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<p>ここまでは、架空の国のデータでした。最後に、実際の統計（内閣府の国民経済計算）で、同じ分析を試します。</p>
+<h4 id="2-csv">取得する 2 つの CSV<a class="headerlink" href="#2-csv" title="Permanent link">&para;</a></h4>
+<p>内閣府・経済社会総合研究所の「四半期別 GDP 速報」の統計表一覧（例: <a href="https://www.esri.cao.go.jp/jp/sna/data/data_list/sokuhou/files/2026/qe261/gdemenuja.html">2026 年 1-3 月期 1 次速報</a>）から、2 つの CSV を、手元に保存します。最新の公表版は、内閣府の国民経済計算のページから、「四半期別 GDP 速報」の最新の統計表一覧をたどって探します。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">表</th>
+<th style="text-align: left;">統計表一覧での場所</th>
+<th style="text-align: left;">ファイル名（2026 年 1-3 月期 1 次速報の例）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">名目 GDP と支出の各項目</td>
+<td style="text-align: left;">「国内総生産(支出側)及び各需要項目」の「実額」の「名目暦年」</td>
+<td style="text-align: left;"><code>gaku-mcy2611.csv</code></td>
+</tr>
+<tr>
+<td style="text-align: left;">GDP デフレーター</td>
+<td style="text-align: left;">同じ表の「デフレーター」の「暦年デフレーター」</td>
+<td style="text-align: left;"><code>def-cy2611.csv</code></td>
+</tr>
+</tbody>
+</table>
+<p>ファイル名の末尾の数字は、公表の回を表すので、回ごとに変わります。統計は、後から改定されるので、ファイルを取得した日と、公表の回を、記録しておきます。</p>
+<h4 id="csv">CSV の形（読む前に確かめたこと）<a class="headerlink" href="#csv" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">項目</th>
+<th style="text-align: left;">内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">文字コード</td>
+<td style="text-align: left;">cp932（Shift_JIS 系）。UTF-8 では、読めずに文字化けする</td>
+</tr>
+<tr>
+<td style="text-align: left;">先頭</td>
+<td style="text-align: left;">見出しが 7 行ある。数値は、8 行目から始まる</td>
+</tr>
+<tr>
+<td style="text-align: left;">年の行</td>
+<td style="text-align: left;"><code>2020/1-12.</code> の形。末尾に、注記などの行がある</td>
+</tr>
+<tr>
+<td style="text-align: left;">数値</td>
+<td style="text-align: left;">3 桁区切り（<code>"521,675.1"</code>）。文字列として入っている</td>
+</tr>
+<tr>
+<td style="text-align: left;">金額の単位</td>
+<td style="text-align: left;">10 億円。この章の表は兆円なので、1000 で割る</td>
+</tr>
+<tr>
+<td style="text-align: left;">デフレーターの基準</td>
+<td style="text-align: left;">2020 年 = 100（この章の架空のデータは、2015 年 = 100）</td>
+</tr>
+<tr>
+<td style="text-align: left;">支出の項目</td>
+<td style="text-align: left;">民間最終消費支出、民間住宅、民間企業設備、民間在庫変動、政府最終消費支出、公的固定資本形成、公的在庫変動、輸出、輸入が、別の列にある</td>
+</tr>
+</tbody>
+</table>
+<h4 id="_13">読み込む関数<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h4>
+<p>この章の表（<code>consumption</code>・<code>investment</code>・<code>government</code>・<code>exports</code>・<code>imports</code>・<code>deflator</code>）の形に直す関数を、<code>lib/chapter11/sna.py</code> に作りました。投資は、民間住宅・民間企業設備・民間在庫変動・公的固定資本形成・公的在庫変動の合計です。年の行だけを取り出して、見出しや注記は読み飛ばします。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_read_calendar_years</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""「2020/1-12.」の形の行だけを、年ごとに取り出す（見出しや注記は読み飛ばす）。"""</span>
+    <span class="n">rows</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">with</span> <span class="n">path</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="n">ENCODING</span><span class="p">,</span> <span class="n">newline</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">file</span><span class="p">):</span>
+            <span class="n">match</span> <span class="o">=</span> <span class="n">_YEAR_ROW</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">row</span> <span class="k">else</span> <span class="kc">None</span>
+            <span class="k">if</span> <span class="n">match</span><span class="p">:</span>
+                <span class="n">rows</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">))]</span> <span class="o">=</span> <span class="n">row</span>
+    <span class="k">return</span> <span class="n">rows</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">load_sna_expenditure</span><span class="p">(</span><span class="n">nominal_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">deflator_path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""支出側の名目 GDP の CSV と、デフレーターの CSV から、この章の表を作る。</span>
+
+<span class="sd">    列は、consumption・investment・government・exports・imports（兆円）と</span>
+<span class="sd">    deflator（GDP デフレーター。基準年は、CSV に書かれた年で 100）。</span>
+<span class="sd">    投資には、在庫と公的固定資本形成も含める。</span>
+<span class="sd">    """</span>
+    <span class="n">nominal</span> <span class="o">=</span> <span class="n">_read_calendar_years</span><span class="p">(</span><span class="n">nominal_path</span><span class="p">)</span>
+    <span class="n">deflator</span> <span class="o">=</span> <span class="n">_read_calendar_years</span><span class="p">(</span><span class="n">deflator_path</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">nominal</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="o">!=</span> <span class="n">deflator</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"名目 GDP とデフレーターの CSV で、年がそろっていない"</span><span class="p">)</span>
+    <span class="n">records</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">year</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"consumption"</span><span class="p">:</span> <span class="n">_number</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">_PRIVATE_CONSUMPTION</span><span class="p">)</span> <span class="o">/</span> <span class="n">_UNIT</span><span class="p">,</span>
+            <span class="s2">"investment"</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">_number</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">_INVESTMENT_COLUMNS</span><span class="p">)</span> <span class="o">/</span> <span class="n">_UNIT</span><span class="p">,</span>
+            <span class="s2">"government"</span><span class="p">:</span> <span class="n">_number</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">_GOVERNMENT_CONSUMPTION</span><span class="p">)</span> <span class="o">/</span> <span class="n">_UNIT</span><span class="p">,</span>
+            <span class="s2">"exports"</span><span class="p">:</span> <span class="n">_number</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">_EXPORTS</span><span class="p">)</span> <span class="o">/</span> <span class="n">_UNIT</span><span class="p">,</span>
+            <span class="s2">"imports"</span><span class="p">:</span> <span class="n">_number</span><span class="p">(</span><span class="n">row</span><span class="p">,</span> <span class="n">_IMPORTS</span><span class="p">)</span> <span class="o">/</span> <span class="n">_UNIT</span><span class="p">,</span>
+            <span class="s2">"deflator"</span><span class="p">:</span> <span class="n">_number</span><span class="p">(</span><span class="n">deflator</span><span class="p">[</span><span class="n">year</span><span class="p">],</span> <span class="n">_GDP</span><span class="p">),</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">year</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">nominal</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">records</span><span class="p">,</span> <span class="n">orient</span><span class="o">=</span><span class="s2">"index"</span><span class="p">)</span>
+</code></pre></div>
+<p>テストは、公式の CSV と同じ構造（cp932、見出し 7 行、3 桁区切り）の小さなファイルを、テストの中で作って、確かめています。単位の変換、投資の合計、支出面の合計が公表の GDP と一致すること、注記の行を読み飛ばすこと、2 つのファイルで年がそろわないときのエラーです。</p>
+<h4 id="_14">分析する<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h4>
+<p>読み込んだ表は、この章の関数に渡せます。ただし、この表には、生産面と分配面の列がありません。そのため、生産面の GDP を使う <code>real_gdp</code> や <code>expenditure_shares</code> は使えず、支出面の GDP（<code>expenditure_gdp</code>）で、同じ計算をします。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter11.economy</span><span class="w"> </span><span class="kn">import</span> <span class="n">expenditure_gdp</span><span class="p">,</span> <span class="n">growth_rates</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter11.sna</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_sna_expenditure</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">load_sna_expenditure</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="s2">"gaku-mcy2611.csv"</span><span class="p">),</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"def-cy2611.csv"</span><span class="p">))</span>
+<span class="n">real</span> <span class="o">=</span> <span class="n">expenditure_gdp</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">/</span> <span class="n">df</span><span class="p">[</span><span class="s2">"deflator"</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="n">growth</span> <span class="o">=</span> <span class="n">growth_rates</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
+<span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">year</span><span class="p">)</span> <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">growth</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="n">growth</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">]]</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>[1998, 1999, 2008, 2009, 2011, 2019, 2020, 2024]
+</code></pre></div>
+<p>これは、2026 年 5 月 19 日に公表された 1 次速報の値での結果です（公表の回が変わると、値も変わりえます）。バブル崩壊後の 1998・1999 年、リーマン・ショックの 2008・2009 年、東日本大震災の 2011 年、コロナ禍の 2020 年が、並んでいます。</p>
+<p>確かめたこと:</p>
+<ul>
+<li>読み込んだ表の <code>expenditure_gdp</code> は、公表の名目 GDP と、全年で 0.0002 兆円以内で一致しました（四捨五入の差）</li>
+<li>同じ統計表一覧の「実質暦年」（連鎖方式の実質 GDP）の成長率と比べると、マイナス成長の年は同じで、成長率の差は、最大でも 0.09 ポイントでした</li>
+</ul>
+<p>名目 GDP をデフレーターで割る方法は、この章で学んだ、簡単な実質化です。公表の実質 GDP は、連鎖方式で、基準年を毎年取り替えながら計算するので、完全には一致しません。</p>
+<h3 id="_15">実行結果<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter11
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>18 passed
+<div class="highlight"><pre><span></span><code>26 passed
 </code></pre></div>
 <h2 id="115">11.5 規則で言うと<a class="headerlink" href="#115" title="Permanent link">&para;</a></h2>
 <ol>
@@ -5227,7 +5413,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_13">このデータと実際の統計の違い<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_16">このデータと実際の統計の違い<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <p>この章のデータは、生産面と分配面が全年で一致します。実際の統計は、そうではありません。分配面にも、別の資料の誤差が入ります。また、この章の GDP デフレーターは、1 つの数ですが、実際には、財・サービスの種類ごとに、別々のデフレーターを使って、実質化します。さらに、実際の統計は、後から改訂されます。同じ年の値が、公表のたびに変わることがあるので、分析の日付と、データの取得日を、記録しておく必要があります。</p>
 <h2 id="116">11.6 練習問題<a class="headerlink" href="#116" title="Permanent link">&para;</a></h2>
 <table>

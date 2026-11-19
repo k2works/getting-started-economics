@@ -1421,14 +1421,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../outline/" class="md-nav__link">
+      <a href="../how-to-read/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    執筆計画
+    この記事の読み方
   
 
     
@@ -1438,7 +1438,7 @@
     
   
   
-    <span class="md-status md-status--stable"></span>
+    <span class="md-status md-status--draft"></span>
   
 
   
@@ -4832,7 +4832,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">使う Python の機能</td>
-<td style="text-align: left;">データクラスの既定値と検証（<code>__post_init__</code>）、<code>dataclasses.replace</code>、<code>np.linalg.solve</code>、図の重ね描き</td>
+<td style="text-align: left;">データクラスの既定値と検証（<code>__post_init__</code>）、<code>float | None</code> の型ヒント、<code>dataclasses.replace</code>、<code>np.linalg.solve</code>、図の重ね描き</td>
 </tr>
 <tr>
 <td style="text-align: left;">完成形</td>
@@ -4887,6 +4887,9 @@
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>記号について</strong>: この章では、第 1〜7 章の記号と、別の意味になるものが多くあります。c は<strong>限界消費性向</strong>（供給曲線の切片ではない）、b は投資の利子率感応度（需要曲線の傾きではない）、k は貨幣需要の所得感応度（第 5 章の調整の速さとは別）、r は利子率（第 10 章の資本の価格とは別）、L は貨幣需要（第 10 章の労働量とは別）、P は物価水準（個別の財の価格ではない）です。A は、利子率にも所得にも依存しない支出（A = C0 − cT + I0 + G）、T は定額税、M は貨幣供給、h は貨幣需要の利子率感応度です。一覧は、<a href="../how-to-read/#symbols">記号について</a> を参照してください。</p>
+</blockquote>
 <p>本書の標準のモデルは、C0 = 100、c = 0.8、T = 50、I0 = 140、b = 10、G = 100、M ÷ P = 525、k = 0.5、h = 20 です。このとき、IS 曲線は 0.2Y + 10r = 300、LM 曲線は 0.5Y − 20r = 525 です。</p>
 <h2 id="132">13.2 予想する<a class="headerlink" href="#132" title="Permanent link">&para;</a></h2>
 <p>標準のモデルについて、紙に、次のことを書いてください。</p>
@@ -4929,6 +4932,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"物価水準は正でなければならない"</span><span class="p">)</span>
 </code></pre></div>
 <p><code>__post_init__</code> は、データクラスが作られた直後に呼ばれる、検証のための場所です。経済学で意味のない係数（限界消費性向が 1 以上など）では、モデルを作れないようにします。</p>
+<p><code>interest_floor: float | None = None</code> の <code>float | None</code> は、「小数、または <code>None</code>（値がない）」という型ヒントです。利子率に下限がないときは、<code>None</code> にします。</p>
 <h3 id="_3">政策を試す<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
 <p>政策は、「係数を 1 つだけ変えたモデル」を作ることで表します。</p>
 <div class="highlight"><pre><span></span><code><span class="n">IsLmModel</span><span class="p">(</span><span class="n">government</span><span class="o">=</span><span class="mi">120</span><span class="p">)</span>             <span class="c1"># 標準のモデルの政府支出だけを 120 にする</span>

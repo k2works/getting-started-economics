@@ -1421,14 +1421,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../outline/" class="md-nav__link">
+      <a href="../how-to-read/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    執筆計画
+    この記事の読み方
   
 
     
@@ -1438,7 +1438,7 @@
     
   
   
-    <span class="md-status md-status--stable"></span>
+    <span class="md-status md-status--draft"></span>
   
 
   
@@ -4871,7 +4871,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">使う Python の機能</td>
-<td style="text-align: left;"><code>import</code>、モジュールとパッケージ、例外（<code>raise</code>・独自の例外）、クロージャ、アルゴリズム</td>
+<td style="text-align: left;"><code>import</code>、モジュールとパッケージ、例外（<code>raise</code>・独自の例外）、クロージャ（<code>nonlocal</code>）、アルゴリズム</td>
 </tr>
 <tr>
 <td style="text-align: left;">完成形</td>
@@ -5107,6 +5107,7 @@
     <span class="k">assert</span> <span class="n">calls</span> <span class="o">==</span> <span class="mi">2</span> <span class="o">+</span> <span class="mi">37</span>
 </code></pre></div>
 <p>超過需要の関数を、呼び出した回数を数える関数で包んで、評価の回数も、テストで固定します（両端の確認で 2 回、反復で 37 回）。</p>
+<p><code>def counting</code> の中の <code>nonlocal calls</code> は、外側の関数の変数 <code>calls</code> を、内側の関数から書き換える、という宣言です。<code>nonlocal</code> がないと、<code>calls += 1</code> は、内側だけの新しい変数を作ろうとして、エラー（<code>UnboundLocalError</code>）になります。</p>
 <p>端点がちょうど均衡のときも、テストで確かめています。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_区間の下端がちょうど均衡ならその価格を返す</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">excess</span> <span class="o">=</span> <span class="n">make_excess_demand</span><span class="p">(</span>

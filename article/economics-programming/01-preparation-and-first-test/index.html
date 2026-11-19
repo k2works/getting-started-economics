@@ -13,7 +13,7 @@
       
       
       
-        <link rel="prev" href="../outline/">
+        <link rel="prev" href="../how-to-read/">
       
       
         <link rel="next" href="../02-data-types-and-variables/">
@@ -1421,14 +1421,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../outline/" class="md-nav__link">
+      <a href="../how-to-read/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    執筆計画
+    この記事の読み方
   
 
     
@@ -1438,7 +1438,7 @@
     
   
   
-    <span class="md-status md-status--stable"></span>
+    <span class="md-status md-status--draft"></span>
   
 
   
@@ -4852,7 +4852,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">完成形</td>
-<td style="text-align: left;">価格を入れると需要量を返す <code>quantity_demanded</code> 関数と、5 つのテスト</td>
+<td style="text-align: left;">価格を入れると需要量を返す <code>quantity_demanded</code> 関数と、6 つのテスト</td>
 </tr>
 <tr>
 <td style="text-align: left;">ファイル</td>
@@ -4917,6 +4917,9 @@
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>記号について</strong>: この記事では、需要曲線を Q = a − bP、供給曲線を Q = c + dP と書きます（第 3 章以降で使います）。ただし、a・b・c などの記号は、章によって、別の意味で使うものがあります（たとえば、第 9 章の c は、限界消費性向です）。そのときは、その章の表の下に、注記があります。一覧は、<a href="../how-to-read/#symbols">記号について</a> を参照してください。</p>
+</blockquote>
 <h2 id="12">1.2 環境を準備する<a class="headerlink" href="#12" title="Permanent link">&para;</a></h2>
 <h3 id="_3">必要なもの<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
 <table>
@@ -4970,9 +4973,9 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter01
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>5 passed
+<div class="highlight"><pre><span></span><code>6 passed
 </code></pre></div>
-<p><code>uv sync</code> は、必要なライブラリを用意します（初回は、時間がかかります）。5 つのテストが通れば、準備は完了です。</p>
+<p><code>uv sync</code> は、必要なライブラリを用意します（初回は、時間がかかります）。6 つのテストが通れば、準備は完了です。</p>
 <p>各章のコマンドの最初の行 <code>cd apps/economics-programming/python</code> は、リポジトリの最上位（<code>getting-started-economics</code>）からの道のりです。すでにこのディレクトリにいるときは、その行を省略してください。</p>
 <h3 id="_7">完成形と、自分のコード<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>準備の確認で、テストが<strong>最初から通った</strong>のは、リポジトリに、完成した実装とテストが入っているからです。</p>
@@ -5179,24 +5182,39 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">intercept</span> <span class="o">-</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">price</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">check_slope</span><span class="p">(</span><span class="n">slope</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"傾き"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""曲線の傾きが正であることを確かめる。0 以下では、ゼロ除算や右上がりになる。"""</span>
+    <span class="k">if</span> <span class="n">slope</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">は正でなければならない"</span><span class="p">)</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">choke_price</span><span class="p">(</span><span class="n">intercept</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">slope</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""需要量がちょうど 0 になる価格 P = a / b を返す。"""</span>
+    <span class="n">check_slope</span><span class="p">(</span><span class="n">slope</span><span class="p">,</span> <span class="s2">"需要曲線の傾き"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">intercept</span> <span class="o">/</span> <span class="n">slope</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_需要が0になる最低の価格を求める</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">choke_price</span><span class="p">(</span><span class="n">intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="mi">50</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_傾きが0以下ではチョーク価格を求められない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"傾き"</span><span class="p">):</span>
+        <span class="n">choke_price</span><span class="p">(</span><span class="n">intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"傾き"</span><span class="p">):</span>
+        <span class="n">choke_price</span><span class="p">(</span><span class="n">intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">slope</span><span class="o">=-</span><span class="mi">2</span><span class="p">)</span>
 </code></pre></div>
+<p>傾き b が 0 のままだと、<code>intercept / slope</code> はゼロで割ることになり、Python の <code>ZeroDivisionError</code> が出ます。経済学の意味からも、需要曲線の傾きは正でなければ（価格が上がると需要量が減る）なりません。そこで、傾きを確かめる <code>check_slope</code> を作り、<code>choke_price</code> の最初で呼んで、意味のあるエラーメッセージにしています。この <code>check_slope</code> は、第 7 章以降の関数でも使い回します。</p>
 <p>テストの追加では、<code>test_demand.py</code> の <code>import</code> の行を、<code>from practice.chapter01.demand import choke_price, quantity_demanded</code> に書き換えます。また、<code>ValueError</code> のテストで使う <code>pytest</code> を、この <code>import</code> で読み込んでいます。</p>
-<p>自分のコードで、テストを実行します。5 つのテストがすべて通ります。</p>
+<p>自分のコードで、テストを実行します。6 つのテストがすべて通ります。</p>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>practice/chapter01
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>5 passed
+<div class="highlight"><pre><span></span><code>6 passed
 </code></pre></div>
 <p>最後に、答え合わせをします。<code>lib/chapter01/demand.py</code> を開いて、自分の実装と見比べてください。完成形のテストも、実行できます。</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter01
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>5 passed
+<div class="highlight"><pre><span></span><code>6 passed
 </code></pre></div>
 <p>章ごとにテストを実行するときは、<code>uv run pytest test/chapter02</code> のように、章のディレクトリを指定します。全章分をまとめて実行するときは、ディレクトリを指定せずに <code>uv run pytest</code> とします。</p>
 <h2 id="15">1.5 規則で言うと<a class="headerlink" href="#15" title="Permanent link">&para;</a></h2>
@@ -5244,7 +5262,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 <tr>
 <td style="text-align: left;">多様</td>
-<td style="text-align: left;"><code>intercept=100, slope=2</code> を <code>intercept=50, slope=5</code> に変えて、5 つのテストの期待値を手計算で作り直してください</td>
+<td style="text-align: left;"><code>intercept=100, slope=2</code> を <code>intercept=50, slope=5</code> に変えて、6 つのテストの期待値を手計算で作り直してください</td>
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>

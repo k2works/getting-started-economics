@@ -1421,14 +1421,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../outline/" class="md-nav__link">
+      <a href="../how-to-read/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    執筆計画
+    この記事の読み方
   
 
     
@@ -1438,7 +1438,7 @@
     
   
   
-    <span class="md-status md-status--stable"></span>
+    <span class="md-status md-status--draft"></span>
   
 
   
@@ -4810,7 +4810,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">使う Python の機能</td>
-<td style="text-align: left;">リスト、辞書、内包表記、<code>in</code>、<code>Mapping</code> の型ヒント</td>
+<td style="text-align: left;">リスト、辞書（<code>.items()</code>）、内包表記（<code>if</code> つき）、<code>in</code>、<code>Mapping</code> の型ヒント</td>
 </tr>
 <tr>
 <td style="text-align: left;">完成形</td>
@@ -4875,10 +4875,20 @@
 <span class="n">demand</span><span class="p">[</span><span class="mi">20</span><span class="p">]</span>      <span class="c1"># 60</span>
 <span class="mi">20</span> <span class="ow">in</span> <span class="n">demand</span>    <span class="c1"># True   キー 20 があるか</span>
 </code></pre></div>
+<p>辞書の「キーと値の組」を、順に取り出すには、<code>.items()</code> を使います。<code>.items()</code> のように、値の後ろに <code>.名前()</code> を付けて呼び出すものを、メソッドと呼びます（第 4 章で詳しく説明します）。</p>
+<div class="highlight"><pre><span></span><code><span class="n">demand</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>   <span class="c1"># dict_items([(0, 100), (10, 80), (20, 60), (30, 40)])</span>
+
+<span class="k">for</span> <span class="n">price</span><span class="p">,</span> <span class="n">quantity</span> <span class="ow">in</span> <span class="n">demand</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="n">quantity</span><span class="p">)</span>   <span class="c1"># 0 100、10 80、20 60、30 40 の順に表示される</span>
+</code></pre></div>
+<p><code>for price, quantity in ...</code> は、組を、2 つの変数に分けて受け取ります。</p>
 <h3 id="_4">内包表記<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
 <p>リストや辞書を、1 行で作る書き方です。繰り返しの値から、新しい辞書を作ります。</p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="mi">100</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">]}</span>
 <span class="c1"># {0: 100, 10: 80, 20: 60, 30: 40}</span>
+</code></pre></div>
+<p>内包表記の最後に <code>if 条件</code> を付けると、条件が成り立つ要素だけが入ります。</p>
+<div class="highlight"><pre><span></span><code><span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">demand</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">q</span> <span class="o">&gt;</span> <span class="mi">50</span><span class="p">]</span>   <span class="c1"># [0, 10, 20]   需要量が 50 より大きい価格だけ</span>
 </code></pre></div>
 <h2 id="34-red-green-refactor">3.4 Red → Green → Refactor<a class="headerlink" href="#34-red-green-refactor" title="Permanent link">&para;</a></h2>
 <h3 id="red">Red: 供給量のテスト<a class="headerlink" href="#red" title="Permanent link">&para;</a></h3>

@@ -1421,14 +1421,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../outline/" class="md-nav__link">
+      <a href="../how-to-read/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    執筆計画
+    この記事の読み方
   
 
     
@@ -1438,7 +1438,7 @@
     
   
   
-    <span class="md-status md-status--stable"></span>
+    <span class="md-status md-status--draft"></span>
   
 
   
@@ -1847,6 +1847,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        数の書き方と集合
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1865,7 +1876,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         需要のばらつき
@@ -1876,7 +1887,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         大数の法則
@@ -1887,7 +1898,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         中心極限定理
@@ -1898,7 +1909,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         ヒストグラム
@@ -1909,7 +1920,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -1937,7 +1948,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -4867,8 +4878,14 @@
 <span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>    <span class="c1"># 6</span>
 <span class="n">statistics</span><span class="o">.</span><span class="n">stdev</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>   <span class="c1"># 2.0  標本標準偏差</span>
 </code></pre></div>
+<h3 id="_4">数の書き方と集合<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="mi">10_000</span>                  <span class="c1"># 10000 と同じ。桁の多い数を読みやすくする区切り（_）</span>
+<span class="nb">set</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>       <span class="c1"># {1, 2, 3}   重複を除いた集まり（集合）</span>
+<span class="p">{</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">}</span> <span class="o">==</span> <span class="p">{</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">}</span>  <span class="c1"># True        集合は、順序を区別しない</span>
+</code></pre></div>
+<p>テストでは、サイコロを 1000 回振って、「1 から 6 のすべての目が出た」ことを、<code>set(rolls) == {1, 2, 3, 4, 5, 6}</code> で確かめます。</p>
 <h2 id="84-red-green-refactor">8.4 Red → Green → Refactor<a class="headerlink" href="#84-red-green-refactor" title="Permanent link">&para;</a></h2>
-<h3 id="_4">需要のばらつき<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<h3 id="_5">需要のばらつき<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>乱数のテストは、「同じ種なら同じ結果になる」ことと、「ばらつきを 0 にすれば決まった値になる」ことから始めます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_同じ種なら同じ乱数列になる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">first</span> <span class="o">=</span> <span class="n">simulate_demand</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
@@ -4899,7 +4916,7 @@
     <span class="k">return</span> <span class="p">[</span><span class="n">expected</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">gauss</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">sigma</span><span class="p">)</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">)]</span>
 </code></pre></div>
 <p>第 1 章の <code>quantity_demanded</code> を再利用しています。種 0 のとき、最初の 3 個の観測値は 89.417、66.034、73.203 です。80 を中心にばらついています。</p>
-<h3 id="_5">大数の法則<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<h3 id="_6">大数の法則<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <p>観測値を 1 個ずつ増やしながら、その時点までの平均（累積平均）を求めます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_累積平均は1個目なら観測値そのもの</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">running_means</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
@@ -4954,7 +4971,7 @@
 </table>
 <p>差は、観測値の個数が増えるにつれて小さくなります。この表では差が単調に小さくなっていますが、いつもそうなるとは限りません。種を変えると、途中で差が一時的に大きくなることもあります。また、1,000 個のときの平均は、80 を上回っています。平均は、80 の上下を行き来しながら近づきます。</p>
 <p>テストの許容誤差 0.5 は、理由があって決めています。10,000 個の平均の標準誤差は 10 ÷ √10,000 = 0.1 なので、0.5 は 5 倍です。種を固定していても、種を変えたときに、まれにしか失敗しない幅にしています。</p>
-<h3 id="_6">中心極限定理<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<h3 id="_7">中心極限定理<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>サイコロを振って平均を求める試行を、何度も繰り返します。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_サイコロの目は1から6</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">rolls</span> <span class="o">=</span> <span class="n">roll_dice</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
@@ -5008,7 +5025,7 @@
 </tbody>
 </table>
 <p>標本平均の標準偏差は、サイコロ 1 回の標準偏差の約 5.5 分の 1（√30）です。</p>
-<h3 id="_7">ヒストグラム<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h3 id="_8">ヒストグラム<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>観測値の分布は、ヒストグラムで見ます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_ヒストグラムの棒の高さの合計は観測値の個数</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">values</span> <span class="o">=</span> <span class="n">sample_means</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
@@ -5028,7 +5045,7 @@
 </code></pre></div>
 <p>サイコロ 1 回の目は 1〜6 が同じ確率（一様分布）なのに、30 回の平均を 1,000 回集めた分布は、3.5 を中心にした釣り鐘の形になります。</p>
 <p><img alt="標本平均のヒストグラム（サイコロ 30 回の平均を 1,000 回）" src="../images/ch08-sample-means.png" /></p>
-<h3 id="_8">実行結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
@@ -5063,7 +5080,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_9">このモデルが成り立たない場面<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p>シミュレーションは、観測値が独立で、同じ分布に従う前提です。需要は、前の日の需要に影響されることがあり、その場合、観測値が増えても、平均がこの章の式の速さでは安定しません。また、この章の需要は、<code>max</code> で 0 に切り捨てていません。ばらつきの標準偏差 10 が、期待値 80 に比べて十分小さいので、負になる確率は無視できますが、期待値が小さくなると、無視できなくなります。</p>
 <h2 id="86">8.6 練習問題<a class="headerlink" href="#86" title="Permanent link">&para;</a></h2>
 <table>

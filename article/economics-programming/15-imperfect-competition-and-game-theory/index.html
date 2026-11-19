@@ -1421,14 +1421,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../outline/" class="md-nav__link">
+      <a href="../how-to-read/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    執筆計画
+    この記事の読み方
   
 
     
@@ -1438,7 +1438,7 @@
     
   
   
-    <span class="md-status md-status--stable"></span>
+    <span class="md-status md-status--draft"></span>
   
 
   
@@ -4903,6 +4903,9 @@
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>記号について</strong>: a・b は、第 1 章と同じ、需要曲線の切片と傾きです。A = a ÷ b、B = 1 ÷ b は、逆需要曲線 P = A − B·Q の切片と傾きです（第 13 章の A（独立支出）とは別）。n は企業の数です（第 8 章の n は、標本の大きさ）。e は 1 単位あたりの外部費用、q は企業 1 社の生産量です（Q は市場全体の数量）。一覧は、<a href="../how-to-read/#symbols">記号について</a> を参照してください。</p>
+</blockquote>
 <h2 id="152">15.2 予想する<a class="headerlink" href="#152" title="Permanent link">&para;</a></h2>
 <p>次の問いに、手計算で答えてください。</p>
 <ul>
@@ -4983,6 +4986,7 @@
     <span class="n">quantity</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">demand_intercept</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">demand_slope</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""限界収入 MR = (a - 2Q) ÷ b。逆需要曲線 P = (a - Q) ÷ b の 2 倍の傾き。"""</span>
+    <span class="n">check_slope</span><span class="p">(</span><span class="n">demand_slope</span><span class="p">,</span> <span class="s2">"需要曲線の傾き"</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">demand_intercept</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">quantity</span><span class="p">)</span> <span class="o">/</span> <span class="n">demand_slope</span>
 
 
@@ -5010,8 +5014,8 @@
 <span class="w">    </span><span class="sd">"""MR = MC で数量を決め、価格は需要曲線の上で決まる。"""</span>
     <span class="n">competitive</span> <span class="o">=</span> <span class="n">competitive_quantity</span><span class="p">(</span><span class="n">demand_intercept</span><span class="p">,</span> <span class="n">demand_slope</span><span class="p">,</span> <span class="n">marginal_cost</span><span class="p">)</span>
     <span class="n">quantity</span> <span class="o">=</span> <span class="p">(</span><span class="n">demand_intercept</span> <span class="o">-</span> <span class="n">demand_slope</span> <span class="o">*</span> <span class="n">marginal_cost</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
-    <span class="n">price</span> <span class="o">=</span> <span class="p">(</span><span class="n">demand_intercept</span> <span class="o">-</span> <span class="n">quantity</span><span class="p">)</span> <span class="o">/</span> <span class="n">demand_slope</span>
-    <span class="n">highest_price</span> <span class="o">=</span> <span class="n">demand_intercept</span> <span class="o">/</span> <span class="n">demand_slope</span>
+    <span class="n">price</span> <span class="o">=</span> <span class="n">inverse_demand</span><span class="p">(</span><span class="n">quantity</span><span class="p">,</span> <span class="n">demand_intercept</span><span class="p">,</span> <span class="n">demand_slope</span><span class="p">)</span>
+    <span class="n">highest_price</span> <span class="o">=</span> <span class="n">choke_price</span><span class="p">(</span><span class="n">demand_intercept</span><span class="p">,</span> <span class="n">demand_slope</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">MonopolyOutcome</span><span class="p">(</span>
         <span class="n">quantity</span><span class="o">=</span><span class="n">quantity</span><span class="p">,</span>
         <span class="n">price</span><span class="o">=</span><span class="n">price</span><span class="p">,</span>
@@ -5020,6 +5024,7 @@
         <span class="n">deadweight_loss</span><span class="o">=</span><span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="n">competitive</span> <span class="o">-</span> <span class="n">quantity</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">price</span> <span class="o">-</span> <span class="n">marginal_cost</span><span class="p">),</span>
     <span class="p">)</span>
 </code></pre></div>
+<p>第 1 章の <code>choke_price</code> と、第 7 章の <code>inverse_demand</code> を使って、需要曲線の縦軸の切片と、数量から価格を求める式を、新しく書かずに済ませています。傾きが 0 以下の需要曲線は、第 1 章の <code>check_slope</code> で、受け付けません。</p>
 <p>MR = (100 − 2Q) ÷ 2 = MC = 10 から、Q = 40 です。価格は、需要曲線 P = (100 − 40) ÷ 2 = 30 の上で決まります。結果は、次のとおりです。</p>
 <table>
 <thead>
@@ -5105,6 +5110,7 @@
 <span class="k">def</span><span class="w"> </span><span class="nf">test_相手が非常に多く生産すれば最適反応は0</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">best_response</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="o">**</span><span class="n">MARKET</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 </code></pre></div>
+<p><code>TypedDict</code> は、辞書に、「どんなキーがあり、値がどんな型か」を書く型ヒントです。<code>**MARKET</code> で関数に渡すときに、検査の道具（mypy）が、引数の名前と型を確かめられるようにするために使っています。実行には、影響しません（<code>MARKET</code> は、ふつうの辞書です）。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">best_response</span><span class="p">(</span>
     <span class="n">opponent_quantity</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">demand_intercept</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -5115,7 +5121,7 @@
 
 <span class="sd">    q = (A - MC - B × 相手の生産量) ÷ 2B（A = a/b、B = 1/b）。負にはならない。</span>
 <span class="sd">    """</span>
-    <span class="n">highest_price</span> <span class="o">=</span> <span class="n">demand_intercept</span> <span class="o">/</span> <span class="n">demand_slope</span>
+    <span class="n">highest_price</span> <span class="o">=</span> <span class="n">choke_price</span><span class="p">(</span><span class="n">demand_intercept</span><span class="p">,</span> <span class="n">demand_slope</span><span class="p">)</span>
     <span class="n">price_slope</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">demand_slope</span>
     <span class="n">quantity</span> <span class="o">=</span> <span class="p">(</span><span class="n">highest_price</span> <span class="o">-</span> <span class="n">marginal_cost</span> <span class="o">-</span> <span class="n">price_slope</span> <span class="o">*</span> <span class="n">opponent_quantity</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
         <span class="mi">2</span> <span class="o">*</span> <span class="n">price_slope</span>
@@ -5236,7 +5242,7 @@
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">firms</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"企業の数は 1 以上でなければならない"</span><span class="p">)</span>
-    <span class="n">highest_price</span> <span class="o">=</span> <span class="n">demand_intercept</span> <span class="o">/</span> <span class="n">demand_slope</span>
+    <span class="n">highest_price</span> <span class="o">=</span> <span class="n">choke_price</span><span class="p">(</span><span class="n">demand_intercept</span><span class="p">,</span> <span class="n">demand_slope</span><span class="p">)</span>
     <span class="n">price_slope</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">demand_slope</span>
     <span class="n">quantity</span> <span class="o">=</span> <span class="p">(</span><span class="n">highest_price</span> <span class="o">-</span> <span class="n">marginal_cost</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">price_slope</span> <span class="o">*</span> <span class="p">(</span><span class="n">firms</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
     <span class="n">price</span> <span class="o">=</span> <span class="n">highest_price</span> <span class="o">-</span> <span class="n">price_slope</span> <span class="o">*</span> <span class="n">firms</span> <span class="o">*</span> <span class="n">quantity</span>
@@ -5347,6 +5353,7 @@
         <span class="ow">and</span> <span class="n">_is_best_for_col</span><span class="p">(</span><span class="n">payoffs</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">col</span><span class="p">)</span>
     <span class="p">]</span>
 </code></pre></div>
+<p>コードの読み方を補います。引数の型に出てくる <code>Payoffs</code> は、<code>Mapping[tuple[str, str], tuple[float, float]]</code> という長い型に付けた、別名です。<code>dict.fromkeys(...)</code> は、重複を除いて、出てきた順を保つ書き方で、戦略の一覧（行と列）を作るのに使っています。<code>all(条件 for ...)</code> は、すべての要素で条件が成り立つときだけ <code>True</code> になります。<code>for row in rows for col in cols</code> と続く内包表記は、行と列の、すべての組を調べる 2 重の繰り返しです。</p>
 <p>囚人のジレンマでは、両者が協力すれば (3, 3) で、両者が裏切るより得なのに、均衡は両者が裏切る (1, 1) です。相手が協力しても裏切っても、自分は裏切った方が得だからです（支配戦略）。調整ゲームには、均衡が 2 つあります。コイン合わせには、純粋戦略の均衡がありません（確率的に選ぶ「混合戦略」が必要で、この章では扱いません）。</p>
 <h3 id="_7">生産量の選択は囚人のジレンマになる<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>2 社が、「協調（独占の半分、各社 20）」か「クールノー（各社 80 ÷ 3）」のどちらかを選ぶ、とします。寡占の生産量の選択が、囚人のジレンマと同じ構造になっていることを、テストで確かめます。</p>
@@ -5424,18 +5431,26 @@
     <span class="n">supply_slope</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">external_cost</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""社会的に最適な数量。(a - Q) ÷ b = (Q - c) ÷ d + e を Q について解く。"""</span>
+<span class="w">    </span><span class="sd">"""社会的に最適な数量。(a - Q) ÷ b = (Q - c) ÷ d + e を Q について解く。</span>
+
+<span class="sd">    社会的な供給曲線は、私的な供給曲線を e だけ上にずらしたもの。</span>
+<span class="sd">    Q = c + d(P - e) = (c - d·e) + dP なので、第 7 章の従量税（税額 e）と同じ形で、</span>
+<span class="sd">    供給曲線の切片を c - d·e にずらした市場の均衡数量になる。</span>
+<span class="sd">    外部費用が大きく、最適な数量が 0 以下になるときは、NoEquilibriumError にする。</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">external_cost</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"外部費用は 0 以上でなければならない"</span><span class="p">)</span>
-    <span class="n">numerator</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">demand_intercept</span> <span class="o">/</span> <span class="n">demand_slope</span>
-        <span class="o">+</span> <span class="n">supply_intercept</span> <span class="o">/</span> <span class="n">supply_slope</span>
-        <span class="o">-</span> <span class="n">external_cost</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">quantity</span> <span class="o">=</span> <span class="n">equilibrium</span><span class="p">(</span>
+        <span class="n">demand_intercept</span><span class="p">,</span>
+        <span class="n">demand_slope</span><span class="p">,</span>
+        <span class="n">supply_intercept</span> <span class="o">-</span> <span class="n">supply_slope</span> <span class="o">*</span> <span class="n">external_cost</span><span class="p">,</span>
+        <span class="n">supply_slope</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="k">return</span> <span class="n">numerator</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="n">demand_slope</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">supply_slope</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">quantity</span>
 </code></pre></div>
+<p>社会的な供給曲線は、私的な供給曲線を、外部費用 e だけ上にずらしたものです。式 Q = c + d(P − e) は、(c − d·e) + dP と変形できます。これは、第 7 章の従量税（税額 e）と同じ形で、<strong>供給曲線の切片を c − d·e にずらした市場の均衡数量</strong>です。そのため、<code>social_optimum_quantity</code> は、新しい式を書かずに、第 7 章の <code>equilibrium</code> を呼んでいます。外部費用が大きすぎて、最適な数量が 0 以下になるときは、<code>equilibrium</code> が <code>NoEquilibriumError</code> にします。</p>
 <p>放任すると、数量は 60 ですが、社会的に最適なのは 54 です。6 だけ過剰供給で、死荷重は 0.5 × 5 × 6 = 15 です。</p>
-<p>ピグー税は、外部費用と同じ額の税を課して、外部費用を価格に織り込ませます。第 7 章の <code>equilibrium_with_tax</code> が、そのまま使えます。</p>
+<p>ピグー税は、外部費用と同じ額の税を課して、外部費用を価格に織り込ませます。第 7 章の <code>equilibrium_with_tax</code> が、そのまま使えます。税額 e の従量税も、外部費用 e の社会的な供給曲線も、同じ「切片を c − d·e にずらした市場」なので、「ピグー税 = 外部費用と同額の税」が、コードの構造にも現れています。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_外部費用と同じ額のピグー税で社会的に最適な数量になる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">taxed</span> <span class="o">=</span> <span class="n">equilibrium_with_tax</span><span class="p">(</span><span class="o">**</span><span class="n">MARKET</span><span class="p">,</span> <span class="n">tax</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">taxed</span><span class="o">.</span><span class="n">quantity</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
@@ -5454,7 +5469,7 @@
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter15
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>38 passed
+<div class="highlight"><pre><span></span><code>42 passed
 </code></pre></div>
 <h2 id="155">15.5 規則で言うと<a class="headerlink" href="#155" title="Permanent link">&para;</a></h2>
 <ol>

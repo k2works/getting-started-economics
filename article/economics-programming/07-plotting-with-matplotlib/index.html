@@ -1421,14 +1421,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../outline/" class="md-nav__link">
+      <a href="../how-to-read/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    執筆計画
+    この記事の読み方
   
 
     
@@ -1438,7 +1438,7 @@
     
   
   
-    <span class="md-status md-status--stable"></span>
+    <span class="md-status md-status--draft"></span>
   
 
   
@@ -4869,6 +4869,9 @@
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>記号について</strong>: t は、1 単位あたりの税額です。第 9 章の練習問題の t は、税率（所得に対する割合）で、第 13 章の T は、定額税（所得に関係なく、一定額の税）です。一覧は、<a href="../how-to-read/#symbols">記号について</a> を参照してください。</p>
+</blockquote>
 <p>縦軸を価格、横軸を数量にします。経済学の教科書と同じ向きです。そのため、需要曲線は P = (a − Q) ÷ b のように、式を P について解いて描きます。</p>
 <h2 id="72">7.2 予想する<a class="headerlink" href="#72" title="Permanent link">&para;</a></h2>
 <p>需要曲線 Q = 100 − 2P、供給曲線 Q = 3P のとき、紙に図を描いて、次を求めてください。</p>
@@ -4953,9 +4956,11 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""均衡価格と均衡数量を返す。a - bP = c + dP を P について解く。</span>
 
-<span class="sd">    価格が負、または数量が 0 以下になる市場には、均衡がないので、</span>
-<span class="sd">    NoEquilibriumError にする。</span>
+<span class="sd">    傾きが 0 以下の曲線は受け付けない。価格が負、または数量が 0 以下になる市場には、</span>
+<span class="sd">    均衡がないので、NoEquilibriumError にする。</span>
 <span class="sd">    """</span>
+    <span class="n">check_slope</span><span class="p">(</span><span class="n">demand_slope</span><span class="p">,</span> <span class="s2">"需要曲線の傾き"</span><span class="p">)</span>
+    <span class="n">check_slope</span><span class="p">(</span><span class="n">supply_slope</span><span class="p">,</span> <span class="s2">"供給曲線の傾き"</span><span class="p">)</span>
     <span class="n">price</span> <span class="o">=</span> <span class="p">(</span><span class="n">demand_intercept</span> <span class="o">-</span> <span class="n">supply_intercept</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">demand_slope</span> <span class="o">+</span> <span class="n">supply_slope</span><span class="p">)</span>
     <span class="n">quantity</span> <span class="o">=</span> <span class="n">demand_intercept</span> <span class="o">-</span> <span class="n">demand_slope</span> <span class="o">*</span> <span class="n">price</span>
     <span class="n">check_equilibrium_exists</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="n">quantity</span><span class="p">)</span>
@@ -4972,7 +4977,7 @@
     <span class="n">price</span><span class="p">,</span> <span class="n">quantity</span> <span class="o">=</span> <span class="n">equilibrium</span><span class="p">(</span>
         <span class="n">demand_intercept</span><span class="p">,</span> <span class="n">demand_slope</span><span class="p">,</span> <span class="n">supply_intercept</span><span class="p">,</span> <span class="n">supply_slope</span>
     <span class="p">)</span>
-    <span class="n">highest_price</span> <span class="o">=</span> <span class="n">demand_intercept</span> <span class="o">/</span> <span class="n">demand_slope</span>
+    <span class="n">highest_price</span> <span class="o">=</span> <span class="n">choke_price</span><span class="p">(</span><span class="n">demand_intercept</span><span class="p">,</span> <span class="n">demand_slope</span><span class="p">)</span>
     <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">quantity</span> <span class="o">*</span> <span class="p">(</span><span class="n">highest_price</span> <span class="o">-</span> <span class="n">price</span><span class="p">)</span>
 
 
@@ -4991,6 +4996,7 @@
     <span class="n">lowest_price</span> <span class="o">=</span> <span class="o">-</span><span class="n">supply_intercept</span> <span class="o">/</span> <span class="n">supply_slope</span>
     <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">quantity</span> <span class="o">*</span> <span class="p">(</span><span class="n">price</span> <span class="o">-</span> <span class="n">lowest_price</span><span class="p">)</span>
 </code></pre></div>
+<p><code>equilibrium</code> は、最初に、需要曲線と供給曲線の傾きが正であることを確かめます（第 1 章の <code>check_slope</code>）。傾きが 0 以下だと、<code>demand_slope + supply_slope</code> が 0 になって、ゼロ除算になるためです。</p>
 <p><code>equilibrium</code> は、価格と数量の 2 つの値を、まとめて（タプルで）返します。<code>price, quantity = equilibrium(...)</code> のように、2 つの変数に分けて受け取れます。</p>
 <p><code>producer_surplus</code> が、供給曲線の切片が正のときを受け付けないのは、そのとき価格が 0 でも供給量があり、三角形の面積では表せないからです。これは、この章の三角形による計算の限界です。</p>
 <h3 id="_5">均衡がない市場<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
@@ -5104,14 +5110,18 @@
 <span class="w">    </span><span class="sd">"""売り手に 1 単位あたり tax の従量税を課したときの均衡を返す。</span>
 
 <span class="sd">    買い手の払う価格を P とすると、売り手の受取は P - tax になる。</span>
-<span class="sd">    a - bP = c + d(P - tax) を P について解く。</span>
+<span class="sd">    a - bP = c + d(P - tax) = (c - d·tax) + dP なので、供給曲線の切片を</span>
+<span class="sd">    c - d·tax にずらした市場の均衡と同じ。税額が大きく、取引が成立しない</span>
+<span class="sd">    ときは、NoEquilibriumError にする。</span>
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">tax</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"税額は 0 以上でなければならない"</span><span class="p">)</span>
-    <span class="n">consumer_price</span> <span class="o">=</span> <span class="p">(</span><span class="n">demand_intercept</span> <span class="o">-</span> <span class="n">supply_intercept</span> <span class="o">+</span> <span class="n">supply_slope</span> <span class="o">*</span> <span class="n">tax</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
-        <span class="n">demand_slope</span> <span class="o">+</span> <span class="n">supply_slope</span>
+    <span class="n">consumer_price</span><span class="p">,</span> <span class="n">quantity</span> <span class="o">=</span> <span class="n">equilibrium</span><span class="p">(</span>
+        <span class="n">demand_intercept</span><span class="p">,</span>
+        <span class="n">demand_slope</span><span class="p">,</span>
+        <span class="n">supply_intercept</span> <span class="o">-</span> <span class="n">supply_slope</span> <span class="o">*</span> <span class="n">tax</span><span class="p">,</span>
+        <span class="n">supply_slope</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="n">quantity</span> <span class="o">=</span> <span class="n">demand_intercept</span> <span class="o">-</span> <span class="n">demand_slope</span> <span class="o">*</span> <span class="n">consumer_price</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">quantity_without_tax</span> <span class="o">=</span> <span class="n">equilibrium</span><span class="p">(</span>
         <span class="n">demand_intercept</span><span class="p">,</span> <span class="n">demand_slope</span><span class="p">,</span> <span class="n">supply_intercept</span><span class="p">,</span> <span class="n">supply_slope</span>
     <span class="p">)</span>
@@ -5123,6 +5133,7 @@
         <span class="n">deadweight_loss</span><span class="o">=</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">tax</span> <span class="o">*</span> <span class="p">(</span><span class="n">quantity_without_tax</span> <span class="o">-</span> <span class="n">quantity</span><span class="p">),</span>
     <span class="p">)</span>
 </code></pre></div>
+<p><code>equilibrium_with_tax</code> は、新しい式を導くのではなく、<code>equilibrium</code> を呼んでいます。売り手が税を払うと、買い手の価格 P のときの売り手の受取は P − t です。式 a − bP = c + d(P − t) は、c + dP − d·t と変形できるので、<strong>供給曲線の切片を c − d·t にずらした市場の均衡</strong>と同じです。税が大きく、ずらした市場で取引が成立しないとき（税額が 100 のときなど）は、<code>equilibrium</code> が <code>NoEquilibriumError</code> にします。</p>
 <p>結果は、買い手の価格が 23（税なしより 3 上がる）、売り手の受取が 18（2 下がる）、取引量が 54（6 減る）、税収が 270、死荷重が 15 です。</p>
 <p>予想した問いの答えは、「買い手の負担が 3、売り手の負担が 2」です。税を課した側（売り手）より、買い手の方が多く負担していることに注意してください。誰に課税しても、負担の割合は同じです。需要の傾き b = 2 と供給の傾き d = 3 の比で決まり、買い手の負担割合は d ÷ (b + d) = 3 ÷ 5 = 60% です。</p>
 <p>死荷重は、税のせいで失われた取引から生まれるはずだった余剰です。次のテストで、「課税前の余剰の合計」と「課税後の余剰の合計と税収の合計」の差が、死荷重と等しいことを確かめます。</p>
@@ -5158,6 +5169,14 @@
     <span class="k">assert</span> <span class="n">points</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">50</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">points</span><span class="p">[</span><span class="mi">60</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
 </code></pre></div>
+<p>需要曲線 Q = a − bP を P について解いた P = (a − Q) ÷ b を、逆需要曲線と呼びます。図の縦軸は価格、横軸は数量なので、数量から価格を求める関数 <code>inverse_demand</code> を、<code>surplus.py</code> に作って、図でも使います（独占の章でも使います）。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">inverse_demand</span><span class="p">(</span><span class="n">quantity</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">intercept</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">slope</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""需要曲線 Q = a - bP を P について解いた、逆需要曲線 P = (a - Q) / b を返す。"""</span>
+    <span class="n">check_slope</span><span class="p">(</span><span class="n">slope</span><span class="p">,</span> <span class="s2">"需要曲線の傾き"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">quantity</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"数量は 0 以上でなければならない"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">intercept</span> <span class="o">-</span> <span class="n">quantity</span><span class="p">)</span> <span class="o">/</span> <span class="n">slope</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">draw_market</span><span class="p">(</span>
     <span class="n">demand_intercept</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">demand_slope</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -5166,8 +5185,9 @@
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""需要曲線・供給曲線・均衡点を描いた図を返す。"""</span>
     <span class="n">quantities</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">demand_intercept</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)]</span>
-    <span class="c1"># 需要曲線 Q = a - bP を P について解くと P = (a - Q) / b</span>
-    <span class="n">demand_prices</span> <span class="o">=</span> <span class="p">[(</span><span class="n">demand_intercept</span> <span class="o">-</span> <span class="n">q</span><span class="p">)</span> <span class="o">/</span> <span class="n">demand_slope</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">quantities</span><span class="p">]</span>
+    <span class="n">demand_prices</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">inverse_demand</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="n">demand_intercept</span><span class="p">,</span> <span class="n">demand_slope</span><span class="p">)</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">quantities</span>
+    <span class="p">]</span>
     <span class="c1"># 供給曲線 Q = c + dP を P について解くと P = (Q - c) / d</span>
     <span class="n">supply_prices</span> <span class="o">=</span> <span class="p">[(</span><span class="n">q</span> <span class="o">-</span> <span class="n">supply_intercept</span><span class="p">)</span> <span class="o">/</span> <span class="n">supply_slope</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">quantities</span><span class="p">]</span>
     <span class="n">price</span><span class="p">,</span> <span class="n">quantity</span> <span class="o">=</span> <span class="n">equilibrium</span><span class="p">(</span>
@@ -5186,16 +5206,17 @@
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 <p><code>plt.close(fig)</code> は、図を画面に出さずに、関数から返すための後始末です。テストのときは、画面を開かない設定（<code>test/conftest.py</code> の <code>matplotlib.use("Agg")</code>）にしています。</p>
-<p>図を保存するには、次のコマンドを実行します。</p>
+<p>図を保存するには、<code>savefig</code> を使います。次のコマンドは、<code>practice/</code> に <code>market.png</code> を作ります（<code>practice/</code> は、Git の管理から外れているので、誤ってコミットされません）。</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"from lib.chapter07.plot import draw_market; draw_market(100, 2, 0, 3).savefig('market.png')"</span>
+uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"from lib.chapter07.plot import draw_market; draw_market(100, 2, 0, 3).savefig('practice/market.png')"</span>
 </code></pre></div>
+<p>この記事の図は、<code>lib/</code> の関数から、コマンド 1 つでまとめて作り直せます（<code>tools/render_figures.py</code>）。モデルの係数や関数を変えて、図のデータが変わったときに、記事の図が古いまま残らないように、検査（<code>tox -e articles</code>）でも確かめています。</p>
 <p><img alt="需要曲線・供給曲線・均衡点" src="../images/ch07-market.png" /></p>
 <h3 id="_8">実行結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter07
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>23 passed
+<div class="highlight"><pre><span></span><code>28 passed
 </code></pre></div>
 <h2 id="75">7.5 規則で言うと<a class="headerlink" href="#75" title="Permanent link">&para;</a></h2>
 <ol>

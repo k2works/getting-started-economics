@@ -1421,14 +1421,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../outline/" class="md-nav__link">
+      <a href="../how-to-read/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    執筆計画
+    この記事の読み方
   
 
     
@@ -1438,7 +1438,7 @@
     
   
   
-    <span class="md-status md-status--stable"></span>
+    <span class="md-status md-status--draft"></span>
   
 
   
@@ -1753,6 +1753,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        読み方の補足
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -1771,7 +1782,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_3" class="md-nav__link">
+  <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
         市場の状態
@@ -1782,7 +1793,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_4" class="md-nav__link">
+  <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
         ワルラス調整
@@ -1793,7 +1804,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         マーシャル調整
@@ -1804,7 +1815,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -1832,7 +1843,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -4799,7 +4810,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">使う Python の機能</td>
-<td style="text-align: left;"><code>if</code> / <code>elif</code> / <code>else</code>、<code>for</code>、<code>range</code>、<code>return</code> での途中終了、関数を引数に渡す</td>
+<td style="text-align: left;"><code>if</code> / <code>elif</code> / <code>else</code>、<code>for</code>、<code>range</code>、<code>return</code> での途中終了、関数を引数に渡す（<code>Callable</code> の型ヒント）、<code>+=</code>、<code>abs</code>、切り出し（<code>[:3]</code>・<code>[-1]</code>）</td>
 </tr>
 <tr>
 <td style="text-align: left;">完成形</td>
@@ -4843,6 +4854,9 @@
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p><strong>記号について</strong>: この章の k は、調整の速さです。第 13 章の k（貨幣需要の所得感応度）と、第 14 章の k（オークンの法則の係数）は、別のものです。一覧は、<a href="../how-to-read/#symbols">記号について</a> を参照してください。</p>
+</blockquote>
 <p>需要曲線 Q = 100 − 2P と供給曲線 Q = 3P を、引き続き使います。</p>
 <h2 id="52">5.2 予想する<a class="headerlink" href="#52" title="Permanent link">&para;</a></h2>
 <p>ワルラス調整で、価格を 0 から始め、調整の速さ k = 0.1 とします。</p>
@@ -4876,8 +4890,52 @@
 <span class="n">walras_path</span><span class="p">(</span><span class="n">demand</span><span class="p">,</span> <span class="n">supply</span><span class="p">,</span> <span class="n">initial_price</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 </code></pre></div>
 <p>これで、需要曲線や供給曲線の式を変えても、調整のコードは変えずに済みます。</p>
+<h3 id="_3">読み方の補足<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<p>この章のコードに出てくる、小さな書き方です。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">書き方</th>
+<th style="text-align: left;">意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;"><code>price += step * excess</code></td>
+<td style="text-align: left;"><code>price = price + step * excess</code> と同じ。値を足して、同じ名前に結び付け直す</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>abs(x)</code></td>
+<td style="text-align: left;">絶対値。<code>abs(-3)</code> は 3</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>for _ in range(n):</code></td>
+<td style="text-align: left;">n 回、繰り返す。何回目かの番号は使わないので、変数の名前を <code>_</code> にする</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>path[:3]</code></td>
+<td style="text-align: left;">リストの、先頭から 3 個を取り出す（切り出し）</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>path[-1]</code></td>
+<td style="text-align: left;">リストの、最後の 1 個</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>Callable[[float], float]</code></td>
+<td style="text-align: left;">型ヒント。「小数を 1 つ受け取って、小数を返す関数」</td>
+</tr>
+<tr>
+<td style="text-align: left;"><code>raise RuntimeError("...")</code></td>
+<td style="text-align: left;">処理を止めて、エラーを知らせる（第 6 章で詳しく説明する）</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mf">17.5</span><span class="p">]</span>
+<span class="n">path</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span>    <span class="c1"># [0, 10, 15]</span>
+<span class="n">path</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>    <span class="c1"># 17.5</span>
+</code></pre></div>
 <h2 id="54-red-green-refactor">5.4 Red → Green → Refactor<a class="headerlink" href="#54-red-green-refactor" title="Permanent link">&para;</a></h2>
-<h3 id="_3">市場の状態<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
+<h3 id="_4">市場の状態<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
     <span class="p">(</span><span class="s2">"excess"</span><span class="p">,</span> <span class="s2">"expected"</span><span class="p">),</span>
     <span class="p">[(</span><span class="mi">50</span><span class="p">,</span> <span class="s2">"品不足"</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="s2">"売れ残り"</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s2">"均衡"</span><span class="p">),</span> <span class="p">(</span><span class="mf">1e-12</span><span class="p">,</span> <span class="s2">"均衡"</span><span class="p">)],</span>
@@ -4894,7 +4952,7 @@
     <span class="k">return</span> <span class="s2">"売れ残り"</span>
 </code></pre></div>
 <p>第 2 章で学んだとおり、小数の 0 は誤差を含むので、「0 に十分近い」を許容誤差 <code>tolerance</code> で判定します。</p>
-<h3 id="_4">ワルラス調整<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<h3 id="_5">ワルラス調整<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>テストでは、予想した手計算の値を使います。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">demand</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="k">return</span> <span class="mi">100</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">price</span>
@@ -4944,7 +5002,7 @@
 </code></pre></div>
 <p><code>for</code> の繰り返しの中で、均衡に達したら <code>return</code> で途中で終わります。<code>max_iterations</code> で回数に上限を付けているのは、収束しない場合に、永久に終わらなくなるのを避けるためです。</p>
 <p>実際に動かすと、価格は 0 → 10 → 15 → 17.5 → 18.75 と近づき、27 回の調整で 19.999999850988388 になります。</p>
-<h3 id="_5">マーシャル調整<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<h3 id="_6">マーシャル調整<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <p>ワルラス調整が「価格を動かす」のに対して、マーシャル調整は「数量を動かす」方法です。需要価格（その数量で買い手が払ってよい価格）が供給価格（売り手が受け取りたい価格）より高いと、数量が増えます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">demand_price</span><span class="p">(</span><span class="n">quantity</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="c1"># 需要曲線 Q = 100 - 2P を P について解いた逆需要曲線</span>
@@ -4980,7 +5038,7 @@
     <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"数量が収束しなかった。調整の速さ step を小さくする"</span><span class="p">)</span>
 </code></pre></div>
 <p>同じ k = 0.1 でも、数量が 0 → 5 → 9.58 → 13.78 と動き、収束まで 204 回かかり、最後の値は 59.99999882703561 です。ワルラス調整の 27 回より、ずっと遅くなります。</p>
-<h3 id="_6">実行結果<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<h3 id="_7">実行結果<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter05
 </code></pre></div>
@@ -5012,7 +5070,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_7">このモデルが成り立たない場面<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h3 id="_8">このモデルが成り立たない場面<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>この章の調整は、価格が毎回、均衡に近づく前提です。需要と供給の傾きによっては、均衡のまわりを行き来して近づかない（または遠ざかる）ことがあります。また、現実の市場は、毎回同じ速さで調整するとは限りません。収束するかどうかは、実際に動かして確かめる必要があります。</p>
 <h2 id="56">5.6 練習問題<a class="headerlink" href="#56" title="Permanent link">&para;</a></h2>
 <table>
