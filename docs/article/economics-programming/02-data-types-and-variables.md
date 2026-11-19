@@ -200,14 +200,12 @@ def is_price_elastic(elasticity: float) -> bool:
 
 ```bash
 cd apps/economics-programming/python
-uv run pytest
+uv run pytest test/chapter02
 ```
 
 ```text
-22 passed
+10 passed
 ```
-
-この 22 件には、第 1 章と第 3 章のテストを含みます。
 
 ## 2.5 規則で言うと
 

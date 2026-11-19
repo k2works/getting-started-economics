@@ -142,12 +142,14 @@ def test_需要が0になる最低の価格を求める() -> None:
 
 ```bash
 cd apps/economics-programming/python
-uv run pytest
+uv run pytest test/chapter01
 ```
 
 ```text
 5 passed
 ```
+
+章ごとにテストを実行するときは、`uv run pytest test/chapter02` のように、章のディレクトリを指定します。全章分をまとめて実行するときは、ディレクトリを指定せずに `uv run pytest` とします。
 
 ## 1.5 規則で言うと
 

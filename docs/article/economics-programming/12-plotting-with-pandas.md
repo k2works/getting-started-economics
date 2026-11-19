@@ -224,11 +224,11 @@ def plot_growth_chart(df: pd.DataFrame) -> Figure:
 
 ```bash
 cd apps/economics-programming/python
-uv run pytest
+uv run pytest test/chapter12
 ```
 
 ```text
-131 passed
+10 passed
 ```
 
 ## 12.5 規則で言うと

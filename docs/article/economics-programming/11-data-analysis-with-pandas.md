@@ -356,14 +356,12 @@ def paasche_index(
 
 ```bash
 cd apps/economics-programming/python
-uv run pytest
+uv run pytest test/chapter11
 ```
 
 ```text
-131 passed
+18 passed
 ```
-
-この 131 件には、第 1〜12 章のテストを含みます。
 
 ## 11.5 規則で言うと
 

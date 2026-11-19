@@ -365,14 +365,12 @@ def test_政策後のモデルを渡すと移動後の曲線も描く() -> None:
 
 ```bash
 cd apps/economics-programming/python
-uv run pytest
+uv run pytest test/chapter13
 ```
 
 ```text
-174 passed
+25 passed
 ```
-
-この 174 件には、第 1〜14 章のテストを含みます。
 
 ## 13.5 規則で言うと
 

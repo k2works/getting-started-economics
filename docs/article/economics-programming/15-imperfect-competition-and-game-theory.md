@@ -521,14 +521,12 @@ def test_ピグー税で解消される死荷重は第7章の死荷重の式と�
 
 ```bash
 cd apps/economics-programming/python
-uv run pytest
+uv run pytest test/chapter15
 ```
 
 ```text
-216 passed
+38 passed
 ```
-
-この 216 件には、第 1〜15 章と付録 A のテストを含みます。
 
 ## 15.5 規則で言うと
 

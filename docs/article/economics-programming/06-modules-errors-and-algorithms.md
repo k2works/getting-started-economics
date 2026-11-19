@@ -274,11 +274,11 @@ def test_下限が上限以上なら区間として成り立たない() -> None:
 
 ```bash
 cd apps/economics-programming/python
-uv run pytest
+uv run pytest test/chapter06
 ```
 
 ```text
-52 passed
+11 passed
 ```
 
 ## 6.5 規則で言うと

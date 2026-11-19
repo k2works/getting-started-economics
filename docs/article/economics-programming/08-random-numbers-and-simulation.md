@@ -216,11 +216,11 @@ def plot_histogram(values: list[float], bins: int) -> Figure:
 
 ```bash
 cd apps/economics-programming/python
-uv run pytest
+uv run pytest test/chapter08
 ```
 
 ```text
-77 passed
+12 passed
 ```
 
 ## 8.5 規則で言うと

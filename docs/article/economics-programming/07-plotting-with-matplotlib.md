@@ -394,14 +394,12 @@ uv run python -c "from lib.chapter07.plot import draw_market; draw_market(100, 2
 
 ```bash
 cd apps/economics-programming/python
-uv run pytest
+uv run pytest test/chapter07
 ```
 
 ```text
-77 passed
+23 passed
 ```
-
-この 77 件には、第 1〜8 章のテストを含みます。
 
 ## 7.5 規則で言うと
 

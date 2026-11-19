@@ -181,11 +181,11 @@ def market_clearing_prices(
 
 ```bash
 cd apps/economics-programming/python
-uv run pytest
+uv run pytest test/chapter03
 ```
 
 ```text
-22 passed
+7 passed
 ```
 
 ## 3.5 規則で言うと

@@ -279,11 +279,11 @@ def test_産出量が負なら費用最小化はできない() -> None:
 
 ```bash
 cd apps/economics-programming/python
-uv run pytest
+uv run pytest test/chapter10
 ```
 
 ```text
-103 passed
+13 passed
 ```
 
 ## 10.5 規則で言うと

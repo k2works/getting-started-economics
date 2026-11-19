@@ -297,14 +297,12 @@ def demand_quantities(
 
 ```bash
 cd apps/economics-programming/python
-uv run pytest
+uv run pytest test/chapter09
 ```
 
 ```text
-103 passed
+22 passed
 ```
-
-この 103 件には、第 1〜10 章のテストを含みます。
 
 ## 9.5 規則で言うと
 

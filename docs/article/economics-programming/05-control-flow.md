@@ -208,11 +208,11 @@ def marshall_path(
 
 ```bash
 cd apps/economics-programming/python
-uv run pytest
+uv run pytest test/chapter05
 ```
 
 ```text
-52 passed
+11 passed
 ```
 
 ## 5.5 規則で言うと

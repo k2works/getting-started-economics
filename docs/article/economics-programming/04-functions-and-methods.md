@@ -213,14 +213,12 @@ def marginal_rate_of_substitution(x: float, y: float, alpha: float = 0.5) -> flo
 
 ```bash
 cd apps/economics-programming/python
-uv run pytest
+uv run pytest test/chapter04
 ```
 
 ```text
-52 passed
+13 passed
 ```
-
-この 52 件には、第 1〜6 章のテストを含みます。
 
 ## 4.5 規則で言うと
 

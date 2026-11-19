@@ -353,11 +353,11 @@ def price_level_by_quantity_theory(
 
 ```bash
 cd apps/economics-programming/python
-uv run pytest
+uv run pytest test/chapter14
 ```
 
 ```text
-174 passed
+22 passed
 ```
 
 ## 14.5 規則で言うと
