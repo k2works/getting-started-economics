@@ -6414,12 +6414,11 @@
 </tbody>
 </table>
 <p>| 25 | 対応しない | <code>matrix_rank(gram)</code> を <code>matrix_rank(design)</code> に変える提案は、採らない。この実装は正規方程式を解くので、Gram 行列の条件数が問題になる。ほぼ共線なデータ（条件数 3.6×10¹⁵）で、設計行列のランクは 3 のままだが、正規方程式の解は不安定（係数が ±6×10⁴）。Gram 行列で調べるほうが、安全側 |
-| 28 | 済み | Stata の <code>tobit</code>（係数・標準誤差・σ・対数尤度）と、R の <code>sampleSelection::heckit()</code>（第 2 段階の係数）の公開された出力と、同じ <code>mroz</code> で照合した。トービットは相対 10⁻⁶ 台、ヘックマンは 10⁻⁴ 以内（R 側が λ を丸めている）で一致し、第 1 段階のプロビットも R と同じ値。第 16 章 16.6 節に、スクリプトを載せ、<code>check_realdata</code> で CI でも実行する |</p>
+| 28 | 済み | Stata の <code>tobit</code>（係数・標準誤差・σ・対数尤度）と、R の <code>sampleSelection::heckit()</code>（第 2 段階の係数と、Heckman の補正した標準誤差）の公開された出力と、同じ <code>mroz</code> で照合した。トービットは相対 10⁻⁶ 台、ヘックマンは係数・補正した標準誤差とも 10⁻⁴ 以内（R 側が λ を丸めている）で一致し、第 1 段階のプロビットも R と同じ値。補正した標準誤差は、<code>heckit_corrected_standard_errors</code>（第 16 章）として実装し、シミュレーションでも検証した。第 16 章 16.6 節に、スクリプトを載せ、<code>check_realdata</code> で CI でも実行する |</p>
 <h3 id="_14">未対応・保留<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>#18</strong>: 章の分割・付録化は、章番号に結びつく箇所が多いので、しない（折りたたみまで）</li>
-<li><strong>実データの利用条件</strong>: 2026-11-19 に、PyPI と GitHub を確認した。パッケージは MIT。READMEは出典を教科書と明記するが、データの許諾（Cengage・著者）の記載はない。判断できる情報がないので、未確認のまま、記事に各自の確認を書いている</li>
-<li><strong>ヘックマンの標準誤差</strong>: R の補正した標準誤差と、この連載のブートストラップは、別の方法なので、比べていない</li>
+<li><strong>#18</strong>: 章の分割・付録化は、章番号に結びつく箇所が多いので、しない（折りたたみまで。ユーザーの確認済み）</li>
+<li><strong>実データの利用条件</strong>: 確認できた範囲は、(1) パッケージ <code>wooldridge</code> は MIT、(2) Cengage の製品ページに「教育目的に限って提供され、利用は Cengage の利用規約に従う」とある。研究・再配布への利用の可否を決める規約本文は、確認できていない。データは配らず、記事に、確認できた範囲と、各自の確認を書いている。<strong>これは、この環境では、解消できない</strong>（Cengage・著者の判断が要る）</li>
 </ul>
 
 

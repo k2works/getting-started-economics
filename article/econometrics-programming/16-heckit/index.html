@@ -3704,7 +3704,7 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
-        偏りと、ヘックマンの効果を、繰り返しで確かめる
+        補正した標準誤差（解析式）
       
     </span>
   </a>
@@ -3715,7 +3715,7 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
-        図
+        偏りと、ヘックマンの効果を、繰り返しで確かめる
       
     </span>
   </a>
@@ -3724,6 +3724,17 @@
         
           <li class="md-nav__item">
   <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        図
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -3751,7 +3762,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         データを取得する
@@ -3762,7 +3773,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         ファイルの形（実物で確かめたこと）
@@ -3773,7 +3784,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_14" class="md-nav__link">
+  <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
         自分の関数を、実際のデータに使う
@@ -3784,7 +3795,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_15" class="md-nav__link">
+  <a href="#_16" class="md-nav__link">
     <span class="md-ellipsis">
       
         外部のソフトウェアの結果との照合
@@ -3812,7 +3823,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_16" class="md-nav__link">
+  <a href="#_17" class="md-nav__link">
     <span class="md-ellipsis">
       
         この方法が成り立たない場面
@@ -3840,7 +3851,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_17" class="md-nav__link">
+  <a href="#_18" class="md-nav__link">
     <span class="md-ellipsis">
       
         できること
@@ -3851,7 +3862,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_18" class="md-nav__link">
+  <a href="#_19" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -3862,7 +3873,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_19" class="md-nav__link">
+  <a href="#_20" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -3912,7 +3923,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_20" class="md-nav__link">
+  <a href="#_21" class="md-nav__link">
     <span class="md-ellipsis">
       
         この連載で扱わなかったこと、次に学ぶこと
@@ -6475,7 +6486,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">完成形</td>
-<td style="text-align: left;"><code>HeckitFit</code>、<code>inverse_mills_ratio</code>、<code>heckit_two_step</code>、<code>heckit_bootstrap_standard_errors</code>、<code>draw_selection_sample</code>、<code>selection_bias_experiment</code></td>
+<td style="text-align: left;"><code>HeckitFit</code>、<code>inverse_mills_ratio</code>、<code>heckit_two_step</code>、<code>heckit_bootstrap_standard_errors</code>、<code>heckit_corrected_standard_errors</code>、<code>draw_selection_sample</code>、<code>selection_bias_experiment</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">ファイル</td>
@@ -6555,7 +6566,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter16
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>22 passed
+<div class="highlight"><pre><span></span><code>26 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter16/</code> に、完成形と同じ名前（<code>heckit.py</code>・<code>test_heckit.py</code>）のファイルを作ります。</p>
 <h2 id="163">16.3 予想する<a class="headerlink" href="#163" title="Permanent link">&para;</a></h2>
@@ -6579,7 +6590,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h3 id="_5">除外制約<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>λ(w′γ) は、w′γ の滑らかな関数で、ほぼ線形に近い範囲では、x と、強く相関します。結果の式に入らない、選択の式の変数 <strong>z</strong>（除外変数）がないと、λ̂ と x の識別が弱くなります。除外変数は、操作変数（第 12 章）と、似た役割を持ちます。</p>
 <h3 id="_6">標準誤差<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
-<p>第 2 段階の OLS の標準誤差は、正しくありません。(1) λ̂ は、第 1 段階の推定値（推定誤差を含む）、(2) 誤差項に、不均一分散が生じる、ためです。解析的な補正式もありますが、この章は、<strong>ブートストラップ</strong>（<a href="../06-asymptotics/">第 6 章</a>で学んだ方法。標本を復元抽出で取り直し、2 段階推定を繰り返して、標準偏差を求める）で求めます。</p>
+<p>第 2 段階の OLS の標準誤差は、正しくありません。(1) λ̂ は、第 1 段階の推定値（推定誤差を含む）、(2) 誤差項に、不均一分散が生じる、ためです。解析的な補正式（Heckman）と、<strong>ブートストラップ</strong>（<a href="../06-asymptotics/">第 6 章</a>で学んだ方法。標本を復元抽出で取り直し、2 段階推定を繰り返して、標準偏差を求める）の、2 つで求め、比べます。</p>
 <h2 id="165-red-green-refactor">16.5 Red → Green → Refactor<a class="headerlink" href="#165-red-green-refactor" title="Permanent link">&para;</a></h2>
 <h3 id="red">Red: 逆ミルズ比の手計算<a class="headerlink" href="#red" title="Permanent link">&para;</a></h3>
 <p>予想 1 です。λ(0) = φ(0) ÷ Φ(0) = (1 ÷ √(2π)) ÷ 0.5 = √(2 ÷ π) ≈ <strong>0.7979</strong> です。λ(1) = φ(1) ÷ Φ(1) = 0.24197 ÷ 0.84134 ≈ 0.2876 です。</p>
@@ -6872,8 +6883,91 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>{'const': 0.0303, 'x': 0.0228, 'lambda': 0.0513}
 </code></pre></div>
-<p>ブートストラップの標準誤差は、x で 0.0228（第 2 段階の OLS では 0.0212）、切片で 0.0303（0.0281）と、少し大きい値です（予想 4: 正しくない。この標本では、差は 1 割程度）。逆ミルズ比の係数の標準誤差は、同じ 0.0513 です。</p>
-<h3 id="_9">偏りと、ヘックマンの効果を、繰り返しで確かめる<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_9">補正した標準誤差（解析式）<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>ブートストラップを使わずに、<strong>第 1 段階の推定誤差を反映した標準誤差を、式で求める</strong>こともできます（Heckman, 1979）。第 2 段階の回帰の説明変数を Z（x と λ̂）、残差を e として、</p>
+<ul>
+<li>Var(b) = σ̂² (Z′Z)⁻¹ [ Z′(I − ρ̂²Δ)Z + ρ̂² F V_γ F′ ] (Z′Z)⁻¹</li>
+<li>Δ は、対角成分が δ_i = λ̂_i (λ̂_i + w_i′γ̂) の行列、F = Z′Δ W（W は、選択された観測値の、選択の式の説明変数）、V_γ は、第 1 段階のプロビットの共分散行列</li>
+<li>σ̂² = e′e ÷ n_s + β̂_λ² · mean(δ)、ρ̂² = β̂_λ² ÷ σ̂²</li>
+</ul>
+<p>通常の OLS の標準誤差 σ̂²(Z′Z)⁻¹ に、(1) 誤差の分散が、観測値ごとに違う分（ρ̂²Δ）と、(2) 第 1 段階の推定誤差（V_γ）の分を、足したものです。V_γ には、第 14 章の <code>binary_covariance</code> を使います。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">heckit_corrected_standard_errors</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">x_columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">selection_columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Heckman の補正した標準誤差（解析式）。第 1 段階の推定誤差も反映する。</span>
+
+<span class="sd">    Var(b) = σ̂² (Z′Z)⁻¹ [Z′(I − ρ̂²Δ)Z + ρ̂² F V_γ F′] (Z′Z)⁻¹。</span>
+<span class="sd">    Z は、第 2 段階の説明変数と λ̂。Δ は、対角成分が δ_i = λ̂_i (λ̂_i + w_i′γ̂) の行列。</span>
+<span class="sd">    F = Z′Δ W（W は、選択された観測値の、選択の式の説明変数）。</span>
+<span class="sd">    V_γ は、第 1 段階の共分散行列。σ̂² = e′e ÷ n_s + β̂_λ² · mean(δ)、ρ̂² = β̂_λ² ÷ σ̂²。</span>
+<span class="sd">    """</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">heckit_two_step</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">x_columns</span><span class="p">,</span> <span class="n">selection_columns</span><span class="p">)</span>
+    <span class="n">chosen</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"selected"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">selection_x</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">selection_columns</span><span class="p">]</span>
+    <span class="n">w_all</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">design_matrix</span><span class="p">(</span><span class="n">selection_x</span><span class="p">)</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">w_all</span> <span class="o">@</span> <span class="n">fit</span><span class="o">.</span><span class="n">selection</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">mills</span> <span class="o">=</span> <span class="n">inverse_mills_ratio</span><span class="p">(</span><span class="n">index</span><span class="p">)[</span><span class="n">chosen</span><span class="p">]</span>
+    <span class="n">delta</span> <span class="o">=</span> <span class="n">mills</span> <span class="o">*</span> <span class="p">(</span><span class="n">mills</span> <span class="o">+</span> <span class="n">index</span><span class="p">[</span><span class="n">chosen</span><span class="p">])</span>
+    <span class="n">z</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="n">design_matrix</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">chosen</span><span class="p">,</span> <span class="n">x_columns</span><span class="p">]</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">lambda_</span><span class="o">=</span><span class="n">mills</span><span class="p">))</span>
+    <span class="n">names</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"lambda"</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">chosen</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">residuals</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="n">z</span> <span class="o">@</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">lambda_coefficient</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"lambda"</span><span class="p">])</span>
+    <span class="n">sigma2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">residuals</span> <span class="o">@</span> <span class="n">residuals</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="n">lambda_coefficient</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span>
+        <span class="n">delta</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="n">rho2</span> <span class="o">=</span> <span class="n">lambda_coefficient</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">sigma2</span>
+    <span class="n">gram_inverse</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">z</span><span class="p">)</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="p">(</span><span class="n">delta</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">w_all</span><span class="p">[</span><span class="n">chosen</span><span class="p">])</span>
+    <span class="n">v_gamma</span> <span class="o">=</span> <span class="n">binary_covariance</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">selection</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="s2">"selected"</span><span class="p">],</span> <span class="n">selection_x</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">middle</span> <span class="o">=</span> <span class="n">z</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="n">rho2</span> <span class="o">*</span> <span class="n">delta</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">*</span> <span class="n">z</span><span class="p">)</span> <span class="o">+</span> <span class="n">rho2</span> <span class="o">*</span> <span class="n">f</span> <span class="o">@</span> <span class="n">v_gamma</span> <span class="o">@</span> <span class="n">f</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">variance</span> <span class="o">=</span> <span class="n">sigma2</span> <span class="o">*</span> <span class="n">gram_inverse</span> <span class="o">@</span> <span class="n">middle</span> <span class="o">@</span> <span class="n">gram_inverse</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">variance</span><span class="p">)),</span> <span class="n">index</span><span class="o">=</span><span class="n">names</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_補正した標準誤差は同じ標本の推定値の実際のばらつきに近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># 許容誤差: 150 回の標準偏差の推定誤差（約 6%）の 4 倍弱</span>
+    <span class="n">estimates</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">150</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">draw_selection_sample</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">))</span>
+        <span class="n">estimates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heckit_two_step</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">])</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heckit_corrected_standard_errors</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">])[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">estimates</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_補正した標準誤差は名前と順序が係数と同じ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">heckit_two_step</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">])</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="n">heckit_corrected_standard_errors</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">errors</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">errors</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_補正した標準誤差は同じ標本ならブートストラップと同程度</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">3000</span><span class="p">)</span>
+    <span class="n">corrected</span> <span class="o">=</span> <span class="n">heckit_corrected_standard_errors</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">])</span>
+    <span class="n">boot</span> <span class="o">=</span> <span class="n">heckit_bootstrap_standard_errors</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">],</span> <span class="mi">200</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">corrected</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">boot</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_相関がなければ補正した標準誤差は第2段階のOLSの標準誤差に近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># 相関 0 なら、逆ミルズ比の係数は 0 で、補正項（ρ² に比例）は消える</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">draw_selection_sample</span><span class="p">(</span><span class="mi">4000</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">naive</span> <span class="o">=</span> <span class="n">heckit_two_step</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">])</span><span class="o">.</span><span class="n">naive_standard_errors</span>
+    <span class="n">corrected</span> <span class="o">=</span> <span class="n">heckit_corrected_standard_errors</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">corrected</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">naive</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter16.heckit</span><span class="w"> </span><span class="kn">import</span> <span class="n">heckit_corrected_standard_errors</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">naive_standard_errors</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">heckit_corrected_standard_errors</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">])</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>{'const': 0.0281, 'x': 0.0212, 'lambda': 0.0513}
+{'const': 0.0297, 'x': 0.0224, 'lambda': 0.0512}
+</code></pre></div>
+<p>x の標準誤差は、通常の OLS 0.0212、<strong>補正した式 0.0224</strong>、ブートストラップ 0.0228 です。補正した式とブートストラップは近く、通常の OLS より、6〜8% ほど大きい値です。<strong>補正した式は、実際のばらつきを、シミュレーションでも再現します</strong>（150 回の標本の傾きの標準偏差に、標準誤差の平均が、近い）。この式は、実際のデータでも、R の <code>sampleSelection</code> と一致します（16.6 節）。</p>
+<h3 id="_10">偏りと、ヘックマンの効果を、繰り返しで確かめる<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">selection_bias_experiment</span><span class="p">(</span>
     <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">correlation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
@@ -6926,7 +7020,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <li><strong>ρ = 0.7</strong>: OLS は <strong>1.8309</strong> と偏り、ヘックマンは <strong>1.9988</strong> で、真の値を復元します。標準偏差は、ヘックマンのほうが、わずかに大きい（0.0523）が、同程度です</li>
 </ul>
 <p><img alt="傾きの推定値の分布（n = 1000、200 回）。選択された標本の OLS（ols_selected）は、2 より小さい値のまわりに偏り、ヘックマン（heckit）は 2 のまわり" src="../images/ch16-heckit-distributions.png" /></p>
-<h3 id="_10">図<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">図<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">xs</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
     <span class="n">values</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">get_xdata</span><span class="p">()</span>
     <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
@@ -6985,18 +7079,18 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
-<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter16
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>22 passed
+<div class="highlight"><pre><span></span><code>26 passed
 </code></pre></div>
 <h2 id="166">16.6 実際のデータで試す（既婚女性の労働参加・労働時間・賃金）<a class="headerlink" href="#166" title="Permanent link">&para;</a></h2>
 <p>第 4 部の仕上げに、<strong>実際のデータ</strong>で、第 14〜16 章の関数を使います。問いは、「既婚女性の、労働参加・労働時間・賃金は、何に影響されるか」です。</p>
-<h3 id="_12">データを取得する<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">データを取得する<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <p>第 13 章と同じ、<code>wooldridge</code> パッケージ（MIT ライセンス）の <code>mroz</code> を使います。出典は、T.A. Mroz (1987), Econometrica 55, 765-799 です（第 13 章 13.6 節）。<strong>データの利用条件は、確認していません</strong>。各自で確認し、使うときは、出典を明記してください。</p>
-<h3 id="_13">ファイルの形（実物で確かめたこと）<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">ファイルの形（実物で確かめたこと）<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <p><strong>753 行、22 列</strong>の、1975 年の既婚女性のデータです。<code>inlf</code>（労働力に入っているか）が 1 の人は <strong>428 人</strong>、<code>hours</code>（労働時間）が 0 の人は <strong>325 人</strong>です。<code>wage</code>・<code>lwage</code> は、働いている 428 人だけで観測され、残りの 325 行は欠損です。説明変数は、<code>nwifeinc</code>（パッケージの説明では (世帯所得 − 本人の賃金 × 労働時間) ÷ 1000。本人の稼ぎ以外の所得）、<code>educ</code>、<code>exper</code>、<code>expersq</code>、<code>age</code>、<code>kidslt6</code>（6 歳未満の子の数）、<code>kidsge6</code>（6〜18 歳の子の数）です。</p>
-<h3 id="_14">自分の関数を、実際のデータに使う<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_15">自分の関数を、実際のデータに使う<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <p>次のスクリプトを <code>practice/chapter16/mroz.py</code> として保存し、アプリの根で、<code>uv run --group realdata python -m practice.chapter16.mroz</code> で実行します。</p>
 <p>このスクリプトは、完成形（<code>lib/</code>）の関数を使います。自分で書いた関数で試すときは、<code>from lib.chapterNN.</code> を <code>from practice.chapterNN.</code> に書き換えます（ファイル名と関数名を、完成形と同じにしてあれば、そのまま動きます）。書き換えた結果が、完成形と同じ出力になれば、自作の関数が、実際のデータでも動いたことになります。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -7095,18 +7189,18 @@ heckit bootstrap se {'const': 0.2869, 'educ': 0.0137, 'exper': 0.0154, 'expersq'
 <blockquote>
 <p><strong>ここで言えること、言えないこと。</strong> トービットは、「働くか」と「何時間か」が、同じ式で決まると仮定します。6 歳未満の子の限界効果（−526 時間）は、働くかどうか（確率が 26 ポイント下がる）と、働く場合の時間の、両方の合計です。この 2 つを、分けて知りたいときは、選択の式と、時間の式を分ける（ヘックマンのような）モデルを使います。また、ヘックマンの結果は、除外変数（<code>nwifeinc</code>・<code>age</code>・<code>kidslt6</code>・<code>kidsge6</code>）が、賃金の式に影響しない、という仮定に依存します。トービットとヘックマンの結果は、外部のソフトウェアの結果と照合しました（次の節）。</p>
 </blockquote>
-<h3 id="_15">外部のソフトウェアの結果との照合<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<h3 id="_16">外部のソフトウェアの結果との照合<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <p>自作のトービットとヘックマンが、実績のあるソフトウェアと同じ結果になるかを、同じ <code>mroz</code> のデータで確かめます。比べる相手は、公開されている次の 2 つの結果です。</p>
 <ul>
 <li><strong>トービット</strong>: Stata の <code>tobit hours nwifeinc educ exper expersq age kidslt6 kidsge6, ll(0)</code> の出力（<a href="https://rowesamuel.github.io/rowesamuel/bookdown_statamarkdown/Week10/book/corner-solution---tobit-model.html">Corner Solution - Tobit Model</a>。係数・標準誤差・σ・対数尤度 −3819.0946）</li>
-<li><strong>ヘックマン</strong>: R の <code>sampleSelection::heckit()</code> の出力（<a href="https://s-saisw.github.io/rtutorial/heckit.html">Review of Heckit</a>。選択の式も賃金の式も、説明変数は educ・exper・expersq・nwifeinc・age・kidslt6・kidsge6。被説明変数は <code>lwage</code>）</li>
+<li><strong>ヘックマン</strong>: R の <code>sampleSelection::heckit()</code> の出力（<a href="https://s-saisw.github.io/rtutorial/heckit.html">Review of Heckit</a>（係数と、補正した標準誤差）。選択の式も賃金の式も、説明変数は educ・exper・expersq・nwifeinc・age・kidslt6・kidsge6。被説明変数は <code>lwage</code>）</li>
 </ul>
 <p>次のスクリプトを <code>practice/chapter16/crosscheck.py</code> として保存し、アプリの根で、<code>uv run --group realdata python -m practice.chapter16.crosscheck</code> で実行します。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">wooldridge</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter15.limited</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_tobit</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter16.heckit</span><span class="w"> </span><span class="kn">import</span> <span class="n">heckit_two_step</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter16.heckit</span><span class="w"> </span><span class="kn">import</span> <span class="n">heckit_corrected_standard_errors</span><span class="p">,</span> <span class="n">heckit_two_step</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">wooldridge</span><span class="o">.</span><span class="n">data</span><span class="p">(</span><span class="s2">"mroz"</span><span class="p">)</span>
 <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"nwifeinc"</span><span class="p">,</span> <span class="s2">"educ"</span><span class="p">,</span> <span class="s2">"exper"</span><span class="p">,</span> <span class="s2">"expersq"</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">,</span> <span class="s2">"kidslt6"</span><span class="p">,</span> <span class="s2">"kidsge6"</span><span class="p">]</span>
@@ -7136,15 +7230,27 @@ heckit bootstrap se {'const': 0.2869, 'educ': 0.0137, 'exper': 0.0154, 'expersq'
 <span class="n">heckit</span> <span class="o">=</span> <span class="n">heckit_two_step</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">selected</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">"inlf"</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">"lwage"</span><span class="p">]),</span> <span class="n">wage_columns</span><span class="p">,</span> <span class="n">wage_columns</span><span class="p">)</span>
 <span class="n">gap</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">heckit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">r_heckit</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"heckit coefficients agree (1e-4):"</span><span class="p">,</span> <span class="n">gap</span> <span class="o">&lt;</span> <span class="mf">1e-4</span><span class="p">)</span>
+
+<span class="c1"># R の標準誤差（Heckman の補正した解析式）。lambda は、R が小数第 4 位に丸めている</span>
+<span class="n">r_errors</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"const"</span><span class="p">:</span> <span class="mf">0.4587672</span><span class="p">,</span> <span class="s2">"educ"</span><span class="p">:</span> <span class="mf">0.0340507</span><span class="p">,</span> <span class="s2">"exper"</span><span class="p">:</span> <span class="mf">0.0336730</span><span class="p">,</span> <span class="s2">"expersq"</span><span class="p">:</span> <span class="mf">0.0006381</span><span class="p">,</span>
+    <span class="s2">"nwifeinc"</span><span class="p">:</span> <span class="mf">0.0044919</span><span class="p">,</span> <span class="s2">"age"</span><span class="p">:</span> <span class="mf">0.0134792</span><span class="p">,</span> <span class="s2">"kidslt6"</span><span class="p">:</span> <span class="mf">0.2308275</span><span class="p">,</span> <span class="s2">"kidsge6"</span><span class="p">:</span> <span class="mf">0.0296063</span><span class="p">,</span>
+    <span class="s2">"lambda"</span><span class="p">:</span> <span class="mf">0.4636</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">selected</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">"inlf"</span><span class="p">],</span> <span class="n">y</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">"lwage"</span><span class="p">])</span>
+<span class="n">corrected</span> <span class="o">=</span> <span class="n">heckit_corrected_standard_errors</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">wage_columns</span><span class="p">,</span> <span class="n">wage_columns</span><span class="p">)</span>
+<span class="n">error_gap</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">corrected</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">-</span> <span class="n">v</span><span class="p">)</span> <span class="o">/</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">r_errors</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"heckit corrected standard errors agree (2e-4):"</span><span class="p">,</span> <span class="n">error_gap</span> <span class="o">&lt;</span> <span class="mf">2e-4</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>tobit coefficients agree (1e-5): True
 tobit standard errors agree (1e-4): True
 tobit log-likelihood -3819.0946 (Stata -3819.0946)
 heckit coefficients agree (1e-4): True
+heckit corrected standard errors agree (2e-4): True
 </code></pre></div>
-<p><strong>トービットは、係数が相対 10⁻⁶ 台、標準誤差が 10⁻⁶ 台で、Stata と一致し、対数尤度も小数第 4 位まで同じ</strong>です。<strong>ヘックマンの 2 段階推定の係数も、R の値と、10⁻⁴ 以内で一致します</strong>（逆ミルズ比の係数は、R 側が小数第 4 位に丸めた 0.2885 と比べています。自作は 0.28846）。第 1 段階のプロビットの係数も、R の出力（0.270077、0.130905、0.123348 …）と、同じ値でした。</p>
+<p><strong>トービットは、係数が相対 10⁻⁶ 台、標準誤差が 10⁻⁶ 台で、Stata と一致し、対数尤度も小数第 4 位まで同じ</strong>です。<strong>ヘックマンの 2 段階推定の係数も、R の値と、10⁻⁴ 以内で一致し、補正した標準誤差（教育 0.0340507 など）も、相対 10⁻⁴ 以内で一致します</strong>（逆ミルズ比の係数は、R 側が小数第 4 位に丸めた 0.2885 と比べています。自作は 0.28846）。第 1 段階のプロビットの係数も、R の出力（0.270077、0.130905、0.123348 …）と、同じ値でした。</p>
 <blockquote>
-<p><strong>この照合で言えること、言えないこと。</strong> 同じ式・同じデータでの、点推定値と標準誤差（トービット）が、別の実装と一致したので、<strong>実装の誤りの可能性は、かなり下がりました</strong>。ただし、ヘックマンの標準誤差は、この章のブートストラップと、R の補正した標準誤差（educ で 0.0341）が、別の方法なので、比べていません。外部の値は、公開された文書から転記したもので、各ソフトウェアのバージョンの違いまでは、確かめていません。</p>
+<p><strong>この照合で言えること、言えないこと。</strong> 同じ式・同じデータでの、点推定値と標準誤差（トービット）が、別の実装と一致したので、<strong>実装の誤りの可能性は、かなり下がりました</strong>。ヘックマンの標準誤差は、R と同じ解析式（補正した標準誤差）で比べました。ブートストラップは、別の方法なので、この照合の対象ではありません（同じ標本の、補正した式と、近い値になることは、シミュレーションで確かめました）。外部の値は、公開された文書から転記したもので、各ソフトウェアのバージョンの違いまでは、確かめていません。</p>
 </blockquote>
 <h2 id="167">16.7 規則で言うと<a class="headerlink" href="#167" title="Permanent link">&para;</a></h2>
 <ol>
@@ -7175,7 +7281,7 @@ heckit coefficients agree (1e-4): True
 </tr>
 </tbody>
 </table>
-<h3 id="_16">この方法が成り立たない場面<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_17">この方法が成り立たない場面<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>誤差項の、同時正規分布を仮定します。</strong> 正規でないと、ヘックマンは、一致性を失います（OLS より悪くなることもある）</li>
 <li><strong>除外変数が、結果の式に影響しない、という仮定は、検定できません。</strong> 選択の式と結果の式に、同じ変数しかないと、逆ミルズ比の非線形性だけに頼ることになり、不安定です</li>
@@ -7183,7 +7289,7 @@ heckit coefficients agree (1e-4): True
 </ul>
 <h2 id="168-4">16.8 第 4 部の到達チェック<a class="headerlink" href="#168-4" title="Permanent link">&para;</a></h2>
 <p>第 4 部（第 14〜16 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。</p>
-<h3 id="_17">できること<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<h3 id="_18">できること<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -7230,7 +7336,7 @@ heckit coefficients agree (1e-4): True
 </tr>
 </tbody>
 </table>
-<h3 id="_18">時間を決めて書く課題<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
+<h3 id="_19">時間を決めて書く課題<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、関数とテストを書きます。</p>
 <table>
 <thead>
@@ -7254,7 +7360,7 @@ heckit coefficients agree (1e-4): True
 </tr>
 </tbody>
 </table>
-<h3 id="_19">誤りの原因の分類<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<h3 id="_20">誤りの原因の分類<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
 <p>できなかったときは、原因を分類して、戻る章に戻ります。</p>
 <table>
 <thead>
@@ -7354,7 +7460,7 @@ heckit coefficients agree (1e-4): True
 <li>値の大きい実際のデータでは、数値微分による最適化が、収束不足と標準誤差の誤りを起こしやすい。解析的な勾配と、単位を変えても結果が同じ、というテストで防ぐ（第 15 章）</li>
 <li>第 4 部の到達チェックを行った。これで、全 16 章が完成した。ここまでの章で、推定量を自分で書き、真の値を知るデータと、恒等式で確かめる方法を、学んだ</li>
 </ul>
-<h3 id="_20">この連載で扱わなかったこと、次に学ぶこと<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<h3 id="_21">この連載で扱わなかったこと、次に学ぶこと<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
 <p>この連載は、クロスセクションとパネルのデータで、推定量と検定を、自分のコードで確かめる所までです。自分のデータで論文の表を作るには、次のことが、さらに要ります。</p>
 <ul>
 <li><strong>時系列</strong>: 系列相関、単位根、HAC 標準誤差（Newey-West）、ARIMA・VAR。第 2 シリーズ（マクロ）の、時系列の扱いも参照してください</li>
