@@ -19,7 +19,7 @@
       
       
       <link rel="icon" href="../../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.2">
     
     
       
@@ -6035,7 +6035,7 @@
 <td style="text-align: left;"><code>tools/check_articles.py</code> の 3 複製がすでにずれている（economics に、cp932 対策・件数の未検出・複数の解答節・章の絞り込みの 4 修正が未反映）。小さく、すぐ、同期と同一性の CI 検査。その後、共通パッケージ化（U6）</td>
 <td style="text-align: left;"><code>apps/*/python/tools/</code></td>
 <td style="text-align: left;">アーキテクト</td>
-<td style="text-align: left;"><strong>第 1 段を修正済み</strong>。3 シリーズを同期し、CI の <code>tools-sync</code> で、ずれたら失敗させる。共通パッケージ化（第 2 段）は、別の Unit</td>
+<td style="text-align: left;"><strong>修正済み</strong>。第 1 段で同期し、第 2 段（U6）で、共通パッケージ <code>apps/article-tools/</code> に集めた（複製をなくした）</td>
 </tr>
 </tbody>
 </table>
@@ -6418,7 +6418,6 @@
 <h3 id="_14">未対応・保留<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>#18</strong>: 章の分割・付録化は、章番号に結びつく箇所が多いので、しない（折りたたみまで）</li>
-<li><strong>#9 の第 2 段</strong>: <code>tools/</code> の共通パッケージ化。別の Unit（U6）</li>
 <li><strong>実データの利用条件</strong>: 2026-11-19 に、PyPI と GitHub を確認した。パッケージは MIT。READMEは出典を教科書と明記するが、データの許諾（Cengage・著者）の記載はない。判断できる情報がないので、未確認のまま、記事に各自の確認を書いている</li>
 <li><strong>ヘックマンの標準誤差</strong>: R の補正した標準誤差と、この連載のブートストラップは、別の方法なので、比べていない</li>
 </ul>
