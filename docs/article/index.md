@@ -18,6 +18,7 @@
 | [実践データベース設計：基幹業務システム編](https://k2works.github.io/practical-database-design/article/) | データベース設計 | 販売管理・財務会計・生産管理の基幹業務システムを題材に、業務フローとデータモデルを体系的に学べます。 |
 | [Docker/Kubernetes 実践コンテナ解説](https://k2works.github.io/getting-started-docker-kubernetes/article/) | コンテナ・オーケストレーション | コンテナの基礎から複数コンテナ構成、Kubernetes、継続的デリバリー、ケーススタディまで実践的に学べます。 |
 | [経済学のためのプログラミング入門](economics-programming/index.md) | 経済学モデルを軸にした Python 入門 | 需要曲線・市場均衡・IS-LM などの経済モデルを、テストを書きながら Python で実装し、基礎・数値計算・データ分析を学べます。（執筆中） |
+| [マクロ経済学のためのプログラミング（中級＋）](macro-programming/index.md) | マクロ経済学の分析を軸にした Python 実践 | 成長・景気循環・貨幣・為替を、データ分析と動学モデル（ソロー、AD-AS、IS-MP-PC、RBC）の数値計算で、テストを書きながら学べます。[経済学のためのプログラミング入門](economics-programming/index.md) の続編です。（執筆中） |
 
 ## 関連資料
 

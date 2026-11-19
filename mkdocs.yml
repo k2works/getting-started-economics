@@ -114,6 +114,10 @@ nav:
           - 第 14 章 AD-AS 分析と主要理論: article/economics-programming/14-ad-as-and-major-theories.md
           - 第 15 章 不完全競争とゲーム理論: article/economics-programming/15-imperfect-competition-and-game-theory.md
           - 付録 A 回帰分析への橋渡し: article/economics-programming/appendix-a-bridge-to-regression.md
+      - マクロ経済学のためのプログラミング（中級＋）:
+          - 概要: article/macro-programming/index.md
+          - この記事の読み方: article/macro-programming/how-to-read.md
+          - 第 1 章 発展会計: article/macro-programming/01-development-accounting.md
   - リファレンス:
       - 概要: reference/index.md
       - よいソフトウェアとは: reference/よいソフトウェアとは.md
