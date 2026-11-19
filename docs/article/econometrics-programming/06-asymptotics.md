@@ -218,6 +218,7 @@ def test_LM検定は関係のある変数を棄却し関係のない変数を棄
     relevant = lm_test(df["y"], df[["x2"]], df[["x1"]])
     irrelevant = lm_test(df["y"], df[["x1"]], noise)
     assert relevant.p_value < 0.001
+    # 種を固定した 1 標本の例示。帰無仮説が正しくても、種を変えれば、約 5% で p < 0.05 になる
     assert irrelevant.p_value > 0.05
 
 

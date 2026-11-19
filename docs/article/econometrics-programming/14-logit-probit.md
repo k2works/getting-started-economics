@@ -57,7 +57,7 @@ uv run pytest test/chapter14
 ```
 
 ```text
-32 passed
+33 passed
 ```
 
 自分でコードを書くときは、`practice/chapter14/` に、完成形と同じ名前（`discrete.py`・`test_discrete.py`）のファイルを作ります。
@@ -155,17 +155,10 @@ class BinaryFit:
 
 def _design(x: ArrayLike) -> tuple[NDArray[np.float64], list[str]]:
     """定数項を先頭に足した説明変数の行列と、係数の名前。"""
-    if isinstance(x, pd.DataFrame):
-        names = [str(c) for c in x.columns]
-    elif isinstance(x, pd.Series):
-        names = [str(x.name)]
-    else:
-        names = []
     values = np.asarray(x, dtype=float)
     if values.ndim == 1:
         values = values.reshape(-1, 1)
-    if not names:
-        names = [f"x{i + 1}" for i in range(values.shape[1])]
+    names = regressor_names(x, values.shape[1])
     return np.column_stack([np.ones(len(values)), values]), ["const", *names]
 
 
@@ -519,6 +512,7 @@ def test_関係のない変数を足しても尤度比検定は棄却しない()
     full = fit_binary(s["y"], np.column_stack([s["x1"], s["x2"], noise]))
     restricted = fit_binary(s["y"], s[["x1", "x2"]])
     test = likelihood_ratio_test(full.log_likelihood, restricted.log_likelihood, 1)
+    # 種を固定した 1 標本の例示。帰無仮説が正しくても、種を変えれば、約 5% で p < 0.05 になる
     assert test.p_value > 0.05
 
 
@@ -606,6 +600,14 @@ def test_線形確率モデルは確率の範囲の外に出ることがある()
     assert (values > 1).any() or (values < 0).any()
     probabilities = predicted_probabilities(fit_binary(s["y"], x), x)
     assert ((probabilities > 0) & (probabilities < 1)).all()
+
+
+def test_系列の名前は係数名になり名前がなければ_x1() -> None:
+    rng = np.random.default_rng(0)
+    x = pd.Series(rng.standard_normal(200), name="educ")
+    y = (x + rng.standard_normal(200) > 0).astype(float)
+    assert list(fit_binary(y, x).coefficients.index) == ["const", "educ"]
+    assert list(fit_binary(y, x.rename(None)).coefficients.index) == ["const", "x1"]
 ```
 
 ```python
@@ -716,7 +718,7 @@ uv run pytest test/chapter14
 ```
 
 ```text
-32 passed
+33 passed
 ```
 
 ## 14.6 規則で言うと

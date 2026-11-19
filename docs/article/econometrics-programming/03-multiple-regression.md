@@ -54,7 +54,7 @@ uv run pytest test/chapter03
 ```
 
 ```text
-25 passed
+27 passed
 ```
 
 自分でコードを書くときは、`practice/chapter03/` に、完成形と同じ名前（`multiple.py`・`test_multiple.py`）のファイルを作ります。
@@ -135,10 +135,11 @@ class OlsResult:
     df_resid: int
 
 
-def _names(x: ArrayLike, width: int) -> list[str]:
+def regressor_names(x: ArrayLike, width: int) -> list[str]:
+    """説明変数の名前。表の列名・系列の名前を使い、名前がなければ x1, x2, …。"""
     if isinstance(x, pd.DataFrame):
         return [str(c) for c in x.columns]
-    if isinstance(x, pd.Series):
+    if isinstance(x, pd.Series) and x.name is not None:
         return [str(x.name)]
     return [f"x{i + 1}" for i in range(width)]
 
@@ -147,7 +148,7 @@ def _matrix(x: ArrayLike, constant: bool) -> tuple[NDArray[np.float64], list[str
     values = np.asarray(x, dtype=float)
     if values.ndim == 1:
         values = values.reshape(-1, 1)
-    names = _names(x, values.shape[1])
+    names = regressor_names(x, values.shape[1])
     if constant:
         values = np.column_stack([np.ones(len(values)), values])
         names = ["const", *names]
@@ -476,6 +477,18 @@ def test_対数の係数の割合への換算() -> None:
     assert percent_effect(0) == 0
     assert percent_effect(-0.1) == pytest.approx(-9.5163, abs=1e-4)
     assert percent_effect(0.1, change=2) == pytest.approx(22.1403, abs=1e-4)
+
+
+def test_名前のない系列を渡すと係数名は_x1() -> None:
+    x = pd.Series([1.0, 2.0, 3.0, 4.0, 6.0])
+    y = [2.0, 4.1, 5.9, 8.2, 12.1]
+    assert list(fit_ols(y, x).coefficients.index) == ["const", "x1"]
+
+
+def test_名前のある系列を渡すと係数名はその名前() -> None:
+    x = pd.Series([1.0, 2.0, 3.0, 4.0, 6.0], name="educ")
+    y = [2.0, 4.1, 5.9, 8.2, 12.1]
+    assert list(fit_ols(y, x).coefficients.index) == ["const", "educ"]
 ```
 
 係数 0.1 は 10.5171%、−0.1 は −9.5163% です。符号によって、近似の誤差の向きが違います。
@@ -540,7 +553,7 @@ uv run pytest test/chapter03
 ```
 
 ```text
-25 passed
+27 passed
 ```
 
 ## 3.6 規則で言うと

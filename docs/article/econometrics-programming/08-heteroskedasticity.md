@@ -53,7 +53,7 @@ uv run pytest test/chapter08
 ```
 
 ```text
-25 passed
+26 passed
 ```
 
 自分でコードを書くときは、`practice/chapter08/` に、完成形と同じ名前（`hetero.py`・`test_hetero.py`）のファイルを作ります。
@@ -138,7 +138,7 @@ def _frame(x: ArrayLike) -> pd.DataFrame:
     values = np.asarray(x, dtype=float)
     if values.ndim == 1:
         values = values.reshape(-1, 1)
-    return pd.DataFrame(values, columns=[f"x{i + 1}" for i in range(values.shape[1])])
+    return pd.DataFrame(values, columns=regressor_names(x, values.shape[1]))
 
 
 def robust_standard_errors(y: ArrayLike, x: ArrayLike, kind: str = "HC1") -> pd.Series:
@@ -380,6 +380,7 @@ def test_不均一分散のデータでは均一分散の帰無仮説を棄却�
 
 def test_均一分散のデータでは棄却しない() -> None:
     x, y = draw_fan_sample(200, np.random.default_rng(1), False)
+    # 種を固定した 1 標本の例示。帰無仮説が正しくても、種を変えれば、約 5% で p < 0.05 になる
     assert breusch_pagan(y, x).p_value > 0.05
     assert white_test(y, x).p_value > 0.05
 ```
@@ -449,6 +450,15 @@ def test_不均一分散なら通常の標準誤差は過小で頑健な標準�
     r = standard_error_comparison(50, 2000, True, np.random.default_rng(0))
     assert r["classical"] < 0.85 * r["sd"]
     assert r["hc1"] == pytest.approx(r["sd"], rel=0.12)
+
+
+def test_頑健な標準誤差の名前は通常の推定の係数名と一致する() -> None:
+    x = pd.Series([1.0, 2.0, 3.0, 4.0, 6.0, 7.0, 9.0], name="educ")
+    y = [2.0, 4.1, 5.9, 8.2, 12.1, 13.8, 18.3]
+    named = robust_standard_errors(y, x)
+    assert list(named.index) == list(fit_ols(y, x).coefficients.index)
+    unnamed = robust_standard_errors(y, x.rename(None))
+    assert list(unnamed.index) == ["const", "x1"]
 ```
 
 ```python
@@ -502,7 +512,7 @@ uv run pytest test/chapter08
 ```
 
 ```text
-25 passed
+26 passed
 ```
 
 ## 8.6 規則で言うと
