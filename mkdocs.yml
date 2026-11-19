@@ -68,6 +68,7 @@ exclude_docs: |
   # 執筆者向けの内部文書（読者向けのサイトには含めない）
   article/economics-programming/outline.md
   article/macro-programming/outline.md
+  article/econometrics-programming/outline.md
   # 参照用に取得した外部資料（.gitignore の対象。サイトには含めない）
   article/py4basics.github.io/
   article/py4etrics.github.io/
@@ -135,6 +136,10 @@ nav:
           - 第 16 章 確率的ソロー・モデル: article/macro-programming/16-stochastic-solow.md
           - 第 17 章 対数線形近似: article/macro-programming/17-log-linearization.md
           - 第 18 章 実物的景気循環（RBC）モデル: article/macro-programming/18-rbc-model.md
+      - 計量経済学のためのプログラミング:
+          - 概要: article/econometrics-programming/index.md
+          - この記事の読み方: article/econometrics-programming/how-to-read.md
+          - 第 1 章 統計学の復習: article/econometrics-programming/01-statistics-review.md
   - リファレンス:
       - 概要: reference/index.md
       - よいソフトウェアとは: reference/よいソフトウェアとは.md
