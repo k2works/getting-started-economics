@@ -6,8 +6,10 @@ import pytest
 from matplotlib.lines import Line2D
 from matplotlib.patches import Polygon, Rectangle
 
+from lib.chapter15.externality import externality_deadweight_loss
 from lib.chapter15.monopoly import monopoly_outcome
-from lib.chapter15.plot import plot_monopoly
+from lib.chapter15.oligopoly import best_response
+from lib.chapter15.plot import plot_cournot, plot_externality, plot_monopoly
 
 DEMAND = {"demand_intercept": 100, "demand_slope": 2}
 
@@ -70,3 +72,70 @@ def test_死荷重の三角形の頂点は独占点と競争点と限界費用�
     vertices: Any = triangle.get_xy()
     corners = {(round(float(x), 6), round(float(y), 6)) for x, y in vertices}
     assert corners == {(40, 30), (40, 10), (80, 10)}
+
+
+MARKET = {
+    "demand_intercept": 100,
+    "demand_slope": 2,
+    "supply_intercept": 0,
+    "supply_slope": 3,
+}
+COURNOT = {"demand_intercept": 100, "demand_slope": 2, "marginal_cost": 10}
+
+
+def test_クールノーの図には2社の反応曲線と均衡点がある() -> None:
+    ax = plot_cournot(**COURNOT).axes[0]
+    assert [line.get_label() for line in ax.lines] == [
+        "Firm 1 best response",
+        "Firm 2 best response",
+        "Cournot equilibrium",
+    ]
+
+
+def test_反応曲線の点は相手の生産量に対する最適反応() -> None:
+    ax = plot_cournot(**COURNOT).axes[0]
+    for x, y in xy(ax.lines[0]):
+        assert x == pytest.approx(best_response(y, **COURNOT))
+    for x, y in xy(ax.lines[1]):
+        assert y == pytest.approx(best_response(x, **COURNOT))
+
+
+def test_クールノー均衡は2本の反応曲線の交点で各社80_3() -> None:
+    ax = plot_cournot(**COURNOT).axes[0]
+    assert xy(ax.lines[2]) == [pytest.approx((80 / 3, 80 / 3), abs=1e-6)]
+
+
+def test_外部不経済の図には需要_私的供給_社会的供給_市場点_最適点がある() -> None:
+    ax = plot_externality(**MARKET, external_cost=5).axes[0]
+    assert [line.get_label() for line in ax.lines] == [
+        "Demand",
+        "Supply (private)",
+        "Supply (social)",
+        "Market",
+        "Social optimum",
+    ]
+
+
+def test_社会的な供給曲線は私的な供給曲線を外部費用だけ上にずらしたもの() -> None:
+    ax = plot_externality(**MARKET, external_cost=5).axes[0]
+    private, social = xy(ax.lines[1]), xy(ax.lines[2])
+    assert all(
+        s[1] == pytest.approx(p[1] + 5) for p, s in zip(private, social, strict=True)
+    )
+
+
+def test_市場点は数量60で価格20_社会的最適点は数量54で価格23() -> None:
+    ax = plot_externality(**MARKET, external_cost=5).axes[0]
+    assert xy(ax.lines[3]) == [pytest.approx((60, 20))]
+    assert xy(ax.lines[4]) == [pytest.approx((54, 23))]
+
+
+def test_外部不経済の死荷重の三角形の頂点と面積() -> None:
+    ax = plot_externality(**MARKET, external_cost=5).axes[0]
+    triangle = next(p for p in ax.patches if isinstance(p, Polygon))
+    vertices: Any = triangle.get_xy()
+    corners = {(round(float(x), 6), round(float(y), 6)) for x, y in vertices}
+    assert corners == {(54, 23), (60, 20), (60, 25)}
+    assert area(triangle) == pytest.approx(
+        externality_deadweight_loss(**MARKET, external_cost=5)
+    )
