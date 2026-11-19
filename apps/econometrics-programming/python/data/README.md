@@ -9,5 +9,6 @@
 - 導入は、`uv run --group realdata ...`（任意の依存グループ。テストと CI には、不要です）
 - データは、パッケージから、各自の手元に取り込みます。**リポジトリには入れません**
 - 第 6 章（第 1 部）で、賃金のデータ `wage1`（526 行 × 24 列。1976 年の米国の Current Population Survey）を使います
+- 第 13 章（第 3 部）で、女性の賃金のデータ `mroz`（753 行 × 22 列。1975 年の既婚女性。`wage` は、働いている 428 人だけ観測。出典は、Mroz (1987)、Econometrica）を使います
 - 第 10 章（第 2 部）で、賃金のパネル `wagepan`（4360 行 × 44 列。545 人 × 1980〜1987 年。出典は、Vella and Verbeek (1998)、Journal of Applied Econometrics）を使います
 - データそのものは、教科書（Wooldridge, *Introductory Econometrics: A Modern Approach*、Cengage）のものです。利用条件は、各自で確認し、使うときは、出典を明記してください

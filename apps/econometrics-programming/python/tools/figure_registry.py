@@ -49,6 +49,18 @@ from lib.chapter10.plot import (  # noqa: E402
     plot_entity_lines,
     plot_estimate_comparison,
 )
+from lib.chapter11.endogeneity import (  # noqa: E402
+    draw_market,
+    simulate_measurement_error,
+    simulate_omitted,
+)
+from lib.chapter11.plot import plot_market  # noqa: E402
+from lib.chapter12.iv import (  # noqa: E402
+    draw_iv_sample,
+    weak_instrument_experiment,
+)
+from lib.chapter13.iv_tests import sargan_rejection_rate  # noqa: E402
+from lib.chapter13.plot import plot_rejection_rates  # noqa: E402
 
 
 def _correlated_regressors() -> pd.DataFrame:
@@ -100,6 +112,45 @@ def _standard_error_figure() -> Figure:
     )
 
 
+def _measurement_error_figure() -> Figure:
+    estimates = pd.DataFrame(
+        {
+            "error sd 0.5": simulate_measurement_error(
+                500, 0.5, 1000, np.random.default_rng(0)
+            ),
+            "error sd 1.0": simulate_measurement_error(
+                500, 1.0, 1000, np.random.default_rng(0)
+            ),
+        }
+    )
+    return plot_estimate_comparison(estimates, 1.0)
+
+
+def _first_stage_figure() -> Figure:
+    sample = draw_iv_sample(200, 1.0, 0.5, np.random.default_rng(0))
+    z, x = sample["z"].to_numpy(), sample["x"].to_numpy()
+    return plot_regression_line(z, x, fit_simple(z, x))
+
+
+def _iv_distribution_figure() -> Figure:
+    strong = weak_instrument_experiment(100, 1.0, 1000, np.random.default_rng(0))
+    weak = weak_instrument_experiment(100, 0.1, 1000, np.random.default_rng(0))
+    estimates = pd.DataFrame(
+        {"strong": strong["iv"].clip(-1, 3), "weak": weak["iv"].clip(-1, 3)}
+    )
+    return plot_estimate_comparison(estimates, 1.0)
+
+
+def _rejection_figure() -> Figure:
+    rates = {
+        f"Invalid {invalid}": sargan_rejection_rate(
+            500, invalid, 500, 0.05, np.random.default_rng(0)
+        )
+        for invalid in (0.0, 0.1, 0.3)
+    }
+    return plot_rejection_rates(rates, 0.05)
+
+
 # 記事に載せる図。名前が、画像のファイル名（名前.png）になる
 FIGURES: dict[str, Callable[[], Figure]] = {
     "ch01-densities": plot_densities,
@@ -143,4 +194,14 @@ FIGURES: dict[str, Callable[[], Figure]] = {
     "ch10-estimate-comparison": lambda: plot_estimate_comparison(
         estimator_comparison(200, 5, 1.0, 300, np.random.default_rng(0)), 1.0
     ),
+    "ch11-omitted-variable": lambda: plot_estimate_comparison(
+        simulate_omitted(200, 0.5, 1000, np.random.default_rng(0)), 1.0
+    ),
+    "ch11-measurement-error": _measurement_error_figure,
+    "ch11-market": lambda: plot_market(
+        draw_market(100, 2.0, 1.0, np.random.default_rng(0))
+    ),
+    "ch12-first-stage": _first_stage_figure,
+    "ch12-iv-distributions": _iv_distribution_figure,
+    "ch13-sargan-rejection": _rejection_figure,
 }

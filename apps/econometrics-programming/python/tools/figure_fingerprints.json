@@ -14,5 +14,11 @@
   "ch08-standard-errors": "6ac2d28ddaae5bb4adc3c2799f7a0d01c6f63b0101728a6656857e3a9ec1b147",
   "ch09-did": "129be32211a7c16257390324f80bfae49b6edddd9bb7b7fe8e6ccd859af49de8",
   "ch10-entity-lines": "30eaa6c269b1ea317caeb8f92497027217159d820d293caa409e8ae61a10aa6f",
-  "ch10-estimate-comparison": "0fe931f5613ac3a55a39bb3f3ea86244a6a1b149c06711e9935113f63cafcca4"
+  "ch10-estimate-comparison": "0fe931f5613ac3a55a39bb3f3ea86244a6a1b149c06711e9935113f63cafcca4",
+  "ch11-market": "549d45593b672215d69c43c08954230be5583f27bb3e0a10e89d3f0be57b6b2b",
+  "ch11-measurement-error": "546b9c83e6c1dcf748ad0921d2ae65f5f7ff18150d6dd1829ec795040bf19aca",
+  "ch11-omitted-variable": "29a8c46c3c0e869f5838c9777fca9cc9cda3f2ab2e48461c731f4ed5d35f8f4b",
+  "ch12-first-stage": "5910a5bc49a913106476f7292ed77ca2e237141286d35ae5011a22a75a20b3d4",
+  "ch12-iv-distributions": "46e59ad5773630e6f05a8f1ebf60b8483eab87dc2f27be08df2de77820581db0",
+  "ch13-sargan-rejection": "72f27b8a44dfa113a987d9a2918208238a22010fc26fe99469b404d1ad81d869"
 }

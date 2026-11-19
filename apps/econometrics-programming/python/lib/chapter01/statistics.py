@@ -4,10 +4,11 @@ import math
 from collections.abc import Sequence
 
 import numpy as np
+import pandas as pd
 from numpy.typing import NDArray
 from scipy import stats
 
-Array = Sequence[float] | NDArray[np.float64]
+Array = Sequence[float] | NDArray[np.float64] | pd.Series
 
 # 臨界値を求められる分布（名前 -> SciPy の分布）
 _DISTRIBUTIONS = {
