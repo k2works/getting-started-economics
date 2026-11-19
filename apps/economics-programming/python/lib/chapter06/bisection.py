@@ -7,7 +7,7 @@ from lib.chapter03.schedule import quantity_supplied
 
 
 class NoEquilibriumError(ValueError):
-    """指定した区間に均衡価格が見つからないときの例外。"""
+    """均衡が見つからない（存在しない）ときの例外。"""
 
 
 def make_excess_demand(

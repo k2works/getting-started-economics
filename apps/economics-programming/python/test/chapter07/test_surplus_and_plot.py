@@ -6,6 +6,7 @@ import pytest
 from matplotlib.figure import Figure
 from matplotlib.lines import Line2D
 
+from lib.chapter06.bisection import NoEquilibriumError
 from lib.chapter07.plot import draw_market
 from lib.chapter07.surplus import (
     consumer_surplus,
@@ -167,3 +168,46 @@ def test_供給曲線に切片があるとき図の均衡点は数量64と価格
     ((quantity, price),) = curve_points(ax.lines[2]).items()
     assert quantity == pytest.approx(64)
     assert price == pytest.approx(18)
+
+
+# 需要の切片が供給の切片より小さい市場: 価格が 0 でも供給が需要を上回る（P* = -4）
+MARKET_WITH_NEGATIVE_PRICE = {
+    "demand_intercept": 100,
+    "demand_slope": 2,
+    "supply_intercept": 120,
+    "supply_slope": 3,
+}
+
+# 価格は正でも取引量が負になる市場: 需要は価格 10 でなくなり、供給は価格 30 まで始まらない
+MARKET_WITH_NEGATIVE_QUANTITY = {
+    "demand_intercept": 10,
+    "demand_slope": 1,
+    "supply_intercept": -30,
+    "supply_slope": 1,
+}
+
+
+def test_価格が負になる市場では均衡を求められない() -> None:
+    with pytest.raises(NoEquilibriumError):
+        equilibrium(**MARKET_WITH_NEGATIVE_PRICE)
+
+
+def test_取引量が負になる市場では均衡を求められない() -> None:
+    with pytest.raises(NoEquilibriumError):
+        equilibrium(**MARKET_WITH_NEGATIVE_QUANTITY)
+
+
+def test_価格がちょうど0になる市場の均衡は許される() -> None:
+    # 100 - 2P = 100 + 3P から P = 0、Q = 100
+    assert equilibrium(100, 2, 100, 3) == pytest.approx((0, 100))
+
+
+def test_均衡のない市場では余剰も図も求められない() -> None:
+    with pytest.raises(NoEquilibriumError):
+        consumer_surplus(**MARKET_WITH_NEGATIVE_PRICE)
+    with pytest.raises(NoEquilibriumError):
+        draw_market(**MARKET_WITH_NEGATIVE_PRICE)
+    with pytest.raises(NoEquilibriumError):
+        producer_surplus(**MARKET_WITH_NEGATIVE_QUANTITY)
+    with pytest.raises(NoEquilibriumError):
+        equilibrium_with_tax(**MARKET_WITH_NEGATIVE_PRICE, tax=5)

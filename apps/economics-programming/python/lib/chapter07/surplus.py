@@ -5,6 +5,23 @@
 
 from dataclasses import dataclass
 
+from lib.chapter06.bisection import NoEquilibriumError
+
+
+def check_equilibrium_exists(price: float, quantity: float) -> None:
+    """価格が 0 以上、数量が正の均衡があることを確かめる。なければ例外にする。
+
+    第 1 章の「価格も需要量も負にならない」を、均衡にも課す。
+    """
+    if price < 0:
+        raise NoEquilibriumError(
+            "均衡価格が負になる。価格が 0 でも供給が需要を上回るので、均衡がない"
+        )
+    if quantity <= 0:
+        raise NoEquilibriumError(
+            "均衡数量が 0 以下になる。取引が成立しないので、均衡がない"
+        )
+
 
 def equilibrium(
     demand_intercept: float,
@@ -12,9 +29,14 @@ def equilibrium(
     supply_intercept: float,
     supply_slope: float,
 ) -> tuple[float, float]:
-    """均衡価格と均衡数量を返す。a - bP = c + dP を P について解く。"""
+    """均衡価格と均衡数量を返す。a - bP = c + dP を P について解く。
+
+    価格が負、または数量が 0 以下になる市場には、均衡がないので、
+    NoEquilibriumError にする。
+    """
     price = (demand_intercept - supply_intercept) / (demand_slope + supply_slope)
     quantity = demand_intercept - demand_slope * price
+    check_equilibrium_exists(price, quantity)
     return price, quantity
 
 

@@ -3,6 +3,8 @@
 import numpy as np
 from numpy.typing import NDArray
 
+from lib.chapter07.surplus import check_equilibrium_exists
+
 
 def _check_mpc(mpc: float) -> None:
     if not 0 <= mpc < 1:
@@ -49,10 +51,14 @@ def equilibrium_by_linear_algebra(
 
     Q + bP = a（需要曲線）
     Q - dP = c（供給曲線）
+
+    第 7 章の `equilibrium` と同じく、価格が負、または数量が 0 以下になる市場には、
+    均衡がないので、NoEquilibriumError にする。
     """
     coefficients = np.array([[1.0, demand_slope], [1.0, -supply_slope]])
     constants = np.array([demand_intercept, supply_intercept])
     quantity, price = np.linalg.solve(coefficients, constants)
+    check_equilibrium_exists(float(price), float(quantity))
     return float(price), float(quantity)
 
 

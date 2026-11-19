@@ -4,6 +4,11 @@ import numpy as np
 import pytest
 
 from lib.chapter01.demand import quantity_demanded
+from lib.chapter06.bisection import (
+    NoEquilibriumError,
+    find_equilibrium_price,
+    make_excess_demand,
+)
 from lib.chapter07.surplus import equilibrium
 from lib.chapter09.linear import (
     demand_quantities,
@@ -106,3 +111,44 @@ def test_連立方程式の解は第7章の閉形式の解と一致する(supply
     assert equilibrium_by_linear_algebra(**market) == pytest.approx(
         equilibrium(**market)
     )
+
+
+@pytest.mark.parametrize(
+    "market",
+    [
+        {
+            "demand_intercept": 100,
+            "demand_slope": 2,
+            "supply_intercept": 120,
+            "supply_slope": 3,
+        },
+        {
+            "demand_intercept": 10,
+            "demand_slope": 1,
+            "supply_intercept": -30,
+            "supply_slope": 1,
+        },
+    ],
+)
+def test_均衡のない市場では連立方程式の解も第7章の閉形式と同じく例外になる(
+    market: dict[str, float],
+) -> None:
+    with pytest.raises(NoEquilibriumError):
+        equilibrium(**market)
+    with pytest.raises(NoEquilibriumError):
+        equilibrium_by_linear_algebra(**market)
+
+
+def test_価格が負になる市場では3つの方法がそろって均衡なしと判断する() -> None:
+    market = {
+        "demand_intercept": 100,
+        "demand_slope": 2,
+        "supply_intercept": 120,
+        "supply_slope": 3,
+    }
+    with pytest.raises(NoEquilibriumError):
+        equilibrium(**market)
+    with pytest.raises(NoEquilibriumError):
+        equilibrium_by_linear_algebra(**market)
+    with pytest.raises(NoEquilibriumError):
+        find_equilibrium_price(make_excess_demand(**market), low=0, high=100)
