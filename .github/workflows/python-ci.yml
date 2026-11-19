@@ -69,3 +69,22 @@ jobs:
       # 記事のコード例・実行結果の件数・解答のコード・図が、サンプル実装とずれていないかを確かめる
       - name: Check articles against the sample code
         run: uv run tox -e articles
+
+  # 3 シリーズに複製した、記事の検査ツールとそのテストが、同一であることを確かめる。
+  # 1 つだけ直して、ほかの複製が古いまま残る（実際に起きた）のを防ぐ。
+  tools-sync:
+    timeout-minutes: 5
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+
+      - name: Check the tools are identical in the three series
+        run: |
+          status=0
+          for f in tools/check_articles.py tools/render_figures.py test/tools/test_check_articles.py test/tools/test_render_figures.py; do
+            for s in macro-programming econometrics-programming; do
+              diff -q --strip-trailing-cr "apps/economics-programming/python/$f" "apps/$s/python/$f" || status=1
+            done
+          done
+          exit $status

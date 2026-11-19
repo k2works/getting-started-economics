@@ -5,6 +5,7 @@ import pytest
 from tools.check_articles import (
     extract_python_blocks,
     find_mismatches,
+    find_unfenced_code,
     read_reported_counts,
     strip_answers,
     top_level_definitions,
@@ -108,6 +109,27 @@ def test_許可した抜粋は不一致にならない() -> None:
         "def indented() -> None:\n    pass",
     ]
     assert find_mismatches(ARTICLE, source, allowed=allowed) == []
+
+
+def test_フェンスの外のコード行を見つける() -> None:
+    markdown = (
+        "説明です。\n\n```python\nimport os\n```\n\n"
+        "def test_x() -> None:\n    return None\n"
+    )
+    assert find_unfenced_code(markdown) == [
+        "def test_x() -> None:",
+        "    return None",
+    ]
+
+
+def test_フェンスの中のコードと文章は対象にしない() -> None:
+    markdown = "文章 import の話。\n\n```python\ndef f():\n    return 1\n```\n"
+    assert find_unfenced_code(markdown) == []
+
+
+def test_字下げされたフェンスの中も対象にしない() -> None:
+    markdown = "    ```python\n    def f():\n        return 1\n    ```\n"
+    assert find_unfenced_code(markdown) == []
 
 
 def test_実行結果の件数を読み取る() -> None:

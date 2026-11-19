@@ -13,6 +13,7 @@
 """
 
 import json
+import os
 import re
 import subprocess
 import sys
@@ -29,6 +30,9 @@ EXCERPTS_FILE = Path(__file__).resolve().parent / "article_code_excerpts.json"
 # 完成形として照合する、トップレベルの定義の書き出し
 _DEFINITION_START = r"(?:def |class |@|[A-Z_]+[: =]|# )"
 _BLOCK_PATTERN = re.compile(r"```python\n(.*?)```", re.S)
+_UNFENCED_CODE = re.compile(
+    r"(def |class |@dataclass|    return |import |from \S+ import )"
+)
 _COUNT_PATTERN = re.compile(
     r"uv run pytest test/chapter(\d{2})\n```\n\n```text\n(\d+) passed\n```"
 )
@@ -106,6 +110,27 @@ def _load_excerpts() -> dict[str, list[str]]:
     return data
 
 
+def find_unfenced_code(markdown: str) -> list[str]:
+    """コードフェンスの外にある、Python のコードらしい行を返す。"""
+    found = []
+    inside = False
+    for line in markdown.splitlines():
+        if line.lstrip().startswith("```"):
+            inside = not inside
+        elif not inside and _UNFENCED_CODE.match(line):
+            found.append(line)
+    return found
+
+
+def check_fences() -> list[str]:
+    """記事のコードが、すべてコードフェンスの中にあるかを調べる。"""
+    return [
+        f"{path.name}: フェンスの外のコード: {line.strip()}"
+        for path in _article_files()
+        for line in find_unfenced_code(_read(path))
+    ]
+
+
 def check_code_blocks() -> list[str]:
     """記事の完成形のコード例が、実装・テストのソースと一致するかを調べる。"""
     source = _source_text()
@@ -127,7 +152,9 @@ def _actual_counts() -> dict[int, int]:
     result = subprocess.run(
         [sys.executable, "-m", "pytest", "--collect-only", "-q",
          "-p", "no:cacheprovider", "test"],
-        cwd=APP_DIR, capture_output=True, text=True, encoding="utf-8", check=False,
+        cwd=APP_DIR, capture_output=True, text=True, encoding="utf-8",
+        errors="replace", check=False,
+        env={**os.environ, "PYTHONUTF8": "1"},
     )  # fmt: skip
     counts: dict[int, int] = {}
     for line in result.stdout.splitlines():
@@ -143,7 +170,10 @@ def check_counts() -> list[str]:
     actual_counts = _actual_counts()
     problems = []
     for path in _article_files():
-        for chapter, reported in read_reported_counts(_read(path)):
+        reports = read_reported_counts(_read(path))
+        if path.name[:2].isdigit() and not reports:
+            problems.append(f"{path.name}: 実行結果の件数が見つからない")
+        for chapter, reported in reports:
             actual = actual_counts.get(chapter, 0)
             if actual != reported:
                 problems.append(
@@ -154,16 +184,20 @@ def check_counts() -> list[str]:
 
 def _answer_module(chapter: int, markdown: str) -> str | None:
     """解答のコードを、1 つのテストモジュールにまとめる。解答がなければ None。"""
+    blocks: list[str] = []
     start = markdown.find('??? note "解答')
     if start == -1:
         return None
-    end = markdown.find("\n## ", start)
-    section = markdown[start : end if end != -1 else len(markdown)]
-    blocks = extract_python_blocks(section)
+    while start != -1:
+        end = markdown.find("\n## ", start)
+        section = markdown[start : end if end != -1 else len(markdown)]
+        blocks.extend(extract_python_blocks(section))
+        start = markdown.find('??? note "解答', end) if end != -1 else -1
     imports = "\n".join(
         f"from lib.{f.parent.name}.{f.stem} import *"
         for f in sorted(APP_DIR.glob("lib/chapter*/*.py"))
         if f.stem != "__init__"
+        and int(f.parent.name.removeprefix("chapter")) <= chapter
     )
     header = (
         "import math, random, statistics, dataclasses\n"
@@ -227,6 +261,7 @@ def check_answers() -> list[str]:
 
 def main() -> int:
     checks = [
+        ("コードがフェンスの中にあること", check_fences),
         ("記事のコード例と実装の照合", check_code_blocks),
         ("実行結果の件数の照合", check_counts),
         ("解答のコードの実行", check_answers),

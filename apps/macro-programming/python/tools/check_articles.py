@@ -30,6 +30,9 @@ EXCERPTS_FILE = Path(__file__).resolve().parent / "article_code_excerpts.json"
 # 完成形として照合する、トップレベルの定義の書き出し
 _DEFINITION_START = r"(?:def |class |@|[A-Z_]+[: =]|# )"
 _BLOCK_PATTERN = re.compile(r"```python\n(.*?)```", re.S)
+_UNFENCED_CODE = re.compile(
+    r"(def |class |@dataclass|    return |import |from \S+ import )"
+)
 _COUNT_PATTERN = re.compile(
     r"uv run pytest test/chapter(\d{2})\n```\n\n```text\n(\d+) passed\n```"
 )
@@ -105,6 +108,27 @@ def _load_excerpts() -> dict[str, list[str]]:
         return {}
     data: dict[str, list[str]] = json.loads(EXCERPTS_FILE.read_text(encoding="utf-8"))
     return data
+
+
+def find_unfenced_code(markdown: str) -> list[str]:
+    """コードフェンスの外にある、Python のコードらしい行を返す。"""
+    found = []
+    inside = False
+    for line in markdown.splitlines():
+        if line.lstrip().startswith("```"):
+            inside = not inside
+        elif not inside and _UNFENCED_CODE.match(line):
+            found.append(line)
+    return found
+
+
+def check_fences() -> list[str]:
+    """記事のコードが、すべてコードフェンスの中にあるかを調べる。"""
+    return [
+        f"{path.name}: フェンスの外のコード: {line.strip()}"
+        for path in _article_files()
+        for line in find_unfenced_code(_read(path))
+    ]
 
 
 def check_code_blocks() -> list[str]:
@@ -237,6 +261,7 @@ def check_answers() -> list[str]:
 
 def main() -> int:
     checks = [
+        ("コードがフェンスの中にあること", check_fences),
         ("記事のコード例と実装の照合", check_code_blocks),
         ("実行結果の件数の照合", check_counts),
         ("解答のコードの実行", check_answers),
