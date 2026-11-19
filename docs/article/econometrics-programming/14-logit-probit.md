@@ -57,7 +57,7 @@ uv run pytest test/chapter14
 ```
 
 ```text
-30 passed
+32 passed
 ```
 
 自分でコードを書くときは、`practice/chapter14/` に、完成形と同じ名前（`discrete.py`・`test_discrete.py`）のファイルを作ります。
@@ -185,7 +185,8 @@ def _score_and_weights(
     """x′β についての、対数尤度の 1 階微分（スコア）と、2 階微分の符号を変えたもの。"""
     dist = LINKS[link]
     q = 2 * y - 1
-    lam = q * dist.pdf(xb) / dist.cdf(q * xb)
+    # 比を、対数の差から作る（極端な x′β でも、0 ÷ 0 や 0 での除算にならない）
+    lam = q * np.exp(dist.logpdf(xb) - dist.logcdf(q * xb))
     if link == "logit":
         p = dist.cdf(xb)
         return lam, p * (1 - p)
@@ -418,6 +419,32 @@ def test_完全に分離できるデータは収束しない() -> None:
 def test_ニュートン法は2_x_2の表で5回で収束する() -> None:
     assert fit_binary(Y, X, "logit").iterations == 5
     assert fit_binary(Y, X, "probit").iterations == 5
+
+
+def test_極端な線形予測値でもスコアは有限() -> None:
+    y = np.array([1.0, 0.0, 1.0])
+    xb = np.array([-40.0, 40.0, -800.0])
+    for link in ("logit", "probit"):
+        score, weights = _score_and_weights(link, y, xb)
+        assert np.all(np.isfinite(score))
+        assert np.all(np.isfinite(weights))
+    # 外れた観測値のスコアは、ほぼ |x′β|（誤って予測した側）になる
+    probit_score, _ = _score_and_weights("probit", y, xb)
+    assert probit_score == pytest.approx([40.0, -40.0, 800.0], rel=0.01)
+
+
+def test_まれな外れ値があっても完全分離と誤報しない() -> None:
+    rng = np.random.default_rng(0)
+    x = rng.standard_normal(20000)
+    y = (4 * x + rng.standard_normal(20000) > 0).astype(float)
+    x = np.append(x, -6.0)
+    y = np.append(y, 1.0)
+    fit = fit_binary(y, x, "probit")
+    # 最大値では、スコアの合計が 0（statsmodels は確率を 2.2e-16 で切り詰めるので、照合に使わない）
+    design = sm.add_constant(x)
+    score, _ = _score_and_weights("probit", y, design @ fit.coefficients.to_numpy())
+    assert design.T @ score == pytest.approx([0.0, 0.0], abs=1e-6)
+    assert fit.coefficients["x1"] == pytest.approx(3.4944, abs=1e-3)
 
 
 def test_知らないリンク関数は受け付けない() -> None:
@@ -689,7 +716,7 @@ uv run pytest test/chapter14
 ```
 
 ```text
-30 passed
+32 passed
 ```
 
 ## 14.6 規則で言うと

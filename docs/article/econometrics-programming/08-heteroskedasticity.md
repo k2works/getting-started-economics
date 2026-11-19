@@ -53,7 +53,7 @@ uv run pytest test/chapter08
 ```
 
 ```text
-24 passed
+25 passed
 ```
 
 自分でコードを書くときは、`practice/chapter08/` に、完成形と同じ名前（`hetero.py`・`test_hetero.py`）のファイルを作ります。
@@ -244,14 +244,20 @@ def breusch_pagan(y: ArrayLike, x: ArrayLike) -> TestResult:
 
 
 def white_test(y: ArrayLike, x: ArrayLike) -> TestResult:
-    """White 検定: 説明変数・その 2 乗・交差項で、残差の 2 乗を説明する。"""
+    """White 検定: 説明変数・その 2 乗・交差項で、残差の 2 乗を説明する。
+
+    ダミー変数は d² = d になるので、同じ値の列は 1 本にまとめる。
+    自由度は、まとめたあとの列数。
+    """
     frame = _frame(x)
     columns = {name: frame[name] for name in frame.columns}
     for name in frame.columns:
         columns[f"{name}^2"] = frame[name] ** 2
     for a, b in combinations(frame.columns, 2):
         columns[f"{a}*{b}"] = frame[a] * frame[b]
-    return _squared_residual_test(y, frame, pd.DataFrame(columns))
+    auxiliary = pd.DataFrame(columns)
+    auxiliary = auxiliary.loc[:, ~auxiliary.T.duplicated()]
+    return _squared_residual_test(y, frame, auxiliary)
 
 
 def reset_test(y: ArrayLike, x: ArrayLike) -> TestResult:
@@ -282,6 +288,23 @@ def test_Whiteはstatsmodelsと一致する() -> None:
     test = white_test(y, x)
     assert test.statistic == pytest.approx(lm)
     assert test.p_value == pytest.approx(p)
+
+
+@pytest.mark.filterwarnings(
+    "ignore::statsmodels.tools.sm_exceptions.SingularMatrixWarning"
+)
+def test_ダミー変数を含んでもWhite検定は_statsmodels_と一致する() -> None:
+    rng = np.random.default_rng(3)
+    n = 400
+    d = (rng.random(n) < 0.4).astype(float)
+    x = rng.standard_normal(n)
+    y = 1 + 2 * x + d + (0.5 + d) * rng.standard_normal(n)
+    frame = pd.DataFrame({"x": x, "d": d})
+    result = white_test(y, frame)
+    fit = sm.OLS(y, sm.add_constant(frame)).fit()
+    lm, p, _, _ = het_white(fit.resid, fit.model.exog)
+    assert result.statistic == pytest.approx(lm)
+    assert result.p_value == pytest.approx(p)
 
 
 def test_RESETはstatsmodelsと一致する() -> None:
@@ -417,14 +440,15 @@ def standard_error_comparison(
 ```python
 def test_均一分散なら通常の標準誤差も頑健な標準誤差も実際のばらつきに近い() -> None:
     r = standard_error_comparison(50, 2000, False, np.random.default_rng(0))
-    assert r["classical"] == pytest.approx(r["sd"], rel=0.05)
-    assert r["hc1"] == pytest.approx(r["sd"], rel=0.05)
+    # 許容誤差: sd の推定誤差（約 1.6%）の 4 倍。HC1 は n = 50 で 5% ほど過小なので、その分を足す
+    assert r["classical"] == pytest.approx(r["sd"], rel=0.07)
+    assert r["hc1"] == pytest.approx(r["sd"], rel=0.12)
 
 
 def test_不均一分散なら通常の標準誤差は過小で頑健な標準誤差は近い() -> None:
     r = standard_error_comparison(50, 2000, True, np.random.default_rng(0))
     assert r["classical"] < 0.85 * r["sd"]
-    assert r["hc1"] == pytest.approx(r["sd"], rel=0.06)
+    assert r["hc1"] == pytest.approx(r["sd"], rel=0.12)
 ```
 
 ```python
@@ -478,7 +502,7 @@ uv run pytest test/chapter08
 ```
 
 ```text
-24 passed
+25 passed
 ```
 
 ## 8.6 規則で言うと
