@@ -6035,7 +6035,7 @@
 <td style="text-align: left;"><code>tools/check_articles.py</code> の 3 複製がすでにずれている（economics に、cp932 対策・件数の未検出・複数の解答節・章の絞り込みの 4 修正が未反映）。小さく、すぐ、同期と同一性の CI 検査。その後、共通パッケージ化（U6）</td>
 <td style="text-align: left;"><code>apps/*/python/tools/</code></td>
 <td style="text-align: left;">アーキテクト</td>
-<td style="text-align: left;">未対応</td>
+<td style="text-align: left;"><strong>第 1 段を修正済み</strong>。3 シリーズを同期し、CI の <code>tools-sync</code> で、ずれたら失敗させる。共通パッケージ化（第 2 段）は、別の Unit</td>
 </tr>
 </tbody>
 </table>
@@ -6301,6 +6301,28 @@
 <li><strong>その後（読みやすさ）</strong>: #11〜#23 を、重要度と費用で選ぶ。#18（折りたたみ・付録化）は、1 章ずつ</li>
 <li><strong>許容・保留</strong>: #24〜#32。必要になった時点で対応</li>
 </ol>
+<h2 id="_13">対応状況（中・低）<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">#</th>
+<th style="text-align: left;">状況</th>
+<th style="text-align: left;">内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">10</td>
+<td style="text-align: left;">済み</td>
+<td style="text-align: left;"><code>tools/check_realdata.py</code> が、記事の実データのスクリプトを実行し、出力（数値は許容誤差つき）を照合する。tox の <code>realdata</code> と、CI のステップを追加した</td>
+</tr>
+<tr>
+<td style="text-align: left;">12</td>
+<td style="text-align: left;">済み</td>
+<td style="text-align: left;">第 6・10・13・16 章に、<code>lib</code> を <code>practice</code> に書き換えて、自作の関数で試す手順を追記した</td>
+</tr>
+</tbody>
+</table>
 
 
 

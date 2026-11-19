@@ -6893,6 +6893,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p><code>wooldridge.data("mroz")</code> は、<strong>753 行、22 列</strong>です。1975 年の既婚女性のデータで、<code>wage</code> は、働いている 428 人だけが、観測されています（残りの <strong>325 行は欠損</strong>）。<code>inlf</code> は、労働力に入っているなら 1（合計 428）です。この節で使う列は、<code>wage</code>（推定の賃金）、<code>educ</code>（教育年数）、<code>exper</code>・<code>expersq</code>（就業経験と、その 2 乗）、<code>fatheduc</code>・<code>motheduc</code>（父・母の教育年数）です。</p>
 <h3 id="_8">自分の関数を、実際のデータに使う<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>次のスクリプトを <code>practice/chapter13/mroz.py</code> として保存し、アプリの根で、<code>uv run --group realdata python -m practice.chapter13.mroz</code> で実行します。</p>
+<p>このスクリプトは、完成形（<code>lib/</code>）の関数を使います。自分で書いた関数で試すときは、<code>from lib.chapterNN.</code> を <code>from practice.chapterNN.</code> に書き換えます（ファイル名と関数名を、完成形と同じにしてあれば、そのまま動きます）。書き換えた結果が、完成形と同じ出力になれば、自作の関数が、実際のデータでも動いたことになります。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">wooldridge</span>
 

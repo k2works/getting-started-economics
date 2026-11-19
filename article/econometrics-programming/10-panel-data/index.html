@@ -7244,6 +7244,7 @@ hausman 184.07 6.258411565090162e-42
 <p><code>wooldridge.data("wagepan")</code> は、<strong>4360 行、44 列</strong>です。個人の識別子 <code>nr</code> が 545 人、<code>year</code> が 1980 年から 1987 年の 8 期で、545 × 8 = 4360 のバランスしたパネルです。この節で使う列は、<code>lwage</code>（賃金の対数）、<code>married</code>（既婚なら 1）、<code>union</code>（組合員なら 1）です。</p>
 <h3 id="_15">自分の関数を、実際のデータに使う<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <p>次のスクリプトを <code>practice/chapter10/wagepan.py</code> として保存し、アプリの根で、<code>uv run --group realdata python -m practice.chapter10.wagepan</code> で実行します。</p>
+<p>このスクリプトは、完成形（<code>lib/</code>）の関数を使います。自分で書いた関数で試すときは、<code>from lib.chapterNN.</code> を <code>from practice.chapterNN.</code> に書き換えます（ファイル名と関数名を、完成形と同じにしてあれば、そのまま動きます）。書き換えた結果が、完成形と同じ出力になれば、自作の関数が、実際のデータでも動いたことになります。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">wooldridge</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter03.multiple</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_ols</span>
