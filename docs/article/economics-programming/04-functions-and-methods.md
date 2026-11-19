@@ -15,7 +15,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 
 | 項目 | 内容 |
 | :--- | :--- |
-| 経済学の題材 | 費用曲線（MC・AC・AVC）、効用関数、限界代替率（マインドマップ 5-1, 5-2） |
+| 経済学の題材 | 費用曲線（MC・AC・AVC）、効用関数、限界代替率（マインドマップ [5-1](<../経済学・経済政策 トピック別マインドマップ.md#t1>), [5-2](<../経済学・経済政策 トピック別マインドマップ.md#t2>)） |
 | 使う Python の機能 | 引数、戻り値、既定値、キーワード引数、組み込み関数、スコープ、メソッド |
 | 完成形 | `total_cost`、`marginal_cost`、`average_cost`、`average_variable_cost`、`cobb_douglas_utility`、`marginal_rate_of_substitution` |
 

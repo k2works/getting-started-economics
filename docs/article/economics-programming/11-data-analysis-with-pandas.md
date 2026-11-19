@@ -15,7 +15,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 
 | 項目 | 内容 |
 | :--- | :--- |
-| 経済学の題材 | GDP の三面等価、名目と実質、成長率、支出の構成比、物価指数（マインドマップ 5-5） |
+| 経済学の題材 | GDP の三面等価、名目と実質、成長率、支出の構成比、物価指数（マインドマップ [5-5](<../経済学・経済政策 トピック別マインドマップ.md#t5>)） |
 | 使う Python の機能 | pandas の `DataFrame` と `Series`、CSV の読み込み、列と行の選択、条件による行の抽出、`pytest.fixture` |
 | 新しく導入するライブラリ | [pandas](https://pandas.pydata.org/)（表形式のデータ分析） |
 | 完成形 | `load_economy`、`production_gdp`、`income_gdp`、`expenditure_gdp`、`statistical_discrepancy`、`real_gdp`、`growth_rates`、`recession_years`、`expenditure_shares`、`laspeyres_index`、`paasche_index` |

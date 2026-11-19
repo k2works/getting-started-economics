@@ -85,6 +85,8 @@ nav:
       - 概要: journal/index.md
   - 記事:
       - 概要: article/index.md
+      - 経済学・経済政策 全体マインドマップ: article/経済学・経済政策 全体マインドマップ.md
+      - 経済学・経済政策 トピック別マインドマップ: article/経済学・経済政策 トピック別マインドマップ.md
       - 経済学のためのプログラミング入門:
           - 概要: article/economics-programming/index.md
           - 執筆計画: article/economics-programming/outline.md

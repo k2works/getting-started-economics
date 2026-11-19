@@ -15,7 +15,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 
 | 項目 | 内容 |
 | :--- | :--- |
-| 経済学の題材 | 独占（MR = MC、死荷重）、寡占（クールノー均衡、囚人のジレンマ、ナッシュ均衡）、外部不経済とピグー税（マインドマップ 5-4） |
+| 経済学の題材 | 独占（MR = MC、死荷重）、寡占（クールノー均衡、囚人のジレンマ、ナッシュ均衡）、外部不経済とピグー税（マインドマップ [5-4](<../経済学・経済政策 トピック別マインドマップ.md#t4>)） |
 | 使う Python の機能 | 辞書をキーにしたタプル、繰り返しによる均衡の探索（第 5 章の復習）、`TypedDict`（テストの型）、第 7 章の関数の再利用 |
 | 完成形 | `monopoly_outcome`、`best_response`、`cournot_by_iteration`、`cournot_symmetric`、`duopoly_profits`、`pure_nash_equilibria`、`social_optimum_quantity` |
 

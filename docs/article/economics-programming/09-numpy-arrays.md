@@ -15,7 +15,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 
 | 項目 | 内容 |
 | :--- | :--- |
-| 経済学の題材 | 乗数効果、45 度線分析（国民所得の決定）、需要・供給の連立方程式（マインドマップ 5-5, 5-3） |
+| 経済学の題材 | 乗数効果、45 度線分析（国民所得の決定）、需要・供給の連立方程式（マインドマップ [5-5](<../経済学・経済政策 トピック別マインドマップ.md#t5>), [5-3](<../経済学・経済政策 トピック別マインドマップ.md#t3>)） |
 | 使う Python の機能 | NumPy の配列（`array`）、形（`shape`）、添字と切り出し、配列どうしの計算、`np.linalg.solve` |
 | 新しく導入するライブラリ | [NumPy](https://numpy.org/)（配列と線形代数） |
 | 完成形 | `multiplier`、`spending_rounds`、`income_determination`、`equilibrium_by_linear_algebra`、`demand_quantities` |

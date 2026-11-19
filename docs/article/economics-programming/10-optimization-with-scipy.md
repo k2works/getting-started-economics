@@ -15,7 +15,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 
 | 項目 | 内容 |
 | :--- | :--- |
-| 経済学の題材 | 効用最大化、利潤最大化（P = MC、操業停止点）、費用最小化（マインドマップ 5-1, 5-2） |
+| 経済学の題材 | 効用最大化、利潤最大化（P = MC、操業停止点）、費用最小化（マインドマップ [5-1](<../経済学・経済政策 トピック別マインドマップ.md#t1>), [5-2](<../経済学・経済政策 トピック別マインドマップ.md#t2>)） |
 | 使う Python の機能 | `scipy.optimize` の `minimize`（制約付き）、`minimize_scalar`、`brentq`（解を求める）、無名関数（`lambda`） |
 | 新しく導入するライブラリ | [SciPy](https://scipy.org/)（科学技術計算） |
 | 完成形 | `maximize_utility`、`profit_maximizing_quantity`、`minimize_cost` |

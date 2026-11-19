@@ -15,7 +15,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 
 | 項目 | 内容 |
 | :--- | :--- |
-| 経済学の題材 | 価格弾力性・所得弾力性、財の分類（マインドマップ 5-1） |
+| 経済学の題材 | 価格弾力性・所得弾力性、財の分類（マインドマップ [5-1](<../経済学・経済政策 トピック別マインドマップ.md#t1>)） |
 | 使う Python の機能 | 整数 `int`、小数 `float`、文字列 `str`、真偽値 `bool`、変数、算術演算、比較 |
 | 完成形 | `price_elasticity`、`income_elasticity`、`classify_income_elasticity`、`is_price_elastic` の 4 つの関数 |
 

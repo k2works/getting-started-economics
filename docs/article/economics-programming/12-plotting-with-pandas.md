@@ -15,7 +15,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 
 | 項目 | 内容 |
 | :--- | :--- |
-| 経済学の題材 | 名目と実質の GDP の推移、成長率、景気の判断（移動平均・景気動向指数）（マインドマップ 5-5） |
+| 経済学の題材 | 名目と実質の GDP の推移、成長率、景気の判断（移動平均・景気動向指数）（マインドマップ [5-5](<../経済学・経済政策 トピック別マインドマップ.md#t5>)） |
 | 使う Python の機能 | `DataFrame.plot`、`Series.plot.bar`、`rolling`、`diff`、`DataFrame` の列の平均 |
 | 完成形 | `moving_average`、`diffusion_index`、`plot_gdp_chart`、`plot_growth_chart` |
 

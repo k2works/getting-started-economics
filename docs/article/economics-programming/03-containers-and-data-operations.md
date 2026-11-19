@@ -15,7 +15,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 
 | 項目 | 内容 |
 | :--- | :--- |
-| 経済学の題材 | 需要表・供給表、超過需要、市場均衡（マインドマップ 5-3） |
+| 経済学の題材 | 需要表・供給表、超過需要、市場均衡（マインドマップ [5-3](<../経済学・経済政策 トピック別マインドマップ.md#t3>)） |
 | 使う Python の機能 | リスト、辞書、内包表記、`in`、`Mapping` の型ヒント |
 | 完成形 | `demand_schedule`、`supply_schedule`、`excess_demand`、`market_clearing_prices` |
 

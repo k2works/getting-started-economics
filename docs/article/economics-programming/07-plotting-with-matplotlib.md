@@ -15,7 +15,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 
 | 項目 | 内容 |
 | :--- | :--- |
-| 経済学の題材 | 市場均衡、消費者余剰・生産者余剰、従量税と死荷重（マインドマップ 5-3） |
+| 経済学の題材 | 市場均衡、消費者余剰・生産者余剰、従量税と死荷重（マインドマップ [5-3](<../経済学・経済政策 トピック別マインドマップ.md#t3>)） |
 | 使う Python の機能 | matplotlib（`Figure` と `Axes`）、データクラス（`dataclass`）、タプル |
 | 新しく導入するライブラリ | [matplotlib](https://matplotlib.org/)（図を描く） |
 | 完成形 | `equilibrium`、`consumer_surplus`、`producer_surplus`、`equilibrium_with_tax`、`draw_market` |
