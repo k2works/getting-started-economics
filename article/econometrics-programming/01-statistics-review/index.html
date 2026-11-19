@@ -6501,65 +6501,84 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 
 <span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
 </code></pre></div>
-<p>def test_不偏分散は分母がn引く1() -&gt; None:
-    assert sample_variance(X) == pytest.approx(2.5)</p>
-<p>def test_分母をnにすると標本分散() -&gt; None:
-    assert sample_variance(X, ddof=0) == pytest.approx(2.0)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_不偏分散は分母がn引く1</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">sample_variance</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">2.5</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_分母をnにすると標本分散</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">sample_variance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+</code></pre></div>
 <p>実行すると、<code>ModuleNotFoundError</code>（まだ、<code>sample_variance</code> がないので）で、失敗します。これが <strong>Red</strong> です。</p>
 <h3 id="green-sample_variance">Green: sample_variance を実装する<a class="headerlink" href="#green-sample_variance" title="Permanent link">&para;</a></h3>
-<p>def sample_variance(x: Array, ddof: int = 1) -&gt; float:
-    """分散。分母は n - ddof（既定は不偏分散の n - 1）。"""
-    values = np.asarray(x, dtype=float)
-    if values.size &lt;= ddof:
-        raise ValueError("観測値の数が足りない（分母が 0 以下になる）")
-    return float(np.sum((values - values.mean()) ** 2) / (values.size - ddof))</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sample_variance</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">ddof</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""分散。分母は n - ddof（既定は不偏分散の n - 1）。"""</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;=</span> <span class="n">ddof</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"観測値の数が足りない（分母が 0 以下になる）"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">values</span> <span class="o">-</span> <span class="n">values</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="n">ddof</span><span class="p">))</span>
+</code></pre></div>
 <p>テストが通ります（<strong>Green</strong>）。観測値が 1 個だと、分母が 0 になるので、エラーにします。これも、先にテストを書きます。</p>
-<p>def test_観測値が足りないと分散は計算できない() -&gt; None:
-    with pytest.raises(ValueError, match="観測値の数"):
-        sample_variance([1])
-    with pytest.raises(ValueError, match="観測値の数"):
-        sample_variance([1, 2], ddof=2)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_観測値が足りないと分散は計算できない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"観測値の数"</span><span class="p">):</span>
+        <span class="n">sample_variance</span><span class="p">([</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"観測値の数"</span><span class="p">):</span>
+        <span class="n">sample_variance</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="_6">共分散と相関<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <p>共分散は、x = [1, 2, 3]、y = [2, 4, 5] で、手計算できます。平均は 2 と 11/3、ずれの積の合計は (−1)(−5/3) + 0 + (1)(4/3) = 3 なので、n − 1 = 2 で割って、1.5 です。</p>
-<p>def test_共分散() -&gt; None:
-    assert sample_covariance([1, 2, 3], [2, 4, 5]) == pytest.approx(1.5)</p>
-<p>def test_自分自身との共分散は分散() -&gt; None:
-    assert sample_covariance(X, X) == pytest.approx(sample_variance(X))</p>
-<p>def test_長さが違うと共分散は計算できない() -&gt; None:
-    with pytest.raises(ValueError, match="長さ"):
-        sample_covariance([1, 2, 3], [1, 2])
-    with pytest.raises(ValueError, match="長さ"):
-        sample_covariance([1, 2], [1, 2, 3])</p>
-<p>def test_観測値が1個だと共分散は計算できない() -&gt; None:
-    with pytest.raises(ValueError, match="観測値の数"):
-        sample_covariance([1], [2])</p>
-<p>def sample_covariance(x: Array, y: Array) -&gt; float:
-    """標本共分散（分母は n - 1）。"""
-    a = np.asarray(x, dtype=float)
-    b = np.asarray(y, dtype=float)
-    if a.size != b.size:
-        raise ValueError("x と y の長さが違う")
-    if a.size &lt; 2:
-        raise ValueError("観測値の数が足りない（2 個以上必要）")
-    return float(np.sum((a - a.mean()) * (b - b.mean())) / (a.size - 1))</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_共分散</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">sample_covariance</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_自分自身との共分散は分散</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">sample_covariance</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">sample_variance</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_長さが違うと共分散は計算できない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"長さ"</span><span class="p">):</span>
+        <span class="n">sample_covariance</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"長さ"</span><span class="p">):</span>
+        <span class="n">sample_covariance</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_観測値が1個だと共分散は計算できない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"観測値の数"</span><span class="p">):</span>
+        <span class="n">sample_covariance</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sample_covariance</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""標本共分散（分母は n - 1）。"""</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">size</span> <span class="o">!=</span> <span class="n">b</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"x と y の長さが違う"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">a</span><span class="o">.</span><span class="n">size</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"観測値の数が足りない（2 個以上必要）"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">a</span> <span class="o">-</span> <span class="n">a</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">*</span> <span class="p">(</span><span class="n">b</span> <span class="o">-</span> <span class="n">b</span><span class="o">.</span><span class="n">mean</span><span class="p">()))</span> <span class="o">/</span> <span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+</code></pre></div>
 <p>相関係数は、直線上のデータなら、傾きが正で 1、負で −1 になります。単位を変えても、変わりません。</p>
-<p>def test_直線上のデータの相関は1と負の1() -&gt; None:
-    assert sample_correlation(X, [2 * v + 1 for v in X]) == pytest.approx(1)
-    assert sample_correlation(X, [-3 * v for v in X]) == pytest.approx(-1)</p>
-<p>def test_相関は単位を変えても変わらない() -&gt; None:
-    x, y = [1, 2, 3, 4], [2, 4, 5, 9]
-    scaled = [100 * v for v in x]
-    assert sample_correlation(scaled, y) == pytest.approx(sample_correlation(x, y))</p>
-<p>def test_ばらつきのない変数の相関は計算できない() -&gt; None:
-    with pytest.raises(ValueError, match="分散が 0"):
-        sample_correlation([1, 1, 1], [1, 2, 3])</p>
-<p>def sample_correlation(x: Array, y: Array) -&gt; float:
-    """標本相関係数。どちらかの分散が 0 なら、計算できない。"""
-    var_x = sample_variance(x)
-    var_y = sample_variance(y)
-    if var_x == 0 or var_y == 0:
-        raise ValueError("分散が 0 の変数の相関は計算できない")
-    return sample_covariance(x, y) / math.sqrt(var_x * var_y)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_直線上のデータの相関は1と負の1</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">sample_correlation</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="p">[</span><span class="mi">2</span> <span class="o">*</span> <span class="n">v</span> <span class="o">+</span> <span class="mi">1</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">X</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">sample_correlation</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span> <span class="o">*</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">X</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_相関は単位を変えても変わらない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
+    <span class="n">scaled</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span> <span class="o">*</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">x</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">sample_correlation</span><span class="p">(</span><span class="n">scaled</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">sample_correlation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ばらつきのない変数の相関は計算できない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"分散が 0"</span><span class="p">):</span>
+        <span class="n">sample_correlation</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sample_correlation</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""標本相関係数。どちらかの分散が 0 なら、計算できない。"""</span>
+    <span class="n">var_x</span> <span class="o">=</span> <span class="n">sample_variance</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">var_y</span> <span class="o">=</span> <span class="n">sample_variance</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">var_x</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">var_y</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"分散が 0 の変数の相関は計算できない"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">sample_covariance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var_x</span> <span class="o">*</span> <span class="n">var_y</span><span class="p">)</span>
+</code></pre></div>
 <p>予想した x = [1, 2, 3, 4]、y = [2, 4, 5, 9] で、実際に計算します。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.statistics</span><span class="w"> </span><span class="kn">import</span> <span class="n">sample_correlation</span><span class="p">,</span> <span class="n">sample_covariance</span>
 
@@ -6574,63 +6593,87 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>共分散は 11/3、相関係数は約 0.965 で、1 に近い値です。NumPy の <code>np.corrcoef</code> と一致することも、テストで確かめています（<code>test_共分散の例の相関はNumPyと一致する</code>）。</p>
 <h3 id="_7">標準化と標準誤差<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>標準化は、平均を引いて標準偏差で割ります。結果は、平均が 0、分散が 1 になります。標本平均の標準誤差は、√(不偏分散 ÷ n) です。1、2、3、4、5 では、√(2.5 ÷ 5) ≈ 0.7071 です。</p>
-<p>def test_標準化すると平均0分散1() -&gt; None:
-    z = standardize([1, 2, 3, 4, 10])
-    assert np.mean(z) == pytest.approx(0, abs=1e-12)
-    assert sample_variance(z) == pytest.approx(1)</p>
-<p>def test_標本平均の標準誤差() -&gt; None:
-    assert standard_error_of_mean(X) == pytest.approx((2.5 / 5) ** 0.5)</p>
-<p>def standardize(x: Array) -&gt; NDArray[np.float64]:
-    """平均を引いて、標準偏差で割る（平均 0、分散 1 にする）。"""
-    values = np.asarray(x, dtype=float)
-    return (values - values.mean()) / math.sqrt(sample_variance(values))</p>
-<p>def standard_error_of_mean(x: Array) -&gt; float:
-    """標本平均の標準誤差 = √(不偏分散 ÷ n)。"""
-    return math.sqrt(sample_variance(x) / len(x))</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_標準化すると平均0分散1</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">standardize</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">sample_variance</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_標本平均の標準誤差</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">standard_error_of_mean</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">((</span><span class="mf">2.5</span> <span class="o">/</span> <span class="mi">5</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">standardize</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""平均を引いて、標準偏差で割る（平均 0、分散 1 にする）。"""</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">values</span> <span class="o">-</span> <span class="n">values</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sample_variance</span><span class="p">(</span><span class="n">values</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">standard_error_of_mean</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""標本平均の標準誤差 = √(不偏分散 ÷ n)。"""</span>
+    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sample_variance</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+</code></pre></div>
 <h3 id="_8">確率分布<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>標準正規分布の分布関数 Φ(z) は、誤差関数 <code>math.erf</code> で書けます。Φ(0) = 0.5（左右対称なので）と、Φ(1.96) ≈ 0.975 が、目印です。SciPy の結果と一致することも、テストにします。</p>
-<p>def test_標準正規の分布関数() -&gt; None:
-    assert normal_cdf(0) == pytest.approx(0.5)
-    assert normal_cdf(1.96) == pytest.approx(0.9750021, abs=1e-6)
-    assert normal_cdf(-1.96) == pytest.approx(1 - normal_cdf(1.96))</p>
-<p>def test_標準正規の分布関数はSciPyと一致する() -&gt; None:
-    for z in (-3.0, -0.5, 0.3, 2.2):
-        assert normal_cdf(z) == pytest.approx(stats.norm.cdf(z))</p>
-<p>def normal_cdf(z: float) -&gt; float:
-    """標準正規分布の累積分布関数 Φ(z)。誤差関数 erf で書く。"""
-    return 0.5 * (1 + math.erf(z / math.sqrt(2)))</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_標準正規の分布関数</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">normal_cdf</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">normal_cdf</span><span class="p">(</span><span class="mf">1.96</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.9750021</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">normal_cdf</span><span class="p">(</span><span class="o">-</span><span class="mf">1.96</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">normal_cdf</span><span class="p">(</span><span class="mf">1.96</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_標準正規の分布関数はSciPyと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">z</span> <span class="ow">in</span> <span class="p">(</span><span class="o">-</span><span class="mf">3.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">normal_cdf</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">normal_cdf</span><span class="p">(</span><span class="n">z</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""標準正規分布の累積分布関数 Φ(z)。誤差関数 erf で書く。"""</span>
+    <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">erf</span><span class="p">(</span><span class="n">z</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span>
+</code></pre></div>
 <p>臨界値は、<code>scipy.stats</code> の分布の <code>ppf</code>（下側確率から点を返す関数）を使います。分布の名前を、辞書で引きます。</p>
-<p>def critical_value(name: str, probability: float, *df: float) -&gt; float:
-    """分布の下側確率が probability になる点（臨界値）。df は自由度。"""
-    if name not in _DISTRIBUTIONS:
-        raise ValueError(f"知らない分布: {name}（normal・t・chi2・f のどれか）")
-    if not 0 &lt; probability &lt; 1:
-        raise ValueError("確率は 0 と 1 の間（0 と 1 は含まない）")
-    return float(_DISTRIBUTIONS[name].ppf(probability, *df))</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">critical_value</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">probability</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="o">*</span><span class="n">df</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""分布の下側確率が probability になる点（臨界値）。df は自由度。"""</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_DISTRIBUTIONS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"知らない分布: </span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">（normal・t・chi2・f のどれか）"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">probability</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"確率は 0 と 1 の間（0 と 1 は含まない）"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">_DISTRIBUTIONS</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">probability</span><span class="p">,</span> <span class="o">*</span><span class="n">df</span><span class="p">))</span>
+</code></pre></div>
 <p>臨界値のテストは、分布の間の関係で書きます。<strong>t の 2 乗は、F（第 1 の自由度が 1）に等しく、標準正規の 2 乗は、χ²（自由度 1）に等しい</strong>、という関係です。回帰分析で、t 検定と F 検定が、同じ結論になる理由の、土台になります。</p>
-<p>def test_正規分布の臨界値() -&gt; None:
-    assert critical_value("normal", 0.975) == pytest.approx(1.959964, abs=1e-6)</p>
-<p>def test_t分布の臨界値は正規分布より大きい() -&gt; None:
-    assert critical_value("t", 0.975, 2) == pytest.approx(4.302653, abs=1e-6)
-    assert critical_value("t", 0.975, 30) &gt; critical_value("normal", 0.975)</p>
-<p>def test_自由度が大きいとt分布は正規分布に近づく() -&gt; None:
-    assert critical_value("t", 0.975, 100000) == pytest.approx(
-        critical_value("normal", 0.975), abs=1e-4
-    )</p>
-<p>def test_tの2乗はFの1つめの自由度が1の場合に等しい() -&gt; None:
-    t = critical_value("t", 0.975, 2)
-    assert t**2 == pytest.approx(critical_value("f", 0.95, 1, 2))
-    assert critical_value("f", 0.95, 1, 2) == pytest.approx(18.5128, abs=1e-4)</p>
-<p>def test_標準正規の2乗はカイ2乗の自由度1に等しい() -&gt; None:
-    z = critical_value("normal", 0.975)
-    assert z**2 == pytest.approx(critical_value("chi2", 0.95, 1))</p>
-<p>def test_知らない分布は受け付けない() -&gt; None:
-    with pytest.raises(ValueError, match="分布"):
-        critical_value("gamma", 0.95)</p>
-<p>def test_確率は0と1の間でなければならない() -&gt; None:
-    for p in (0, 1, -0.1, 1.5):
-        with pytest.raises(ValueError, match="確率"):
-            critical_value("normal", p)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_正規分布の臨界値</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">critical_value</span><span class="p">(</span><span class="s2">"normal"</span><span class="p">,</span> <span class="mf">0.975</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">1.959964</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_t分布の臨界値は正規分布より大きい</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">critical_value</span><span class="p">(</span><span class="s2">"t"</span><span class="p">,</span> <span class="mf">0.975</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">4.302653</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">critical_value</span><span class="p">(</span><span class="s2">"t"</span><span class="p">,</span> <span class="mf">0.975</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">critical_value</span><span class="p">(</span><span class="s2">"normal"</span><span class="p">,</span> <span class="mf">0.975</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_自由度が大きいとt分布は正規分布に近づく</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">critical_value</span><span class="p">(</span><span class="s2">"t"</span><span class="p">,</span> <span class="mf">0.975</span><span class="p">,</span> <span class="mi">100000</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">critical_value</span><span class="p">(</span><span class="s2">"normal"</span><span class="p">,</span> <span class="mf">0.975</span><span class="p">),</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-4</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_tの2乗はFの1つめの自由度が1の場合に等しい</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">critical_value</span><span class="p">(</span><span class="s2">"t"</span><span class="p">,</span> <span class="mf">0.975</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="o">**</span><span class="mi">2</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">critical_value</span><span class="p">(</span><span class="s2">"f"</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">critical_value</span><span class="p">(</span><span class="s2">"f"</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">18.5128</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_標準正規の2乗はカイ2乗の自由度1に等しい</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">critical_value</span><span class="p">(</span><span class="s2">"normal"</span><span class="p">,</span> <span class="mf">0.975</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">critical_value</span><span class="p">(</span><span class="s2">"chi2"</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_知らない分布は受け付けない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"分布"</span><span class="p">):</span>
+        <span class="n">critical_value</span><span class="p">(</span><span class="s2">"gamma"</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_確率は0と1の間でなければならない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">):</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"確率"</span><span class="p">):</span>
+            <span class="n">critical_value</span><span class="p">(</span><span class="s2">"normal"</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+</code></pre></div>
 <p>予想した臨界値を、実際に求めます。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.statistics</span><span class="w"> </span><span class="kn">import</span> <span class="n">critical_value</span>
 
@@ -6651,25 +6694,29 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>自由度が小さいほど、t 分布の臨界値は大きく（裾が厚く）、自由度が大きくなると、1.96 に近づきます。自由度 2 では 4.30 で、正規分布の 2 倍以上です。サンプルが小さいときに、信頼区間が広くなるのは、このためです。4.3027 の 2 乗は 18.5128 で、F の臨界値と一致します。</p>
 <h3 id="_9">標本平均の標準誤差を、シミュレーションで見る<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>標準誤差は、「標本平均が、標本ごとに、どれだけ変わるか」でした。実際に、標本を取り直して、確かめます。乱数の生成器を引数にして、種を固定すると、テストが毎回同じ結果になります（<a href="../../economics-programming/08-random-numbers-and-simulation/">第 1 シリーズの第 8 章</a>）。</p>
-<p>def sampling_distribution_of_mean(
-    n: int, repetitions: int, rng: np.random.Generator
-) -&gt; NDArray[np.float64]:
-    """標準正規分布から n 個を取り出して平均を求める作業を、繰り返す。"""
-    draws = rng.standard_normal((repetitions, n))
-    result: NDArray[np.float64] = draws.mean(axis=1)
-    return result</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sampling_distribution_of_mean</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""標準正規分布から n 個を取り出して平均を求める作業を、繰り返す。"""</span>
+    <span class="n">draws</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="n">repetitions</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="n">result</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="n">draws</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
 <p>標準正規分布（σ = 1）から 25 個を取り出すので、標準誤差の理論値は 1 ÷ √25 = 0.2 です。テストは、2000 回の標本平均の標準偏差が、0.2 の 10% 以内にあることを確かめます。許容誤差は、標準偏差の推定値のばらつき（約 0.2 ÷ √4000 ≈ 0.003、つまり 1.6%）より、十分に大きく取っています。</p>
-<p>def test_標本平均の標準偏差は1をnの平方根で割った値に近づく() -&gt; None:
-    means = sampling_distribution_of_mean(
-        n=25, repetitions=2000, rng=np.random.default_rng(0)
-    )
-    assert means.shape == (2000,)
-    assert np.mean(means) == pytest.approx(0, abs=4 * 0.2 / 2000**0.5)
-    assert np.std(means, ddof=1) == pytest.approx(0.2, rel=0.1)</p>
-<p>def test_同じ種なら同じ標本平均になる() -&gt; None:
-    a = sampling_distribution_of_mean(5, 10, np.random.default_rng(1))
-    b = sampling_distribution_of_mean(5, 10, np.random.default_rng(1))
-    assert np.array_equal(a, b)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_標本平均の標準偏差は1をnの平方根で割った値に近づく</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="n">sampling_distribution_of_mean</span><span class="p">(</span>
+        <span class="n">n</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">repetitions</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span> <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">means</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2000</span><span class="p">,)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">means</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="mf">0.2</span> <span class="o">/</span> <span class="mi">2000</span><span class="o">**</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">means</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_同じ種なら同じ標本平均になる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">sampling_distribution_of_mean</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">sampling_distribution_of_mean</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.statistics</span><span class="w"> </span><span class="kn">import</span> <span class="n">sampling_distribution_of_mean</span>
@@ -6684,28 +6731,32 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>標本の大きさを 4 倍にすると、標準誤差は、約半分になります。「データを増やすと、推定が確かになる」ことを、数値で見ました。次の章から、同じ形のシミュレーションで、回帰の推定量の性質を確かめます。</p>
 <h3 id="t">図: 正規分布と t 分布<a class="headerlink" href="#t" title="Permanent link">&para;</a></h3>
 <p>冒頭の図は、<code>plot_densities</code> で描きます。テストは、図に描いた線の名前、中心の高さ（標準正規の φ(0) ≈ 0.3989、t(2) の中心 ≈ 0.3536）、裾の厚さの順序を確かめます。</p>
-<p>def test_中心の高さは理論値と一致する() -&gt; None:
-    ax = plot_densities().axes[0]
-    middle = len(xs(ax.lines[0])) // 2
-    assert xs(ax.lines[0])[middle] == pytest.approx(0)
-    assert ys(ax.lines[0])[middle] == pytest.approx(0.398942, abs=1e-6)
-    assert ys(ax.lines[1])[middle] == pytest.approx(0.353553, abs=1e-6)</p>
-<p>def test_自由度が小さいほど裾が厚い() -&gt; None:
-    ax = plot_densities().axes[0]
-    tail = [ys(line)[-1] for line in ax.lines]
-    assert tail[1] &gt; tail[2] &gt; tail[3] &gt; tail[0]</p>
-<p>def plot_densities(degrees_of_freedom: Sequence[int] = (2, 5, 30)) -&gt; Figure:
-    """標準正規分布と、自由度ごとの t 分布の密度関数を重ねて描く。"""
-    grid = np.linspace(-4, 4, 201)
-    fig, ax = plt.subplots()
-    ax.plot(grid, stats.norm.pdf(grid), label="Normal")
-    for df in degrees_of_freedom:
-        ax.plot(grid, stats.t.pdf(grid, df), label=f"t({df})")
-    ax.set_xlabel("Value")
-    ax.set_ylabel("Density")
-    ax.legend()
-    plt.close(fig)
-    return fig</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_中心の高さは理論値と一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_densities</span><span class="p">()</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">middle</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">//</span> <span class="mi">2</span>
+    <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="n">middle</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])[</span><span class="n">middle</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.398942</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">])[</span><span class="n">middle</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.353553</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_自由度が小さいほど裾が厚い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_densities</span><span class="p">()</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">tail</span> <span class="o">=</span> <span class="p">[</span><span class="n">ys</span><span class="p">(</span><span class="n">line</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">tail</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">tail</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">tail</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">tail</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_densities</span><span class="p">(</span><span class="n">degrees_of_freedom</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">30</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""標準正規分布と、自由度ごとの t 分布の密度関数を重ねて描く。"""</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">201</span><span class="p">)</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">grid</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Normal"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">df</span> <span class="ow">in</span> <span class="n">degrees_of_freedom</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">df</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"t(</span><span class="si">{</span><span class="n">df</span><span class="si">}</span><span class="s2">)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Value"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Density"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+</code></pre></div>
 <h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter01
 </code></pre></div>

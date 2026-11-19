@@ -6451,72 +6451,93 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="n">Y</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">14.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mf">22.0</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">"y"</span><span class="p">)</span>
 <span class="n">GROUP</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s2">"a"</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">"group"</span><span class="p">)</span>
 </code></pre></div>
-<p>def test_グループごとの平均() -&gt; None:
-    means = group_means(Y, GROUP)
-    assert means["a"] == pytest.approx(12)
-    assert means["b"] == pytest.approx(21)</p>
-<p>def test_ダミー変数は基準のカテゴリーを除いて作る() -&gt; None:
-    d = make_dummies(GROUP)
-    assert list(d.columns) == ["group_b"]
-    assert d["group_b"].tolist() == [0, 0, 0, 1, 1]</p>
-<p>def test_基準のカテゴリーを指定できる() -&gt; None:
-    d = make_dummies(GROUP, base="b")
-    assert list(d.columns) == ["group_a"]
-    assert d["group_a"].tolist() == [1, 1, 1, 0, 0]</p>
-<p>def test_カテゴリーが3つならダミー変数は2つ() -&gt; None:
-    region = pd.Series(["north", "south", "west", "south"], name="region")
-    d = make_dummies(region)
-    assert list(d.columns) == ["region_south", "region_west"]
-    assert d.sum(axis=1).tolist() == [0, 1, 1, 1]</p>
-<p>def test_存在しない基準のカテゴリーは受け付けない() -&gt; None:
-    with pytest.raises(ValueError, match="基準"):
-        make_dummies(GROUP, base="c")</p>
-<p>def test_名前のないデータにも名前が付く() -&gt; None:
-    d = make_dummies(pd.Series(["x", "y", "x"]))
-    assert list(d.columns) == ["d_y"]</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_グループごとの平均</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="n">group_means</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">GROUP</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">means</span><span class="p">[</span><span class="s2">"a"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">means</span><span class="p">[</span><span class="s2">"b"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">21</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ダミー変数は基準のカテゴリーを除いて作る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">make_dummies</span><span class="p">(</span><span class="n">GROUP</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"group_b"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">d</span><span class="p">[</span><span class="s2">"group_b"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_基準のカテゴリーを指定できる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">make_dummies</span><span class="p">(</span><span class="n">GROUP</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="s2">"b"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"group_a"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">d</span><span class="p">[</span><span class="s2">"group_a"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_カテゴリーが3つならダミー変数は2つ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s2">"north"</span><span class="p">,</span> <span class="s2">"south"</span><span class="p">,</span> <span class="s2">"west"</span><span class="p">,</span> <span class="s2">"south"</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">"region"</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">make_dummies</span><span class="p">(</span><span class="n">region</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"region_south"</span><span class="p">,</span> <span class="s2">"region_west"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_存在しない基準のカテゴリーは受け付けない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"基準"</span><span class="p">):</span>
+        <span class="n">make_dummies</span><span class="p">(</span><span class="n">GROUP</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="s2">"c"</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_名前のないデータにも名前が付く</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">make_dummies</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">]))</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"d_y"</span><span class="p">]</span>
+</code></pre></div>
 <h3 id="green-group_means-make_dummies">Green: group_means と make_dummies を実装する<a class="headerlink" href="#green-group_means-make_dummies" title="Permanent link">&para;</a></h3>
-<p>def group_means(y: pd.Series, groups: pd.Series) -&gt; pd.Series:
-    """グループごとの平均。"""
-    return y.groupby(groups).mean()</p>
-<p>def make_dummies(values: pd.Series, base: str | None = None) -&gt; pd.DataFrame:
-    """カテゴリー変数から、ダミー変数（0 と 1）を作る。基準のカテゴリーは除く。</p>
-<div class="highlight"><pre><span></span><code>基準を指定しなければ、小さい順で最初のカテゴリーを基準にする。
-"""
-levels = sorted(values.unique())
-reference = levels[0] if base is None else base
-if reference not in levels:
-    raise ValueError(f"基準のカテゴリー {reference!r} が、データにない")
-prefix = "d" if values.name is None else str(values.name)
-return pd.DataFrame(
-    {
-        f"{prefix}_{level}": (values == level).astype(float)
-        for level in levels
-        if level != reference
-    },
-    index=values.index,
-)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">group_means</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">groups</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""グループごとの平均。"""</span>
+    <span class="k">return</span> <span class="n">y</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">groups</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">make_dummies</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""カテゴリー変数から、ダミー変数（0 と 1）を作る。基準のカテゴリーは除く。</span>
+
+<span class="sd">    基準を指定しなければ、小さい順で最初のカテゴリーを基準にする。</span>
+<span class="sd">    """</span>
+    <span class="n">levels</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">levels</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">base</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">base</span>
+    <span class="k">if</span> <span class="n">reference</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">levels</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"基準のカテゴリー </span><span class="si">{</span><span class="n">reference</span><span class="si">!r}</span><span class="s2"> が、データにない"</span><span class="p">)</span>
+    <span class="n">prefix</span> <span class="o">=</span> <span class="s2">"d"</span> <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">level</span><span class="si">}</span><span class="s2">"</span><span class="p">:</span> <span class="p">(</span><span class="n">values</span> <span class="o">==</span> <span class="n">level</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">level</span> <span class="ow">in</span> <span class="n">levels</span>
+            <span class="k">if</span> <span class="n">level</span> <span class="o">!=</span> <span class="n">reference</span>
+        <span class="p">},</span>
+        <span class="n">index</span><span class="o">=</span><span class="n">values</span><span class="o">.</span><span class="n">index</span><span class="p">,</span>
+    <span class="p">)</span>
 </code></pre></div>
 <h3 id="_7">係数は、群の平均の差<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
-<p>def test_定数項だけの回帰の係数は標本平均() -&gt; None:
-    result = fit_ols(Y, np.empty((5, 0)))
-    assert result.coefficients["const"] == pytest.approx(Y.mean())</p>
-<p>def test_ダミー変数の係数は2つの群の平均の差() -&gt; None:
-    result = fit_ols(Y, make_dummies(GROUP))
-    assert result.coefficients["const"] == pytest.approx(12)
-    assert result.coefficients["group_b"] == pytest.approx(21 - 12)</p>
-<p>def test_基準を入れ替えると符号が変わるが当てはめ値は同じ() -&gt; None:
-    a = fit_ols(Y, make_dummies(GROUP, base="a"))
-    b = fit_ols(Y, make_dummies(GROUP, base="b"))
-    assert b.coefficients["const"] == pytest.approx(21)
-    assert b.coefficients["group_a"] == pytest.approx(-9)
-    assert a.residuals == pytest.approx(b.residuals)</p>
-<p>def test_カテゴリーのダミー変数の係数は基準との平均の差() -&gt; None:
-    y = pd.Series([1.0, 3.0, 5.0, 6.0, 10.0, 12.0])
-    g = pd.Series(["p", "p", "q", "q", "r", "r"], name="g")
-    result = fit_ols(y, make_dummies(g))
-    assert result.coefficients["const"] == pytest.approx(2)
-    assert result.coefficients["g_q"] == pytest.approx(5.5 - 2)
-    assert result.coefficients["g_r"] == pytest.approx(11 - 2)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_定数項だけの回帰の係数は標本平均</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">Y</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ダミー変数の係数は2つの群の平均の差</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">make_dummies</span><span class="p">(</span><span class="n">GROUP</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"group_b"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">21</span> <span class="o">-</span> <span class="mi">12</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_基準を入れ替えると符号が変わるが当てはめ値は同じ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">make_dummies</span><span class="p">(</span><span class="n">GROUP</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="s2">"a"</span><span class="p">))</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">make_dummies</span><span class="p">(</span><span class="n">GROUP</span><span class="p">,</span> <span class="n">base</span><span class="o">=</span><span class="s2">"b"</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">b</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">21</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">b</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"group_a"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="o">-</span><span class="mi">9</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">a</span><span class="o">.</span><span class="n">residuals</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">residuals</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_カテゴリーのダミー変数の係数は基準との平均の差</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">])</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s2">"p"</span><span class="p">,</span> <span class="s2">"p"</span><span class="p">,</span> <span class="s2">"q"</span><span class="p">,</span> <span class="s2">"q"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">,</span> <span class="s2">"r"</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">"g"</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">make_dummies</span><span class="p">(</span><span class="n">g</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"g_q"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">5.5</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"g_r"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">11</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
@@ -6537,22 +6558,26 @@ return pd.DataFrame(
 </code></pre></div>
 <p>予想どおり、定数項だけの回帰は 15.6、ダミー変数ありは α = 12、δ = 9 です。基準を b に変えると、α = 21、δ = −9 です（浮動小数点の誤差を除いて）。<strong>当てはめ値は、変わりません</strong>（テストで確認）。</p>
 <h3 id="_8">ダミー変数の罠<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
-<p>def has_dummy_trap(x: pd.DataFrame, constant: bool = True) -&gt; bool:
-    """ダミー変数の罠: 定数項があり、ダミー変数が全カテゴリー分そろっているか。</p>
-<div class="highlight"><pre><span></span><code>すべてのダミー変数の和が、どの行でも 1（定数項と同じ）になると、推定できない。
-"""
-return constant and bool((x.sum(axis=1) == 1).all())
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">has_dummy_trap</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">constant</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""ダミー変数の罠: 定数項があり、ダミー変数が全カテゴリー分そろっているか。</span>
+
+<span class="sd">    すべてのダミー変数の和が、どの行でも 1（定数項と同じ）になると、推定できない。</span>
+<span class="sd">    """</span>
+    <span class="k">return</span> <span class="n">constant</span> <span class="ow">and</span> <span class="nb">bool</span><span class="p">((</span><span class="n">x</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">())</span>
 </code></pre></div>
-<p>def test_ダミー変数の罠() -&gt; None:
-    assert has_dummy_trap(FULL)
-    assert not has_dummy_trap(make_dummies(GROUP))
-    assert not has_dummy_trap(FULL, constant=False)
-    with pytest.raises(ValueError, match="多重共線性"):
-        fit_ols(Y, FULL)</p>
-<p>def test_定数項を外すと全カテゴリーの係数が群の平均になる() -&gt; None:
-    result = fit_ols(Y, FULL, constant=False)
-    assert result.coefficients["a"] == pytest.approx(12)
-    assert result.coefficients["b"] == pytest.approx(21)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_ダミー変数の罠</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">has_dummy_trap</span><span class="p">(</span><span class="n">FULL</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">has_dummy_trap</span><span class="p">(</span><span class="n">make_dummies</span><span class="p">(</span><span class="n">GROUP</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">has_dummy_trap</span><span class="p">(</span><span class="n">FULL</span><span class="p">,</span> <span class="n">constant</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"多重共線性"</span><span class="p">):</span>
+        <span class="n">fit_ols</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">FULL</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_定数項を外すと全カテゴリーの係数が群の平均になる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">FULL</span><span class="p">,</span> <span class="n">constant</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"a"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"b"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">21</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="n">full</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"a"</span><span class="p">:</span> <span class="p">(</span><span class="n">group</span> <span class="o">==</span> <span class="s2">"a"</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">"b"</span><span class="p">:</span> <span class="p">(</span><span class="n">group</span> <span class="o">==</span> <span class="s2">"b"</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.0</span><span class="p">})</span>
 <span class="k">try</span><span class="p">:</span>
     <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">full</span><span class="p">)</span>
@@ -6565,69 +6590,78 @@ return constant and bool((x.sum(axis=1) == 1).all())
 </code></pre></div>
 <p>全カテゴリーのダミー変数と定数項を入れると、推定できません（予想 4）。定数項を外すと、各ダミー変数の係数が、<strong>そのまま群の平均</strong>になります。どちらも同じモデルですが、係数の意味が違います。</p>
 <h3 id="_9">交差項<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
-<p>def with_interaction(x: pd.Series, d: pd.Series) -&gt; pd.Series:
-    """交差項（2 つの変数の積）。"""
-    product = x * d
-    product.name = f"{x.name}:{d.name}"
-    return product</p>
-<p>def test_交差項は2つの変数の積() -&gt; None:
-    x = pd.Series([1.0, 2.0, 3.0, 4.0], name="x")
-    d = pd.Series([0.0, 1.0, 0.0, 1.0], name="d")
-    z = with_interaction(x, d)
-    assert z.name == "x:d"
-    assert z.tolist() == [0, 2, 0, 4]</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">with_interaction</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""交差項（2 つの変数の積）。"""</span>
+    <span class="n">product</span> <span class="o">=</span> <span class="n">x</span> <span class="o">*</span> <span class="n">d</span>
+    <span class="n">product</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">d</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">"</span>
+    <span class="k">return</span> <span class="n">product</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_交差項は2つの変数の積</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">"x"</span><span class="p">)</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="n">name</span><span class="o">=</span><span class="s2">"d"</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">with_interaction</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">z</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">"x:d"</span>
+    <span class="k">assert</span> <span class="n">z</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+</code></pre></div>
 <h3 id="_10">乱数の賃金データ<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p>母集団の式は、次のとおりです（真の値を、自分で決めます）。</p>
 <blockquote>
 <p>lwage = 1 + 0.08·educ − 0.25·female + 0.02·educ·female + 地域の効果 + 0.3·u</p>
 </blockquote>
 <p>地域の効果は、north が 0（基準）、south が −0.1、west が 0.15 です。教育 1 年あたりの賃金は、男性で 8%、女性で 10%（0.08 + 0.02）です。</p>
-<p>def draw_wage_sample(n: int, rng: np.random.Generator) -&gt; pd.DataFrame:
-    """対数賃金・教育年数・女性ダミー・地域の標本を、母集団の式から作る。</p>
-<div class="highlight"><pre><span></span><code>lwage = 1 + 0.08·educ − 0.25·female + 0.02·educ·female + 地域の効果 + 0.3·u
-"""
-educ = rng.integers(8, 19, n)
-female = rng.integers(0, 2, n)
-region = rng.choice(list(REGION_EFFECTS), n)
-effect = np.array([REGION_EFFECTS[r] for r in region])
-u = rng.standard_normal(n)
-lwage = 1 + 0.08 * educ - 0.25 * female + 0.02 * educ * female + effect + 0.3 * u
-return pd.DataFrame(
-    {"lwage": lwage, "educ": educ, "female": female, "region": region}
-)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">draw_wage_sample</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""対数賃金・教育年数・女性ダミー・地域の標本を、母集団の式から作る。</span>
+
+<span class="sd">    lwage = 1 + 0.08·educ − 0.25·female + 0.02·educ·female + 地域の効果 + 0.3·u</span>
+<span class="sd">    """</span>
+    <span class="n">educ</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">19</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">female</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">region</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">REGION_EFFECTS</span><span class="p">),</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">effect</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">REGION_EFFECTS</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">region</span><span class="p">])</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">lwage</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.08</span> <span class="o">*</span> <span class="n">educ</span> <span class="o">-</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">female</span> <span class="o">+</span> <span class="mf">0.02</span> <span class="o">*</span> <span class="n">educ</span> <span class="o">*</span> <span class="n">female</span> <span class="o">+</span> <span class="n">effect</span> <span class="o">+</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">u</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">"lwage"</span><span class="p">:</span> <span class="n">lwage</span><span class="p">,</span> <span class="s2">"educ"</span><span class="p">:</span> <span class="n">educ</span><span class="p">,</span> <span class="s2">"female"</span><span class="p">:</span> <span class="n">female</span><span class="p">,</span> <span class="s2">"region"</span><span class="p">:</span> <span class="n">region</span><span class="p">}</span>
+    <span class="p">)</span>
 </code></pre></div>
-<p>def wage_sample(n: int = 20000) -&gt; pd.DataFrame:
-    return draw_wage_sample(n, np.random.default_rng(0))</p>
-<p>def test_標本の列とカテゴリー() -&gt; None:
-    df = wage_sample(300)
-    assert list(df.columns) == ["lwage", "educ", "female", "region"]
-    assert set(df["region"]) == {"north", "south", "west"}
-    assert set(df["female"]) == {0, 1}
-    assert df["educ"].min() == 8
-    assert df["educ"].max() == 18</p>
-<p>def test_同じ種なら同じ標本() -&gt; None:
-    a = draw_wage_sample(50, np.random.default_rng(2))
-    b = draw_wage_sample(50, np.random.default_rng(2))
-    pd.testing.assert_frame_equal(a, b)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wage_sample</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20000</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">draw_wage_sample</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_標本の列とカテゴリー</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">wage_sample</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"lwage"</span><span class="p">,</span> <span class="s2">"educ"</span><span class="p">,</span> <span class="s2">"female"</span><span class="p">,</span> <span class="s2">"region"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"region"</span><span class="p">])</span> <span class="o">==</span> <span class="p">{</span><span class="s2">"north"</span><span class="p">,</span> <span class="s2">"south"</span><span class="p">,</span> <span class="s2">"west"</span><span class="p">}</span>
+    <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"female"</span><span class="p">])</span> <span class="o">==</span> <span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">}</span>
+    <span class="k">assert</span> <span class="n">df</span><span class="p">[</span><span class="s2">"educ"</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">==</span> <span class="mi">8</span>
+    <span class="k">assert</span> <span class="n">df</span><span class="p">[</span><span class="s2">"educ"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">==</span> <span class="mi">18</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_同じ種なら同じ標本</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">draw_wage_sample</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">draw_wage_sample</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_frame_equal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+</code></pre></div>
 <p>交差項つきの回帰が、<strong>男女別の回帰と、ちょうど一致する</strong>ことを、テストにします。</p>
-<p>def test_交差項つきの回帰は群ごとの回帰と一致する() -&gt; None:
-    df = wage_sample(400)
-    x = pd.DataFrame(
-        {
-            "educ": df["educ"],
-            "female": df["female"],
-            "educ:female": with_interaction(df["educ"], df["female"]),
-        }
-    )
-    pooled = fit_ols(df["lwage"], x).coefficients
-    male = df[df["female"] == 0]
-    female = df[df["female"] == 1]
-    m = fit_ols(male["lwage"], male[["educ"]]).coefficients
-    f = fit_ols(female["lwage"], female[["educ"]]).coefficients
-    assert pooled["const"] == pytest.approx(m["const"])
-    assert pooled["educ"] == pytest.approx(m["educ"])
-    assert pooled["const"] + pooled["female"] == pytest.approx(f["const"])
-    assert pooled["educ"] + pooled["educ:female"] == pytest.approx(f["educ"])</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_交差項つきの回帰は群ごとの回帰と一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">wage_sample</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">"educ"</span><span class="p">:</span> <span class="n">df</span><span class="p">[</span><span class="s2">"educ"</span><span class="p">],</span>
+            <span class="s2">"female"</span><span class="p">:</span> <span class="n">df</span><span class="p">[</span><span class="s2">"female"</span><span class="p">],</span>
+            <span class="s2">"educ:female"</span><span class="p">:</span> <span class="n">with_interaction</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"educ"</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">"female"</span><span class="p">]),</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">pooled</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"lwage"</span><span class="p">],</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span>
+    <span class="n">male</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"female"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">female</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"female"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">male</span><span class="p">[</span><span class="s2">"lwage"</span><span class="p">],</span> <span class="n">male</span><span class="p">[[</span><span class="s2">"educ"</span><span class="p">]])</span><span class="o">.</span><span class="n">coefficients</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">female</span><span class="p">[</span><span class="s2">"lwage"</span><span class="p">],</span> <span class="n">female</span><span class="p">[[</span><span class="s2">"educ"</span><span class="p">]])</span><span class="o">.</span><span class="n">coefficients</span>
+    <span class="k">assert</span> <span class="n">pooled</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s2">"const"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">pooled</span><span class="p">[</span><span class="s2">"educ"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s2">"educ"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">pooled</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">+</span> <span class="n">pooled</span><span class="p">[</span><span class="s2">"female"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s2">"const"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">pooled</span><span class="p">[</span><span class="s2">"educ"</span><span class="p">]</span> <span class="o">+</span> <span class="n">pooled</span><span class="p">[</span><span class="s2">"educ:female"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s2">"educ"</span><span class="p">])</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter07.dummies</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_wage_sample</span><span class="p">,</span> <span class="n">with_interaction</span>
 
 <span class="n">small</span> <span class="o">=</span> <span class="n">draw_wage_sample</span><span class="p">(</span><span class="mi">400</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
@@ -6656,19 +6690,20 @@ return pd.DataFrame(
 <p>4 行とも、左（交差項つきの回帰から作った値）と、右（群ごとの回帰）が一致します。男性の傾き 0.0774（真の値 0.08）、女性の傾き 0.1043（真の値 0.10）です。</p>
 <h3 id="_11">真の値の復元<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>n = 20000 の標本で、地域ダミー変数も入れて推定し、真の値と比べます。許容誤差は、標準誤差の 4 倍です。</p>
-<p>def test_真の係数は標準誤差の4倍以内で復元される() -&gt; None:
-    df = wage_sample()
-    result = fit_ols(df["lwage"], full_design(df))
-    truth = {
-        "const": 1.0,
-        "educ": 0.08,
-        "female": -0.25,
-        "educ:female": 0.02,
-        "region_south": -0.1,
-        "region_west": 0.15,
-    }
-    for name, value in truth.items():
-        assert abs(result.coefficients[name] - value) &lt; 4 * result.standard_errors[name]</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_真の係数は標準誤差の4倍以内で復元される</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">wage_sample</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"lwage"</span><span class="p">],</span> <span class="n">full_design</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
+    <span class="n">truth</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"const"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="s2">"educ"</span><span class="p">:</span> <span class="mf">0.08</span><span class="p">,</span>
+        <span class="s2">"female"</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.25</span><span class="p">,</span>
+        <span class="s2">"educ:female"</span><span class="p">:</span> <span class="mf">0.02</span><span class="p">,</span>
+        <span class="s2">"region_south"</span><span class="p">:</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">,</span>
+        <span class="s2">"region_west"</span><span class="p">:</span> <span class="mf">0.15</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">truth</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">-</span> <span class="n">value</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">result</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter07.dummies</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_wage_sample</span><span class="p">,</span> <span class="n">make_dummies</span><span class="p">,</span> <span class="n">with_interaction</span>
 
 <span class="n">df</span> <span class="o">=</span> <span class="n">draw_wage_sample</span><span class="p">(</span><span class="mi">20000</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
@@ -6694,55 +6729,61 @@ region_west   0.1594  0.0052
 <h3 id="_12">図<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p><code>plot_group_lines</code> は、2 群のデータと回帰直線を描きます。切片だけが違う場合は、平行な直線（冒頭の図）、交差項がある場合は、傾きも違う直線です。</p>
 <p><img alt="交差項つき。女性（Group 1）の傾きが、男性（Group 0）より急" src="../images/ch07-interaction.png" /></p>
-<p>def test_群ごとにデータと直線を描く() -&gt; None:
-    ax = plot_group_lines(X, Y, D, interaction=False).axes[0]
-    assert [line.get_label() for line in ax.lines] == [
-        "Group 0",
-        "Group 1",
-        "Fit group 0",
-        "Fit group 1",
-    ]
-    assert ys(ax.lines[0]) == [1, 2, 3]
-    assert ys(ax.lines[1]) == [3, 4, 5]</p>
-<p>def test_切片だけ違う直線は平行() -&gt; None:
-    ax = plot_group_lines(X, Y, D, interaction=False).axes[0]
-    assert ys(ax.lines[2]) == pytest.approx([1, 3])
-    assert ys(ax.lines[3]) == pytest.approx([3, 5])</p>
-<p>def test_交差項があると傾きも変わる() -&gt; None:
-    y = Y.copy()
-    y[3:] = [3.0, 5.0, 7.0]
-    ax = plot_group_lines(X, y, D, interaction=True).axes[0]
-    assert ys(ax.lines[2]) == pytest.approx([1, 3])
-    assert ys(ax.lines[3]) == pytest.approx([3, 7])</p>
-<p>def plot_group_lines(
-    x: NDArray[np.float64],
-    y: NDArray[np.float64],
-    d: NDArray[np.float64],
-    interaction: bool,
-) -&gt; Figure:
-    """ダミー変数 d で分けた 2 群のデータと、回帰直線を描く。</p>
-<div class="highlight"><pre><span></span><code>interaction が偽なら、切片だけが違う（平行な）直線。真なら、傾きも違う直線。
-"""
-columns: dict[str, ArrayLike] = {"x": x, "d": d}
-if interaction:
-    columns["x:d"] = with_interaction(
-        pd.Series(x, name="x"), pd.Series(d, name="d")
-    )
-coefficients = fit_ols(y, pd.DataFrame(columns)).coefficients
-fig, ax = plt.subplots()
-ends = [float(np.min(x)), float(np.max(x))]
-for group in (0, 1):
-    mask = d == group
-    ax.plot(x[mask], y[mask], "o", label=f"Group {group}")
-for group in (0, 1):
-    intercept = coefficients["const"] + coefficients["d"] * group
-    slope = coefficients["x"] + (coefficients["x:d"] * group if interaction else 0)
-    ax.plot(ends, [intercept + slope * v for v in ends], label=f"Fit group {group}")
-ax.set_xlabel("x")
-ax.set_ylabel("y")
-ax.legend()
-plt.close(fig)
-return fig
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_群ごとにデータと直線を描く</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_group_lines</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">interaction</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span>
+        <span class="s2">"Group 0"</span><span class="p">,</span>
+        <span class="s2">"Group 1"</span><span class="p">,</span>
+        <span class="s2">"Fit group 0"</span><span class="p">,</span>
+        <span class="s2">"Fit group 1"</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_切片だけ違う直線は平行</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_group_lines</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">interaction</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_交差項があると傾きも変わる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">Y</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">y</span><span class="p">[</span><span class="mi">3</span><span class="p">:]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">]</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_group_lines</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">interaction</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">])</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_group_lines</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">d</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">interaction</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""ダミー変数 d で分けた 2 群のデータと、回帰直線を描く。</span>
+
+<span class="sd">    interaction が偽なら、切片だけが違う（平行な）直線。真なら、傾きも違う直線。</span>
+<span class="sd">    """</span>
+    <span class="n">columns</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"x"</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">"d"</span><span class="p">:</span> <span class="n">d</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">interaction</span><span class="p">:</span>
+        <span class="n">columns</span><span class="p">[</span><span class="s2">"x:d"</span><span class="p">]</span> <span class="o">=</span> <span class="n">with_interaction</span><span class="p">(</span>
+            <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"x"</span><span class="p">),</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"d"</span><span class="p">)</span>
+        <span class="p">)</span>
+    <span class="n">coefficients</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="p">))</span><span class="o">.</span><span class="n">coefficients</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ends</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">))]</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">mask</span> <span class="o">=</span> <span class="n">d</span> <span class="o">==</span> <span class="n">group</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="n">y</span><span class="p">[</span><span class="n">mask</span><span class="p">],</span> <span class="s2">"o"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Group </span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">group</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">intercept</span> <span class="o">=</span> <span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">+</span> <span class="n">coefficients</span><span class="p">[</span><span class="s2">"d"</span><span class="p">]</span> <span class="o">*</span> <span class="n">group</span>
+        <span class="n">slope</span> <span class="o">=</span> <span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x:d"</span><span class="p">]</span> <span class="o">*</span> <span class="n">group</span> <span class="k">if</span> <span class="n">interaction</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ends</span><span class="p">,</span> <span class="p">[</span><span class="n">intercept</span> <span class="o">+</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ends</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Fit group </span><span class="si">{</span><span class="n">group</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"y"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 <h3 id="_13">実行結果<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter07

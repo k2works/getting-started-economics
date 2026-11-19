@@ -6453,72 +6453,91 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
 <span class="n">Y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
 </code></pre></div>
-<p>def test_手計算の例のt値() -&gt; None:
-    t = t_statistics(fit_ols(Y, X))
-    assert t["x1"] == pytest.approx(2.2 / 0.18<strong>0.5)
-    assert t["const"] == pytest.approx(-0.5 / 1.35</strong>0.5)</p>
-<p>def test_帰無仮説の値を変えるとt値が変わる() -&gt; None:
-    result = fit_ols(Y, X)
-    t = t_statistics(result, null=2.0)
-    assert t["x1"] == pytest.approx(0.2 / 0.18**0.5)</p>
-<h3 id="green-t-p">Green: t 値・p 値を実装する<a class="headerlink" href="#green-t-p" title="Permanent link">&para;</a></h3>
-<p>@dataclass(frozen=True)
-class TestResult:
-    """検定の結果（検定統計量と p 値）。"""</p>
-<div class="highlight"><pre><span></span><code>__test__ = False  # pytest が、テストのクラスと間違えないようにする
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_手計算の例のt値</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">t_statistics</span><span class="p">(</span><span class="n">fit_ols</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">2.2</span> <span class="o">/</span> <span class="mf">0.18</span><span class="o">**</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span> <span class="o">/</span> <span class="mf">1.35</span><span class="o">**</span><span class="mf">0.5</span><span class="p">)</span>
 
-statistic: float
-p_value: float
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_帰無仮説の値を変えるとt値が変わる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">t_statistics</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.2</span> <span class="o">/</span> <span class="mf">0.18</span><span class="o">**</span><span class="mf">0.5</span><span class="p">)</span>
 </code></pre></div>
-<p>def t_statistics(result: OlsResult, null: float = 0.0) -&gt; pd.Series:
-    """t 値 = (係数 − 帰無仮説の値) ÷ 標準誤差。"""
-    return (result.coefficients - null) / result.standard_errors</p>
-<p>def p_value(t: float, df: float, alternative: str = "two-sided") -&gt; float:
-    """t 値の p 値。対立仮説は two-sided（両側）・greater・less。"""
-    if alternative == "two-sided":
-        return float(2 * stats.t.sf(abs(t), df))
-    if alternative == "greater":
-        return float(stats.t.sf(t, df))
-    if alternative == "less":
-        return float(stats.t.cdf(t, df))
-    raise ValueError(f"知らない対立仮説: {alternative}")</p>
+<h3 id="green-t-p">Green: t 値・p 値を実装する<a class="headerlink" href="#green-t-p" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">TestResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""検定の結果（検定統計量と p 値）。"""</span>
+
+    <span class="n">__test__</span> <span class="o">=</span> <span class="kc">False</span>  <span class="c1"># pytest が、テストのクラスと間違えないようにする</span>
+
+    <span class="n">statistic</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">p_value</span><span class="p">:</span> <span class="nb">float</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">t_statistics</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">OlsResult</span><span class="p">,</span> <span class="n">null</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""t 値 = (係数 − 帰無仮説の値) ÷ 標準誤差。"""</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">coefficients</span> <span class="o">-</span> <span class="n">null</span><span class="p">)</span> <span class="o">/</span> <span class="n">result</span><span class="o">.</span><span class="n">standard_errors</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">p_value</span><span class="p">(</span><span class="n">t</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">df</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">alternative</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"two-sided"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""t 値の p 値。対立仮説は two-sided（両側）・greater・less。"""</span>
+    <span class="k">if</span> <span class="n">alternative</span> <span class="o">==</span> <span class="s2">"two-sided"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">df</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">alternative</span> <span class="o">==</span> <span class="s2">"greater"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">df</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">alternative</span> <span class="o">==</span> <span class="s2">"less"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">df</span><span class="p">))</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"知らない対立仮説: </span><span class="si">{</span><span class="n">alternative</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</code></pre></div>
 <p>p 値は、両側が 2 × P(T &gt; |t|)、片側が P(T &gt; t) または P(T &lt; t) です。両側と片側の関係と、t = 0 のときの値をテストにします。</p>
-<p>def test_p値は両側と片側で関係する() -&gt; None:
-    two = p_value(5.185, 2)
-    assert two == pytest.approx(2 * stats.t.sf(5.185, 2))
-    assert p_value(5.185, 2, "greater") == pytest.approx(two / 2)
-    assert p_value(-5.185, 2, "less") == pytest.approx(two / 2)
-    assert p_value(5.185, 2, "less") == pytest.approx(1 - two / 2)</p>
-<p>def test_t値が0ならp値は1と半分() -&gt; None:
-    assert p_value(0, 10) == pytest.approx(1)
-    assert p_value(0, 10, "greater") == pytest.approx(0.5)</p>
-<p>def test_知らない対立仮説は受け付けない() -&gt; None:
-    with pytest.raises(ValueError, match="対立仮説"):
-        p_value(1, 10, "bigger")</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_p値は両側と片側で関係する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">two</span> <span class="o">=</span> <span class="n">p_value</span><span class="p">(</span><span class="mf">5.185</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">two</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="mf">5.185</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">p_value</span><span class="p">(</span><span class="mf">5.185</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"greater"</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">two</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">p_value</span><span class="p">(</span><span class="o">-</span><span class="mf">5.185</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"less"</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">two</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">p_value</span><span class="p">(</span><span class="mf">5.185</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"less"</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">two</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_t値が0ならp値は1と半分</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">p_value</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">p_value</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">"greater"</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_知らない対立仮説は受け付けない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"対立仮説"</span><span class="p">):</span>
+        <span class="n">p_value</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="s2">"bigger"</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="_6">信頼区間<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
-<p>def confidence_interval(result: OlsResult, level: float = 0.95) -&gt; pd.DataFrame:
-    """係数の信頼区間 = 係数 ± t の臨界値 × 標準誤差。"""
-    critical = float(stats.t.ppf(1 - (1 - level) / 2, result.df_resid))
-    half = critical * result.standard_errors
-    return pd.DataFrame(
-        {"lower": result.coefficients - half, "upper": result.coefficients + half}
-    )</p>
-<p>def test_手計算の例の信頼区間() -&gt; None:
-    interval = confidence_interval(fit_ols(Y, X))
-    half = 4.302653 * 0.18**0.5
-    assert interval.loc["x1", "lower"] == pytest.approx(2.2 - half, abs=1e-5)
-    assert interval.loc["x1", "upper"] == pytest.approx(2.2 + half, abs=1e-5)</p>
-<p>def test_信頼区間はstatsmodelsと一致する() -&gt; None:
-    df = random_data()
-    x = df[["x1", "x2"]]
-    interval = confidence_interval(fit_ols(df["y"], x), level=0.9)
-    reference = sm.OLS(df["y"], sm.add_constant(x)).fit().conf_int(alpha=0.1)
-    assert interval.to_numpy() == pytest.approx(reference.to_numpy())</p>
-<p>def test_水準が高いほど区間は広い() -&gt; None:
-    result = fit_ols(Y, X)
-    narrow = confidence_interval(result, 0.9).loc["x1"]
-    wide = confidence_interval(result, 0.99).loc["x1"]
-    assert wide["upper"] - wide["lower"] &gt; narrow["upper"] - narrow["lower"]</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">confidence_interval</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">OlsResult</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.95</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""係数の信頼区間 = 係数 ± t の臨界値 × 標準誤差。"""</span>
+    <span class="n">critical</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">level</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">df_resid</span><span class="p">))</span>
+    <span class="n">half</span> <span class="o">=</span> <span class="n">critical</span> <span class="o">*</span> <span class="n">result</span><span class="o">.</span><span class="n">standard_errors</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">"lower"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">coefficients</span> <span class="o">-</span> <span class="n">half</span><span class="p">,</span> <span class="s2">"upper"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">coefficients</span> <span class="o">+</span> <span class="n">half</span><span class="p">}</span>
+    <span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_手計算の例の信頼区間</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">interval</span> <span class="o">=</span> <span class="n">confidence_interval</span><span class="p">(</span><span class="n">fit_ols</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">))</span>
+    <span class="n">half</span> <span class="o">=</span> <span class="mf">4.302653</span> <span class="o">*</span> <span class="mf">0.18</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="k">assert</span> <span class="n">interval</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"lower"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">2.2</span> <span class="o">-</span> <span class="n">half</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">interval</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"upper"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">2.2</span> <span class="o">+</span> <span class="n">half</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_信頼区間はstatsmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">random_data</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]]</span>
+    <span class="n">interval</span> <span class="o">=</span> <span class="n">confidence_interval</span><span class="p">(</span><span class="n">fit_ols</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">x</span><span class="p">),</span> <span class="n">level</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span><span class="o">.</span><span class="n">conf_int</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">interval</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_水準が高いほど区間は広い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+    <span class="n">narrow</span> <span class="o">=</span> <span class="n">confidence_interval</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span>
+    <span class="n">wide</span> <span class="o">=</span> <span class="n">confidence_interval</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">wide</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">]</span> <span class="o">-</span> <span class="n">wide</span><span class="p">[</span><span class="s2">"lower"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">narrow</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">]</span> <span class="o">-</span> <span class="n">narrow</span><span class="p">[</span><span class="s2">"lower"</span><span class="p">]</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter03.multiple</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_ols</span>
@@ -6542,42 +6561,50 @@ x1     0.3745  4.0255
 </code></pre></div>
 <p>傾きの t 値は 5.1854、p 値は 0.0352 で、5% では棄却されます（予想 1）。95% 信頼区間は 0.3745 から 4.0255 で、0 を含みません（予想 2）。ただし、<strong>幅は約 3.65 と、とても広い</strong>です。観測値が 4 つ（自由度 2）しかないので、t の臨界値が 4.30 と大きいためです。99% 水準では、区間は −2.01 から 6.41 に広がり、0 を含みます。<strong>有意かどうかは、水準で変わります。</strong></p>
 <h3 id="f_1">F 検定<a class="headerlink" href="#f_1" title="Permanent link">&para;</a></h3>
-<p>def _rss(y: ArrayLike, x: pd.DataFrame) -&gt; tuple[float, int]:
-    """残差平方和と、残差の自由度。説明変数がなければ、定数項だけの回帰。"""
-    if x.shape[1] == 0:
-        values = np.asarray(y, dtype=float)
-        return float(np.sum((values - values.mean()) ** 2)), len(values) - 1
-    result = fit_ols(y, x)
-    return float(result.residuals @ result.residuals), result.df_resid</p>
-<p>def f_test(y: ArrayLike, x: pd.DataFrame, zero: list[str]) -&gt; TestResult:
-    """列 zero の係数が、すべて 0 という仮説の F 検定（制約付き回帰との比較）。"""
-    rss_full, df_full = _rss(y, x)
-    rss_restricted, df_restricted = _rss(y, x.drop(columns=zero))
-    q = df_restricted - df_full
-    statistic = ((rss_restricted - rss_full) / q) / (rss_full / df_full)
-    return TestResult(float(statistic), float(stats.f.sf(statistic, q, df_full)))</p>
-<p>def test_制約が1つならFはtの2乗でp値も一致する() -&gt; None:
-    result = fit_ols(Y, X)
-    test = f_test(Y, pd.DataFrame({"x": X}), ["x"])
-    t = t_statistics(result)["x1"]
-    assert test.statistic == pytest.approx(t**2)
-    assert test.statistic == pytest.approx(24.2 / 0.9)
-    assert test.p_value == pytest.approx(p_value(t, 2))</p>
-<p>def test_複数の制約のF検定はstatsmodelsと一致する() -&gt; None:
-    df = random_data()
-    test = f_test(df["y"], df[["x1", "x2"]], ["x1", "x2"])
-    full = sm.OLS(df["y"], sm.add_constant(df[["x1", "x2"]])).fit()
-    assert test.statistic == pytest.approx(full.fvalue)
-    assert test.p_value == pytest.approx(full.f_pvalue)</p>
-<p>def test_一部の制約のF検定はstatsmodelsと一致する() -&gt; None:
-    df = random_data()
-    test = f_test(df["y"], df[["x1", "x2"]], ["x2"])
-    full = sm.OLS(df["y"], sm.add_constant(df[["x1", "x2"]])).fit()
-    restricted = sm.OLS(df["y"], sm.add_constant(df[["x1"]])).fit()
-    statistic, p, _ = full.compare_f_test(restricted)
-    assert isinstance(test, TestResult)
-    assert test.statistic == pytest.approx(statistic)
-    assert test.p_value == pytest.approx(p)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_rss</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""残差平方和と、残差の自由度。説明変数がなければ、定数項だけの回帰。"""</span>
+    <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">values</span> <span class="o">-</span> <span class="n">values</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)),</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">residuals</span> <span class="o">@</span> <span class="n">result</span><span class="o">.</span><span class="n">residuals</span><span class="p">),</span> <span class="n">result</span><span class="o">.</span><span class="n">df_resid</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">f_test</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">zero</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TestResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""列 zero の係数が、すべて 0 という仮説の F 検定（制約付き回帰との比較）。"""</span>
+    <span class="n">rss_full</span><span class="p">,</span> <span class="n">df_full</span> <span class="o">=</span> <span class="n">_rss</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">rss_restricted</span><span class="p">,</span> <span class="n">df_restricted</span> <span class="o">=</span> <span class="n">_rss</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">zero</span><span class="p">))</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">df_restricted</span> <span class="o">-</span> <span class="n">df_full</span>
+    <span class="n">statistic</span> <span class="o">=</span> <span class="p">((</span><span class="n">rss_restricted</span> <span class="o">-</span> <span class="n">rss_full</span><span class="p">)</span> <span class="o">/</span> <span class="n">q</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">rss_full</span> <span class="o">/</span> <span class="n">df_full</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">TestResult</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">statistic</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">f</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">statistic</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">df_full</span><span class="p">)))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_制約が1つならFはtの2乗でp値も一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">f_test</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"x"</span><span class="p">:</span> <span class="n">X</span><span class="p">}),</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">t_statistics</span><span class="p">(</span><span class="n">result</span><span class="p">)[</span><span class="s2">"x1"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">statistic</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">t</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">statistic</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">24.2</span> <span class="o">/</span> <span class="mf">0.9</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">p_value</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">p_value</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_複数の制約のF検定はstatsmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">random_data</span><span class="p">()</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">f_test</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">df</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]],</span> <span class="p">[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">])</span>
+    <span class="n">full</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]]))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">statistic</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">full</span><span class="o">.</span><span class="n">fvalue</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">p_value</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">full</span><span class="o">.</span><span class="n">f_pvalue</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_一部の制約のF検定はstatsmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">random_data</span><span class="p">()</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">f_test</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">df</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]],</span> <span class="p">[</span><span class="s2">"x2"</span><span class="p">])</span>
+    <span class="n">full</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]]))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="n">restricted</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">]]))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="n">statistic</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">full</span><span class="o">.</span><span class="n">compare_f_test</span><span class="p">(</span><span class="n">restricted</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">test</span><span class="p">,</span> <span class="n">TestResult</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">statistic</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">statistic</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">p_value</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
 <span class="n">y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
 <span class="n">test</span> <span class="o">=</span> <span class="n">f_test</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"x"</span><span class="p">:</span> <span class="n">x</span><span class="p">}),</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
@@ -6588,38 +6615,48 @@ x1     0.3745  4.0255
 <p>F 統計量は 26.8889 で、t 値の 2 乗（5.1854²）に等しく、p 値も 0.0352 で一致します。複数の制約のときの F 検定も、<code>statsmodels</code> の結果と一致することを、テストで確かめました。</p>
 <h3 id="_7">信頼区間の被覆率<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>「95% 信頼区間」は、本当に 95% の割合で、真の値を含むでしょうか。真の傾き 0.5 の母集団から、n = 30 の標本を 2000 回取って、区間を作り、真の値を含む割合を数えます。</p>
-<p>def slope_intervals(
-    n: int, repetitions: int, level: float, rng: np.random.Generator
-) -&gt; pd.DataFrame:
-    """標本を取り直して、傾きの信頼区間を繰り返し作る（真の傾きは 0.5）。"""
-    rows = []
-    for _ in range(repetitions):
-        x, y = draw_sample(n, 1.0, 0.5, 1.0, rng)
-        interval = confidence_interval(fit_ols(y, x), level).loc["x1"]
-        rows.append((interval["lower"], interval["upper"]))
-    return pd.DataFrame(rows, columns=["lower", "upper"])</p>
-<p>def coverage_rate(
-    n: int, repetitions: int, level: float, rng: np.random.Generator
-) -&gt; float:
-    """信頼区間が真の傾き（0.5）を含む割合（被覆率）。水準に近いはず。"""
-    table = slope_intervals(n, repetitions, level, rng)
-    return float(((table["lower"] &lt;= 0.5) &amp; (0.5 &lt;= table["upper"])).mean())</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">slope_intervals</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""標本を取り直して、傾きの信頼区間を繰り返し作る（真の傾きは 0.5）。"""</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">draw_sample</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+        <span class="n">interval</span> <span class="o">=</span> <span class="n">confidence_interval</span><span class="p">(</span><span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">level</span><span class="p">)</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">interval</span><span class="p">[</span><span class="s2">"lower"</span><span class="p">],</span> <span class="n">interval</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"lower"</span><span class="p">,</span> <span class="s2">"upper"</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">coverage_rate</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">level</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""信頼区間が真の傾き（0.5）を含む割合（被覆率）。水準に近いはず。"""</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">slope_intervals</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(((</span><span class="n">table</span><span class="p">[</span><span class="s2">"lower"</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">&lt;=</span> <span class="n">table</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">]))</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+</code></pre></div>
 <p>許容誤差は、割合の標準誤差 √(p(1 − p) ÷ 2000) の 4 倍です。</p>
-<p>def test_傾きの信頼区間を繰り返し作る() -&gt; None:
-    table = slope_intervals(30, 20, 0.95, np.random.default_rng(0))
-    assert list(table.columns) == ["lower", "upper"]
-    assert len(table) == 20
-    assert (table["lower"] &lt; table["upper"]).all()</p>
-<p>def test_信頼区間の被覆率は区間の表から数えた割合と一致する() -&gt; None:
-    table = slope_intervals(30, 200, 0.95, np.random.default_rng(5))
-    expected = ((table["lower"] &lt;= 0.5) &amp; (0.5 &lt;= table["upper"])).mean()
-    assert coverage_rate(30, 200, 0.95, np.random.default_rng(5)) == expected</p>
-<p>def test_信頼区間の被覆率は水準に近い() -&gt; None:
-    rate = coverage_rate(30, 2000, 0.95, np.random.default_rng(0))
-    assert rate == pytest.approx(0.95, abs=4 * (0.95 * 0.05 / 2000) ** 0.5)</p>
-<p>def test_水準を下げると被覆率も下がる() -&gt; None:
-    rate = coverage_rate(30, 2000, 0.8, np.random.default_rng(0))
-    assert rate == pytest.approx(0.8, abs=4 * (0.8 * 0.2 / 2000) ** 0.5)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_傾きの信頼区間を繰り返し作る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">slope_intervals</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"lower"</span><span class="p">,</span> <span class="s2">"upper"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="p">)</span> <span class="o">==</span> <span class="mi">20</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">"lower"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">table</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_信頼区間の被覆率は区間の表から数えた割合と一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">slope_intervals</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="p">((</span><span class="n">table</span><span class="p">[</span><span class="s2">"lower"</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">&lt;=</span> <span class="n">table</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">]))</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">coverage_rate</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span> <span class="o">==</span> <span class="n">expected</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_信頼区間の被覆率は水準に近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">rate</span> <span class="o">=</span> <span class="n">coverage_rate</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">rate</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.95</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.95</span> <span class="o">*</span> <span class="mf">0.05</span> <span class="o">/</span> <span class="mi">2000</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_水準を下げると被覆率も下がる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">rate</span> <span class="o">=</span> <span class="n">coverage_rate</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">rate</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.8</span> <span class="o">*</span> <span class="mf">0.2</span> <span class="o">/</span> <span class="mi">2000</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter05.inference</span><span class="w"> </span><span class="kn">import</span> <span class="n">coverage_rate</span>
@@ -6633,30 +6670,34 @@ x1     0.3745  4.0255
 <p>被覆率は、80% 水準で 0.8125、95% 水準で 0.953 でした（予想 4: 2000 回のうち、約 1900 回）。冒頭の図は、100 回のうち、真の値を含まなかったのが、赤の 3 本です（5 本程度が期待されます）。</p>
 <h3 id="_8">検定の大きさと検出力<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>帰無仮説が正しいとき（傾き = 0.5 という仮説）の棄却率が、有意水準 5% に近いか、帰無仮説が誤っているとき（傾き = 0.3、傾き = 0）の棄却率（検出力）が、どう変わるかを、見ます。</p>
-<p>def rejection_rate(
-    n: int,
-    repetitions: int,
-    true_slope: float,
-    null_slope: float,
-    significance: float,
-    rng: np.random.Generator,
-) -&gt; float:
-    """傾きが null_slope という仮説を、両側 t 検定で棄却する割合。"""
-    rejected = 0
-    for _ in range(repetitions):
-        x, y = draw_sample(n, 1.0, true_slope, 1.0, rng)
-        result = fit_ols(y, x)
-        t = t_statistics(result, null_slope)["x1"]
-        rejected += p_value(t, result.df_resid) &lt; significance
-    return rejected / repetitions</p>
-<p>def test_帰無仮説が正しいときの棄却率は有意水準に近い() -&gt; None:
-    rate = rejection_rate(30, 2000, 0.5, 0.5, 0.05, np.random.default_rng(0))
-    assert rate == pytest.approx(0.05, abs=4 * (0.05 * 0.95 / 2000) ** 0.5)</p>
-<p>def test_帰無仮説が誤っているほど棄却率は高い() -&gt; None:
-    near = rejection_rate(30, 1000, 0.5, 0.3, 0.05, np.random.default_rng(0))
-    far = rejection_rate(30, 1000, 0.5, 0.0, 0.05, np.random.default_rng(0))
-    assert far &gt; near &gt; 0.05
-    assert far &gt; 0.5</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">rejection_rate</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">true_slope</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">null_slope</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">significance</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""傾きが null_slope という仮説を、両側 t 検定で棄却する割合。"""</span>
+    <span class="n">rejected</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">draw_sample</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">true_slope</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">t_statistics</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">null_slope</span><span class="p">)[</span><span class="s2">"x1"</span><span class="p">]</span>
+        <span class="n">rejected</span> <span class="o">+=</span> <span class="n">p_value</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">df_resid</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">significance</span>
+    <span class="k">return</span> <span class="n">rejected</span> <span class="o">/</span> <span class="n">repetitions</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_帰無仮説が正しいときの棄却率は有意水準に近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">rate</span> <span class="o">=</span> <span class="n">rejection_rate</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">rate</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.05</span> <span class="o">*</span> <span class="mf">0.95</span> <span class="o">/</span> <span class="mi">2000</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_帰無仮説が誤っているほど棄却率は高い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">near</span> <span class="o">=</span> <span class="n">rejection_rate</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">far</span> <span class="o">=</span> <span class="n">rejection_rate</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">far</span> <span class="o">&gt;</span> <span class="n">near</span> <span class="o">&gt;</span> <span class="mf">0.05</span>
+    <span class="k">assert</span> <span class="n">far</span> <span class="o">&gt;</span> <span class="mf">0.5</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter05.inference</span><span class="w"> </span><span class="kn">import</span> <span class="n">rejection_rate</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">rejection_rate</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)))</span>
@@ -6670,51 +6711,59 @@ x1     0.3745  4.0255
 <p>正しい仮説を棄却する割合は 0.047 で、有意水準 5% に近い値です。誤った仮説の棄却率は、真の値（0.5）から近い 0.3 で 0.19、遠い 0 で 0.703 です。<strong>真の値に近い仮説は、n = 30 では、ほとんど棄却できません</strong>。棄却されなかったことは、帰無仮説が正しい証拠ではありません（予想 3）。</p>
 <h3 id="_9">図<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p><code>plot_confidence_intervals</code> は、区間を縦線で描き、真の値を含まないものを赤にします。</p>
-<p>def test_区間ごとに縦線を描き最後に真の値の線を引く() -&gt; None:
-    ax = plot_confidence_intervals(TABLE, 0.5).axes[0]
-    assert len(ax.lines) == 5
-    assert [xs(line) for line in ax.lines[:4]] == [[0, 0], [1, 1], [2, 2], [3, 3]]
-    assert ys(ax.lines[0]) == pytest.approx([0.3, 0.7])
-    assert ys(ax.lines[4]) == [0.5, 0.5]</p>
-<p>def test_含む区間と含まない区間で凡例の名前が違う() -&gt; None:
-    ax = plot_confidence_intervals(TABLE, 0.5).axes[0]
-    labels = [line.get_label() for line in ax.lines]
-    assert labels == [
-        "Contains true value",
-        "Misses true value",
-        "_interval",
-        "_interval",
-        "True value",
-    ]</p>
-<p>def test_含む区間と含まない区間で色が違う() -&gt; None:
-    ax = plot_confidence_intervals(TABLE, 0.5).axes[0]
-    colors = [line.get_color() for line in ax.lines[:4]]
-    assert colors[0] == colors[3]
-    assert colors[1] == colors[2]
-    assert colors[0] != colors[1]</p>
-<p>def test_真の値を含む区間は青で含まない区間は赤() -&gt; None:
-    ax = plot_confidence_intervals(TABLE, 0.5).axes[0]
-    assert ax.lines[0].get_color() == "tab:blue"
-    assert ax.lines[1].get_color() == "tab:red"</p>
-<p>def plot_confidence_intervals(intervals: pd.DataFrame, true_value: float) -&gt; Figure:
-    """標本ごとの信頼区間を縦線で描く。真の値を含む区間と、含まない区間で色を変える。"""
-    fig, ax = plt.subplots()
-    seen: set[bool] = set()
-    names = {True: "Contains true value", False: "Misses true value"}
-    colors = {True: "tab:blue", False: "tab:red"}
-    for i, (lower, upper) in enumerate(
-        zip(intervals["lower"], intervals["upper"], strict=True)
-    ):
-        contains = bool(lower &lt;= true_value &lt;= upper)
-        label = "_interval" if contains in seen else names[contains]
-        seen.add(contains)
-        ax.plot([i, i], [lower, upper], color=colors[contains], label=label)
-    ax.axhline(true_value, color="black", linestyle="--", label="True value")
-    ax.set_xlabel("Sample")
-    ax.set_ylabel("95% confidence interval of the slope")
-    ax.legend()
-    plt.close(fig)
-    return fig</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_区間ごとに縦線を描き最後に真の値の線を引く</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_confidence_intervals</span><span class="p">(</span><span class="n">TABLE</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">xs</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[:</span><span class="mi">4</span><span class="p">]]</span> <span class="o">==</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]]</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span> <span class="o">==</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_含む区間と含まない区間で凡例の名前が違う</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_confidence_intervals</span><span class="p">(</span><span class="n">TABLE</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">labels</span> <span class="o">==</span> <span class="p">[</span>
+        <span class="s2">"Contains true value"</span><span class="p">,</span>
+        <span class="s2">"Misses true value"</span><span class="p">,</span>
+        <span class="s2">"_interval"</span><span class="p">,</span>
+        <span class="s2">"_interval"</span><span class="p">,</span>
+        <span class="s2">"True value"</span><span class="p">,</span>
+    <span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_含む区間と含まない区間で色が違う</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_confidence_intervals</span><span class="p">(</span><span class="n">TABLE</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">get_color</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[:</span><span class="mi">4</span><span class="p">]]</span>
+    <span class="k">assert</span> <span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">colors</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">colors</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">colors</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">colors</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_真の値を含む区間は青で含まない区間は赤</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_confidence_intervals</span><span class="p">(</span><span class="n">TABLE</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_color</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"tab:blue"</span>
+    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_color</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"tab:red"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_confidence_intervals</span><span class="p">(</span><span class="n">intervals</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">true_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""標本ごとの信頼区間を縦線で描く。真の値を含む区間と、含まない区間で色を変える。"""</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">seen</span><span class="p">:</span> <span class="nb">set</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">{</span><span class="kc">True</span><span class="p">:</span> <span class="s2">"Contains true value"</span><span class="p">,</span> <span class="kc">False</span><span class="p">:</span> <span class="s2">"Misses true value"</span><span class="p">}</span>
+    <span class="n">colors</span> <span class="o">=</span> <span class="p">{</span><span class="kc">True</span><span class="p">:</span> <span class="s2">"tab:blue"</span><span class="p">,</span> <span class="kc">False</span><span class="p">:</span> <span class="s2">"tab:red"</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+        <span class="nb">zip</span><span class="p">(</span><span class="n">intervals</span><span class="p">[</span><span class="s2">"lower"</span><span class="p">],</span> <span class="n">intervals</span><span class="p">[</span><span class="s2">"upper"</span><span class="p">],</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">):</span>
+        <span class="n">contains</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">lower</span> <span class="o">&lt;=</span> <span class="n">true_value</span> <span class="o">&lt;=</span> <span class="n">upper</span><span class="p">)</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="s2">"_interval"</span> <span class="k">if</span> <span class="n">contains</span> <span class="ow">in</span> <span class="n">seen</span> <span class="k">else</span> <span class="n">names</span><span class="p">[</span><span class="n">contains</span><span class="p">]</span>
+        <span class="n">seen</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">contains</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">],</span> <span class="p">[</span><span class="n">lower</span><span class="p">,</span> <span class="n">upper</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">[</span><span class="n">contains</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">true_value</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"True value"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Sample"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"95</span><span class="si">% c</span><span class="s2">onfidence interval of the slope"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+</code></pre></div>
 <h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter05
 </code></pre></div>

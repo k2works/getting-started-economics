@@ -6452,39 +6452,47 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="n">X2</span> <span class="o">=</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">]</span>
 <span class="n">Y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">a</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
 </code></pre></div>
-<p>def test_ちょうどの関係では長い回帰が真の係数を復元する() -&gt; None:
-    d = ovb_decomposition(Y, X1, X2)
-    assert d.long == pytest.approx(2)
-    assert d.beta2 == pytest.approx(3)</p>
-<p>def test_手計算の補助回帰の傾き() -&gt; None:
-    d = ovb_decomposition(Y, X1, X2)
-    assert d.delta == pytest.approx(fit_simple(X1, X2).slope)
-    assert d.delta == pytest.approx(1.0)</p>
-<p>def test_短い回帰の傾きは長い回帰の傾きにバイアスを足したものにちょうど等しい() -&gt; None:
-    d = ovb_decomposition(Y, X1, X2)
-    assert d.short == pytest.approx(d.long + d.beta2 * d.delta)
-    assert d.short == pytest.approx(2 + 3 * 1.0)</p>
-<h3 id="green-ovb_decomposition">Green: ovb_decomposition を実装する<a class="headerlink" href="#green-ovb_decomposition" title="Permanent link">&para;</a></h3>
-<p>@dataclass(frozen=True)
-class OvbDecomposition:
-    """欠落変数バイアスの分解: 短い回帰の傾き = 長い回帰の傾き + β₂ · δ。"""</p>
-<div class="highlight"><pre><span></span><code>short: float
-long: float
-beta2: float
-delta: float
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_ちょうどの関係では長い回帰が真の係数を復元する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">ovb_decomposition</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">long</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">beta2</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_手計算の補助回帰の傾き</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">ovb_decomposition</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">delta</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">fit_simple</span><span class="p">(</span><span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">)</span><span class="o">.</span><span class="n">slope</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">delta</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_短い回帰の傾きは長い回帰の傾きにバイアスを足したものにちょうど等しい</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">ovb_decomposition</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X1</span><span class="p">,</span> <span class="n">X2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">short</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">long</span> <span class="o">+</span> <span class="n">d</span><span class="o">.</span><span class="n">beta2</span> <span class="o">*</span> <span class="n">d</span><span class="o">.</span><span class="n">delta</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">short</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="mf">1.0</span><span class="p">)</span>
 </code></pre></div>
-<p>def ovb_decomposition(y: Array, x1: Array, x2: Array) -&gt; OvbDecomposition:
-    """x2 を落とした回帰（短い）と、入れた回帰（長い）、補助回帰（x2 を x1 で回帰）。</p>
-<div class="highlight"><pre><span></span><code>標本の中で、短い回帰の傾き = 長い回帰の x1 の係数 + x2 の係数 × 補助回帰の傾き
-が、ちょうど成り立つ。
-"""
-long = fit_ols(y, np.column_stack([x1, x2])).coefficients
-return OvbDecomposition(
-    short=fit_simple(x1, y).slope,
-    long=float(long["x1"]),
-    beta2=float(long["x2"]),
-    delta=fit_simple(x1, x2).slope,
-)
+<h3 id="green-ovb_decomposition">Green: ovb_decomposition を実装する<a class="headerlink" href="#green-ovb_decomposition" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">OvbDecomposition</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""欠落変数バイアスの分解: 短い回帰の傾き = 長い回帰の傾き + β₂ · δ。"""</span>
+
+    <span class="n">short</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">long</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">beta2</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">delta</span><span class="p">:</span> <span class="nb">float</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ovb_decomposition</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">x1</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">x2</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OvbDecomposition</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""x2 を落とした回帰（短い）と、入れた回帰（長い）、補助回帰（x2 を x1 で回帰）。</span>
+
+<span class="sd">    標本の中で、短い回帰の傾き = 長い回帰の x1 の係数 + x2 の係数 × 補助回帰の傾き</span>
+<span class="sd">    が、ちょうど成り立つ。</span>
+<span class="sd">    """</span>
+    <span class="n">long</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">]))</span><span class="o">.</span><span class="n">coefficients</span>
+    <span class="k">return</span> <span class="n">OvbDecomposition</span><span class="p">(</span>
+        <span class="n">short</span><span class="o">=</span><span class="n">fit_simple</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">slope</span><span class="p">,</span>
+        <span class="n">long</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">long</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]),</span>
+        <span class="n">beta2</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">long</span><span class="p">[</span><span class="s2">"x2"</span><span class="p">]),</span>
+        <span class="n">delta</span><span class="o">=</span><span class="n">fit_simple</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span><span class="o">.</span><span class="n">slope</span><span class="p">,</span>
+    <span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter11.endogeneity</span><span class="w"> </span><span class="kn">import</span> <span class="n">ovb_decomposition</span>
 
@@ -6501,41 +6509,49 @@ return OvbDecomposition(
 <p>手計算の 5 と一致します。恒等式（長い回帰の傾き + b₂ × δ̃ = 短い回帰の傾き）も、浮動小数点の誤差を除いて、ちょうど成り立ちます。</p>
 <h3 id="_7">乱数の標本<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>y = 1 + x₁ + 2·x₂ + u（真の傾きは x₁ が 1、x₂ が 2）。x₁ と x₂ は、どちらも分散 1 で、相関が 0.5 です。x₂ を落とすと、バイアスは 2 × 0.5 = 1 で、x₁ の傾きは 2 に近づくはずです（予想 1）。</p>
-<p>def draw_omitted(
-    n: int, correlation: float, rng: np.random.Generator
-) -&gt; tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
-    """y = 1 + x1 + 2·x2 + u（x1 と x2 の相関は correlation、どちらも分散 1）。</p>
-<div class="highlight"><pre><span></span><code>x2 を落とすと、x1 の係数は、1 + 2·correlation に近づく（バイアスは 2·correlation）。
-"""
-x1 = rng.standard_normal(n)
-x2 = correlation * x1 + math.sqrt(1 - correlation**2) * rng.standard_normal(n)
-y = 1 + x1 + 2 * x2 + rng.standard_normal(n)
-return y, x1, x2
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">draw_omitted</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">correlation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""y = 1 + x1 + 2·x2 + u（x1 と x2 の相関は correlation、どちらも分散 1）。</span>
+
+<span class="sd">    x2 を落とすと、x1 の係数は、1 + 2·correlation に近づく（バイアスは 2·correlation）。</span>
+<span class="sd">    """</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="n">correlation</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">correlation</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">y</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">simulate_omitted</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">correlation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""x2 を落とした回帰（short）と入れた回帰（long）の x1 の係数を繰り返す。"""</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
+        <span class="n">y</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">draw_omitted</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">correlation</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">ovb_decomposition</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">d</span><span class="o">.</span><span class="n">short</span><span class="p">,</span> <span class="n">d</span><span class="o">.</span><span class="n">long</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"short"</span><span class="p">,</span> <span class="s2">"long"</span><span class="p">])</span>
 </code></pre></div>
-<p>def simulate_omitted(
-    n: int, correlation: float, repetitions: int, rng: np.random.Generator
-) -&gt; pd.DataFrame:
-    """x2 を落とした回帰（short）と入れた回帰（long）の x1 の係数を繰り返す。"""
-    rows = []
-    for _ in range(repetitions):
-        y, x1, x2 = draw_omitted(n, correlation, rng)
-        d = ovb_decomposition(y, x1, x2)
-        rows.append((d.short, d.long))
-    return pd.DataFrame(rows, columns=["short", "long"])</p>
-<p>def test_恒等式は乱数の標本でも成り立つ() -&gt; None:
-    y, x1, x2 = draw_omitted(50, 0.5, np.random.default_rng(0))
-    d = ovb_decomposition(y, x1, x2)
-    assert d.short == pytest.approx(d.long + d.beta2 * d.delta, abs=1e-10)</p>
-<p>def test_バイアスの符号は欠落変数の係数と相関の符号の積() -&gt; None:
-    for correlation in (0.6, -0.6):
-        y, x1, x2 = draw_omitted(5000, correlation, np.random.default_rng(1))
-        d = ovb_decomposition(y, x1, x2)
-        assert np.sign(d.short - d.long) == np.sign(d.beta2 * correlation)</p>
-<p>def test_標本の形と相関() -&gt; None:
-    y, x1, x2 = draw_omitted(20000, 0.5, np.random.default_rng(0))
-    assert y.shape == x1.shape == x2.shape == (20000,)
-    assert np.corrcoef(x1, x2)[0, 1] == pytest.approx(0.5, abs=0.02)
-    assert np.var(x2) == pytest.approx(1, rel=0.05)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_恒等式は乱数の標本でも成り立つ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">y</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">draw_omitted</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">ovb_decomposition</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">short</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">long</span> <span class="o">+</span> <span class="n">d</span><span class="o">.</span><span class="n">beta2</span> <span class="o">*</span> <span class="n">d</span><span class="o">.</span><span class="n">delta</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-10</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_バイアスの符号は欠落変数の係数と相関の符号の積</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">correlation</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.6</span><span class="p">):</span>
+        <span class="n">y</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">draw_omitted</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span> <span class="n">correlation</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="n">ovb_decomposition</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">short</span> <span class="o">-</span> <span class="n">d</span><span class="o">.</span><span class="n">long</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">beta2</span> <span class="o">*</span> <span class="n">correlation</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_標本の形と相関</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">y</span><span class="p">,</span> <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">draw_omitted</span><span class="p">(</span><span class="mi">20000</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">x1</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">x2</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">20000</span><span class="p">,)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">x2</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter11.endogeneity</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_omitted</span><span class="p">,</span> <span class="n">simulate_omitted</span>
@@ -6554,66 +6570,85 @@ return y, x1, x2
 2000 {'short': 2.0009, 'long': 1.0014} {'short': 0.0442, 'long': 0.0262}
 </code></pre></div>
 <p>1 つの標本（n = 200）では、x₂ を入れた回帰の x₁ の係数は 1.0327（真の値 1 に近い）、落とした回帰は 1.9431（2 に近い）です。500 回繰り返すと、<strong>落とした回帰の平均は、n = 50 で 1.9949、n = 2000 で 2.0009</strong>。標本を増やしても、ばらつき（0.288 → 0.0442）が小さくなるだけで、<strong>偏りは消えません</strong>。入れた回帰は、平均が真の値 1 に近いままです。</p>
-<p>def test_x2を落とした回帰は平均して1プラス2ρに近く入れた回帰は真の値() -&gt; None:
-    table = simulate_omitted(200, 0.5, 1000, np.random.default_rng(0))
-    se = table.std() / 1000**0.5
-    assert list(table.columns) == ["short", "long"]
-    assert abs(table["short"].mean() - 2.0) &lt; 4 * se["short"]
-    assert abs(table["long"].mean() - 1.0) &lt; 4 * se["long"]</p>
-<p>def test_相関がなければ欠落変数バイアスはない() -&gt; None:
-    table = simulate_omitted(200, 0.0, 1000, np.random.default_rng(0))
-    se = table.std() / 1000**0.5
-    assert abs(table["short"].mean() - 1.0) &lt; 4 * se["short"]</p>
-<p>def test_標本を増やしても短い回帰のバイアスは消えない() -&gt; None:
-    small = simulate_omitted(50, 0.5, 500, np.random.default_rng(0))["short"]
-    large = simulate_omitted(2000, 0.5, 500, np.random.default_rng(0))["short"]
-    assert large.mean() == pytest.approx(2.0, abs=0.02)
-    assert large.std() &lt; small.std() / 3
-    assert abs(large.mean() - 1.0) &gt; 0.9</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_x2を落とした回帰は平均して1プラス2ρに近く入れた回帰は真の値</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">simulate_omitted</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">se</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="mi">1000</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"short"</span><span class="p">,</span> <span class="s2">"long"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">"short"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">se</span><span class="p">[</span><span class="s2">"short"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">"long"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">se</span><span class="p">[</span><span class="s2">"long"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_相関がなければ欠落変数バイアスはない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">simulate_omitted</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">se</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="mi">1000</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">"short"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">se</span><span class="p">[</span><span class="s2">"short"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_標本を増やしても短い回帰のバイアスは消えない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">small</span> <span class="o">=</span> <span class="n">simulate_omitted</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))[</span><span class="s2">"short"</span><span class="p">]</span>
+    <span class="n">large</span> <span class="o">=</span> <span class="n">simulate_omitted</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))[</span><span class="s2">"short"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">large</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">large</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">&lt;</span> <span class="n">small</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="mi">3</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">large</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.9</span>
+</code></pre></div>
 <p><img alt="x₂ を落とした回帰（short）は、真の値 1 から大きくずれた 2 のまわりに、入れた回帰（long）は 1 のまわりに分布する" src="../images/ch11-omitted-variable.png" /></p>
 <h3 id="_8">測定誤差<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
-<p>def attenuation_factor(var_true: float, var_error: float) -&gt; float:
-    """測定誤差による減衰係数 = Var(真の x) ÷ (Var(真の x) + Var(誤差))。"""
-    return var_true / (var_true + var_error)</p>
-<p>def draw_measurement_error(
-    n: int, error_sd: float, rng: np.random.Generator
-) -&gt; tuple[NDArray[np.float64], NDArray[np.float64]]:
-    """y = 1 + x* + u。観測できるのは、誤差のある x = x* + e だけ（x* は分散 1）。"""
-    x_true = rng.standard_normal(n)
-    y = 1 + x_true + rng.standard_normal(n)
-    return y, x_true + error_sd * rng.standard_normal(n)</p>
-<p>def simulate_measurement_error(
-    n: int, error_sd: float, repetitions: int, rng: np.random.Generator
-) -&gt; NDArray[np.float64]:
-    """誤差のある x で回帰した傾きを、繰り返し推定する（真の傾きは 1）。"""
-    slopes = []
-    for _ in range(repetitions):
-        y, x = draw_measurement_error(n, error_sd, rng)
-        slopes.append(fit_simple(x, y).slope)
-    return np.array(slopes)</p>
-<p>def test_減衰係数() -&gt; None:
-    assert attenuation_factor(1, 1) == pytest.approx(0.5)
-    assert attenuation_factor(1, 0.25) == pytest.approx(0.8)
-    assert attenuation_factor(1, 0) == 1</p>
-<p>def test_測定誤差のある標本の形() -&gt; None:
-    y, x = draw_measurement_error(20000, 1.0, np.random.default_rng(0))
-    assert np.var(x) == pytest.approx(2, rel=0.05)
-    assert np.var(y) == pytest.approx(2, rel=0.05)</p>
-<p>def test_測定誤差があると傾きは0の方向に減衰する() -&gt; None:
-    for error_sd in (0.5, 1.0):
-        slopes = simulate_measurement_error(
-            500, error_sd, 1000, np.random.default_rng(0)
-        )
-        expected = attenuation_factor(1, error_sd<strong>2)
-        assert slopes.mean() == pytest.approx(
-            expected, abs=4 * slopes.std() / 1000</strong>0.5
-        )</p>
-<p>def test_誤差がなければ減衰しない() -&gt; None:
-    slopes = simulate_measurement_error(500, 0.0, 500, np.random.default_rng(0))
-    assert slopes.mean() == pytest.approx(1, abs=4 * slopes.std() / 500**0.5)</p>
-<p>def test_標本を増やしても減衰は消えない() -&gt; None:
-    slopes = simulate_measurement_error(5000, 1.0, 300, np.random.default_rng(0))
-    assert slopes.mean() == pytest.approx(0.5, abs=0.02)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">attenuation_factor</span><span class="p">(</span><span class="n">var_true</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">var_error</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""測定誤差による減衰係数 = Var(真の x) ÷ (Var(真の x) + Var(誤差))。"""</span>
+    <span class="k">return</span> <span class="n">var_true</span> <span class="o">/</span> <span class="p">(</span><span class="n">var_true</span> <span class="o">+</span> <span class="n">var_error</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">draw_measurement_error</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">error_sd</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""y = 1 + x* + u。観測できるのは、誤差のある x = x* + e だけ（x* は分散 1）。"""</span>
+    <span class="n">x_true</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x_true</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">y</span><span class="p">,</span> <span class="n">x_true</span> <span class="o">+</span> <span class="n">error_sd</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">simulate_measurement_error</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">error_sd</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""誤差のある x で回帰した傾きを、繰り返し推定する（真の傾きは 1）。"""</span>
+    <span class="n">slopes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
+        <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">draw_measurement_error</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">error_sd</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+        <span class="n">slopes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fit_simple</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">slope</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">slopes</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_減衰係数</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">attenuation_factor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">attenuation_factor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.8</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">attenuation_factor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_測定誤差のある標本の形</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">draw_measurement_error</span><span class="p">(</span><span class="mi">20000</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_測定誤差があると傾きは0の方向に減衰する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">error_sd</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">):</span>
+        <span class="n">slopes</span> <span class="o">=</span> <span class="n">simulate_measurement_error</span><span class="p">(</span>
+            <span class="mi">500</span><span class="p">,</span> <span class="n">error_sd</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="n">attenuation_factor</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">error_sd</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">slopes</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+            <span class="n">expected</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="n">slopes</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="mi">1000</span><span class="o">**</span><span class="mf">0.5</span>
+        <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_誤差がなければ減衰しない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">slopes</span> <span class="o">=</span> <span class="n">simulate_measurement_error</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">slopes</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="n">slopes</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="mi">500</span><span class="o">**</span><span class="mf">0.5</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_標本を増やしても減衰は消えない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">slopes</span> <span class="o">=</span> <span class="n">simulate_measurement_error</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">slopes</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter11.endogeneity</span><span class="w"> </span><span class="kn">import</span> <span class="n">simulate_measurement_error</span>
 
 <span class="k">for</span> <span class="n">error_sd</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">):</span>
@@ -6626,61 +6661,75 @@ return y, x1, x2
 <p>列は、誤差の標準偏差、傾きの平均、標準偏差、減衰係数の理論値です。誤差の分散が 0.25 のとき、傾きの平均は 0.7984（理論値 0.8）、誤差の分散が 1 のとき 0.4991（理論値 0.5）です（予想 2）。<strong>真の傾きは 1 なのに、測定誤差があると、半分以下に縮みます</strong>。</p>
 <p><img alt="誤差の標準偏差が大きいほど（error sd 1.0）、傾きの推定値は、真の値 1 から 0 の方向に離れる" src="../images/ch11-measurement-error.png" /></p>
 <h3 id="_9">同時方程式<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
-<p>def draw_market(
-    n: int, sd_demand: float, sd_supply: float, rng: np.random.Generator
-) -&gt; pd.DataFrame:
-    """需要・供給の均衡で決まる、価格 p と数量 q の標本。</p>
-<div class="highlight"><pre><span></span><code>需要: q = 10 − p + u_d、供給: q = p + u_s（需要の傾き −1、供給の傾き +1）。
-均衡で、p = (10 + u_d − u_s) ÷ 2、q = (10 + u_d + u_s) ÷ 2。
-"""
-u_d = sd_demand * rng.standard_normal(n)
-u_s = sd_supply * rng.standard_normal(n)
-return pd.DataFrame({"p": (10 + u_d - u_s) / 2, "q": (10 + u_d + u_s) / 2})
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">draw_market</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">sd_demand</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sd_supply</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""需要・供給の均衡で決まる、価格 p と数量 q の標本。</span>
+
+<span class="sd">    需要: q = 10 − p + u_d、供給: q = p + u_s（需要の傾き −1、供給の傾き +1）。</span>
+<span class="sd">    均衡で、p = (10 + u_d − u_s) ÷ 2、q = (10 + u_d + u_s) ÷ 2。</span>
+<span class="sd">    """</span>
+    <span class="n">u_d</span> <span class="o">=</span> <span class="n">sd_demand</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">u_s</span> <span class="o">=</span> <span class="n">sd_supply</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"p"</span><span class="p">:</span> <span class="p">(</span><span class="mi">10</span> <span class="o">+</span> <span class="n">u_d</span> <span class="o">-</span> <span class="n">u_s</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">"q"</span><span class="p">:</span> <span class="p">(</span><span class="mi">10</span> <span class="o">+</span> <span class="n">u_d</span> <span class="o">+</span> <span class="n">u_s</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">})</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">simultaneity_slope</span><span class="p">(</span><span class="n">sd_demand</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sd_supply</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""q を p で回帰した傾きの、大標本での値 = (σ_d² − σ_s²) ÷ (σ_d² + σ_s²)。"""</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">sd_demand</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">sd_supply</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">sd_demand</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">sd_supply</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">simulate_simultaneity</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">sd_demand</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sd_supply</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""q を p で回帰した傾きを、繰り返し推定する。"""</span>
+    <span class="n">slopes</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
+        <span class="n">market</span> <span class="o">=</span> <span class="n">draw_market</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">sd_demand</span><span class="p">,</span> <span class="n">sd_supply</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+        <span class="n">slopes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fit_simple</span><span class="p">(</span><span class="n">market</span><span class="p">[</span><span class="s2">"p"</span><span class="p">],</span> <span class="n">market</span><span class="p">[</span><span class="s2">"q"</span><span class="p">])</span><span class="o">.</span><span class="n">slope</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">slopes</span><span class="p">)</span>
 </code></pre></div>
-<p>def simultaneity_slope(sd_demand: float, sd_supply: float) -&gt; float:
-    """q を p で回帰した傾きの、大標本での値 = (σ_d² − σ_s²) ÷ (σ_d² + σ_s²)。"""
-    return (sd_demand<strong>2 - sd_supply</strong>2) / (sd_demand<strong>2 + sd_supply</strong>2)</p>
-<p>def simulate_simultaneity(
-    n: int,
-    sd_demand: float,
-    sd_supply: float,
-    repetitions: int,
-    rng: np.random.Generator,
-) -&gt; NDArray[np.float64]:
-    """q を p で回帰した傾きを、繰り返し推定する。"""
-    slopes = []
-    for _ in range(repetitions):
-        market = draw_market(n, sd_demand, sd_supply, rng)
-        slopes.append(fit_simple(market["p"], market["q"]).slope)
-    return np.array(slopes)</p>
-<p>def test_市場の標本の式() -&gt; None:
-    market = draw_market(10, 0.0, 0.0, np.random.default_rng(0))
-    assert market["p"].tolist() == [5] * 10
-    assert market["q"].tolist() == [5] * 10</p>
-<p>def test_均衡の価格と数量は需要と供給の両方の式を満たす() -&gt; None:
-    market = draw_market(100, 1.0, 1.0, np.random.default_rng(0))
-    demand_shock = market["q"] - (10 - market["p"])
-    supply_shock = market["q"] - market["p"]
-    assert demand_shock.std() == pytest.approx(1, rel=0.3)
-    assert supply_shock.std() == pytest.approx(1, rel=0.3)</p>
-<p>def test_大標本での傾き() -&gt; None:
-    assert simultaneity_slope(1, 1) == 0
-    assert simultaneity_slope(2, 1) == pytest.approx(0.6)
-    assert simultaneity_slope(1, 2) == pytest.approx(-0.6)</p>
-<p>def test_同時性があるとOLSの傾きは需要の傾きにも供給の傾きにも近づかない() -&gt; None:
-    for sd_demand, sd_supply in ((1, 1), (2, 1), (1, 2)):
-        slopes = simulate_simultaneity(
-            500, sd_demand, sd_supply, 1000, np.random.default_rng(0)
-        )
-        expected = simultaneity_slope(sd_demand, sd_supply)
-        assert slopes.mean() == pytest.approx(
-            expected, abs=4 * slopes.std() / 1000**0.5
-        )
-        assert abs(slopes.mean() - 1) &gt; 0.3
-        assert abs(slopes.mean() + 1) &gt; 0.3</p>
-<p>def test_需要の変動が小さいと傾きは需要の傾きに近づく() -&gt; None:
-    slopes = simulate_simultaneity(500, 0.05, 1.0, 300, np.random.default_rng(0))
-    assert slopes.mean() == pytest.approx(-1, abs=0.02)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_市場の標本の式</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">market</span> <span class="o">=</span> <span class="n">draw_market</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">market</span><span class="p">[</span><span class="s2">"p"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span>
+    <span class="k">assert</span> <span class="n">market</span><span class="p">[</span><span class="s2">"q"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_均衡の価格と数量は需要と供給の両方の式を満たす</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">market</span> <span class="o">=</span> <span class="n">draw_market</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">demand_shock</span> <span class="o">=</span> <span class="n">market</span><span class="p">[</span><span class="s2">"q"</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="mi">10</span> <span class="o">-</span> <span class="n">market</span><span class="p">[</span><span class="s2">"p"</span><span class="p">])</span>
+    <span class="n">supply_shock</span> <span class="o">=</span> <span class="n">market</span><span class="p">[</span><span class="s2">"q"</span><span class="p">]</span> <span class="o">-</span> <span class="n">market</span><span class="p">[</span><span class="s2">"p"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">demand_shock</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">supply_shock</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_大標本での傾き</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">simultaneity_slope</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">simultaneity_slope</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.6</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">simultaneity_slope</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="o">-</span><span class="mf">0.6</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_同時性があるとOLSの傾きは需要の傾きにも供給の傾きにも近づかない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">sd_demand</span><span class="p">,</span> <span class="n">sd_supply</span> <span class="ow">in</span> <span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)):</span>
+        <span class="n">slopes</span> <span class="o">=</span> <span class="n">simulate_simultaneity</span><span class="p">(</span>
+            <span class="mi">500</span><span class="p">,</span> <span class="n">sd_demand</span><span class="p">,</span> <span class="n">sd_supply</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="n">expected</span> <span class="o">=</span> <span class="n">simultaneity_slope</span><span class="p">(</span><span class="n">sd_demand</span><span class="p">,</span> <span class="n">sd_supply</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">slopes</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+            <span class="n">expected</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="n">slopes</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="mi">1000</span><span class="o">**</span><span class="mf">0.5</span>
+        <span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">slopes</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.3</span>
+        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">slopes</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.3</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_需要の変動が小さいと傾きは需要の傾きに近づく</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">slopes</span> <span class="o">=</span> <span class="n">simulate_simultaneity</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">slopes</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter11.endogeneity</span><span class="w"> </span><span class="kn">import</span> <span class="n">simulate_simultaneity</span><span class="p">,</span> <span class="n">simultaneity_slope</span>
 
 <span class="k">for</span> <span class="n">sd_demand</span><span class="p">,</span> <span class="n">sd_supply</span> <span class="ow">in</span> <span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
@@ -6695,48 +6744,54 @@ return pd.DataFrame({"p": (10 + u_d - u_s) / 2, "q": (10 + u_d + u_s) / 2})
 <p>列は、需要の変動の標準偏差、供給の変動の標準偏差、傾きの平均、理論値です。需要と供給の変動が同じ大きさ（1、1）だと、傾きは<strong>ほぼ 0</strong>（予想 3）。需要の変動が大きい（2、1）と、供給の傾き +1 に向かって 0.6、供給の変動が大きい（1、2）と、需要の傾き −1 に向かって −0.6 です。需要の変動が、ほとんどない（0.05、1）ときだけ、需要の傾き −1 に近い（−0.995）値になります。<strong>同じ市場でも、どちらの変動が大きいかで、結果が変わります。</strong></p>
 <h3 id="_10">図<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p><code>plot_market</code> は、均衡の点と、OLS の直線、真の需要・供給の直線を描きます。冒頭の図（需要の変動 2、供給の変動 1）で、OLS の直線は、需要と供給の、間を通ります。</p>
-<p>def test_データと3本の直線() -&gt; None:
-    market = draw_market(50, 1.0, 1.0, np.random.default_rng(0))
-    ax = plot_market(market).axes[0]
-    assert [line.get_label() for line in ax.lines] == [
-        "Data",
-        "OLS fit",
-        "Demand (slope -1)",
-        "Supply (slope +1)",
-    ]
-    assert ys(ax.lines[0]) == pytest.approx(market["q"].tolist())</p>
-<p>def test_OLSの直線の傾きはOLSの推定値() -&gt; None:
-    market = draw_market(50, 2.0, 1.0, np.random.default_rng(0))
-    ax = plot_market(market).axes[0]
-    x, y = xs(ax.lines[1]), ys(ax.lines[1])
-    assert (y[1] - y[0]) / (x[1] - x[0]) == pytest.approx(
-        fit_simple(market["p"], market["q"]).slope
-    )</p>
-<p>def test_需要の直線と供給の直線は真の式() -&gt; None:
-    market = draw_market(50, 1.0, 1.0, np.random.default_rng(0))
-    ax = plot_market(market).axes[0]
-    demand_x, demand_y = xs(ax.lines[2]), ys(ax.lines[2])
-    supply_x, supply_y = xs(ax.lines[3]), ys(ax.lines[3])
-    assert demand_y == pytest.approx([10 - p for p in demand_x])
-    assert supply_y == pytest.approx(supply_x)</p>
-<p>def plot_market(market: pd.DataFrame) -&gt; Figure:
-    """均衡の点と、OLS の直線、真の需要曲線（q = 10 − p）、供給曲線（q = p）。"""
-    fig, ax = plt.subplots()
-    ax.plot(market["p"], market["q"], "o", alpha=0.4, label="Data")
-    ends = np.array([market["p"].min(), market["p"].max()])
-    ax.plot(
-        ends,
-        fitted_values(fit_simple(market["p"], market["q"]), ends),
-        color="black",
-        label="OLS fit",
-    )
-    ax.plot(ends, 10 - ends, "--", label="Demand (slope -1)")
-    ax.plot(ends, ends, "--", label="Supply (slope +1)")
-    ax.set_xlabel("Price")
-    ax.set_ylabel("Quantity")
-    ax.legend()
-    plt.close(fig)
-    return fig</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_データと3本の直線</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">market</span> <span class="o">=</span> <span class="n">draw_market</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_market</span><span class="p">(</span><span class="n">market</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span>
+        <span class="s2">"Data"</span><span class="p">,</span>
+        <span class="s2">"OLS fit"</span><span class="p">,</span>
+        <span class="s2">"Demand (slope -1)"</span><span class="p">,</span>
+        <span class="s2">"Supply (slope +1)"</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">market</span><span class="p">[</span><span class="s2">"q"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_OLSの直線の傾きはOLSの推定値</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">market</span> <span class="o">=</span> <span class="n">draw_market</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_market</span><span class="p">(</span><span class="n">market</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">xs</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">fit_simple</span><span class="p">(</span><span class="n">market</span><span class="p">[</span><span class="s2">"p"</span><span class="p">],</span> <span class="n">market</span><span class="p">[</span><span class="s2">"q"</span><span class="p">])</span><span class="o">.</span><span class="n">slope</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_需要の直線と供給の直線は真の式</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">market</span> <span class="o">=</span> <span class="n">draw_market</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_market</span><span class="p">(</span><span class="n">market</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">demand_x</span><span class="p">,</span> <span class="n">demand_y</span> <span class="o">=</span> <span class="n">xs</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">supply_x</span><span class="p">,</span> <span class="n">supply_y</span> <span class="o">=</span> <span class="n">xs</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">]),</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">demand_y</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mi">10</span> <span class="o">-</span> <span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">demand_x</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">supply_y</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">supply_x</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_market</span><span class="p">(</span><span class="n">market</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""均衡の点と、OLS の直線、真の需要曲線（q = 10 − p）、供給曲線（q = p）。"""</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">market</span><span class="p">[</span><span class="s2">"p"</span><span class="p">],</span> <span class="n">market</span><span class="p">[</span><span class="s2">"q"</span><span class="p">],</span> <span class="s2">"o"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Data"</span><span class="p">)</span>
+    <span class="n">ends</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">market</span><span class="p">[</span><span class="s2">"p"</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">market</span><span class="p">[</span><span class="s2">"p"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="n">ends</span><span class="p">,</span>
+        <span class="n">fitted_values</span><span class="p">(</span><span class="n">fit_simple</span><span class="p">(</span><span class="n">market</span><span class="p">[</span><span class="s2">"p"</span><span class="p">],</span> <span class="n">market</span><span class="p">[</span><span class="s2">"q"</span><span class="p">]),</span> <span class="n">ends</span><span class="p">),</span>
+        <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">"OLS fit"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ends</span><span class="p">,</span> <span class="mi">10</span> <span class="o">-</span> <span class="n">ends</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Demand (slope -1)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ends</span><span class="p">,</span> <span class="n">ends</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Supply (slope +1)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Price"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Quantity"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+</code></pre></div>
 <h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter11
 </code></pre></div>

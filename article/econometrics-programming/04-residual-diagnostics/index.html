@@ -6442,55 +6442,70 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
 <span class="n">Y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
 </code></pre></div>
-<p>def test_標準化残差は残差を誤差の標準偏差の推定値で割る() -&gt; None:
-    result = fit_ols(Y, X)
-    z = standardized_residuals(result)
-    assert z == pytest.approx(np.array([0.3, 0.1, -1.1, 0.7]) / 0.9**0.5)</p>
-<p>def test_手計算の例のてこ比() -&gt; None:
-    assert leverage(X) == pytest.approx([0.7, 0.3, 0.3, 0.7])</p>
-<p>def test_手計算の例のスチューデント化残差とクックの距離() -&gt; None:
-    result = fit_ols(Y, X)
-    h = leverage(X)
-    r = studentized_residuals(result, h)
-    assert r[0] == pytest.approx(0.3 / (0.9<strong>0.5 * 0.3</strong>0.5))
-    assert cooks_distance(result, h)[0] == pytest.approx(r[0] ** 2 / 2 * 0.7 / 0.3)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_標準化残差は残差を誤差の標準偏差の推定値で割る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">standardized_residuals</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">z</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">])</span> <span class="o">/</span> <span class="mf">0.9</span><span class="o">**</span><span class="mf">0.5</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_手計算の例のてこ比</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">leverage</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_手計算の例のスチューデント化残差とクックの距離</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">leverage</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">studentized_residuals</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.3</span> <span class="o">/</span> <span class="p">(</span><span class="mf">0.9</span><span class="o">**</span><span class="mf">0.5</span> <span class="o">*</span> <span class="mf">0.3</span><span class="o">**</span><span class="mf">0.5</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">cooks_distance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">h</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">2</span> <span class="o">*</span> <span class="mf">0.7</span> <span class="o">/</span> <span class="mf">0.3</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="green">Green: 標準化残差・スチューデント化残差・クックの距離<a class="headerlink" href="#green" title="Permanent link">&para;</a></h3>
-<p>def _sigma_hat(result: OlsResult) -&gt; float:
-    """誤差項の標準偏差の推定値 σ̂ = √(残差平方和 ÷ (n − k))。"""
-    return math.sqrt(float(result.residuals @ result.residuals) / result.df_resid)</p>
-<p>def standardized_residuals(result: OlsResult) -&gt; NDArray[np.float64]:
-    """標準化残差 e ÷ σ̂。"""
-    return result.residuals / _sigma_hat(result)</p>
-<p>def studentized_residuals(
-    result: OlsResult, leverage: NDArray[np.float64]
-) -&gt; NDArray[np.float64]:
-    """スチューデント化残差 e ÷ (σ̂ · √(1 − てこ比))。"""
-    return result.residuals / (_sigma_hat(result) * np.sqrt(1 - leverage))</p>
-<p>def cooks_distance(
-    result: OlsResult, leverage: NDArray[np.float64]
-) -&gt; NDArray[np.float64]:
-    """クックの距離 = r² ÷ k · h ÷ (1 − h)。観測値を除くと、推定値がどれだけ動くか。"""
-    k = len(result.coefficients)
-    r = studentized_residuals(result, leverage)
-    distance: NDArray[np.float64] = r**2 / k * leverage / (1 - leverage)
-    return distance</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_sigma_hat</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">OlsResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""誤差項の標準偏差の推定値 σ̂ = √(残差平方和 ÷ (n − k))。"""</span>
+    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">residuals</span> <span class="o">@</span> <span class="n">result</span><span class="o">.</span><span class="n">residuals</span><span class="p">)</span> <span class="o">/</span> <span class="n">result</span><span class="o">.</span><span class="n">df_resid</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">standardized_residuals</span><span class="p">(</span><span class="n">result</span><span class="p">:</span> <span class="n">OlsResult</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""標準化残差 e ÷ σ̂。"""</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">residuals</span> <span class="o">/</span> <span class="n">_sigma_hat</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">studentized_residuals</span><span class="p">(</span>
+    <span class="n">result</span><span class="p">:</span> <span class="n">OlsResult</span><span class="p">,</span> <span class="n">leverage</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""スチューデント化残差 e ÷ (σ̂ · √(1 − てこ比))。"""</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">residuals</span> <span class="o">/</span> <span class="p">(</span><span class="n">_sigma_hat</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">leverage</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">cooks_distance</span><span class="p">(</span>
+    <span class="n">result</span><span class="p">:</span> <span class="n">OlsResult</span><span class="p">,</span> <span class="n">leverage</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""クックの距離 = r² ÷ k · h ÷ (1 − h)。観測値を除くと、推定値がどれだけ動くか。"""</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">)</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">studentized_residuals</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">leverage</span><span class="p">)</span>
+    <span class="n">distance</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">k</span> <span class="o">*</span> <span class="n">leverage</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">leverage</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">distance</span>
+</code></pre></div>
 <p><code>statsmodels</code> の <code>OLSInfluence</code> と、一致することも確かめます。</p>
-<p>def random_data(n: int = 40, seed: int = 0) -&gt; pd.DataFrame:
-    rng = np.random.default_rng(seed)
-    x1 = rng.standard_normal(n)
-    x2 = 0.5 * x1 + rng.standard_normal(n)
-    y = 1 + 2 * x1 - x2 + rng.standard_normal(n)
-    return pd.DataFrame({"y": y, "x1": x1, "x2": x2})</p>
-<p>def test_スチューデント化残差とクックの距離はstatsmodelsと一致する() -&gt; None:
-    df = random_data()
-    x = df[["x1", "x2"]]
-    result = fit_ols(df["y"], x)
-    h = leverage(x)
-    influence = OLSInfluence(sm.OLS(df["y"], sm.add_constant(x)).fit())
-    assert studentized_residuals(result, h) == pytest.approx(
-        influence.resid_studentized_internal
-    )
-    assert cooks_distance(result, h) == pytest.approx(influence.cooks_distance[0])</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">random_data</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">40</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">x1</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">x2</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x1</span> <span class="o">-</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"y"</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span> <span class="s2">"x1"</span><span class="p">:</span> <span class="n">x1</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">:</span> <span class="n">x2</span><span class="p">})</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_スチューデント化残差とクックの距離はstatsmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">random_data</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">leverage</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">influence</span> <span class="o">=</span> <span class="n">OLSInfluence</span><span class="p">(</span><span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">())</span>
+    <span class="k">assert</span> <span class="n">studentized_residuals</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">influence</span><span class="o">.</span><span class="n">resid_studentized_internal</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">cooks_distance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">influence</span><span class="o">.</span><span class="n">cooks_distance</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter03.multiple</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_ols</span><span class="p">,</span> <span class="n">leverage</span>
@@ -6517,94 +6532,108 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p><strong>4 番目の観測値（x = 4、y = 9）の、クックの距離が 2.1173</strong> で、突出しています。てこ比が 0.7 と大きく（x が端にある）、残差も 0.7 と大きいためです（予想 1）。この 1 点を除くと、直線が大きく動きます（練習問題で確かめます）。</p>
 <h3 id="q-q_1">Q-Q プロットの点<a class="headerlink" href="#q-q_1" title="Permanent link">&para;</a></h3>
 <p>標準化して小さい順に並べた値と、標準正規分布の分位点 Φ⁻¹((i − 0.5) ÷ n) を、組にします。</p>
-<p>def qq_points(values: ArrayLike) -&gt; tuple[NDArray[np.float64], NDArray[np.float64]]:
-    """Q-Q プロットの点: 標準正規分布の分位点と、標準化して小さい順に並べた値。"""
-    ordered = np.sort(standardize(np.asarray(values, dtype=float)))
-    n = len(ordered)
-    probabilities = (np.arange(1, n + 1) - 0.5) / n
-    return stats.norm.ppf(probabilities), ordered</p>
-<p>def test_Q_Qの点は小さい順で理論分位点と対応する() -&gt; None:
-    values = [3.0, -1.0, 0.5, 2.0]
-    theoretical, ordered = qq_points(values)
-    assert ordered.tolist() == sorted(
-        (np.asarray(values) - np.mean(values)) / np.std(values, ddof=1)
-    )
-    assert theoretical == pytest.approx(stats.norm.ppf([0.125, 0.375, 0.625, 0.875]))</p>
-<p>def test_正規乱数のQ_Q点はほぼ1本の直線上にある() -&gt; None:
-    values = np.random.default_rng(0).standard_normal(500)
-    theoretical, ordered = qq_points(values)
-    assert sample_correlation(theoretical, ordered) &gt; 0.99
-    assert fit_simple(theoretical, ordered).slope == pytest.approx(1, abs=0.05)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">qq_points</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""Q-Q プロットの点: 標準正規分布の分位点と、標準化して小さい順に並べた値。"""</span>
+    <span class="n">ordered</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">standardize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)))</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ordered</span><span class="p">)</span>
+    <span class="n">probabilities</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span>
+    <span class="k">return</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="n">probabilities</span><span class="p">),</span> <span class="n">ordered</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_Q_Qの点は小さい順で理論分位点と対応する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="mf">3.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]</span>
+    <span class="n">theoretical</span><span class="p">,</span> <span class="n">ordered</span> <span class="o">=</span> <span class="n">qq_points</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">ordered</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="nb">sorted</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">values</span><span class="p">))</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">theoretical</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">([</span><span class="mf">0.125</span><span class="p">,</span> <span class="mf">0.375</span><span class="p">,</span> <span class="mf">0.625</span><span class="p">,</span> <span class="mf">0.875</span><span class="p">]))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_正規乱数のQ_Q点はほぼ1本の直線上にある</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">500</span><span class="p">)</span>
+    <span class="n">theoretical</span><span class="p">,</span> <span class="n">ordered</span> <span class="o">=</span> <span class="n">qq_points</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">sample_correlation</span><span class="p">(</span><span class="n">theoretical</span><span class="p">,</span> <span class="n">ordered</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.99</span>
+    <span class="k">assert</span> <span class="n">fit_simple</span><span class="p">(</span><span class="n">theoretical</span><span class="p">,</span> <span class="n">ordered</span><span class="p">)</span><span class="o">.</span><span class="n">slope</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+</code></pre></div>
 <p>標準正規分布から取った 500 個の値と、指数分布（右に裾が長い）から取った 500 個の値で、Q-Q の点の相関を比べると、前者は 0.9965、後者は 0.8909 でした（予想 3）。直線に乗るほど、1 に近づきます。</p>
 <h3 id="4_1">要約統計量が同じで形が違う 4 組のデータ<a class="headerlink" href="#4_1" title="Permanent link">&para;</a></h3>
 <p>平均・標準偏差・相関・回帰直線が、すべて同じでも、散布図の形は、まったく違うことがあります。この 4 組は、形の違う数列を、<strong>平均・標準偏差・相関が指定どおりになるように直して</strong>作ります。x の形を標準化し、y の形から x と直交する部分を取り出して、相関に応じて混ぜます。</p>
-<p>def match_moments(
-    x_shape: ArrayLike,
-    y_shape: ArrayLike,
-    means: tuple[float, float],
-    sds: tuple[float, float],
-    correlation: float,
-) -&gt; tuple[NDArray[np.float64], NDArray[np.float64]]:
-    """形の違う 2 つの数列を、平均・標準偏差・相関が指定どおりになるように直す。"""
-    zx = standardize(np.asarray(x_shape, dtype=float))
-    zy = standardize(np.asarray(y_shape, dtype=float))
-    n = len(zx)
-    perpendicular = zy - (zy @ zx / (n - 1)) * zx
-    sd = math.sqrt(perpendicular @ perpendicular / (n - 1))
-    if sd &lt; 1e-12:
-        raise ValueError("y の形が x に比例しているので、相関を指定できない")
-    y = correlation * zx + math.sqrt(1 - correlation**2) * perpendicular / sd
-    return means[0] + sds[0] * zx, means[1] + sds[1] * y</p>
-<p>def same_summary_datasets() -&gt; dict[
-    str, tuple[NDArray[np.float64], NDArray[np.float64]]
-]:
-    """平均・標準偏差・相関・回帰直線が同じで、形が違う 4 組のデータ（11 個ずつ）。"""
-    x = np.arange(11.0)
-    shapes: dict[str, tuple[ArrayLike, ArrayLike]] = {
-        "linear": (x, [1.2, -0.8, 2.0, -1.5, 0.3, 0.9, -2.2, 1.7, -0.4, 0.1, -1.1]),
-        "curved": (x, -((x - 5) ** 2)),
-        "outlier": (x, [0.0] * 10 + [10.0]),
-        "clustered": (
-            [0.0] * 9 + [1.0] * 2,
-            [0.3, -1.0, 1.1, 0.2, -0.5, 0.8, -0.2, 0.6, -0.9, 2.5, 1.9],
-        ),
-    }
-    return {
-        name: match_moments(xs, ys, (9, 7.5), (3.3, 2.0), 0.8)
-        for name, (xs, ys) in shapes.items()
-    }</p>
-<p>def test_モーメントをそろえると平均と標準偏差と相関が指定どおり() -&gt; None:
-    x, y = match_moments(
-        np.arange(6.0), [1.0, 3.0, 2.0, 5.0, 4.0, 4.5], (9, 7.5), (3.3, 2.0), 0.8
-    )
-    assert np.mean(x) == pytest.approx(9)
-    assert np.mean(y) == pytest.approx(7.5)
-    assert sample_variance(x) ** 0.5 == pytest.approx(3.3)
-    assert sample_variance(y) ** 0.5 == pytest.approx(2.0)
-    assert sample_correlation(x, y) == pytest.approx(0.8)</p>
-<p>def test_形が説明変数と完全に比例していると相関を指定できない() -&gt; None:
-    with pytest.raises(ValueError, match="比例"):
-        match_moments([1.0, 2.0, 3.0], [2.0, 4.0, 6.0], (0, 0), (1, 1), 0.5)</p>
-<p>def test_4組のデータは要約統計量がすべて同じ() -&gt; None:
-    datasets = same_summary_datasets()
-    assert list(datasets) == ["linear", "curved", "outlier", "clustered"]
-    for x, y in datasets.values():
-        assert len(x) == len(y) == 11
-        assert np.mean(x) == pytest.approx(9)
-        assert np.mean(y) == pytest.approx(7.5)
-        assert sample_variance(x) ** 0.5 == pytest.approx(3.3)
-        assert sample_variance(y) ** 0.5 == pytest.approx(2.0)
-        assert sample_correlation(x, y) == pytest.approx(0.8)
-        fit = fit_simple(x, y)
-        assert fit.slope == pytest.approx(0.8 * 2.0 / 3.3)
-        assert fit.intercept == pytest.approx(7.5 - 0.8 * 2.0 / 3.3 * 9)</p>
-<p>def test_4組のデータは要約統計量が同じでもクックの距離が違う() -&gt; None:
-    maxima = {}
-    for name, (x, y) in same_summary_datasets().items():
-        result = fit_ols(y, x)
-        maxima[name] = cooks_distance(result, leverage(x)).max()
-    assert maxima["outlier"] &gt; 5 * maxima["linear"]
-    assert maxima["outlier"] &gt; 1</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">match_moments</span><span class="p">(</span>
+    <span class="n">x_shape</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">y_shape</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">means</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="n">sds</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="n">correlation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""形の違う 2 つの数列を、平均・標準偏差・相関が指定どおりになるように直す。"""</span>
+    <span class="n">zx</span> <span class="o">=</span> <span class="n">standardize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x_shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">zy</span> <span class="o">=</span> <span class="n">standardize</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y_shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">zx</span><span class="p">)</span>
+    <span class="n">perpendicular</span> <span class="o">=</span> <span class="n">zy</span> <span class="o">-</span> <span class="p">(</span><span class="n">zy</span> <span class="o">@</span> <span class="n">zx</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">*</span> <span class="n">zx</span>
+    <span class="n">sd</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">perpendicular</span> <span class="o">@</span> <span class="n">perpendicular</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">if</span> <span class="n">sd</span> <span class="o">&lt;</span> <span class="mf">1e-12</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"y の形が x に比例しているので、相関を指定できない"</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">correlation</span> <span class="o">*</span> <span class="n">zx</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">correlation</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">perpendicular</span> <span class="o">/</span> <span class="n">sd</span>
+    <span class="k">return</span> <span class="n">means</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">sds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">zx</span><span class="p">,</span> <span class="n">means</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">sds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">y</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">same_summary_datasets</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span>
+    <span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]</span>
+<span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""平均・標準偏差・相関・回帰直線が同じで、形が違う 4 組のデータ（11 個ずつ）。"""</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">11.0</span><span class="p">)</span>
+    <span class="n">shapes</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">ArrayLike</span><span class="p">,</span> <span class="n">ArrayLike</span><span class="p">]]</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"linear"</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">1.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="o">-</span><span class="mf">2.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.1</span><span class="p">]),</span>
+        <span class="s2">"curved"</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="mi">5</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)),</span>
+        <span class="s2">"outlier"</span><span class="p">:</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">+</span> <span class="p">[</span><span class="mf">10.0</span><span class="p">]),</span>
+        <span class="s2">"clustered"</span><span class="p">:</span> <span class="p">(</span>
+            <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">9</span> <span class="o">+</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">]</span> <span class="o">*</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">1.9</span><span class="p">],</span>
+        <span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="n">name</span><span class="p">:</span> <span class="n">match_moments</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">),</span> <span class="p">(</span><span class="mf">3.3</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="mf">0.8</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span> <span class="ow">in</span> <span class="n">shapes</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_モーメントをそろえると平均と標準偏差と相関が指定どおり</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">match_moments</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mf">6.0</span><span class="p">),</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">],</span> <span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mf">7.5</span><span class="p">),</span> <span class="p">(</span><span class="mf">3.3</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="mf">0.8</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">7.5</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">sample_variance</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">3.3</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">sample_variance</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">sample_correlation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.8</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_形が説明変数と完全に比例していると相関を指定できない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"比例"</span><span class="p">):</span>
+        <span class="n">match_moments</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">],</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mf">0.5</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_4組のデータは要約統計量がすべて同じ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">datasets</span> <span class="o">=</span> <span class="n">same_summary_datasets</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">datasets</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"linear"</span><span class="p">,</span> <span class="s2">"curved"</span><span class="p">,</span> <span class="s2">"outlier"</span><span class="p">,</span> <span class="s2">"clustered"</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">datasets</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="mi">11</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">7.5</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">sample_variance</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">3.3</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">sample_variance</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">sample_correlation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.8</span><span class="p">)</span>
+        <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_simple</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">slope</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.8</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="mf">3.3</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">intercept</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">7.5</span> <span class="o">-</span> <span class="mf">0.8</span> <span class="o">*</span> <span class="mf">2.0</span> <span class="o">/</span> <span class="mf">3.3</span> <span class="o">*</span> <span class="mi">9</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_4組のデータは要約統計量が同じでもクックの距離が違う</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">maxima</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="n">same_summary_datasets</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">maxima</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">cooks_distance</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">leverage</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">maxima</span><span class="p">[</span><span class="s2">"outlier"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">maxima</span><span class="p">[</span><span class="s2">"linear"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">maxima</span><span class="p">[</span><span class="s2">"outlier"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span>
+</code></pre></div>
 <p><img alt="要約統計量が同じ 4 組のデータ。直線は、4 組とも同じ" src="../images/ch04-same-summary.png" /></p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -6634,91 +6663,105 @@ clustered 7.5 2.0 0.8 0.4848 0.176
 <p>y の平均 7.5、標準偏差 2.0、相関 0.8、傾き 0.4848 は、4 組で同じです（予想 2）。しかし、図では、直線が合っている組（linear）、曲線（curved）、1 点の外れ値（outlier）、2 つの塊（clustered）で、まるで違います。クックの距離の最大値も、outlier が 2.1 で、linear の 0.186 の 10 倍以上です。<strong>要約統計量だけでは、データの問題を見つけられません。図と診断量を見る必要があります。</strong></p>
 <h3 id="_6">診断図<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <p><code>plot_diagnostics</code> は、4 つの図（残差と当てはめ値、Q-Q、スケール、てこ比）を、自分で書いた量から描きます。テストは、各枠に描かれた点の座標が、<code>fit_ols</code> の残差・<code>qq_points</code>・<code>leverage</code> と一致することを確かめます。冒頭の図は、x が大きいほど誤差が大きいデータで、残差が右に行くほど広がっています（<strong>不均一分散</strong>）。次の章以降で、この問題への対処を学びます（第 8 章）。</p>
-<p>def data() -&gt; tuple[np.ndarray, np.ndarray]:
-    rng = np.random.default_rng(0)
-    x = rng.standard_normal(30)
-    return x, 1 + 2 * x + rng.standard_normal(30)</p>
-<p>def test_診断図は4つの枠を持つ() -&gt; None:
-    x, y = data()
-    fig = plot_diagnostics(y, x)
-    assert len(fig.axes) == 4
-    assert [ax.get_title() for ax in fig.axes] == [
-        "Residuals vs Fitted",
-        "Normal Q-Q",
-        "Scale-Location",
-        "Residuals vs Leverage",
-    ]</p>
-<p>def test_残差と当てはめ値の図は残差を描き0の線を引く() -&gt; None:
-    x, y = data()
-    ax = plot_diagnostics(y, x).axes[0]
-    result = fit_ols(y, x)
-    assert ys(ax.lines[0]) == pytest.approx(result.residuals)
-    assert xs(ax.lines[0]) == pytest.approx(y - result.residuals)
-    assert ys(ax.lines[1]) == [0, 0]</p>
-<p>def test_Q_Qの図は点と基準線() -&gt; None:
-    x, y = data()
-    ax = plot_diagnostics(y, x).axes[1]
-    theoretical, ordered = qq_points(fit_ols(y, x).residuals)
-    assert xs(ax.lines[0]) == pytest.approx(theoretical)
-    assert ys(ax.lines[0]) == pytest.approx(ordered)
-    assert xs(ax.lines[1]) == ys(ax.lines[1])</p>
-<p>def test_スケールの図は標準化残差の絶対値の平方根() -&gt; None:
-    x, y = data()
-    ax = plot_diagnostics(y, x).axes[2]
-    z = standardized_residuals(fit_ols(y, x))
-    assert ys(ax.lines[0]) == pytest.approx(np.sqrt(np.abs(z)))</p>
-<p>def test_てこ比の図はてこ比を横軸にする() -&gt; None:
-    x, y = data()
-    ax = plot_diagnostics(y, x).axes[3]
-    assert xs(ax.lines[0]) == pytest.approx(leverage(x))
-    assert ax.get_xlabel() == "Leverage"</p>
-<p>def plot_diagnostics(y: ArrayLike, x: ArrayLike) -&gt; Figure:
-    """回帰の診断図 4 点（残差と当てはめ値、Q-Q、スケール、てこ比）を描く。"""
-    target = np.asarray(y, dtype=float)
-    result = fit_ols(target, x)
-    h = leverage(x)
-    fitted = target - result.residuals
-    fig, axes = plt.subplots(2, 2, figsize=(9, 7))
-    ax = axes[0, 0]
-    ax.plot(fitted, result.residuals, "o")
-    ax.plot([fitted.min(), fitted.max()], [0, 0], "--", color="gray")
-    ax.set_title("Residuals vs Fitted")
-    ax.set_xlabel("Fitted values")
-    ax.set_ylabel("Residuals")
-    theoretical, ordered = qq_points(result.residuals)
-    ax = axes[0, 1]
-    ax.plot(theoretical, ordered, "o")
-    ends = [float(theoretical.min()), float(theoretical.max())]
-    ax.plot(ends, ends, "--", color="gray")
-    ax.set_title("Normal Q-Q")
-    ax.set_xlabel("Theoretical quantiles")
-    ax.set_ylabel("Standardized residuals")
-    ax = axes[1, 0]
-    ax.plot(fitted, np.sqrt(np.abs(standardized_residuals(result))), "o")
-    ax.set_title("Scale-Location")
-    ax.set_xlabel("Fitted values")
-    ax.set_ylabel("sqrt(|standardized residuals|)")
-    ax = axes[1, 1]
-    ax.plot(h, studentized_residuals(result, h), "o")
-    ax.set_title("Residuals vs Leverage")
-    ax.set_xlabel("Leverage")
-    ax.set_ylabel("Studentized residuals")
-    fig.tight_layout()
-    plt.close(fig)
-    return fig</p>
-<p>def plot_same_summary(
-    datasets: Mapping[str, tuple[NDArray[np.float64], NDArray[np.float64]]],
-) -&gt; Figure:
-    """要約統計量が同じで形が違う 4 組のデータと、共通の回帰直線を描く。"""
-    fig, axes = plt.subplots(2, 2, figsize=(8, 6), sharex=True, sharey=True)
-    for ax, (name, (x, y)) in zip(axes.flat, datasets.items(), strict=True):
-        ax.plot(x, y, "o", label="Data")
-        ends = [float(x.min()), float(x.max())]
-        ax.plot(ends, fitted_values(fit_simple(x, y), ends), label="Fitted line")
-        ax.set_title(name)
-    fig.tight_layout()
-    plt.close(fig)
-    return fig</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">data</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_診断図は4つの枠を持つ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">()</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">plot_diagnostics</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">ax</span><span class="o">.</span><span class="n">get_title</span><span class="p">()</span> <span class="k">for</span> <span class="n">ax</span> <span class="ow">in</span> <span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span>
+        <span class="s2">"Residuals vs Fitted"</span><span class="p">,</span>
+        <span class="s2">"Normal Q-Q"</span><span class="p">,</span>
+        <span class="s2">"Scale-Location"</span><span class="p">,</span>
+        <span class="s2">"Residuals vs Leverage"</span><span class="p">,</span>
+    <span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_残差と当てはめ値の図は残差を描き0の線を引く</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">()</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_diagnostics</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">residuals</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">result</span><span class="o">.</span><span class="n">residuals</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_Q_Qの図は点と基準線</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">()</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_diagnostics</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">theoretical</span><span class="p">,</span> <span class="n">ordered</span> <span class="o">=</span> <span class="n">qq_points</span><span class="p">(</span><span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">residuals</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">theoretical</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">ordered</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_スケールの図は標準化残差の絶対値の平方根</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">()</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_diagnostics</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">standardized_residuals</span><span class="p">(</span><span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">z</span><span class="p">)))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_てこ比の図はてこ比を横軸にする</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">()</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_diagnostics</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">leverage</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlabel</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"Leverage"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_diagnostics</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""回帰の診断図 4 点（残差と当てはめ値、Q-Q、スケール、てこ比）を描く。"""</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">leverage</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">fitted</span> <span class="o">=</span> <span class="n">target</span> <span class="o">-</span> <span class="n">result</span><span class="o">.</span><span class="n">residuals</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fitted</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">residuals</span><span class="p">,</span> <span class="s2">"o"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">fitted</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">fitted</span><span class="o">.</span><span class="n">max</span><span class="p">()],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Residuals vs Fitted"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Fitted values"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Residuals"</span><span class="p">)</span>
+    <span class="n">theoretical</span><span class="p">,</span> <span class="n">ordered</span> <span class="o">=</span> <span class="n">qq_points</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">residuals</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">theoretical</span><span class="p">,</span> <span class="n">ordered</span><span class="p">,</span> <span class="s2">"o"</span><span class="p">)</span>
+    <span class="n">ends</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">theoretical</span><span class="o">.</span><span class="n">min</span><span class="p">()),</span> <span class="nb">float</span><span class="p">(</span><span class="n">theoretical</span><span class="o">.</span><span class="n">max</span><span class="p">())]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ends</span><span class="p">,</span> <span class="n">ends</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Normal Q-Q"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Theoretical quantiles"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Standardized residuals"</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fitted</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">standardized_residuals</span><span class="p">(</span><span class="n">result</span><span class="p">))),</span> <span class="s2">"o"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Scale-Location"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Fitted values"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"sqrt(|standardized residuals|)"</span><span class="p">)</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">axes</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">studentized_residuals</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="n">h</span><span class="p">),</span> <span class="s2">"o"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s2">"Residuals vs Leverage"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Leverage"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Studentized residuals"</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_same_summary</span><span class="p">(</span>
+    <span class="n">datasets</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""要約統計量が同じで形が違う 4 組のデータと、共通の回帰直線を描く。"""</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="n">sharex</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">sharey</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="o">.</span><span class="n">flat</span><span class="p">,</span> <span class="n">datasets</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">"o"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Data"</span><span class="p">)</span>
+        <span class="n">ends</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()),</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">())]</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ends</span><span class="p">,</span> <span class="n">fitted_values</span><span class="p">(</span><span class="n">fit_simple</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">),</span> <span class="n">ends</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Fitted line"</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+</code></pre></div>
 <h3 id="_7">実行結果<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter04
 </code></pre></div>

@@ -6544,56 +6544,68 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.iv</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_iv_sample</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter13.iv_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">wu_hausman</span>
 </code></pre></div>
-<p>def with_control(n: int = 400) -&gt; pd.DataFrame:
-    rng = np.random.default_rng(2)
-    s = draw_iv_sample(n, 1.0, 0.5, rng)
-    s["w"] = rng.standard_normal(n)
-    return s.assign(y=s["y"] + 0.5 * s["w"])</p>
-<p>def reference_fit(df: pd.DataFrame, endog: list[str], instruments: list[str]) -&gt; Any:
-    exog = pd.DataFrame({"const": np.ones(len(df))})
-    if "w" in df:
-        exog["w"] = df["w"]
-    return IV2SLS(df["y"], exog, df[endog], df[instruments]).fit(
-        cov_type="unadjusted", debiased=True
-    )</p>
-<p>def test_Wu_Hausmanはlinearmodelsと一致する() -&gt; None:
-    s = draw_iv_sample(500, 1.0, 0.5, np.random.default_rng(0))
-    test = wu_hausman(s["y"], s["x"], s[["z"]])
-    reference = reference_fit(s, ["x"], ["z"]).wu_hausman()
-    assert test.statistic == pytest.approx(reference.stat)
-    assert test.p_value == pytest.approx(reference.pval)</p>
-<p>def test_外生の説明変数があってもWu_Hausmanはlinearmodelsと一致する() -&gt; None:
-    s = with_control()
-    test = wu_hausman(s["y"], s["x"], s[["z"]], s[["w"]])
-    reference = reference_fit(s, ["x"], ["z"]).wu_hausman()
-    assert test.statistic == pytest.approx(reference.stat)
-    assert test.p_value == pytest.approx(reference.pval)</p>
-<p>def test_Wu_Hausmanの統計量は第1段階の残差のt値の2乗() -&gt; None:
-    s = draw_iv_sample(300, 1.0, 0.5, np.random.default_rng(0))
-    v_hat = fit_ols(s["x"], s[["z"]]).residuals
-    augmented = fit_ols(s["y"], pd.DataFrame({"x": s["x"], "v_hat": v_hat}))
-    test = wu_hausman(s["y"], s["x"], s[["z"]])
-    assert test.statistic == pytest.approx(t_statistics(augmented)["v_hat"] ** 2)</p>
-<p>def test_説明変数が内生なら外生という仮説を棄却する() -&gt; None:
-    s = draw_iv_sample(500, 1.0, 0.5, np.random.default_rng(0))
-    assert wu_hausman(s["y"], s["x"], s[["z"]]).p_value &lt; 1e-10</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">with_control</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">400</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_iv_sample</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+    <span class="n">s</span><span class="p">[</span><span class="s2">"w"</span><span class="p">]</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">s</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="s2">"w"</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">reference_fit</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">endog</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">instruments</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="n">exog</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"const"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))})</span>
+    <span class="k">if</span> <span class="s2">"w"</span> <span class="ow">in</span> <span class="n">df</span><span class="p">:</span>
+        <span class="n">exog</span><span class="p">[</span><span class="s2">"w"</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"w"</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">IV2SLS</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">exog</span><span class="p">,</span> <span class="n">df</span><span class="p">[</span><span class="n">endog</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="n">instruments</span><span class="p">])</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+        <span class="n">cov_type</span><span class="o">=</span><span class="s2">"unadjusted"</span><span class="p">,</span> <span class="n">debiased</span><span class="o">=</span><span class="kc">True</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_Wu_Hausmanはlinearmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_iv_sample</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">wu_hausman</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">]])</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">reference_fit</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"z"</span><span class="p">])</span><span class="o">.</span><span class="n">wu_hausman</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">statistic</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">stat</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">p_value</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">pval</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_外生の説明変数があってもWu_Hausmanはlinearmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">with_control</span><span class="p">()</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">wu_hausman</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">]],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"w"</span><span class="p">]])</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">reference_fit</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"z"</span><span class="p">])</span><span class="o">.</span><span class="n">wu_hausman</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">statistic</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">stat</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">p_value</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">pval</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_Wu_Hausmanの統計量は第1段階の残差のt値の2乗</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_iv_sample</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">v_hat</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">]])</span><span class="o">.</span><span class="n">residuals</span>
+    <span class="n">augmented</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"x"</span><span class="p">:</span> <span class="n">s</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="s2">"v_hat"</span><span class="p">:</span> <span class="n">v_hat</span><span class="p">}))</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">wu_hausman</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">]])</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">statistic</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">t_statistics</span><span class="p">(</span><span class="n">augmented</span><span class="p">)[</span><span class="s2">"v_hat"</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_説明変数が内生なら外生という仮説を棄却する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_iv_sample</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">wu_hausman</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">]])</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+</code></pre></div>
 <h3 id="green-wu_hausman">Green: wu_hausman を実装する<a class="headerlink" href="#green-wu_hausman" title="Permanent link">&para;</a></h3>
-<p>def wu_hausman(
-    y: pd.Series,
-    endogenous: pd.Series,
-    instruments: pd.DataFrame,
-    exogenous: pd.DataFrame | None = None,
-) -&gt; TestResult:
-    """Wu-Hausman 検定: 説明変数 x が外生か（帰無仮説: 外生）。</p>
-<div class="highlight"><pre><span></span><code>第 1 段階の残差 v̂ を、元の回帰に足し、v̂ の係数が 0 かを F 検定する。
-x が外生なら、v̂（x の内生的な部分）は、y と関係しない。
-"""
-columns = instruments if exogenous is None else exogenous.join(instruments)
-residual = fit_ols(endogenous, columns).residuals
-base = pd.DataFrame({endogenous.name: endogenous})
-if exogenous is not None:
-    base = exogenous.join(base)
-return f_test(y, base.assign(v_hat=residual), ["v_hat"])
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wu_hausman</span><span class="p">(</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+    <span class="n">endogenous</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+    <span class="n">instruments</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">exogenous</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TestResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Wu-Hausman 検定: 説明変数 x が外生か（帰無仮説: 外生）。</span>
+
+<span class="sd">    第 1 段階の残差 v̂ を、元の回帰に足し、v̂ の係数が 0 かを F 検定する。</span>
+<span class="sd">    x が外生なら、v̂（x の内生的な部分）は、y と関係しない。</span>
+<span class="sd">    """</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">instruments</span> <span class="k">if</span> <span class="n">exogenous</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">exogenous</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">instruments</span><span class="p">)</span>
+    <span class="n">residual</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">endogenous</span><span class="p">,</span> <span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">residuals</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="n">endogenous</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">endogenous</span><span class="p">})</span>
+    <span class="k">if</span> <span class="n">exogenous</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="n">exogenous</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">f_test</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">v_hat</span><span class="o">=</span><span class="n">residual</span><span class="p">),</span> <span class="p">[</span><span class="s2">"v_hat"</span><span class="p">])</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter13.iv_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">wu_hausman</span>
 
@@ -6605,24 +6617,26 @@ return f_test(y, base.assign(v_hat=residual), ["v_hat"])
 </code></pre></div>
 <p>統計量は 63.3748、p 値は 10⁻¹⁴ で、<code>linearmodels</code> と一致します。この標本は、内生性 0.5 で作ったので、外生という仮説を、強く棄却します。</p>
 <h3 id="_3">棄却率（大きさと検出力）<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
-<p>def wu_hausman_rejection_rate(
-    n: int,
-    endogeneity: float,
-    repetitions: int,
-    significance: float,
-    rng: np.random.Generator,
-) -&gt; float:
-    """Wu-Hausman 検定が、外生という帰無仮説を棄却する割合。"""
-    rejected = 0
-    for _ in range(repetitions):
-        s = draw_iv_sample(n, 1.0, endogeneity, rng)
-        rejected += wu_hausman(s["y"], s["x"], s[["z"]]).p_value &lt; significance
-    return rejected / repetitions</p>
-<p>def test_外生なら棄却率は有意水準に近く内生なら高い() -&gt; None:
-    size = wu_hausman_rejection_rate(500, 0.0, 500, 0.05, np.random.default_rng(0))
-    power = wu_hausman_rejection_rate(500, 0.3, 500, 0.05, np.random.default_rng(0))
-    assert size == pytest.approx(0.05, abs=4 * (0.05 * 0.95 / 500) ** 0.5)
-    assert power &gt; 0.95</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">wu_hausman_rejection_rate</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">endogeneity</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">significance</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Wu-Hausman 検定が、外生という帰無仮説を棄却する割合。"""</span>
+    <span class="n">rejected</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">draw_iv_sample</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">endogeneity</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+        <span class="n">rejected</span> <span class="o">+=</span> <span class="n">wu_hausman</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">]])</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&lt;</span> <span class="n">significance</span>
+    <span class="k">return</span> <span class="n">rejected</span> <span class="o">/</span> <span class="n">repetitions</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_外生なら棄却率は有意水準に近く内生なら高い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">wu_hausman_rejection_rate</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">power</span> <span class="o">=</span> <span class="n">wu_hausman_rejection_rate</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">size</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.05</span> <span class="o">*</span> <span class="mf">0.95</span> <span class="o">/</span> <span class="mi">500</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">power</span> <span class="o">&gt;</span> <span class="mf">0.95</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter13.iv_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">wu_hausman_rejection_rate</span>
 
 <span class="k">for</span> <span class="n">endogeneity</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">):</span>
@@ -6635,70 +6649,82 @@ return f_test(y, base.assign(v_hat=residual), ["v_hat"])
 </code></pre></div>
 <p>外生（内生性 0）のとき、棄却率は 0.042 で、有意水準 5% に近い値です（予想 1）。内生性 0.3 では、0.998 と、ほとんどの標本で、内生を見つけます。</p>
 <h3 id="sargan_1">Sargan 検定<a class="headerlink" href="#sargan_1" title="Permanent link">&para;</a></h3>
-<p>def sargan_test(
-    y: pd.Series,
-    endogenous: pd.DataFrame,
-    instruments: pd.DataFrame,
-    exogenous: pd.DataFrame | None = None,
-) -&gt; TestResult:
-    """Sargan 検定（過剰識別制約の検定）: 操作変数が、すべて外生か（帰無仮説: 外生）。</p>
-<div class="highlight"><pre><span></span><code>2SLS の残差 û を、外生の変数と、すべての操作変数で回帰する。
-LM = n · R² は、χ²(操作変数の数 − 内生変数の数) に従う。
-"""
-degrees = instruments.shape[1] - endogenous.shape[1]
-if degrees &lt;= 0:
-    raise ValueError("操作変数が内生変数より多くないと、過剰識別の検定はできない")
-result = two_stage_least_squares(y, endogenous, instruments, exogenous)
-columns = instruments if exogenous is None else exogenous.join(instruments)
-statistic = result.n_obs * fit_ols(result.residuals, columns).r_squared
-return TestResult(float(statistic), float(stats.chi2.sf(statistic, degrees)))
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sargan_test</span><span class="p">(</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+    <span class="n">endogenous</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">instruments</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">exogenous</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TestResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Sargan 検定（過剰識別制約の検定）: 操作変数が、すべて外生か（帰無仮説: 外生）。</span>
+
+<span class="sd">    2SLS の残差 û を、外生の変数と、すべての操作変数で回帰する。</span>
+<span class="sd">    LM = n · R² は、χ²(操作変数の数 − 内生変数の数) に従う。</span>
+<span class="sd">    """</span>
+    <span class="n">degrees</span> <span class="o">=</span> <span class="n">instruments</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">endogenous</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">degrees</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"操作変数が内生変数より多くないと、過剰識別の検定はできない"</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">two_stage_least_squares</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">endogenous</span><span class="p">,</span> <span class="n">instruments</span><span class="p">,</span> <span class="n">exogenous</span><span class="p">)</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">instruments</span> <span class="k">if</span> <span class="n">exogenous</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">exogenous</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">instruments</span><span class="p">)</span>
+    <span class="n">statistic</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">n_obs</span> <span class="o">*</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">residuals</span><span class="p">,</span> <span class="n">columns</span><span class="p">)</span><span class="o">.</span><span class="n">r_squared</span>
+    <span class="k">return</span> <span class="n">TestResult</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">statistic</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">chi2</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">statistic</span><span class="p">,</span> <span class="n">degrees</span><span class="p">)))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">draw_overid_sample</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">invalid</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""操作変数が 2 つ（過剰識別）の標本。z2 が、誤差項 u と相関する度合いが invalid。</span>
+
+<span class="sd">    y = 1 + x + u、x = z1 + z2 + v、u = 0.5·v + √0.75·w + invalid·z2。</span>
+<span class="sd">    invalid = 0 なら、z1 も z2 も有効。invalid &gt; 0 なら、z2 は無効（外生でない）。</span>
+<span class="sd">    """</span>
+    <span class="n">z1</span><span class="p">,</span> <span class="n">z2</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">v</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span> <span class="o">*</span> <span class="n">w</span> <span class="o">+</span> <span class="n">invalid</span> <span class="o">*</span> <span class="n">z2</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">z1</span> <span class="o">+</span> <span class="n">z2</span> <span class="o">+</span> <span class="n">v</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"y"</span><span class="p">:</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">u</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">"z1"</span><span class="p">:</span> <span class="n">z1</span><span class="p">,</span> <span class="s2">"z2"</span><span class="p">:</span> <span class="n">z2</span><span class="p">})</span>
 </code></pre></div>
-<p>def draw_overid_sample(
-    n: int, invalid: float, rng: np.random.Generator
-) -&gt; pd.DataFrame:
-    """操作変数が 2 つ（過剰識別）の標本。z2 が、誤差項 u と相関する度合いが invalid。</p>
-<div class="highlight"><pre><span></span><code>y = 1 + x + u、x = z1 + z2 + v、u = 0.5·v + √0.75·w + invalid·z2。
-invalid = 0 なら、z1 も z2 も有効。invalid &gt; 0 なら、z2 は無効（外生でない）。
-"""
-z1, z2, v, w = rng.standard_normal((4, n))
-u = 0.5 * v + math.sqrt(0.75) * w + invalid * z2
-x = z1 + z2 + v
-return pd.DataFrame({"y": 1 + x + u, "x": x, "z1": z1, "z2": z2})
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_Sarganはlinearmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">invalid</span><span class="p">,</span> <span class="n">seed</span> <span class="ow">in</span> <span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)):</span>
+        <span class="n">o</span> <span class="o">=</span> <span class="n">draw_overid_sample</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">invalid</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">))</span>
+        <span class="n">test</span> <span class="o">=</span> <span class="n">sargan_test</span><span class="p">(</span><span class="n">o</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">o</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]],</span> <span class="n">o</span><span class="p">[[</span><span class="s2">"z1"</span><span class="p">,</span> <span class="s2">"z2"</span><span class="p">]])</span>
+        <span class="n">reference</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">IV2SLS</span><span class="p">(</span>
+            <span class="n">o</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"const"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">500</span><span class="p">)}),</span> <span class="n">o</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]],</span> <span class="n">o</span><span class="p">[[</span><span class="s2">"z1"</span><span class="p">,</span> <span class="s2">"z2"</span><span class="p">]]</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">cov_type</span><span class="o">=</span><span class="s2">"unadjusted"</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">statistic</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">sargan</span><span class="o">.</span><span class="n">stat</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">p_value</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">sargan</span><span class="o">.</span><span class="n">pval</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_外生の説明変数があってもSarganはlinearmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">with_control</span><span class="p">()</span>
+    <span class="n">s</span><span class="p">[</span><span class="s2">"z2"</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">s</span><span class="p">[</span><span class="s2">"z"</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">sargan_test</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">,</span> <span class="s2">"z2"</span><span class="p">]],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"w"</span><span class="p">]])</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">reference_fit</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"z"</span><span class="p">,</span> <span class="s2">"z2"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">statistic</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">sargan</span><span class="o">.</span><span class="n">stat</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_識別のちょうどの場合Sargan検定はできない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_iv_sample</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"過剰識別"</span><span class="p">):</span>
+        <span class="n">sargan_test</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">]])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_有効な操作変数ではSarganは棄却せず無効な操作変数では棄却する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">valid</span> <span class="o">=</span> <span class="n">draw_overid_sample</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">invalid</span> <span class="o">=</span> <span class="n">draw_overid_sample</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">sargan_test</span><span class="p">(</span><span class="n">valid</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">valid</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]],</span> <span class="n">valid</span><span class="p">[[</span><span class="s2">"z1"</span><span class="p">,</span> <span class="s2">"z2"</span><span class="p">]])</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&gt;</span> <span class="mf">0.05</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="n">sargan_test</span><span class="p">(</span><span class="n">invalid</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">invalid</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]],</span> <span class="n">invalid</span><span class="p">[[</span><span class="s2">"z1"</span><span class="p">,</span> <span class="s2">"z2"</span><span class="p">]])</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&lt;</span> <span class="mf">1e-6</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_過剰識別の標本の相関</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">o</span> <span class="o">=</span> <span class="n">draw_overid_sample</span><span class="p">(</span><span class="mi">50000</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">o</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">o</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">o</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"y"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z1"</span><span class="p">,</span> <span class="s2">"z2"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">o</span><span class="p">[</span><span class="s2">"z2"</span><span class="p">],</span> <span class="n">u</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.03</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">o</span><span class="p">[</span><span class="s2">"z1"</span><span class="p">],</span> <span class="n">u</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.03</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">o</span><span class="p">[</span><span class="s2">"z1"</span><span class="p">],</span> <span class="n">o</span><span class="p">[</span><span class="s2">"x"</span><span class="p">])[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.03</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">o</span><span class="p">[</span><span class="s2">"z2"</span><span class="p">],</span> <span class="n">o</span><span class="p">[</span><span class="s2">"x"</span><span class="p">])[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.03</span><span class="p">)</span>
 </code></pre></div>
-<p>def test_Sarganはlinearmodelsと一致する() -&gt; None:
-    for invalid, seed in ((0.0, 1), (0.5, 1)):
-        o = draw_overid_sample(500, invalid, np.random.default_rng(seed))
-        test = sargan_test(o["y"], o[["x"]], o[["z1", "z2"]])
-        reference: Any = IV2SLS(
-            o["y"], pd.DataFrame({"const": np.ones(500)}), o[["x"]], o[["z1", "z2"]]
-        ).fit(cov_type="unadjusted")
-        assert test.statistic == pytest.approx(reference.sargan.stat)
-        assert test.p_value == pytest.approx(reference.sargan.pval)</p>
-<p>def test_外生の説明変数があってもSarganはlinearmodelsと一致する() -&gt; None:
-    s = with_control()
-    s["z2"] = 0.5 * s["z"] + np.random.default_rng(3).standard_normal(len(s))
-    test = sargan_test(s["y"], s[["x"]], s[["z", "z2"]], s[["w"]])
-    reference = reference_fit(s, ["x"], ["z", "z2"])
-    assert test.statistic == pytest.approx(reference.sargan.stat)</p>
-<p>def test_識別のちょうどの場合Sargan検定はできない() -&gt; None:
-    s = draw_iv_sample(100, 1.0, 0.5, np.random.default_rng(0))
-    with pytest.raises(ValueError, match="過剰識別"):
-        sargan_test(s["y"], s[["x"]], s[["z"]])</p>
-<p>def test_有効な操作変数ではSarganは棄却せず無効な操作変数では棄却する() -&gt; None:
-    valid = draw_overid_sample(500, 0.0, np.random.default_rng(1))
-    invalid = draw_overid_sample(500, 0.5, np.random.default_rng(1))
-    assert sargan_test(valid["y"], valid[["x"]], valid[["z1", "z2"]]).p_value &gt; 0.05
-    assert (
-        sargan_test(invalid["y"], invalid[["x"]], invalid[["z1", "z2"]]).p_value &lt; 1e-6
-    )</p>
-<p>def test_過剰識別の標本の相関() -&gt; None:
-    o = draw_overid_sample(50000, 0.5, np.random.default_rng(0))
-    u = o["y"] - 1 - o["x"]
-    assert list(o.columns) == ["y", "x", "z1", "z2"]
-    assert np.cov(o["z2"], u)[0, 1] == pytest.approx(0.5, abs=0.03)
-    assert np.cov(o["z1"], u)[0, 1] == pytest.approx(0, abs=0.03)
-    assert np.cov(o["z1"], o["x"])[0, 1] == pytest.approx(1, abs=0.03)
-    assert np.cov(o["z2"], o["x"])[0, 1] == pytest.approx(1, abs=0.03)</p>
 <p>操作変数が 1 つ（識別がちょうど）だと、Sargan 検定の自由度が 0 で、検定できません。エラーにします。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter13.iv_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_overid_sample</span><span class="p">,</span> <span class="n">sargan_rejection_rate</span><span class="p">,</span> <span class="n">sargan_test</span>
 
@@ -6718,79 +6744,91 @@ return pd.DataFrame({"y": 1 + x + u, "x": x, "z1": z1, "z2": z2})
 </code></pre></div>
 <p>前半の 2 行は、1 つの標本の結果です。操作変数が有効（0.0）なら、統計量は 0.0234、p 値は 0.878 で、棄却されません。z2 が無効（0.5）なら、統計量は 66.8484、p 値は 3 × 10⁻¹⁶ で、強く棄却されます。<code>linearmodels</code> の <code>sargan</code> と、統計量・p 値が一致します。</p>
 <p>後半の 4 行は、棄却率です。有効なら <strong>0.054</strong>（有意水準 5% に近い）、無効の度合いが 0.1 で 0.344、0.3 で 0.998 と、無効なほど高くなります（予想 2）。<strong>0.1 程度の相関は、n = 500 では、3 分の 2 の標本で、見逃されます</strong>。</p>
-<p>def sargan_rejection_rate(
-    n: int,
-    invalid: float,
-    repetitions: int,
-    significance: float,
-    rng: np.random.Generator,
-) -&gt; float:
-    """Sargan 検定が、操作変数は外生という帰無仮説を棄却する割合。"""
-    rejected = 0
-    for _ in range(repetitions):
-        s = draw_overid_sample(n, invalid, rng)
-        test = sargan_test(s["y"], s[["x"]], s[["z1", "z2"]])
-        rejected += test.p_value &lt; significance
-    return rejected / repetitions</p>
-<p>def test_操作変数が有効なら棄却率は有意水準に近く無効なほど高い() -&gt; None:
-    size = sargan_rejection_rate(500, 0.0, 500, 0.05, np.random.default_rng(0))
-    weak = sargan_rejection_rate(500, 0.1, 500, 0.05, np.random.default_rng(0))
-    strong = sargan_rejection_rate(500, 0.3, 500, 0.05, np.random.default_rng(0))
-    assert size == pytest.approx(0.05, abs=4 * (0.05 * 0.95 / 500) ** 0.5)
-    assert 0.2 &lt; weak &lt; strong
-    assert strong &gt; 0.95</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sargan_rejection_rate</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">invalid</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">significance</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Sargan 検定が、操作変数は外生という帰無仮説を棄却する割合。"""</span>
+    <span class="n">rejected</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="n">draw_overid_sample</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">invalid</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+        <span class="n">test</span> <span class="o">=</span> <span class="n">sargan_test</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"z1"</span><span class="p">,</span> <span class="s2">"z2"</span><span class="p">]])</span>
+        <span class="n">rejected</span> <span class="o">+=</span> <span class="n">test</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&lt;</span> <span class="n">significance</span>
+    <span class="k">return</span> <span class="n">rejected</span> <span class="o">/</span> <span class="n">repetitions</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_操作変数が有効なら棄却率は有意水準に近く無効なほど高い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="n">sargan_rejection_rate</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">weak</span> <span class="o">=</span> <span class="n">sargan_rejection_rate</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">strong</span> <span class="o">=</span> <span class="n">sargan_rejection_rate</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">size</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.05</span> <span class="o">*</span> <span class="mf">0.95</span> <span class="o">/</span> <span class="mi">500</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="mf">0.2</span> <span class="o">&lt;</span> <span class="n">weak</span> <span class="o">&lt;</span> <span class="n">strong</span>
+    <span class="k">assert</span> <span class="n">strong</span> <span class="o">&gt;</span> <span class="mf">0.95</span>
+</code></pre></div>
 <h3 id="_4">図<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
-<p>RATES = {"Valid (0)": 0.054, "Invalid (0.1)": 0.344, "Invalid (0.3)": 0.998}</p>
-<p>def test_棄却率の棒と有意水準の線() -&gt; None:
-    ax = plot_rejection_rates(RATES, 0.05).axes[0]
-    bars: list[Any] = list(ax.patches)
-    assert [p.get_height() for p in bars] == pytest.approx([0.054, 0.344, 0.998])
-    assert [t.get_text() for t in ax.get_xticklabels()] == list(RATES)
-    assert [line.get_label() for line in ax.lines] == ["Significance level"]
-    line_y: Any = ax.lines[0].get_ydata()
-    assert [float(v) for v in line_y] == [0.05, 0.05]</p>
-<p>def test_軸の名前と範囲() -&gt; None:
-    ax = plot_rejection_rates(RATES, 0.05).axes[0]
-    assert ax.get_ylabel() == "Rejection rate"
-    assert ax.get_ylim() == (0, 1)</p>
-<p>def plot_rejection_rates(rates: Mapping[str, float], level: float) -&gt; Figure:
-    """検定の棄却率の棒グラフと、有意水準の線。"""
-    fig, ax = plt.subplots(figsize=(7, 4))
-    ax.bar(list(rates), list(rates.values()))
-    ax.axhline(level, color="red", linestyle="--", label="Significance level")
-    ax.set_ylim(0, 1)
-    ax.set_ylabel("Rejection rate")
-    ax.legend()
-    plt.close(fig)
-    return fig</p>
+<div class="highlight"><pre><span></span><code><span class="n">RATES</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"Valid (0)"</span><span class="p">:</span> <span class="mf">0.054</span><span class="p">,</span> <span class="s2">"Invalid (0.1)"</span><span class="p">:</span> <span class="mf">0.344</span><span class="p">,</span> <span class="s2">"Invalid (0.3)"</span><span class="p">:</span> <span class="mf">0.998</span><span class="p">}</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_棄却率の棒と有意水準の線</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_rejection_rates</span><span class="p">(</span><span class="n">RATES</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">bars</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">patches</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">bars</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mf">0.054</span><span class="p">,</span> <span class="mf">0.344</span><span class="p">,</span> <span class="mf">0.998</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">()]</span> <span class="o">==</span> <span class="nb">list</span><span class="p">(</span><span class="n">RATES</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"Significance level"</span><span class="p">]</span>
+    <span class="n">line_y</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_ydata</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">line_y</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_軸の名前と範囲</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_rejection_rates</span><span class="p">(</span><span class="n">RATES</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylabel</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"Rejection rate"</span>
+    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_rejection_rates</span><span class="p">(</span><span class="n">rates</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">level</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""検定の棄却率の棒グラフと、有意水準の線。"""</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">rates</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">rates</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axhline</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"red"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Significance level"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Rejection rate"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+</code></pre></div>
 <h3 id="iv_2">同時方程式に IV を使う<a class="headerlink" href="#iv_2" title="Permanent link">&para;</a></h3>
 <p>需要: q = 10 − p + u_d、供給: q = p + 2·w + u_s（w は需要に入らない供給の変動要因）。</p>
-<p>def draw_market_with_shifter(n: int, rng: np.random.Generator) -&gt; pd.DataFrame:
-    """需要曲線を識別できる、供給の変動要因 w（たとえば天候）つきの市場の標本。</p>
-<div class="highlight"><pre><span></span><code>需要: q = 10 − p + u_d、供給: q = p + 2·w + u_s（w は需要に入らない）。
-均衡で、p = (10 + u_d − u_s − 2w) ÷ 2、q = (10 + u_d + u_s + 2w) ÷ 2。
-"""
-u_d, u_s, w = rng.standard_normal((3, n))
-return pd.DataFrame(
-    {
-        "p": (10 + u_d - u_s - 2 * w) / 2,
-        "q": (10 + u_d + u_s + 2 * w) / 2,
-        "w": w,
-    }
-)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">draw_market_with_shifter</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""需要曲線を識別できる、供給の変動要因 w（たとえば天候）つきの市場の標本。</span>
+
+<span class="sd">    需要: q = 10 − p + u_d、供給: q = p + 2·w + u_s（w は需要に入らない）。</span>
+<span class="sd">    均衡で、p = (10 + u_d − u_s − 2w) ÷ 2、q = (10 + u_d + u_s + 2w) ÷ 2。</span>
+<span class="sd">    """</span>
+    <span class="n">u_d</span><span class="p">,</span> <span class="n">u_s</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">"p"</span><span class="p">:</span> <span class="p">(</span><span class="mi">10</span> <span class="o">+</span> <span class="n">u_d</span> <span class="o">-</span> <span class="n">u_s</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">w</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">"q"</span><span class="p">:</span> <span class="p">(</span><span class="mi">10</span> <span class="o">+</span> <span class="n">u_d</span> <span class="o">+</span> <span class="n">u_s</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">w</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span>
+            <span class="s2">"w"</span><span class="p">:</span> <span class="n">w</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
 </code></pre></div>
-<p>def test_供給の変動要因を操作変数にすると需要の傾きを識別できる() -&gt; None:
-    m = draw_market_with_shifter(5000, np.random.default_rng(0))
-    ols = fit_simple(m["p"], m["q"]).slope
-    result = two_stage_least_squares(m["q"], m[["p"]], m[["w"]])
-    assert abs(ols + 1) &gt; 0.2
-    assert abs(result.coefficients["p"] + 1) &lt; 4 * result.standard_errors["p"]</p>
-<p>def test_供給の変動要因は価格を下げ需要の誤差とは無関係() -&gt; None:
-    m = draw_market_with_shifter(50000, np.random.default_rng(0))
-    assert list(m.columns) == ["p", "q", "w"]
-    assert np.cov(m["w"], m["p"])[0, 1] == pytest.approx(-1.0, abs=0.03)
-    demand_shock = m["q"] - (10 - m["p"])
-    assert np.cov(m["w"], demand_shock)[0, 1] == pytest.approx(0, abs=0.03)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_供給の変動要因を操作変数にすると需要の傾きを識別できる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">draw_market_with_shifter</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">ols</span> <span class="o">=</span> <span class="n">fit_simple</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s2">"p"</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="s2">"q"</span><span class="p">])</span><span class="o">.</span><span class="n">slope</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">two_stage_least_squares</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s2">"q"</span><span class="p">],</span> <span class="n">m</span><span class="p">[[</span><span class="s2">"p"</span><span class="p">]],</span> <span class="n">m</span><span class="p">[[</span><span class="s2">"w"</span><span class="p">]])</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ols</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.2</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"p"</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">result</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"p"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_供給の変動要因は価格を下げ需要の誤差とは無関係</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">draw_market_with_shifter</span><span class="p">(</span><span class="mi">50000</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"p"</span><span class="p">,</span> <span class="s2">"q"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s2">"w"</span><span class="p">],</span> <span class="n">m</span><span class="p">[</span><span class="s2">"p"</span><span class="p">])[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.03</span><span class="p">)</span>
+    <span class="n">demand_shock</span> <span class="o">=</span> <span class="n">m</span><span class="p">[</span><span class="s2">"q"</span><span class="p">]</span> <span class="o">-</span> <span class="p">(</span><span class="mi">10</span> <span class="o">-</span> <span class="n">m</span><span class="p">[</span><span class="s2">"p"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">m</span><span class="p">[</span><span class="s2">"w"</span><span class="p">],</span> <span class="n">demand_shock</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.03</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter02.simple</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_simple</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.iv</span><span class="w"> </span><span class="kn">import</span> <span class="n">two_stage_least_squares</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter13.iv_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_market_with_shifter</span>
@@ -6804,31 +6842,35 @@ return pd.DataFrame(
 </code></pre></div>
 <p><strong>OLS は −0.6652 で、需要の傾き −1 から、大きく外れます</strong>（需要と供給が混ざる）。w を操作変数にした IV は、<strong>−0.9763（標準誤差 0.0136）で、真の値 −1 の近くです</strong>（予想 3）。切片は 9.8776（真の値 10）です。</p>
 <h3 id="iv_3">測定誤差に IV を使う<a class="headerlink" href="#iv_3" title="Permanent link">&para;</a></h3>
-<p>def draw_two_measurements(
-    n: int, error_sd: float, rng: np.random.Generator
-) -&gt; pd.DataFrame:
-    """y = 1 + x* + u。x* を、独立な誤差で 2 回測った x1・x2（x* は分散 1）。"""
-    x_true = rng.standard_normal(n)
-    y = 1 + x_true + rng.standard_normal(n)
-    return pd.DataFrame(
-        {
-            "y": y,
-            "x1": x_true + error_sd * rng.standard_normal(n),
-            "x2": x_true + error_sd * rng.standard_normal(n),
-        }
-    )</p>
-<p>def test_2回目の測定を操作変数にすると測定誤差のバイアスが消える() -&gt; None:
-    d = draw_two_measurements(5000, 1.0, np.random.default_rng(0))
-    ols = fit_simple(d["x1"], d["y"]).slope
-    result = two_stage_least_squares(d["y"], d[["x1"]], d[["x2"]])
-    assert ols == pytest.approx(0.5, abs=0.05)
-    assert abs(result.coefficients["x1"] - 1) &lt; 4 * result.standard_errors["x1"]</p>
-<p>def test_2回の測定の標本の形() -&gt; None:
-    d = draw_two_measurements(20000, 1.0, np.random.default_rng(0))
-    assert list(d.columns) == ["y", "x1", "x2"]
-    assert np.var(d["x1"]) == pytest.approx(2, rel=0.05)
-    assert np.var(d["x2"]) == pytest.approx(2, rel=0.05)
-    assert np.cov(d["x1"], d["x2"])[0, 1] == pytest.approx(1, abs=0.05)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">draw_two_measurements</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">error_sd</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""y = 1 + x* + u。x* を、独立な誤差で 2 回測った x1・x2（x* は分散 1）。"""</span>
+    <span class="n">x_true</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x_true</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">"y"</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+            <span class="s2">"x1"</span><span class="p">:</span> <span class="n">x_true</span> <span class="o">+</span> <span class="n">error_sd</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">),</span>
+            <span class="s2">"x2"</span><span class="p">:</span> <span class="n">x_true</span> <span class="o">+</span> <span class="n">error_sd</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">),</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_2回目の測定を操作変数にすると測定誤差のバイアスが消える</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">draw_two_measurements</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">ols</span> <span class="o">=</span> <span class="n">fit_simple</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="s2">"y"</span><span class="p">])</span><span class="o">.</span><span class="n">slope</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">two_stage_least_squares</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">d</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">]],</span> <span class="n">d</span><span class="p">[[</span><span class="s2">"x2"</span><span class="p">]])</span>
+    <span class="k">assert</span> <span class="n">ols</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">result</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_2回の測定の標本の形</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">draw_two_measurements</span><span class="p">(</span><span class="mi">20000</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"y"</span><span class="p">,</span> <span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"x2"</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">],</span> <span class="n">d</span><span class="p">[</span><span class="s2">"x2"</span><span class="p">])[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter13.iv_tests</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_two_measurements</span>
 
 <span class="n">d</span> <span class="o">=</span> <span class="n">draw_two_measurements</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>

@@ -6542,64 +6542,72 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="n">PARAMS</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
 <span class="n">DESIGN</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]])</span>
 </code></pre></div>
-<p>def test_トービットの対数尤度の手計算() -&gt; None:
-    # y = 0（打ち切り）: ln Φ(−0.5)、y = 2: ln φ(2 − 1.5)
-    expected = (
-        math.log(0.5 * math.erfc(0.5 / math.sqrt(2)))
-        - 0.5 * math.log(2 * math.pi)
-        - 0.125
-    )
-    value = tobit_log_likelihood(PARAMS, np.array([0.0, 2.0]), DESIGN, 0.0)
-    assert value == pytest.approx(expected)
-    assert value == pytest.approx(-2.2199, abs=1e-4)</p>
-<p>def test_切断回帰の対数尤度の手計算() -&gt; None:
-    value = truncreg_log_likelihood(PARAMS, np.array([1.0, 2.0]), DESIGN, 0.0)
-    assert value == pytest.approx(-1.6498, abs=1e-4)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_トービットの対数尤度の手計算</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># y = 0（打ち切り）: ln Φ(−0.5)、y = 2: ln φ(2 − 1.5)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">erfc</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)))</span>
+        <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">)</span>
+        <span class="o">-</span> <span class="mf">0.125</span>
+    <span class="p">)</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">tobit_log_likelihood</span><span class="p">(</span><span class="n">PARAMS</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]),</span> <span class="n">DESIGN</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">value</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">value</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="o">-</span><span class="mf">2.2199</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_切断回帰の対数尤度の手計算</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="n">truncreg_log_likelihood</span><span class="p">(</span><span class="n">PARAMS</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]),</span> <span class="n">DESIGN</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">value</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="o">-</span><span class="mf">1.6498</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="green">Green: 対数尤度を実装する<a class="headerlink" href="#green" title="Permanent link">&para;</a></h3>
-<p>@dataclass(frozen=True)
-class LimitedFit:
-    """トービット・切断回帰の推定結果。係数の最後の <code>sigma</code> は、誤差の標準偏差。"""</p>
-<div class="highlight"><pre><span></span><code>coefficients: pd.Series
-standard_errors: pd.Series
-log_likelihood: float
-n_obs: int
-</code></pre></div>
-<p>def tobit_log_likelihood(
-    params: NDArray[np.float64],
-    y: NDArray[np.float64],
-    design: NDArray[np.float64],
-    left: float,
-) -&gt; float:
-    """トービット（下限 left で打ち切り）の対数尤度。params = (β, ln σ)。</p>
-<div class="highlight"><pre><span></span><code>打ち切られた観測値（y = left）: ln Φ((left − x′β) ÷ σ)
-それ以外: ln φ((y − x′β) ÷ σ) − ln σ
-"""
-beta, sigma = params[:-1], np.exp(params[-1])
-xb = design @ beta
-censored = y &lt;= left
-uncensored = ~censored
-return float(
-    np.sum(stats.norm.logcdf((left - xb[censored]) / sigma))
-    + np.sum(stats.norm.logpdf((y[uncensored] - xb[uncensored]) / sigma))
-    - uncensored.sum() * params[-1]
-)
-</code></pre></div>
-<p>def truncreg_log_likelihood(
-    params: NDArray[np.float64],
-    y: NDArray[np.float64],
-    design: NDArray[np.float64],
-    left: float,
-) -&gt; float:
-    """切断回帰（y &gt; left の観測値だけが標本にある）の対数尤度。params = (β, ln σ)。</p>
-<div class="highlight"><pre><span></span><code>ln φ((y − x′β) ÷ σ) − ln σ − ln (1 − Φ((left − x′β) ÷ σ))
-"""
-beta, sigma = params[:-1], np.exp(params[-1])
-xb = design @ beta
-return float(
-    np.sum(stats.norm.logpdf((y - xb) / sigma))
-    - len(y) * params[-1]
-    - np.sum(stats.norm.logsf((left - xb) / sigma))
-)
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">LimitedFit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""トービット・切断回帰の推定結果。係数の最後の `sigma` は、誤差の標準偏差。"""</span>
+
+    <span class="n">coefficients</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>
+    <span class="n">standard_errors</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>
+    <span class="n">log_likelihood</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">n_obs</span><span class="p">:</span> <span class="nb">int</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">tobit_log_likelihood</span><span class="p">(</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">design</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">left</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""トービット（下限 left で打ち切り）の対数尤度。params = (β, ln σ)。</span>
+
+<span class="sd">    打ち切られた観測値（y = left）: ln Φ((left − x′β) ÷ σ)</span>
+<span class="sd">    それ以外: ln φ((y − x′β) ÷ σ) − ln σ</span>
+<span class="sd">    """</span>
+    <span class="n">beta</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">params</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">xb</span> <span class="o">=</span> <span class="n">design</span> <span class="o">@</span> <span class="n">beta</span>
+    <span class="n">censored</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="n">left</span>
+    <span class="n">uncensored</span> <span class="o">=</span> <span class="o">~</span><span class="n">censored</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">logcdf</span><span class="p">((</span><span class="n">left</span> <span class="o">-</span> <span class="n">xb</span><span class="p">[</span><span class="n">censored</span><span class="p">])</span> <span class="o">/</span> <span class="n">sigma</span><span class="p">))</span>
+        <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">logpdf</span><span class="p">((</span><span class="n">y</span><span class="p">[</span><span class="n">uncensored</span><span class="p">]</span> <span class="o">-</span> <span class="n">xb</span><span class="p">[</span><span class="n">uncensored</span><span class="p">])</span> <span class="o">/</span> <span class="n">sigma</span><span class="p">))</span>
+        <span class="o">-</span> <span class="n">uncensored</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span> <span class="o">*</span> <span class="n">params</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">truncreg_log_likelihood</span><span class="p">(</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">design</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">left</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""切断回帰（y &gt; left の観測値だけが標本にある）の対数尤度。params = (β, ln σ)。</span>
+
+<span class="sd">    ln φ((y − x′β) ÷ σ) − ln σ − ln (1 − Φ((left − x′β) ÷ σ))</span>
+<span class="sd">    """</span>
+    <span class="n">beta</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">params</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">xb</span> <span class="o">=</span> <span class="n">design</span> <span class="o">@</span> <span class="n">beta</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">logpdf</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">xb</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma</span><span class="p">))</span>
+        <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">*</span> <span class="n">params</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">logsf</span><span class="p">((</span><span class="n">left</span> <span class="o">-</span> <span class="n">xb</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma</span><span class="p">))</span>
+    <span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter15.limited</span><span class="w"> </span><span class="kn">import</span> <span class="n">tobit_log_likelihood</span><span class="p">,</span> <span class="n">truncreg_log_likelihood</span>
 
@@ -6614,223 +6622,252 @@ return float(
 <p>手計算の値と一致します。<code>erfc</code> で書いた、独立な計算とも、一致することを、テストで確認しています。</p>
 <h3 id="_6">解析的な勾配<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <p>トービットの勾配は、打ち切られた観測値で<strong>逆ミルズ比</strong> λ = φ(c) ÷ Φ(c)（c = (left − x′β) ÷ σ）を使い、それ以外では標準化残差 z = (y − x′β) ÷ σ を使います。ln σ についての微分は、前者が −λ·c、後者が z² − 1 です。</p>
-<p>def tobit_gradient(
-    params: NDArray[np.float64],
-    y: NDArray[np.float64],
-    design: NDArray[np.float64],
-    left: float,
-) -&gt; NDArray[np.float64]:
-    """トービットの対数尤度の勾配（β と ln σ についての、1 階微分）。</p>
-<div class="highlight"><pre><span></span><code>打ち切られた観測値は、逆ミルズ比 λ = φ(c) ÷ Φ(c)（c = (left − x′β) ÷ σ）を使う。
-"""
-beta, sigma = params[:-1], np.exp(params[-1])
-xb = design @ beta
-censored = y &lt;= left
-z = (y - xb) / sigma
-c = (left - xb) / sigma
-mills = np.exp(stats.norm.logpdf(c) - stats.norm.logcdf(c))
-weight = np.where(censored, -mills / sigma, z / sigma)
-d_log_sigma = np.where(censored, -mills * c, z**2 - 1)
-return np.append(design.T @ weight, d_log_sigma.sum())
-</code></pre></div>
-<p>def truncreg_gradient(
-    params: NDArray[np.float64],
-    y: NDArray[np.float64],
-    design: NDArray[np.float64],
-    left: float,
-) -&gt; NDArray[np.float64]:
-    """切断回帰の対数尤度の勾配。m = φ(a) ÷ (1 − Φ(a))、a = (left − x′β) ÷ σ。"""
-    beta, sigma = params[:-1], np.exp(params[-1])
-    xb = design @ beta
-    z = (y - xb) / sigma
-    a = (left - xb) / sigma
-    hazard = np.exp(stats.norm.logpdf(a) - stats.norm.logsf(a))
-    weight = (z - hazard) / sigma
-    d_log_sigma = z**2 - 1 - hazard * a
-    return np.append(design.T @ weight, d_log_sigma.sum())</p>
-<p>def hessian_from_gradient(
-    gradient: Callable[[NDArray[np.float64]], NDArray[np.float64]],
-    point: NDArray[np.float64],
-) -&gt; NDArray[np.float64]:
-    """勾配の関数を、中心差分で微分して、2 階微分の行列（ヘッセ行列）を求める。</p>
-<div class="highlight"><pre><span></span><code>刻み幅は、各パラメータの大きさに比例させる。結果は、対称な行列にそろえる。
-"""
-n = len(point)
-hessian = np.zeros((n, n))
-for j in range(n):
-    step = 1e-5 * max(1.0, abs(float(point[j])))
-    e = np.eye(n)[j] * step
-    hessian[:, j] = (gradient(point + e) - gradient(point - e)) / (2 * step)
-return (hessian + hessian.T) / 2
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">tobit_gradient</span><span class="p">(</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">design</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">left</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""トービットの対数尤度の勾配（β と ln σ についての、1 階微分）。</span>
+
+<span class="sd">    打ち切られた観測値は、逆ミルズ比 λ = φ(c) ÷ Φ(c)（c = (left − x′β) ÷ σ）を使う。</span>
+<span class="sd">    """</span>
+    <span class="n">beta</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">params</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">xb</span> <span class="o">=</span> <span class="n">design</span> <span class="o">@</span> <span class="n">beta</span>
+    <span class="n">censored</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&lt;=</span> <span class="n">left</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">xb</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span> <span class="o">-</span> <span class="n">xb</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma</span>
+    <span class="n">mills</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">logpdf</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="o">-</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">logcdf</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">censored</span><span class="p">,</span> <span class="o">-</span><span class="n">mills</span> <span class="o">/</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">z</span> <span class="o">/</span> <span class="n">sigma</span><span class="p">)</span>
+    <span class="n">d_log_sigma</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">censored</span><span class="p">,</span> <span class="o">-</span><span class="n">mills</span> <span class="o">*</span> <span class="n">c</span><span class="p">,</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">design</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">weight</span><span class="p">,</span> <span class="n">d_log_sigma</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">truncreg_gradient</span><span class="p">(</span>
+    <span class="n">params</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">design</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="n">left</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""切断回帰の対数尤度の勾配。m = φ(a) ÷ (1 − Φ(a))、a = (left − x′β) ÷ σ。"""</span>
+    <span class="n">beta</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="n">params</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">xb</span> <span class="o">=</span> <span class="n">design</span> <span class="o">@</span> <span class="n">beta</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span> <span class="o">-</span> <span class="n">xb</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">left</span> <span class="o">-</span> <span class="n">xb</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma</span>
+    <span class="n">hazard</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">logpdf</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">-</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">logsf</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+    <span class="n">weight</span> <span class="o">=</span> <span class="p">(</span><span class="n">z</span> <span class="o">-</span> <span class="n">hazard</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma</span>
+    <span class="n">d_log_sigma</span> <span class="o">=</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">hazard</span> <span class="o">*</span> <span class="n">a</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">design</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">weight</span><span class="p">,</span> <span class="n">d_log_sigma</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">hessian_from_gradient</span><span class="p">(</span>
+    <span class="n">gradient</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]],</span>
+    <span class="n">point</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""勾配の関数を、中心差分で微分して、2 階微分の行列（ヘッセ行列）を求める。</span>
+
+<span class="sd">    刻み幅は、各パラメータの大きさに比例させる。結果は、対称な行列にそろえる。</span>
+<span class="sd">    """</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">point</span><span class="p">)</span>
+    <span class="n">hessian</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="n">step</span> <span class="o">=</span> <span class="mf">1e-5</span> <span class="o">*</span> <span class="nb">max</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">point</span><span class="p">[</span><span class="n">j</span><span class="p">])))</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="n">n</span><span class="p">)[</span><span class="n">j</span><span class="p">]</span> <span class="o">*</span> <span class="n">step</span>
+        <span class="n">hessian</span><span class="p">[:,</span> <span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">gradient</span><span class="p">(</span><span class="n">point</span> <span class="o">+</span> <span class="n">e</span><span class="p">)</span> <span class="o">-</span> <span class="n">gradient</span><span class="p">(</span><span class="n">point</span> <span class="o">-</span> <span class="n">e</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">step</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">hessian</span> <span class="o">+</span> <span class="n">hessian</span><span class="o">.</span><span class="n">T</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
 </code></pre></div>
 <p>解析的な勾配を、<strong>数値微分と比べる</strong>テストを書きます（式の書き間違いを、見つけられます）。</p>
-<p>def latent(n: int = 20000, seed: int = 0) -&gt; tuple[np.ndarray, np.ndarray]:
-    return draw_latent_sample(n, np.random.default_rng(seed))</p>
-<p>def numerical_gradient(
-    f: Callable[[np.ndarray], float], point: np.ndarray
-) -&gt; np.ndarray:
-    step = 1e-6
-    result = np.zeros(len(point))
-    for i in range(len(point)):
-        e = np.eye(len(point))[i] * step
-        result[i] = (f(point + e) - f(point - e)) / (2 * step)
-    return result</p>
-<p>def test_トービットの解析的な勾配は数値微分に一致する() -&gt; None:
-    x, y = latent(400)
-    observed = censor(y)
-    design = np.column_stack([np.ones(400), x])
-    for params in (np.array([0.5, 1.5, 0.3]), np.array([-1.0, 3.0, 1.0])):
-        numeric = numerical_gradient(
-            lambda p: tobit_log_likelihood(p, observed, design, 0.0), params
-        )
-        assert tobit_gradient(params, observed, design, 0.0) == pytest.approx(
-            numeric, rel=1e-5, abs=1e-5
-        )</p>
-<p>def test_切断回帰の解析的な勾配は数値微分に一致する() -&gt; None:
-    x, y = latent(400)
-    kept_x, kept_y = truncate(x, y)
-    design = np.column_stack([np.ones(len(kept_x)), kept_x])
-    for params in (np.array([0.5, 1.5, 0.3]), np.array([1.0, 2.0, 0.7])):
-        numeric = numerical_gradient(
-            lambda p: truncreg_log_likelihood(p, kept_y, design, 0.0), params
-        )
-        assert truncreg_gradient(params, kept_y, design, 0.0) == pytest.approx(
-            numeric, rel=1e-5, abs=1e-5
-        )</p>
-<p>def test_ヘッセ行列は既知の2次式の勾配の差分に一致する() -&gt; None:
-    def gradient(v: np.ndarray) -&gt; np.ndarray:
-        # f = 3a² + ab + 2b² の勾配
-        return np.array([6 * v[0] + v[1], v[0] + 4 * v[1]])</p>
-<div class="highlight"><pre><span></span><code>hessian = hessian_from_gradient(gradient, np.array([1.0, 2.0]))
-assert hessian == pytest.approx(np.array([[6.0, 1.0], [1.0, 4.0]]), abs=1e-6)
-</code></pre></div>
-<p>def test_ヘッセ行列は対称にそろえる() -&gt; None:
-    # 勾配 (b, 0) の微分は [[0, 1], [0, 0]]。対称にそろえると [[0, 0.5], [0.5, 0]]
-    def gradient(v: np.ndarray) -&gt; np.ndarray:
-        return np.array([v[1], 0.0])</p>
-<div class="highlight"><pre><span></span><code>hessian = hessian_from_gradient(gradient, np.array([1.0, 2.0]))
-assert hessian == pytest.approx(np.array([[0.0, 0.5], [0.5, 0.0]]), abs=1e-6)
-assert hessian == pytest.approx(hessian.T)
-</code></pre></div>
-<p>def test_大きな値のパラメータでもヘッセ行列を求められる() -&gt; None:
-    def gradient(v: np.ndarray) -&gt; np.ndarray:
-        return np.array([2 * v[0], 6 * v[1]])</p>
-<div class="highlight"><pre><span></span><code>hessian = hessian_from_gradient(gradient, np.array([1000.0, 5.0]))
-assert hessian == pytest.approx(np.array([[2.0, 0.0], [0.0, 6.0]]), abs=1e-4)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">latent</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">20000</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">draw_latent_sample</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">numerical_gradient</span><span class="p">(</span>
+    <span class="n">f</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span> <span class="n">point</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="mf">1e-6</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">point</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">point</span><span class="p">)):</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">point</span><span class="p">))[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">step</span>
+        <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">f</span><span class="p">(</span><span class="n">point</span> <span class="o">+</span> <span class="n">e</span><span class="p">)</span> <span class="o">-</span> <span class="n">f</span><span class="p">(</span><span class="n">point</span> <span class="o">-</span> <span class="n">e</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">step</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_トービットの解析的な勾配は数値微分に一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">latent</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span>
+    <span class="n">observed</span> <span class="o">=</span> <span class="n">censor</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">design</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">400</span><span class="p">),</span> <span class="n">x</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">params</span> <span class="ow">in</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])):</span>
+        <span class="n">numeric</span> <span class="o">=</span> <span class="n">numerical_gradient</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">tobit_log_likelihood</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">observed</span><span class="p">,</span> <span class="n">design</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">params</span>
+        <span class="p">)</span>
+        <span class="k">assert</span> <span class="n">tobit_gradient</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">observed</span><span class="p">,</span> <span class="n">design</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+            <span class="n">numeric</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-5</span>
+        <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_切断回帰の解析的な勾配は数値微分に一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">latent</span><span class="p">(</span><span class="mi">400</span><span class="p">)</span>
+    <span class="n">kept_x</span><span class="p">,</span> <span class="n">kept_y</span> <span class="o">=</span> <span class="n">truncate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">design</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">kept_x</span><span class="p">)),</span> <span class="n">kept_x</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">params</span> <span class="ow">in</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">]),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">])):</span>
+        <span class="n">numeric</span> <span class="o">=</span> <span class="n">numerical_gradient</span><span class="p">(</span>
+            <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">truncreg_log_likelihood</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">kept_y</span><span class="p">,</span> <span class="n">design</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">params</span>
+        <span class="p">)</span>
+        <span class="k">assert</span> <span class="n">truncreg_gradient</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">kept_y</span><span class="p">,</span> <span class="n">design</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+            <span class="n">numeric</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-5</span>
+        <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ヘッセ行列は既知の2次式の勾配の差分に一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">gradient</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="c1"># f = 3a² + ab + 2b² の勾配</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">6</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+
+    <span class="n">hessian</span> <span class="o">=</span> <span class="n">hessian_from_gradient</span><span class="p">(</span><span class="n">gradient</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]))</span>
+    <span class="k">assert</span> <span class="n">hessian</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">]]),</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ヘッセ行列は対称にそろえる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># 勾配 (b, 0) の微分は [[0, 1], [0, 0]]。対称にそろえると [[0, 0.5], [0.5, 0]]</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">gradient</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mf">0.0</span><span class="p">])</span>
+
+    <span class="n">hessian</span> <span class="o">=</span> <span class="n">hessian_from_gradient</span><span class="p">(</span><span class="n">gradient</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]))</span>
+    <span class="k">assert</span> <span class="n">hessian</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]]),</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">hessian</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">hessian</span><span class="o">.</span><span class="n">T</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_大きな値のパラメータでもヘッセ行列を求められる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">gradient</span><span class="p">(</span><span class="n">v</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">2</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">6</span> <span class="o">*</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]])</span>
+
+    <span class="n">hessian</span> <span class="o">=</span> <span class="n">hessian_from_gradient</span><span class="p">(</span><span class="n">gradient</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">]))</span>
+    <span class="k">assert</span> <span class="n">hessian</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">]]),</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="fit_tobit-fit_truncreg">fit_tobit と fit_truncreg を実装する<a class="headerlink" href="#fit_tobit-fit_truncreg" title="Permanent link">&para;</a></h3>
-<p>def _fit(
-    log_likelihood: Callable[
-        [NDArray[np.float64], NDArray[np.float64], NDArray[np.float64], float], float
-    ],
-    gradient: Callable[
-        [NDArray[np.float64], NDArray[np.float64], NDArray[np.float64], float],
-        NDArray[np.float64],
-    ],
-    y: ArrayLike,
-    x: ArrayLike,
-    left: float,
-) -&gt; LimitedFit:
-    """対数尤度を最大化する（初期値は OLS）。標準誤差は、ヘッセ行列から求める。"""
-    target = np.asarray(y, dtype=float)
-    ols = fit_ols(target, x)
-    columns = np.asarray(x, dtype=float)
-    design = np.column_stack([np.ones(len(target)), columns.reshape(len(target), -1)])
-    names = [*ols.coefficients.index, "sigma"]
-    sigma0 = np.sqrt(ols.residuals @ ols.residuals / len(target))
-    start = np.append(ols.coefficients.to_numpy(), np.log(sigma0))</p>
-<div class="highlight"><pre><span></span><code>n = len(target)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_fit</span><span class="p">(</span>
+    <span class="n">log_likelihood</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
+        <span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">float</span>
+    <span class="p">],</span>
+    <span class="n">gradient</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[</span>
+        <span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span>
+    <span class="p">],</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">left</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LimitedFit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""対数尤度を最大化する（初期値は OLS）。標準誤差は、ヘッセ行列から求める。"""</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">ols</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">design</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)),</span> <span class="n">columns</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)])</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="o">*</span><span class="n">ols</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s2">"sigma"</span><span class="p">]</span>
+    <span class="n">sigma0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">ols</span><span class="o">.</span><span class="n">residuals</span> <span class="o">@</span> <span class="n">ols</span><span class="o">.</span><span class="n">residuals</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">))</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ols</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">sigma0</span><span class="p">))</span>
 
-def negative(params: NDArray[np.float64]) -&gt; float:
-    return -log_likelihood(params, target, design, left)
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
 
-# 1 観測値あたりの対数尤度を最大化する（勾配の尺度を、nによらず、そろえる）
-result = optimize.minimize(
-    lambda params: negative(params) / n,
-    start,
-    jac=lambda params: -gradient(params, target, design, left) / n,
-    method="BFGS",
-    options={"gtol": 1e-9},
-)
-if not result.success and np.max(np.abs(result.jac)) &gt; 1e-6:
-    raise ValueError("最尤法が収束しない")
-hessian = hessian_from_gradient(
-    lambda params: gradient(params, target, design, left), result.x
-)
-covariance = np.linalg.inv(-hessian)
-errors = np.sqrt(np.diag(covariance))
-sigma = float(np.exp(result.x[-1]))
-values = np.append(result.x[:-1], sigma)
-errors = np.append(errors[:-1], sigma * errors[-1])  # デルタ法: σ = exp(ln σ)
-return LimitedFit(
-    coefficients=pd.Series(values, index=names),
-    standard_errors=pd.Series(errors, index=names),
-    log_likelihood=float(-result.fun * n),
-    n_obs=len(target),
-)
+    <span class="k">def</span><span class="w"> </span><span class="nf">negative</span><span class="p">(</span><span class="n">params</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+        <span class="k">return</span> <span class="o">-</span><span class="n">log_likelihood</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">design</span><span class="p">,</span> <span class="n">left</span><span class="p">)</span>
+
+    <span class="c1"># 1 観測値あたりの対数尤度を最大化する（勾配の尺度を、nによらず、そろえる）</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">optimize</span><span class="o">.</span><span class="n">minimize</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">params</span><span class="p">:</span> <span class="n">negative</span><span class="p">(</span><span class="n">params</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="p">,</span>
+        <span class="n">start</span><span class="p">,</span>
+        <span class="n">jac</span><span class="o">=</span><span class="k">lambda</span> <span class="n">params</span><span class="p">:</span> <span class="o">-</span><span class="n">gradient</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">design</span><span class="p">,</span> <span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="n">n</span><span class="p">,</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">"BFGS"</span><span class="p">,</span>
+        <span class="n">options</span><span class="o">=</span><span class="p">{</span><span class="s2">"gtol"</span><span class="p">:</span> <span class="mf">1e-9</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span> <span class="ow">and</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">jac</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mf">1e-6</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"最尤法が収束しない"</span><span class="p">)</span>
+    <span class="n">hessian</span> <span class="o">=</span> <span class="n">hessian_from_gradient</span><span class="p">(</span>
+        <span class="k">lambda</span> <span class="n">params</span><span class="p">:</span> <span class="n">gradient</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">design</span><span class="p">,</span> <span class="n">left</span><span class="p">),</span> <span class="n">result</span><span class="o">.</span><span class="n">x</span>
+    <span class="p">)</span>
+    <span class="n">covariance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="o">-</span><span class="n">hessian</span><span class="p">)</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">covariance</span><span class="p">))</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">x</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">sigma</span><span class="p">)</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">errors</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">errors</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># デルタ法: σ = exp(ln σ)</span>
+    <span class="k">return</span> <span class="n">LimitedFit</span><span class="p">(</span>
+        <span class="n">coefficients</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">names</span><span class="p">),</span>
+        <span class="n">standard_errors</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">errors</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">names</span><span class="p">),</span>
+        <span class="n">log_likelihood</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="o">-</span><span class="n">result</span><span class="o">.</span><span class="n">fun</span> <span class="o">*</span> <span class="n">n</span><span class="p">),</span>
+        <span class="n">n_obs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">),</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_tobit</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">left</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LimitedFit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""トービットの最尤推定（下限 left で打ち切られた y）。"""</span>
+    <span class="k">return</span> <span class="n">_fit</span><span class="p">(</span><span class="n">tobit_log_likelihood</span><span class="p">,</span> <span class="n">tobit_gradient</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">left</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_truncreg</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">left</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LimitedFit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""切断回帰の最尤推定（y &gt; left の観測値だけが標本にある）。"""</span>
+    <span class="k">return</span> <span class="n">_fit</span><span class="p">(</span><span class="n">truncreg_log_likelihood</span><span class="p">,</span> <span class="n">truncreg_gradient</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">left</span><span class="p">)</span>
 </code></pre></div>
-<p>def fit_tobit(y: ArrayLike, x: ArrayLike, left: float = 0.0) -&gt; LimitedFit:
-    """トービットの最尤推定（下限 left で打ち切られた y）。"""
-    return _fit(tobit_log_likelihood, tobit_gradient, y, x, left)</p>
-<p>def fit_truncreg(y: ArrayLike, x: ArrayLike, left: float = 0.0) -&gt; LimitedFit:
-    """切断回帰の最尤推定（y &gt; left の観測値だけが標本にある）。"""
-    return _fit(truncreg_log_likelihood, truncreg_gradient, y, x, left)</p>
 <p>初期値は、OLS の係数と、残差の標準偏差の対数です。最適化に失敗したら、エラーにします。</p>
-<p>def test_係数の名前と標本の大きさ() -&gt; None:
-    x, y = latent(2000)
-    fit = fit_tobit(censor(y), x)
-    assert list(fit.coefficients.index) == ["const", "x1", "sigma"]
-    assert list(fit.standard_errors.index) == ["const", "x1", "sigma"]
-    assert fit.n_obs == 2000
-    assert (fit.standard_errors &gt; 0).all()</p>
-<p>def test_最適点では対数尤度の勾配がほぼ0で周りより大きい() -&gt; None:
-    x, y = latent(3000)
-    observed = censor(y)
-    fit = fit_tobit(observed, x)
-    design = np.column_stack([np.ones(3000), x])
-    best = np.append(
-        fit.coefficients.iloc[:-1].to_numpy(), np.log(fit.coefficients["sigma"])
-    )
-    assert fit.log_likelihood == pytest.approx(
-        tobit_log_likelihood(best, observed, design, 0.0)
-    )
-    for direction in np.eye(3):
-        for delta in (0.02, -0.02):
-            moved = tobit_log_likelihood(
-                best + delta * direction, observed, design, 0.0
-            )
-            assert moved &lt; fit.log_likelihood
-    step = 1e-5
-    for i in range(3):
-        e = np.eye(3)[i] * step
-        gradient = (
-            tobit_log_likelihood(best + e, observed, design, 0.0)
-            - tobit_log_likelihood(best - e, observed, design, 0.0)
-        ) / (2 * step)
-        assert abs(gradient) / 3000 &lt; 1e-4</p>
-<p>def test_最適化が収束しなければエラー(monkeypatch: pytest.MonkeyPatch) -&gt; None:
-    def fake_minimize(*args: object, **kwargs: object) -&gt; SimpleNamespace:
-        return SimpleNamespace(success=False, jac=np.array([1.0, 1.0, 1.0]), x=None)</p>
-<div class="highlight"><pre><span></span><code>monkeypatch.setattr(limited.optimize, "minimize", fake_minimize)
-x, y = latent(200)
-with pytest.raises(ValueError, match="収束"):
-    fit_tobit(censor(y), x)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_係数の名前と標本の大きさ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">latent</span><span class="p">(</span><span class="mi">2000</span><span class="p">)</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_tobit</span><span class="p">(</span><span class="n">censor</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"const"</span><span class="p">,</span> <span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"sigma"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">standard_errors</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"const"</span><span class="p">,</span> <span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"sigma"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">n_obs</span> <span class="o">==</span> <span class="mi">2000</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">standard_errors</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_最適点では対数尤度の勾配がほぼ0で周りより大きい</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">latent</span><span class="p">(</span><span class="mi">3000</span><span class="p">)</span>
+    <span class="n">observed</span> <span class="o">=</span> <span class="n">censor</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_tobit</span><span class="p">(</span><span class="n">observed</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">design</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">3000</span><span class="p">),</span> <span class="n">x</span><span class="p">])</span>
+    <span class="n">best</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"sigma"</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">log_likelihood</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">tobit_log_likelihood</span><span class="p">(</span><span class="n">best</span><span class="p">,</span> <span class="n">observed</span><span class="p">,</span> <span class="n">design</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">direction</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">delta</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.02</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.02</span><span class="p">):</span>
+            <span class="n">moved</span> <span class="o">=</span> <span class="n">tobit_log_likelihood</span><span class="p">(</span>
+                <span class="n">best</span> <span class="o">+</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">direction</span><span class="p">,</span> <span class="n">observed</span><span class="p">,</span> <span class="n">design</span><span class="p">,</span> <span class="mf">0.0</span>
+            <span class="p">)</span>
+            <span class="k">assert</span> <span class="n">moved</span> <span class="o">&lt;</span> <span class="n">fit</span><span class="o">.</span><span class="n">log_likelihood</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="mf">1e-5</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">)[</span><span class="n">i</span><span class="p">]</span> <span class="o">*</span> <span class="n">step</span>
+        <span class="n">gradient</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">tobit_log_likelihood</span><span class="p">(</span><span class="n">best</span> <span class="o">+</span> <span class="n">e</span><span class="p">,</span> <span class="n">observed</span><span class="p">,</span> <span class="n">design</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+            <span class="o">-</span> <span class="n">tobit_log_likelihood</span><span class="p">(</span><span class="n">best</span> <span class="o">-</span> <span class="n">e</span><span class="p">,</span> <span class="n">observed</span><span class="p">,</span> <span class="n">design</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">step</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">gradient</span><span class="p">)</span> <span class="o">/</span> <span class="mi">3000</span> <span class="o">&lt;</span> <span class="mf">1e-4</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_最適化が収束しなければエラー</span><span class="p">(</span><span class="n">monkeypatch</span><span class="p">:</span> <span class="n">pytest</span><span class="o">.</span><span class="n">MonkeyPatch</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">fake_minimize</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="nb">object</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SimpleNamespace</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">success</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">jac</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">]),</span> <span class="n">x</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="n">limited</span><span class="o">.</span><span class="n">optimize</span><span class="p">,</span> <span class="s2">"minimize"</span><span class="p">,</span> <span class="n">fake_minimize</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">latent</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"収束"</span><span class="p">):</span>
+        <span class="n">fit_tobit</span><span class="p">(</span><span class="n">censor</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="ols_1">打ち切りがなければ、OLS と同じ<a class="headerlink" href="#ols_1" title="Permanent link">&para;</a></h3>
 <p>予想 4 です。下限を、観測値よりずっと低く（−1000）すると、打ち切りがありません。このとき、トービットの β は OLS と同じで、σ は、残差平方和 ÷ n の平方根（最尤推定量）になります。</p>
-<p>def test_打ち切りがなければトービットはOLSと一致する() -&gt; None:
-    rng = np.random.default_rng(1)
-    x = rng.standard_normal(300)
-    y = 5 + 2 * x + rng.standard_normal(300)
-    tobit = fit_tobit(y, x, left=-1000.0)
-    ols = fit_ols(y, x)
-    assert tobit.coefficients["const"] == pytest.approx(
-        ols.coefficients["const"], abs=1e-4
-    )
-    assert tobit.coefficients["x1"] == pytest.approx(ols.coefficients["x1"], abs=1e-4)
-    assert tobit.coefficients["sigma"] == pytest.approx(
-        math.sqrt(ols.residuals @ ols.residuals / 300), abs=1e-4
-    )</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_打ち切りがなければトービットはOLSと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>
+    <span class="n">tobit</span> <span class="o">=</span> <span class="n">fit_tobit</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">left</span><span class="o">=-</span><span class="mf">1000.0</span><span class="p">)</span>
+    <span class="n">ols</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">tobit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">ols</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">],</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-4</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">tobit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">ols</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">],</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">tobit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"sigma"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">ols</span><span class="o">.</span><span class="n">residuals</span> <span class="o">@</span> <span class="n">ols</span><span class="o">.</span><span class="n">residuals</span> <span class="o">/</span> <span class="mi">300</span><span class="p">),</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-4</span>
+    <span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter03.multiple</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_ols</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter15.limited</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_tobit</span>
 
@@ -6846,37 +6883,45 @@ with pytest.raises(ValueError, match="収束"):
 </code></pre></div>
 <p>5 桁まで一致します（予想 4）。σ の最尤推定量 1.01526 は、残差の標準偏差（n で割る）と同じです（不偏推定の n − k で割る値とは、少し違います）。</p>
 <h3 id="ols_2">乱数の標本で、OLS とトービットを比べる<a class="headerlink" href="#ols_2" title="Permanent link">&para;</a></h3>
-<p>def draw_latent_sample(
-    n: int, rng: np.random.Generator
-) -&gt; tuple[NDArray[np.float64], NDArray[np.float64]]:
-    """潜在変数 y* = 1 + 2x + u（x は標準正規、u は標準偏差 2 の正規分布）の標本。"""
-    x = rng.standard_normal(n)
-    return x, 1 + 2 * x + 2 * rng.standard_normal(n)</p>
-<p>def censor(y_latent: NDArray[np.float64], left: float = 0.0) -&gt; NDArray[np.float64]:
-    """打ち切り: left を下回る値は、left として観測される（観測値の数は変わらない）。"""
-    result: NDArray[np.float64] = np.maximum(y_latent, left)
-    return result</p>
-<p>def truncate(
-    x: NDArray[np.float64], y_latent: NDArray[np.float64], left: float = 0.0
-) -&gt; tuple[NDArray[np.float64], NDArray[np.float64]]:
-    """切断: left 以下の観測値は、標本から消える（観測値の数が減る）。"""
-    kept = y_latent &gt; left
-    return x[kept], y_latent[kept]</p>
-<p>def test_打ち切りは下限未満を下限にし_切断は下限以下を除く() -&gt; None:
-    x = np.array([1.0, 2.0, 3.0, 4.0])
-    y = np.array([-1.0, 0.0, 0.5, 2.0])
-    assert censor(y).tolist() == [0, 0, 0.5, 2]
-    assert censor(y, 1.0).tolist() == [1, 1, 1, 2]
-    kept_x, kept_y = truncate(x, y)
-    assert kept_x.tolist() == [3, 4]
-    assert kept_y.tolist() == [0.5, 2]</p>
-<p>def test_潜在変数の標本() -&gt; None:
-    x, y = latent()
-    assert x.shape == y.shape == (20000,)
-    fit = fit_ols(y, x)
-    assert fit.coefficients.to_numpy() == pytest.approx([1.0, 2.0], abs=0.1)
-    assert np.std(fit.residuals) == pytest.approx(2.0, abs=0.05)
-    assert (censor(y) == 0).mean() == pytest.approx(0.36, abs=0.02)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">draw_latent_sample</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""潜在変数 y* = 1 + 2x + u（x は標準正規、u は標準偏差 2 の正規分布）の標本。"""</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">censor</span><span class="p">(</span><span class="n">y_latent</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">left</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""打ち切り: left を下回る値は、left として観測される（観測値の数は変わらない）。"""</span>
+    <span class="n">result</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">y_latent</span><span class="p">,</span> <span class="n">left</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">truncate</span><span class="p">(</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">y_latent</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">left</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""切断: left 以下の観測値は、標本から消える（観測値の数が減る）。"""</span>
+    <span class="n">kept</span> <span class="o">=</span> <span class="n">y_latent</span> <span class="o">&gt;</span> <span class="n">left</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">[</span><span class="n">kept</span><span class="p">],</span> <span class="n">y_latent</span><span class="p">[</span><span class="n">kept</span><span class="p">]</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_打ち切りは下限未満を下限にし_切断は下限以下を除く</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">])</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="o">-</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">censor</span><span class="p">(</span><span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">censor</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+    <span class="n">kept_x</span><span class="p">,</span> <span class="n">kept_y</span> <span class="o">=</span> <span class="n">truncate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">kept_x</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">kept_y</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_潜在変数の標本</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">latent</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">20000</span><span class="p">,)</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">residuals</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">censor</span><span class="p">(</span><span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.36</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+</code></pre></div>
 <p>n = 20000 の標本で、潜在変数 y* = 1 + 2x + u（σ = 2）から、打ち切りの標本と、切断の標本を作ります。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter15.limited</span><span class="w"> </span><span class="kn">import</span> <span class="n">censor</span><span class="p">,</span> <span class="n">draw_latent_sample</span><span class="p">,</span> <span class="n">truncate</span>
 
@@ -6895,25 +6940,30 @@ uncensored only {'const': 2.1632, 'x1': 1.2238}
 </code></pre></div>
 <p>36% が 0 に打ち切られ、y* &gt; 0 の人は 12797 人です。<strong>潜在変数（本来は観測できない）の OLS は、真の値に近い</strong>（0.9997、2.0068）ですが、<strong>打ち切られた y を OLS すると、傾きは 1.2796</strong> と、真の値 2 の約 64%（= 打ち切られていない割合）に縮みます。<strong>打ち切られていない人だけ</strong>（y &gt; 0）の OLS も、傾きは 1.2238 で、偏ります（予想 1）。</p>
 <h3 id="_7">トービットの推定<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
-<p>def test_トービットは真の値を復元しOLSは0の方向に偏る() -&gt; None:
-    x, y = latent()
-    observed = censor(y)
-    tobit = fit_tobit(observed, x)
-    truth = {"const": 1.0, "x1": 2.0, "sigma": 2.0}
-    for name, value in truth.items():
-        assert abs(tobit.coefficients[name] - value) &lt; 4 * tobit.standard_errors[name]
-    ols = fit_ols(observed, x).coefficients["x1"]
-    assert ols &lt; 1.5
-    assert abs(ols - 2.0) &gt; 0.5</p>
-<p>def test_打ち切られていない観測値だけのOLSも偏る() -&gt; None:
-    x, y = latent()
-    keep = y &gt; 0
-    assert fit_ols(y[keep], x[keep]).coefficients["x1"] &lt; 1.5</p>
-<p>def test_下限が0以外でもトービットは真の値を復元する() -&gt; None:
-    x, y = latent()
-    fit = fit_tobit(censor(y, 2.0), x, left=2.0)
-    assert abs(fit.coefficients["x1"] - 2.0) &lt; 4 * fit.standard_errors["x1"]
-    assert abs(fit.coefficients["const"] - 1.0) &lt; 4 * fit.standard_errors["const"]</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_トービットは真の値を復元しOLSは0の方向に偏る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">latent</span><span class="p">()</span>
+    <span class="n">observed</span> <span class="o">=</span> <span class="n">censor</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">tobit</span> <span class="o">=</span> <span class="n">fit_tobit</span><span class="p">(</span><span class="n">observed</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">truth</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"const"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">"x1"</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span> <span class="s2">"sigma"</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">truth</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">tobit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">-</span> <span class="n">value</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">tobit</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+    <span class="n">ols</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">observed</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">ols</span> <span class="o">&lt;</span> <span class="mf">1.5</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ols</span> <span class="o">-</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.5</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_打ち切られていない観測値だけのOLSも偏る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">latent</span><span class="p">()</span>
+    <span class="n">keep</span> <span class="o">=</span> <span class="n">y</span> <span class="o">&gt;</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">keep</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">keep</span><span class="p">])</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">1.5</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_下限が0以外でもトービットは真の値を復元する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">latent</span><span class="p">()</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_tobit</span><span class="p">(</span><span class="n">censor</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="n">x</span><span class="p">,</span> <span class="n">left</span><span class="o">=</span><span class="mf">2.0</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">-</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">fit</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">fit</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="n">tobit</span> <span class="o">=</span> <span class="n">fit_tobit</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">tobit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">tobit</span><span class="o">.</span><span class="n">standard_errors</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="nb">round</span><span class="p">(</span><span class="n">tobit</span><span class="o">.</span><span class="n">log_likelihood</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
@@ -6924,15 +6974,16 @@ uncensored only {'const': 2.1632, 'x1': 1.2238}
 <p>トービットは、真の値（1、2、σ = 2）を、標準誤差の範囲で復元します（1.0061、2.0056、2.0101）。OLS の 1.2796 とは、大きく違います（予想 3）。</p>
 <p><img alt="傾きの推定値（n = 500、150 回）。OLS（ols）は 2 より小さい値のまわり、トービット（tobit）は、真の値 2 のまわりに分布する" src="../images/ch15-slope-distributions.png" /></p>
 <h3 id="_8">切断回帰の推定<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
-<p>def test_切断回帰は真の値を復元しOLSは0の方向に偏る() -&gt; None:
-    x, y = latent()
-    kept_x, kept_y = truncate(x, y)
-    fit = fit_truncreg(kept_y, kept_x)
-    truth = {"const": 1.0, "x1": 2.0, "sigma": 2.0}
-    for name, value in truth.items():
-        assert abs(fit.coefficients[name] - value) &lt; 4 * fit.standard_errors[name]
-    assert fit_ols(kept_y, kept_x).coefficients["x1"] &lt; 1.5
-    assert fit.n_obs == len(kept_y)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_切断回帰は真の値を復元しOLSは0の方向に偏る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">latent</span><span class="p">()</span>
+    <span class="n">kept_x</span><span class="p">,</span> <span class="n">kept_y</span> <span class="o">=</span> <span class="n">truncate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_truncreg</span><span class="p">(</span><span class="n">kept_y</span><span class="p">,</span> <span class="n">kept_x</span><span class="p">)</span>
+    <span class="n">truth</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"const"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">"x1"</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span> <span class="s2">"sigma"</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">truth</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">-</span> <span class="n">value</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">fit</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">kept_y</span><span class="p">,</span> <span class="n">kept_x</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">1.5</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">n_obs</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">kept_y</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter15.limited</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_truncreg</span>
 
 <span class="n">truncated_x</span><span class="p">,</span> <span class="n">truncated_y</span> <span class="o">=</span> <span class="n">truncate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">latent</span><span class="p">)</span>
@@ -6948,15 +6999,16 @@ uncensored only {'const': 2.1632, 'x1': 1.2238}
 <p>切断回帰は、切断された標本（12797 人）だけから、真の値を復元します（1.0104、1.9906、2.0147）。標準誤差は、トービットより大きい（x1 で 0.0333 対 0.0177）。切断された標本は、打ち切られた標本より、<strong>情報が少ない</strong>（下限以下の人の x が、わからない）ためです。OLS は、1.2238 と偏ります（予想 2）。</p>
 <h3 id="_9">標準誤差が正しいかを、確かめる<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>標準誤差は、推定値を、標本を取り直したときの、実際のばらつきに、近いはずです。n = 500 で、150 回繰り返し、傾きの標準誤差の平均と、推定値の標準偏差を比べます。</p>
-<p>def test_標準誤差は推定値の実際のばらつきに近い() -&gt; None:
-    slopes, errors = [], []
-    for seed in range(150):
-        x, y = latent(500, seed)
-        fit = fit_tobit(censor(y), x)
-        slopes.append(fit.coefficients["x1"])
-        errors.append(fit.standard_errors["x1"])
-    assert np.mean(errors) == pytest.approx(np.std(slopes, ddof=1), rel=0.2)
-    assert np.mean(slopes) == pytest.approx(2.0, abs=4 * np.std(slopes) / 150**0.5)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_標準誤差は推定値の実際のばらつきに近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">slopes</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">150</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">latent</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="n">seed</span><span class="p">)</span>
+        <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_tobit</span><span class="p">(</span><span class="n">censor</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">slopes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">])</span>
+        <span class="n">errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">errors</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">slopes</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">slopes</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">slopes</span><span class="p">)</span> <span class="o">/</span> <span class="mi">150</span><span class="o">**</span><span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter15.limited</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_latent_sample</span>
 
 <span class="n">slopes</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
@@ -6971,57 +7023,65 @@ uncensored only {'const': 2.1632, 'x1': 1.2238}
 </code></pre></div>
 <p>傾きの推定値の平均は 1.9852（真の値 2）、実際のばらつき（標準偏差）は 0.113、標準誤差の平均は 0.1107 で、2% しか違いません。</p>
 <h3 id="_10">期待値と限界効果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
-<p>def tobit_expected_value(
-    fit: LimitedFit, x: ArrayLike, left: float = 0.0
-) -&gt; NDArray[np.float64]:
-    """打ち切られた y の期待値 E[y | x] = left + (x′β − left)·Φ(z) + σ·φ(z)。</p>
-<div class="highlight"><pre><span></span><code>z = (x′β − left) ÷ σ。
-"""
-columns = np.asarray(x, dtype=float)
-xb = fit.coefficients.iloc[0] + columns.reshape(len(columns), -1) @ (
-    fit.coefficients.iloc[1:-1].to_numpy()
-)
-sigma = fit.coefficients["sigma"]
-z = (xb - left) / sigma
-result: NDArray[np.float64] = (
-    left + (xb - left) * stats.norm.cdf(z) + sigma * stats.norm.pdf(z)
-)
-return result
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">tobit_expected_value</span><span class="p">(</span>
+    <span class="n">fit</span><span class="p">:</span> <span class="n">LimitedFit</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">left</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""打ち切られた y の期待値 E[y | x] = left + (x′β − left)·Φ(z) + σ·φ(z)。</span>
+
+<span class="sd">    z = (x′β − left) ÷ σ。</span>
+<span class="sd">    """</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">xb</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">columns</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">@</span> <span class="p">(</span>
+        <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="n">sigma</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"sigma"</span><span class="p">]</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="p">(</span><span class="n">xb</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="n">sigma</span>
+    <span class="n">result</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">left</span> <span class="o">+</span> <span class="p">(</span><span class="n">xb</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span> <span class="o">*</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">z</span><span class="p">)</span> <span class="o">+</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">tobit_marginal_effects</span><span class="p">(</span>
+    <span class="n">fit</span><span class="p">:</span> <span class="n">LimitedFit</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">left</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""E[y | x] への、平均限界効果 = Φ(z) の平均 × 係数。"""</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">xb</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">columns</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">@</span> <span class="n">beta</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">((</span><span class="n">xb</span> <span class="o">-</span> <span class="n">left</span><span class="p">)</span> <span class="o">/</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"sigma"</span><span class="p">])))</span>
+    <span class="k">return</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">beta</span>
 </code></pre></div>
-<p>def tobit_marginal_effects(
-    fit: LimitedFit, x: ArrayLike, left: float = 0.0
-) -&gt; pd.Series:
-    """E[y | x] への、平均限界効果 = Φ(z) の平均 × 係数。"""
-    columns = np.asarray(x, dtype=float)
-    beta = fit.coefficients.iloc[1:-1]
-    xb = fit.coefficients.iloc[0] + columns.reshape(len(columns), -1) @ beta.to_numpy()
-    scale = float(np.mean(stats.norm.cdf((xb - left) / fit.coefficients["sigma"])))
-    return scale * beta</p>
-<p>def test_期待値の平均は観測値の平均に近い() -&gt; None:
-    x, y = latent()
-    observed = censor(y)
-    fit = fit_tobit(observed, x)
-    expected = tobit_expected_value(fit, x)
-    assert expected.mean() == pytest.approx(observed.mean(), abs=0.05)
-    assert (expected &gt;= 0).all()</p>
-<p>def test_限界効果は期待値の数値微分の平均に一致する() -&gt; None:
-    x, y = latent()
-    fit = fit_tobit(censor(y), x)
-    h = 1e-4
-    numeric = np.mean(
-        (tobit_expected_value(fit, x + h) - tobit_expected_value(fit, x - h)) / (2 * h)
-    )
-    effect = tobit_marginal_effects(fit, x)
-    assert effect["x1"] == pytest.approx(numeric, rel=1e-4)
-    assert 0 &lt; effect["x1"] &lt; fit.coefficients["x1"]</p>
-<p>def test_複数の説明変数でも期待値と限界効果を求められる() -&gt; None:
-    rng = np.random.default_rng(3)
-    x = rng.standard_normal((4000, 2))
-    y = 1 + 2 * x[:, 0] - x[:, 1] + 2 * rng.standard_normal(4000)
-    fit = fit_tobit(censor(y), x)
-    assert list(fit.coefficients.index) == ["const", "x1", "x2", "sigma"]
-    assert tobit_expected_value(fit, x).shape == (4000,)
-    assert list(tobit_marginal_effects(fit, x).index) == ["x1", "x2"]</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_期待値の平均は観測値の平均に近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">latent</span><span class="p">()</span>
+    <span class="n">observed</span> <span class="o">=</span> <span class="n">censor</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_tobit</span><span class="p">(</span><span class="n">observed</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="n">tobit_expected_value</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">expected</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">observed</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">expected</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_限界効果は期待値の数値微分の平均に一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">latent</span><span class="p">()</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_tobit</span><span class="p">(</span><span class="n">censor</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="mf">1e-4</span>
+    <span class="n">numeric</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span>
+        <span class="p">(</span><span class="n">tobit_expected_value</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">x</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">tobit_expected_value</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">x</span> <span class="o">-</span> <span class="n">h</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">effect</span> <span class="o">=</span> <span class="n">tobit_marginal_effects</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">effect</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">numeric</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">effect</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_複数の説明変数でも期待値と限界効果を求められる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="mi">4000</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">4000</span><span class="p">)</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_tobit</span><span class="p">(</span><span class="n">censor</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"const"</span><span class="p">,</span> <span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">,</span> <span class="s2">"sigma"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">tobit_expected_value</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">4000</span><span class="p">,)</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">tobit_marginal_effects</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter15.limited</span><span class="w"> </span><span class="kn">import</span> <span class="n">tobit_expected_value</span><span class="p">,</span> <span class="n">tobit_marginal_effects</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">tobit_marginal_effects</span><span class="p">(</span><span class="n">tobit</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">tobit_expected_value</span><span class="p">(</span><span class="n">tobit</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span> <span class="mi">4</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">mean</span><span class="p">()),</span> <span class="mi">4</span><span class="p">))</span>
@@ -7031,63 +7091,76 @@ return result
 <p>期待値 E[y | x] の平均は 1.7104 で、観測された y の平均 1.7111 に、近い値です。x が 1 増えたときの、<strong>打ち切りを含む y の期待値</strong>の変化（平均限界効果）は <strong>1.2837</strong> で、潜在変数への効果 2.0056 の、約 64%（打ち切られていない割合）です。この値は、OLS の傾き 1.2796 と、ほぼ同じです（<strong>打ち切られたデータの OLS は、潜在変数への効果ではなく、観測される y の期待値への効果を、おおよそ推定している</strong>）。</p>
 <h3 id="_11">標準誤差が、スケールで狂う落とし穴<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p><code>test_yの単位を1000倍しても係数と標準偏差が1000倍になるだけ</code> は、y の単位を 1000 倍にしても（時間を、分に変えるように）、係数・σ・標準誤差が、1000 倍になるだけ、という性質を確かめます。<strong>最初の実装（数値微分で、勾配とヘッセ行列を求めた版）は、このテストを通りませんでした</strong>。単位を 1000 倍にした標本で、標準誤差が最大 16% ずれました。シミュレーション（y の大きさが 1 程度）では、見つからなかった不具合です（16.6 節の実際のデータで、気づきました）。</p>
-<p>def test_yの単位を1000倍しても係数と標準偏差が1000倍になるだけ() -&gt; None:
-    x, y = latent(3000)
-    observed = censor(y)
-    small = fit_tobit(observed, x)
-    large = fit_tobit(observed * 1000, x)
-    assert large.coefficients.to_numpy() == pytest.approx(
-        small.coefficients.to_numpy() * 1000, rel=1e-4
-    )
-    assert large.standard_errors.to_numpy() == pytest.approx(
-        small.standard_errors.to_numpy() * 1000, rel=1e-3
-    )</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_yの単位を1000倍しても係数と標準偏差が1000倍になるだけ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">latent</span><span class="p">(</span><span class="mi">3000</span><span class="p">)</span>
+    <span class="n">observed</span> <span class="o">=</span> <span class="n">censor</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+    <span class="n">small</span> <span class="o">=</span> <span class="n">fit_tobit</span><span class="p">(</span><span class="n">observed</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">large</span> <span class="o">=</span> <span class="n">fit_tobit</span><span class="p">(</span><span class="n">observed</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">large</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">small</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-4</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">large</span><span class="o">.</span><span class="n">standard_errors</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">small</span><span class="o">.</span><span class="n">standard_errors</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">*</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-3</span>
+    <span class="p">)</span>
+</code></pre></div>
 <h3 id="_12">図<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p><code>plot_censored_data</code> は、データ・真の直線・OLS・トービットの直線を描きます（冒頭の図）。</p>
-<p>def data() -&gt; tuple[np.ndarray, np.ndarray]:
-    x, latent = draw_latent_sample(2000, np.random.default_rng(0))
-    return x, censor(latent)</p>
-<p>def xs(line: Any) -&gt; list[float]:
-    values: Any = line.get_xdata()
-    return [float(v) for v in values]</p>
-<p>def ys(line: Any) -&gt; list[float]:
-    values: Any = line.get_ydata()
-    return [float(v) for v in values]</p>
-<p>def slope(line: Any) -&gt; float:
-    x, y = xs(line), ys(line)
-    return (y[1] - y[0]) / (x[1] - x[0])</p>
-<p>def test_データと3本の直線() -&gt; None:
-    x, y = data()
-    ax = plot_censored_data(x, y).axes[0]
-    assert [line.get_label() for line in ax.lines] == [
-        "Data",
-        "True line",
-        "OLS",
-        "Tobit",
-    ]
-    assert ys(ax.lines[0]) == y.tolist()</p>
-<p>def test_真の直線の傾きは2でOLSは偏りトービットは真の値に近い() -&gt; None:
-    x, y = data()
-    ax = plot_censored_data(x, y).axes[0]
-    assert slope(ax.lines[1]) == pytest.approx(2)
-    assert slope(ax.lines[2]) == pytest.approx(fit_ols(y, x).coefficients["x1"])
-    assert slope(ax.lines[3]) == pytest.approx(fit_tobit(y, x).coefficients["x1"])
-    assert slope(ax.lines[2]) &lt; slope(ax.lines[3])</p>
-<p>def plot_censored_data(x: NDArray[np.float64], y: NDArray[np.float64]) -&gt; Figure:
-    """0 で打ち切られたデータと、真の直線（1 + 2x）、OLS・トービットの直線を描く。"""
-    ends = np.array([float(x.min()), float(x.max())])
-    ols = fit_ols(y, x).coefficients
-    tobit = fit_tobit(y, x).coefficients
-    fig, ax = plt.subplots()
-    ax.plot(x, y, "o", alpha=0.3, label="Data")
-    ax.plot(ends, 1 + 2 * ends, "--", label="True line")
-    ax.plot(ends, ols["const"] + ols["x1"] * ends, label="OLS")
-    ax.plot(ends, tobit["const"] + tobit["x1"] * ends, label="Tobit")
-    ax.set_xlabel("x")
-    ax.set_ylabel("y (censored at 0)")
-    ax.legend()
-    plt.close(fig)
-    return fig</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">data</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">latent</span> <span class="o">=</span> <span class="n">draw_latent_sample</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">censor</span><span class="p">(</span><span class="n">latent</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">xs</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="n">values</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">get_xdata</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ys</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="n">values</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">get_ydata</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">slope</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">xs</span><span class="p">(</span><span class="n">line</span><span class="p">),</span> <span class="n">ys</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_データと3本の直線</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">()</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_censored_data</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span>
+        <span class="s2">"Data"</span><span class="p">,</span>
+        <span class="s2">"True line"</span><span class="p">,</span>
+        <span class="s2">"OLS"</span><span class="p">,</span>
+        <span class="s2">"Tobit"</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">y</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_真の直線の傾きは2でOLSは偏りトービットは真の値に近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">data</span><span class="p">()</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_censored_data</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">slope</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">slope</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">slope</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">fit_tobit</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">slope</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">slope</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_censored_data</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">y</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""0 で打ち切られたデータと、真の直線（1 + 2x）、OLS・トービットの直線を描く。"""</span>
+    <span class="n">ends</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()),</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">())])</span>
+    <span class="n">ols</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span>
+    <span class="n">tobit</span> <span class="o">=</span> <span class="n">fit_tobit</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">"o"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Data"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ends</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">ends</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"True line"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ends</span><span class="p">,</span> <span class="n">ols</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">+</span> <span class="n">ols</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">*</span> <span class="n">ends</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"OLS"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ends</span><span class="p">,</span> <span class="n">tobit</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">+</span> <span class="n">tobit</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">*</span> <span class="n">ends</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Tobit"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"y (censored at 0)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+</code></pre></div>
 <h3 id="_13">実行結果<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter15
 </code></pre></div>

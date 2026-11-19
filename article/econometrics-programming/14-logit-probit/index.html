@@ -6500,94 +6500,108 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="n">Y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">30</span><span class="p">)]</span>
 <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">40</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">40</span><span class="p">)]</span>
 </code></pre></div>
-<p>def test_定数項だけのロジットは対数オッズ() -&gt; None:
-    y = np.r_[np.ones(30), np.zeros(10)]
-    fit = fit_binary(y, np.empty((40, 0)), "logit")
-    assert fit.coefficients["const"] == pytest.approx(np.log(3))
-    assert fit.coefficients["const"] == pytest.approx(1.0986, abs=1e-4)</p>
-<p>def test_定数項だけのプロビットは標準正規分布の分位点() -&gt; None:
-    y = np.r_[np.ones(30), np.zeros(10)]
-    fit = fit_binary(y, np.empty((40, 0)), "probit")
-    assert fit.coefficients["const"] == pytest.approx(stats.norm.ppf(0.75))
-    assert fit.coefficients["const"] == pytest.approx(0.6745, abs=1e-4)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_定数項だけのロジットは対数オッズ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">40</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="s2">"logit"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">1.0986</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_定数項だけのプロビットは標準正規分布の分位点</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">)]</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">40</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="s2">"probit"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.75</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.6745</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="green-fit_binary">Green: fit_binary を実装する<a class="headerlink" href="#green-fit_binary" title="Permanent link">&para;</a></h3>
 <p>対数尤度のスコア（x′β についての 1 階微分）と、2 階微分の符号を変えたものを、リンク関数ごとに求め、ニュートン法を回します。</p>
-<p>LINKS = {"logit": stats.logistic, "probit": stats.norm}</p>
-<p>@dataclass(frozen=True)
-class BinaryFit:
-    """ロジット・プロビットの推定結果。"""</p>
-<div class="highlight"><pre><span></span><code>coefficients: pd.Series
-standard_errors: pd.Series
-log_likelihood: float
-n_obs: int
-iterations: int
-link: str
-</code></pre></div>
-<p>def _design(x: ArrayLike) -&gt; tuple[NDArray[np.float64], list[str]]:
-    """定数項を先頭に足した説明変数の行列と、係数の名前。"""
-    if isinstance(x, pd.DataFrame):
-        names = [str(c) for c in x.columns]
-    elif isinstance(x, pd.Series):
-        names = [str(x.name)]
-    else:
-        names = []
-    values = np.asarray(x, dtype=float)
-    if values.ndim == 1:
-        values = values.reshape(-1, 1)
-    if not names:
-        names = [f"x{i + 1}" for i in range(values.shape[1])]
-    return np.column_stack([np.ones(len(values)), values]), ["const", *names]</p>
-<p>def log_likelihood(
-    link: str, y: ArrayLike, design: NDArray[np.float64], beta: NDArray[np.float64]
-) -&gt; float:
-    """対数尤度 Σ [y·ln F(x′β) + (1 − y)·ln(1 − F(x′β))]。"""
-    dist = LINKS[link]
-    xb = design @ beta
-    values = np.asarray(y, dtype=float)
-    return float(np.sum(values * dist.logcdf(xb) + (1 - values) * dist.logsf(xb)))</p>
-<p>def _score_and_weights(
-    link: str, y: NDArray[np.float64], xb: NDArray[np.float64]
-) -&gt; tuple[NDArray[np.float64], NDArray[np.float64]]:
-    """x′β についての、対数尤度の 1 階微分（スコア）と、2 階微分の符号を変えたもの。"""
-    dist = LINKS[link]
-    q = 2 * y - 1
-    lam = q * dist.pdf(xb) / dist.cdf(q * xb)
-    if link == "logit":
-        p = dist.cdf(xb)
-        return lam, p * (1 - p)
-    return lam, lam * (lam + xb)</p>
-<p>def fit_binary(
-    y: ArrayLike, x: ArrayLike, link: str = "logit", max_iterations: int = 100
-) -&gt; BinaryFit:
-    """最尤法（ニュートン法）でロジット・プロビットを推定する。</p>
-<div class="highlight"><pre><span></span><code>β ← β + (X′WX)⁻¹ X′s。s は x′β についてのスコア、W は 2 階微分の符号を変えたもの。
-収束しないとき（完全分離など）は、エラーにする。
-"""
-if link not in LINKS:
-    raise ValueError(f"知らないリンク関数: {link}（logit か probit）")
-design, names = _design(x)
-target = np.asarray(y, dtype=float)
-beta = np.zeros(design.shape[1])
-for iteration in range(1, max_iterations + 1):
-    score, weights = _score_and_weights(link, target, design @ beta)
-    information = design.T @ (design * weights[:, None])
-    try:
-        step = np.linalg.solve(information, design.T @ score)
-    except np.linalg.LinAlgError:
-        raise ValueError("収束しない（完全分離の可能性がある）") from None
-    beta = beta + step
-    if np.max(np.abs(step)) &lt; 1e-10:
-        _, weights = _score_and_weights(link, target, design @ beta)
-        covariance = np.linalg.inv(design.T @ (design * weights[:, None]))
-        return BinaryFit(
-            coefficients=pd.Series(beta, index=names),
-            standard_errors=pd.Series(np.sqrt(np.diag(covariance)), index=names),
-            log_likelihood=log_likelihood(link, target, design, beta),
-            n_obs=len(target),
-            iterations=iteration,
-            link=link,
-        )
-raise ValueError("収束しない（完全分離の可能性がある）")
+<div class="highlight"><pre><span></span><code><span class="n">LINKS</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"logit"</span><span class="p">:</span> <span class="n">stats</span><span class="o">.</span><span class="n">logistic</span><span class="p">,</span> <span class="s2">"probit"</span><span class="p">:</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="p">}</span>
+
+
+<span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">BinaryFit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""ロジット・プロビットの推定結果。"""</span>
+
+    <span class="n">coefficients</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>
+    <span class="n">standard_errors</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>
+    <span class="n">log_likelihood</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">n_obs</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">iterations</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">link</span><span class="p">:</span> <span class="nb">str</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_design</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""定数項を先頭に足した説明変数の行列と、係数の名前。"""</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">):</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">name</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">names</span><span class="p">:</span>
+        <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">"x</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])]</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)),</span> <span class="n">values</span><span class="p">]),</span> <span class="p">[</span><span class="s2">"const"</span><span class="p">,</span> <span class="o">*</span><span class="n">names</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">log_likelihood</span><span class="p">(</span>
+    <span class="n">link</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">design</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">beta</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""対数尤度 Σ [y·ln F(x′β) + (1 − y)·ln(1 − F(x′β))]。"""</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">LINKS</span><span class="p">[</span><span class="n">link</span><span class="p">]</span>
+    <span class="n">xb</span> <span class="o">=</span> <span class="n">design</span> <span class="o">@</span> <span class="n">beta</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">values</span> <span class="o">*</span> <span class="n">dist</span><span class="o">.</span><span class="n">logcdf</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">values</span><span class="p">)</span> <span class="o">*</span> <span class="n">dist</span><span class="o">.</span><span class="n">logsf</span><span class="p">(</span><span class="n">xb</span><span class="p">)))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_score_and_weights</span><span class="p">(</span>
+    <span class="n">link</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">xb</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""x′β についての、対数尤度の 1 階微分（スコア）と、2 階微分の符号を変えたもの。"""</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">LINKS</span><span class="p">[</span><span class="n">link</span><span class="p">]</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="n">lam</span> <span class="o">=</span> <span class="n">q</span> <span class="o">*</span> <span class="n">dist</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span> <span class="o">/</span> <span class="n">dist</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">q</span> <span class="o">*</span> <span class="n">xb</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">link</span> <span class="o">==</span> <span class="s2">"logit"</span><span class="p">:</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">dist</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">xb</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">lam</span><span class="p">,</span> <span class="n">p</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">p</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lam</span><span class="p">,</span> <span class="n">lam</span> <span class="o">*</span> <span class="p">(</span><span class="n">lam</span> <span class="o">+</span> <span class="n">xb</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_binary</span><span class="p">(</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">link</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"logit"</span><span class="p">,</span> <span class="n">max_iterations</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">BinaryFit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""最尤法（ニュートン法）でロジット・プロビットを推定する。</span>
+
+<span class="sd">    β ← β + (X′WX)⁻¹ X′s。s は x′β についてのスコア、W は 2 階微分の符号を変えたもの。</span>
+<span class="sd">    収束しないとき（完全分離など）は、エラーにする。</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">link</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">LINKS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"知らないリンク関数: </span><span class="si">{</span><span class="n">link</span><span class="si">}</span><span class="s2">（logit か probit）"</span><span class="p">)</span>
+    <span class="n">design</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="n">_design</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">design</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">iteration</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_iterations</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">score</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">_score_and_weights</span><span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">design</span> <span class="o">@</span> <span class="n">beta</span><span class="p">)</span>
+        <span class="n">information</span> <span class="o">=</span> <span class="n">design</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="p">(</span><span class="n">design</span> <span class="o">*</span> <span class="n">weights</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">step</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">information</span><span class="p">,</span> <span class="n">design</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">score</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">LinAlgError</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"収束しない（完全分離の可能性がある）"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="kc">None</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">+</span> <span class="n">step</span>
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">step</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">1e-10</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">weights</span> <span class="o">=</span> <span class="n">_score_and_weights</span><span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">design</span> <span class="o">@</span> <span class="n">beta</span><span class="p">)</span>
+            <span class="n">covariance</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">design</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="p">(</span><span class="n">design</span> <span class="o">*</span> <span class="n">weights</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]))</span>
+            <span class="k">return</span> <span class="n">BinaryFit</span><span class="p">(</span>
+                <span class="n">coefficients</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">names</span><span class="p">),</span>
+                <span class="n">standard_errors</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">covariance</span><span class="p">)),</span> <span class="n">index</span><span class="o">=</span><span class="n">names</span><span class="p">),</span>
+                <span class="n">log_likelihood</span><span class="o">=</span><span class="n">log_likelihood</span><span class="p">(</span><span class="n">link</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">design</span><span class="p">,</span> <span class="n">beta</span><span class="p">),</span>
+                <span class="n">n_obs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">target</span><span class="p">),</span>
+                <span class="n">iterations</span><span class="o">=</span><span class="n">iteration</span><span class="p">,</span>
+                <span class="n">link</span><span class="o">=</span><span class="n">link</span><span class="p">,</span>
+            <span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"収束しない（完全分離の可能性がある）"</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -6604,21 +6618,26 @@ probit 0.6745
 <p>手計算の 1.0986 と 0.6745 に一致します（予想 1）。</p>
 <h3 id="2-2">2 × 2 の表: 傾きは、対数オッズ比<a class="headerlink" href="#2-2" title="Permanent link">&para;</a></h3>
 <p>予想 2 の手計算です。x = 0 の群は、確率 0.25（オッズ 1/3）、x = 1 の群は、0.75（オッズ 3）。ロジットでは、定数項は ln(1/3) = −1.0986、傾きは、<strong>対数オッズ比</strong> ln(3 ÷ (1/3)) = ln 9 ≈ 2.1972 です。プロビットは、定数項が Φ⁻¹(0.25) = −0.6745、傾きが Φ⁻¹(0.75) − Φ⁻¹(0.25) = 1.3490 です。</p>
-<p>def test_ダミー変数1つのロジットの傾きは対数オッズ比() -&gt; None:
-    fit = fit_binary(Y, X, "logit")
-    assert fit.coefficients["const"] == pytest.approx(np.log(1 / 3))
-    assert fit.coefficients["x1"] == pytest.approx(np.log(9))</p>
-<p>def test_ダミー変数1つのプロビットの係数は分位点の差() -&gt; None:
-    fit = fit_binary(Y, X, "probit")
-    assert fit.coefficients["const"] == pytest.approx(stats.norm.ppf(0.25))
-    assert fit.coefficients["x1"] == pytest.approx(
-        stats.norm.ppf(0.75) - stats.norm.ppf(0.25)
-    )</p>
-<p>def test_予測確率は表の割合に一致する() -&gt; None:
-    fit = fit_binary(Y, X, "logit")
-    p = predicted_probabilities(fit, X)
-    assert p[0] == pytest.approx(0.25)
-    assert p[-1] == pytest.approx(0.75)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_ダミー変数1つのロジットの傾きは対数オッズ比</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="s2">"logit"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">9</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ダミー変数1つのプロビットの係数は分位点の差</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="s2">"probit"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.25</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span> <span class="o">-</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">ppf</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_予測確率は表の割合に一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="s2">"logit"</span><span class="p">)</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="n">predicted_probabilities</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.25</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">p</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.75</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter14.discrete</span><span class="w"> </span><span class="kn">import</span> <span class="n">predicted_probabilities</span>
 
 <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">30</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">10</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">30</span><span class="p">)]</span>
@@ -6635,73 +6654,87 @@ probit {'const': -0.67449, 'x1': 1.34898} -44.9868 5
 <p>ロジットの傾き 2.19722 は ln 9 に、プロビットの傾き 1.34898 は分位点の差に、一致します（予想 2）。どちらも、5 回の反復で収束し、<strong>対数尤度は同じ −44.9868</strong> です（この表では、どちらのモデルも、2 つの確率を、ちょうど再現できるため）。予測確率は、表の割合 0.25 と 0.75 です。</p>
 <h3 id="statsmodels">statsmodels と照合する<a class="headerlink" href="#statsmodels" title="Permanent link">&para;</a></h3>
 <p>乱数の標本（ロジットの母集団、n = 500）で、係数・標準誤差・対数尤度・平均限界効果を、<code>statsmodels</code> の <code>Logit</code>・<code>Probit</code> と、照合します。</p>
-<p>def predicted_probabilities(fit: BinaryFit, x: ArrayLike) -&gt; NDArray[np.float64]:
-    """P(y = 1 | x) = F(x′β)。"""
-    design, _ = _design(x)
-    result: NDArray[np.float64] = LINKS[fit.link].cdf(
-        design @ fit.coefficients.to_numpy()
-    )
-    return result</p>
-<p>def average_marginal_effects(fit: BinaryFit, x: ArrayLike) -&gt; pd.Series:
-    """平均限界効果 = 密度 f(x′β) の平均 × 係数（連続変数）。定数項は含めない。"""
-    design, _ = _design(x)
-    density = LINKS[fit.link].pdf(design @ fit.coefficients.to_numpy())
-    return float(np.mean(density)) * fit.coefficients.drop("const")</p>
-<p>def draw_binary_sample(n: int, link: str, rng: np.random.Generator) -&gt; pd.DataFrame:
-    """潜在変数 y* = 0.5 + x1 − 0.8·x2 + ε から、y = 1（y* &gt; 0）の標本を作る。</p>
-<div class="highlight"><pre><span></span><code>ε は、link が logit なら標準ロジスティック分布、probit なら標準正規分布。
-"""
-x1, x2 = rng.standard_normal((2, n))
-error = rng.logistic(size=n) if link == "logit" else rng.standard_normal(n)
-latent = 0.5 + x1 - 0.8 * x2 + error
-return pd.DataFrame({"y": (latent &gt; 0).astype(float), "x1": x1, "x2": x2})
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">predicted_probabilities</span><span class="p">(</span><span class="n">fit</span><span class="p">:</span> <span class="n">BinaryFit</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""P(y = 1 | x) = F(x′β)。"""</span>
+    <span class="n">design</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_design</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">result</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="n">LINKS</span><span class="p">[</span><span class="n">fit</span><span class="o">.</span><span class="n">link</span><span class="p">]</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span>
+        <span class="n">design</span> <span class="o">@</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">average_marginal_effects</span><span class="p">(</span><span class="n">fit</span><span class="p">:</span> <span class="n">BinaryFit</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""平均限界効果 = 密度 f(x′β) の平均 × 係数（連続変数）。定数項は含めない。"""</span>
+    <span class="n">design</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_design</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">density</span> <span class="o">=</span> <span class="n">LINKS</span><span class="p">[</span><span class="n">fit</span><span class="o">.</span><span class="n">link</span><span class="p">]</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">design</span> <span class="o">@</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">density</span><span class="p">))</span> <span class="o">*</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">"const"</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">draw_binary_sample</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">link</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""潜在変数 y* = 0.5 + x1 − 0.8·x2 + ε から、y = 1（y* &gt; 0）の標本を作る。</span>
+
+<span class="sd">    ε は、link が logit なら標準ロジスティック分布、probit なら標準正規分布。</span>
+<span class="sd">    """</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">x2</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="n">error</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">logistic</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="n">n</span><span class="p">)</span> <span class="k">if</span> <span class="n">link</span> <span class="o">==</span> <span class="s2">"logit"</span> <span class="k">else</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">latent</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="n">x1</span> <span class="o">-</span> <span class="mf">0.8</span> <span class="o">*</span> <span class="n">x2</span> <span class="o">+</span> <span class="n">error</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"y"</span><span class="p">:</span> <span class="p">(</span><span class="n">latent</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="s2">"x1"</span><span class="p">:</span> <span class="n">x1</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">:</span> <span class="n">x2</span><span class="p">})</span>
 </code></pre></div>
-<p>def sample(link: str = "logit", n: int = 500) -&gt; pd.DataFrame:
-    return draw_binary_sample(n, link, np.random.default_rng(0))</p>
-<p>@pytest.mark.parametrize(
-    ("link", "model"), [("logit", sm.Logit), ("probit", sm.Probit)]
-)
-def test_statsmodelsと係数も標準誤差も対数尤度も一致する(
-    link: str, model: type
-) -&gt; None:
-    s = sample(link)
-    x = s[["x1", "x2"]]
-    fit = fit_binary(s["y"], x, link)
-    reference = model(s["y"], sm.add_constant(x)).fit(disp=0)
-    assert fit.coefficients.to_numpy() == pytest.approx(reference.params.to_numpy())
-    assert fit.standard_errors.to_numpy() == pytest.approx(reference.bse.to_numpy())
-    assert fit.log_likelihood == pytest.approx(reference.llf)
-    assert fit.n_obs == 500</p>
-<p>@pytest.mark.parametrize(
-    ("link", "model"), [("logit", sm.Logit), ("probit", sm.Probit)]
-)
-def test_平均限界効果はstatsmodelsと一致する(link: str, model: type) -&gt; None:
-    s = sample(link)
-    x = s[["x1", "x2"]]
-    fit = fit_binary(s["y"], x, link)
-    reference = model(s["y"], sm.add_constant(x)).fit(disp=0).get_margeff().margeff
-    assert average_marginal_effects(fit, x).to_numpy() == pytest.approx(reference)
-    assert list(average_marginal_effects(fit, x).index) == ["x1", "x2"]</p>
-<p>def test_対数尤度は最大値でスコアが0() -&gt; None:
-    s = sample()
-    x = s[["x1", "x2"]]
-    fit = fit_binary(s["y"], x, "logit")
-    design = np.column_stack([np.ones(500), x.to_numpy()])
-    beta = fit.coefficients.to_numpy()
-    best = log_likelihood("logit", s["y"], design, beta)
-    for direction in np.eye(3):
-        for delta in (0.05, -0.05):
-            assert (
-                log_likelihood("logit", s["y"], design, beta + delta * direction) &lt; best
-            )
-    residual = s["y"].to_numpy() - predicted_probabilities(fit, x)
-    assert design.T @ residual == pytest.approx(0, abs=1e-7)</p>
-<p>def test_標本の形と割合() -&gt; None:
-    s = draw_binary_sample(50000, "probit", np.random.default_rng(0))
-    assert list(s.columns) == ["y", "x1", "x2"]
-    assert set(s["y"]) == {0.0, 1.0}
-    expected = stats.norm.cdf(0.5 / (1 + 1 + 0.64) ** 0.5)
-    assert s["y"].mean() == pytest.approx(expected, abs=0.01)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="n">link</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"logit"</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">500</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">draw_binary_sample</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">link</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="p">(</span><span class="s2">"link"</span><span class="p">,</span> <span class="s2">"model"</span><span class="p">),</span> <span class="p">[(</span><span class="s2">"logit"</span><span class="p">,</span> <span class="n">sm</span><span class="o">.</span><span class="n">Logit</span><span class="p">),</span> <span class="p">(</span><span class="s2">"probit"</span><span class="p">,</span> <span class="n">sm</span><span class="o">.</span><span class="n">Probit</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_statsmodelsと係数も標準誤差も対数尤度も一致する</span><span class="p">(</span>
+    <span class="n">link</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">type</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]]</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">x</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">disp</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">standard_errors</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">bse</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">log_likelihood</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">llf</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">n_obs</span> <span class="o">==</span> <span class="mi">500</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+    <span class="p">(</span><span class="s2">"link"</span><span class="p">,</span> <span class="s2">"model"</span><span class="p">),</span> <span class="p">[(</span><span class="s2">"logit"</span><span class="p">,</span> <span class="n">sm</span><span class="o">.</span><span class="n">Logit</span><span class="p">),</span> <span class="p">(</span><span class="s2">"probit"</span><span class="p">,</span> <span class="n">sm</span><span class="o">.</span><span class="n">Probit</span><span class="p">)]</span>
+<span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_平均限界効果はstatsmodelsと一致する</span><span class="p">(</span><span class="n">link</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">model</span><span class="p">:</span> <span class="nb">type</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]]</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">x</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">disp</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">get_margeff</span><span class="p">()</span><span class="o">.</span><span class="n">margeff</span>
+    <span class="k">assert</span> <span class="n">average_marginal_effects</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">average_marginal_effects</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_対数尤度は最大値でスコアが0</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">sample</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]]</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">x</span><span class="p">,</span> <span class="s2">"logit"</span><span class="p">)</span>
+    <span class="n">design</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">500</span><span class="p">),</span> <span class="n">x</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()])</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">best</span> <span class="o">=</span> <span class="n">log_likelihood</span><span class="p">(</span><span class="s2">"logit"</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">design</span><span class="p">,</span> <span class="n">beta</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">direction</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="mi">3</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">delta</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.05</span><span class="p">):</span>
+            <span class="k">assert</span> <span class="p">(</span>
+                <span class="n">log_likelihood</span><span class="p">(</span><span class="s2">"logit"</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">design</span><span class="p">,</span> <span class="n">beta</span> <span class="o">+</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">direction</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">best</span>
+            <span class="p">)</span>
+    <span class="n">residual</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">-</span> <span class="n">predicted_probabilities</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">design</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">residual</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-7</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_標本の形と割合</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_binary_sample</span><span class="p">(</span><span class="mi">50000</span><span class="p">,</span> <span class="s2">"probit"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"y"</span><span class="p">,</span> <span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">])</span> <span class="o">==</span> <span class="p">{</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">}</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">0.64</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">expected</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter03.multiple</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_ols</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter14.discrete</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">average_marginal_effects</span><span class="p">,</span>
@@ -6726,28 +6759,37 @@ LPM {'const': 0.5841, 'x1': 0.1824, 'x2': -0.0977}
 </code></pre></div>
 <p>母集団の真の値は、ロジットの式で、定数項 0.5、x1 の係数 1、x2 の係数 −0.8 です。ロジットの推定値（0.4161、0.9386、−0.502）は、定数項と x1 では、真の値から標準誤差（0.10〜0.12）の 1 つ分以内ですが、x2 は、真の値 −0.8 から、約 2.7 標準誤差ずれています。1 つの標本では、このようなずれも起こります（n = 100000 では、真の値に近づきます）。<strong>係数の大きさは、ロジットとプロビットで違いますが</strong>（0.9386 と 0.5543）、<strong>平均限界効果は、ほぼ同じ</strong>です（0.1868 と 0.1839、−0.0999 と −0.0983）。線形確率モデルの係数（0.1824、−0.0977）も、平均限界効果に近い値です（予想 3）。<code>statsmodels</code> との一致は、テストで確認しています。</p>
 <h3 id="_9">反復と収束<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
-<p>def test_完全に分離できるデータは収束しない() -&gt; None:
-    with pytest.raises(ValueError, match="完全分離"):
-        fit_binary([0, 0, 0, 1, 1, 1], [1, 2, 3, 4, 5, 6])</p>
-<p>def test_ニュートン法は2_x_2の表で5回で収束する() -&gt; None:
-    assert fit_binary(Y, X, "logit").iterations == 5
-    assert fit_binary(Y, X, "probit").iterations == 5</p>
-<p>def test_知らないリンク関数は受け付けない() -&gt; None:
-    with pytest.raises(ValueError, match="リンク"):
-        fit_binary(Y, X, "cauchy")</p>
-<p>def test_反復の回数が少ないと収束しない() -&gt; None:
-    s = sample()
-    with pytest.raises(ValueError, match="収束"):
-        fit_binary(s["y"], s[["x1", "x2"]], "logit", max_iterations=2)</p>
-<p>def test_配列と列の名前() -&gt; None:
-    s = sample()
-    named = fit_binary(s["y"], s[["x1", "x2"]])
-    plain = fit_binary(s["y"], s[["x1", "x2"]].to_numpy())
-    single = fit_binary(s["y"], s["x1"])
-    assert list(named.coefficients.index) == ["const", "x1", "x2"]
-    assert list(plain.coefficients.index) == ["const", "x1", "x2"]
-    assert list(single.coefficients.index) == ["const", "x1"]
-    assert named.coefficients.to_numpy() == pytest.approx(plain.coefficients.to_numpy())</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_完全に分離できるデータは収束しない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"完全分離"</span><span class="p">):</span>
+        <span class="n">fit_binary</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ニュートン法は2_x_2の表で5回で収束する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="s2">"logit"</span><span class="p">)</span><span class="o">.</span><span class="n">iterations</span> <span class="o">==</span> <span class="mi">5</span>
+    <span class="k">assert</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="s2">"probit"</span><span class="p">)</span><span class="o">.</span><span class="n">iterations</span> <span class="o">==</span> <span class="mi">5</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_知らないリンク関数は受け付けない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"リンク"</span><span class="p">):</span>
+        <span class="n">fit_binary</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="s2">"cauchy"</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_反復の回数が少ないと収束しない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">sample</span><span class="p">()</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"収束"</span><span class="p">):</span>
+        <span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]],</span> <span class="s2">"logit"</span><span class="p">,</span> <span class="n">max_iterations</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_配列と列の名前</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">sample</span><span class="p">()</span>
+    <span class="n">named</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]])</span>
+    <span class="n">plain</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+    <span class="n">single</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">named</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"const"</span><span class="p">,</span> <span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">plain</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"const"</span><span class="p">,</span> <span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">single</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"const"</span><span class="p">,</span> <span class="s2">"x1"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">named</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">plain</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">try</span><span class="p">:</span>
     <span class="n">fit_binary</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span>
 <span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
@@ -6757,38 +6799,48 @@ LPM {'const': 0.5841, 'x1': 0.1824, 'x2': -0.0977}
 </code></pre></div>
 <p>x = 1、2、3 で y = 0、x = 4、5、6 で y = 1 は、完全に分離できます。尤度は、係数を大きくするほど増え続けるので、収束せず、エラーにします（情報行列が、特異になる）。</p>
 <h3 id="_10">尤度比検定<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
-<p>def likelihood_ratio_test(
-    log_likelihood_full: float, log_likelihood_restricted: float, restrictions: int
-) -&gt; TestResult:
-    """尤度比検定: LR = 2 · (ln L_制約なし − ln L_制約あり) ~ χ²(制約の数)。"""
-    statistic = 2 * (log_likelihood_full - log_likelihood_restricted)
-    return TestResult(float(statistic), float(stats.chi2.sf(statistic, restrictions)))</p>
-<p>def linear_probability(y: ArrayLike, x: ArrayLike) -&gt; pd.Series:
-    """線形確率モデル: y（0 か 1）を、OLS で x に回帰した係数。"""
-    return fit_ols(y, x).coefficients</p>
-<p>def test_尤度比検定の手計算() -&gt; None:
-    test = likelihood_ratio_test(-40.0, -45.0, 2)
-    assert test.statistic == pytest.approx(10)
-    assert test.p_value == pytest.approx(stats.chi2.sf(10, 2))</p>
-<p>def test_関係のある変数を除くと尤度比検定は棄却する() -&gt; None:
-    s = sample(n=1000)
-    full = fit_binary(s["y"], s[["x1", "x2"]])
-    restricted = fit_binary(s["y"], np.empty((1000, 0)))
-    test = likelihood_ratio_test(full.log_likelihood, restricted.log_likelihood, 2)
-    assert test.p_value &lt; 1e-10</p>
-<p>def test_関係のない変数を足しても尤度比検定は棄却しない() -&gt; None:
-    s = sample(n=1000)
-    noise = np.random.default_rng(9).standard_normal(1000)
-    full = fit_binary(s["y"], np.column_stack([s["x1"], s["x2"], noise]))
-    restricted = fit_binary(s["y"], s[["x1", "x2"]])
-    test = likelihood_ratio_test(full.log_likelihood, restricted.log_likelihood, 1)
-    assert test.p_value &gt; 0.05</p>
-<p>def test_線形確率モデルはOLSの係数() -&gt; None:
-    s = sample()
-    x = s[["x1", "x2"]]
-    assert linear_probability(s["y"], x).to_numpy() == pytest.approx(
-        fit_ols(s["y"], x).coefficients.to_numpy()
-    )</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">likelihood_ratio_test</span><span class="p">(</span>
+    <span class="n">log_likelihood_full</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">log_likelihood_restricted</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">restrictions</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TestResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""尤度比検定: LR = 2 · (ln L_制約なし − ln L_制約あり) ~ χ²(制約の数)。"""</span>
+    <span class="n">statistic</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">log_likelihood_full</span> <span class="o">-</span> <span class="n">log_likelihood_restricted</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">TestResult</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">statistic</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">chi2</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">statistic</span><span class="p">,</span> <span class="n">restrictions</span><span class="p">)))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">linear_probability</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""線形確率モデル: y（0 か 1）を、OLS で x に回帰した係数。"""</span>
+    <span class="k">return</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_尤度比検定の手計算</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">likelihood_ratio_test</span><span class="p">(</span><span class="o">-</span><span class="mf">40.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">45.0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">statistic</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">p_value</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">chi2</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_関係のある変数を除くと尤度比検定は棄却する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">full</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]])</span>
+    <span class="n">restricted</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">likelihood_ratio_test</span><span class="p">(</span><span class="n">full</span><span class="o">.</span><span class="n">log_likelihood</span><span class="p">,</span> <span class="n">restricted</span><span class="o">.</span><span class="n">log_likelihood</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&lt;</span> <span class="mf">1e-10</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_関係のない変数を足しても尤度比検定は棄却しない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">9</span><span class="p">)</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">1000</span><span class="p">)</span>
+    <span class="n">full</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">s</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="s2">"x2"</span><span class="p">],</span> <span class="n">noise</span><span class="p">]))</span>
+    <span class="n">restricted</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]])</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">likelihood_ratio_test</span><span class="p">(</span><span class="n">full</span><span class="o">.</span><span class="n">log_likelihood</span><span class="p">,</span> <span class="n">restricted</span><span class="o">.</span><span class="n">log_likelihood</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&gt;</span> <span class="mf">0.05</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_線形確率モデルはOLSの係数</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">sample</span><span class="p">()</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]]</span>
+    <span class="k">assert</span> <span class="n">linear_probability</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">fit_ols</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="n">full</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">cols</span><span class="p">)</span>
 <span class="n">null</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="mi">500</span><span class="p">,</span> <span class="mi">0</span><span class="p">)))</span>
 <span class="n">lr</span> <span class="o">=</span> <span class="n">likelihood_ratio_test</span><span class="p">(</span><span class="n">full</span><span class="o">.</span><span class="n">log_likelihood</span><span class="p">,</span> <span class="n">null</span><span class="o">.</span><span class="n">log_likelihood</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -6799,25 +6851,30 @@ LPM {'const': 0.5841, 'x1': 0.1824, 'x2': -0.0977}
 <p>定数項だけのモデルの対数尤度は −339.14、説明変数 2 つを入れたモデルは −290.5 です。LR 統計量は 97.27、p 値は 10⁻²¹ で、「2 つの係数が両方 0」を、強く棄却します。</p>
 <h3 id="_11">標本が大きいと: ロジットとプロビットの違い<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>n = 100000 の標本を、ロジットの母集団と、プロビットの母集団の、両方から作って、ロジットとプロビットで、推定します。</p>
-<p>def test_ロジットの標本は標準ロジスティック分布の誤差() -&gt; None:
-    s = draw_binary_sample(100000, "logit", np.random.default_rng(1))
-    fit = fit_binary(s["y"], s[["x1", "x2"]], "logit")
-    assert fit.coefficients.to_numpy() == pytest.approx([0.5, 1.0, -0.8], abs=0.04)</p>
-<p>def test_プロビットの標本ではプロビットの係数が真の値でロジットは約1点7倍() -&gt; None:
-    s = draw_binary_sample(100000, "probit", np.random.default_rng(1))
-    probit = fit_binary(s["y"], s[["x1", "x2"]], "probit")
-    logit = fit_binary(s["y"], s[["x1", "x2"]], "logit")
-    assert probit.coefficients.to_numpy() == pytest.approx([0.5, 1.0, -0.8], abs=0.04)
-    ratio = logit.coefficients["x1"] / probit.coefficients["x1"]
-    assert ratio == pytest.approx(1.7, abs=0.1)</p>
-<p>def test_平均限界効果はロジット_プロビット_線形確率モデルでほぼ同じ() -&gt; None:
-    s = draw_binary_sample(100000, "probit", np.random.default_rng(1))
-    x = s[["x1", "x2"]]
-    logit = average_marginal_effects(fit_binary(s["y"], x, "logit"), x)
-    probit = average_marginal_effects(fit_binary(s["y"], x, "probit"), x)
-    lpm = linear_probability(s["y"], x).drop("const")
-    assert logit.to_numpy() == pytest.approx(probit.to_numpy(), abs=0.005)
-    assert lpm.to_numpy() == pytest.approx(probit.to_numpy(), abs=0.01)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_ロジットの標本は標準ロジスティック分布の誤差</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_binary_sample</span><span class="p">(</span><span class="mi">100000</span><span class="p">,</span> <span class="s2">"logit"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]],</span> <span class="s2">"logit"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.8</span><span class="p">],</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_プロビットの標本ではプロビットの係数が真の値でロジットは約1点7倍</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_binary_sample</span><span class="p">(</span><span class="mi">100000</span><span class="p">,</span> <span class="s2">"probit"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">probit</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]],</span> <span class="s2">"probit"</span><span class="p">)</span>
+    <span class="n">logit</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]],</span> <span class="s2">"logit"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">probit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.8</span><span class="p">],</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.04</span><span class="p">)</span>
+    <span class="n">ratio</span> <span class="o">=</span> <span class="n">logit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">/</span> <span class="n">probit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">ratio</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">1.7</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_平均限界効果はロジット_プロビット_線形確率モデルでほぼ同じ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_binary_sample</span><span class="p">(</span><span class="mi">100000</span><span class="p">,</span> <span class="s2">"probit"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]]</span>
+    <span class="n">logit</span> <span class="o">=</span> <span class="n">average_marginal_effects</span><span class="p">(</span><span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">x</span><span class="p">,</span> <span class="s2">"logit"</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">probit</span> <span class="o">=</span> <span class="n">average_marginal_effects</span><span class="p">(</span><span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">x</span><span class="p">,</span> <span class="s2">"probit"</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">lpm</span> <span class="o">=</span> <span class="n">linear_probability</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">"const"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">logit</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">probit</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.005</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">lpm</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">probit</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">for</span> <span class="n">generator</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"logit"</span><span class="p">,</span> <span class="s2">"probit"</span><span class="p">):</span>
     <span class="n">big</span> <span class="o">=</span> <span class="n">draw_binary_sample</span><span class="p">(</span><span class="mi">100000</span><span class="p">,</span> <span class="n">generator</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
     <span class="n">cols</span> <span class="o">=</span> <span class="n">big</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]]</span>
@@ -6837,14 +6894,15 @@ probit {'const': 0.846, 'x1': 1.717, 'x2': -1.372} {'const': 0.49, 'x1': 0.993, 
 <li><strong>どちらの母集団でも、平均限界効果は、ロジット・プロビット・線形確率モデルで、ほぼ同じ</strong>（x1 で 0.1834〜0.1839、および 0.2339〜0.2351）。<strong>モデルの選択は、係数の大きさを変えますが、確率への効果は、ほとんど変えません。</strong></li>
 </ul>
 <h3 id="_12">線形確率モデルは、範囲の外に出る<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
-<p>def test_線形確率モデルは確率の範囲の外に出ることがある() -&gt; None:
-    s = sample(n=2000)
-    x = s[["x1", "x2"]]
-    fitted = fit_ols(s["y"], x).coefficients
-    values = fitted["const"] + x @ fitted[["x1", "x2"]]
-    assert (values &gt; 1).any() or (values &lt; 0).any()
-    probabilities = predicted_probabilities(fit_binary(s["y"], x), x)
-    assert ((probabilities &gt; 0) &amp; (probabilities &lt; 1)).all()</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_線形確率モデルは確率の範囲の外に出ることがある</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]]</span>
+    <span class="n">fitted</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">fitted</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">+</span> <span class="n">x</span> <span class="o">@</span> <span class="n">fitted</span><span class="p">[[</span><span class="s2">"x1"</span><span class="p">,</span> <span class="s2">"x2"</span><span class="p">]]</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">values</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">()</span> <span class="ow">or</span> <span class="p">(</span><span class="n">values</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">()</span>
+    <span class="n">probabilities</span> <span class="o">=</span> <span class="n">predicted_probabilities</span><span class="p">(</span><span class="n">fit_binary</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">x</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">((</span><span class="n">probabilities</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">probabilities</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter03.multiple</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_ols</span>
 
 <span class="n">s2</span> <span class="o">=</span> <span class="n">draw_binary_sample</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="s2">"logit"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
@@ -6858,69 +6916,83 @@ probit {'const': 0.846, 'x1': 1.717, 'x2': -1.372} {'const': 0.49, 'x1': 0.993, 
 <p>線形確率モデルの予測値は、3.4% の観測値で 1 を超え、0.65% で 0 を下回りました。最小は −0.194、最大は 1.444 で、確率として意味を持ちません（予想 4）。ロジット・プロビットの予測確率は、必ず 0 と 1 の間にあります（テストで確認）。</p>
 <h3 id="_13">図<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <p><code>plot_probability_curves</code> は、データ・線形確率モデルの直線・ロジット・プロビットの曲線を描きます。</p>
-<p>def xs(line: Any) -&gt; list[float]:
-    values: Any = line.get_xdata()
-    return [float(v) for v in values]</p>
-<p>def ys(line: Any) -&gt; list[float]:
-    values: Any = line.get_ydata()
-    return [float(v) for v in values]</p>
-<p>def test_データと3つの曲線() -&gt; None:
-    s = draw_binary_sample(300, "logit", np.random.default_rng(0))
-    ax = plot_probability_curves(s["x1"].to_numpy(), s["y"].to_numpy()).axes[0]
-    assert [line.get_label() for line in ax.lines] == [
-        "Data",
-        "Linear probability",
-        "Logit",
-        "Probit",
-    ]
-    assert ys(ax.lines[0]) == s["y"].tolist()</p>
-<p>def test_ロジットとプロビットの曲線は0と1の間で単調に増える() -&gt; None:
-    s = draw_binary_sample(300, "logit", np.random.default_rng(0))
-    ax = plot_probability_curves(s["x1"].to_numpy(), s["y"].to_numpy()).axes[0]
-    for line in (ax.lines[2], ax.lines[3]):
-        values = ys(line)
-        assert min(values) &gt; 0
-        assert max(values) &lt; 1
-        assert values == sorted(values)</p>
-<p>def test_ロジットの曲線は最尤推定の確率() -&gt; None:
-    s = draw_binary_sample(300, "logit", np.random.default_rng(0))
-    x, y = s["x1"].to_numpy(), s["y"].to_numpy()
-    ax = plot_probability_curves(x, y).axes[0]
-    fit = fit_binary(y, x, "logit")
-    grid = xs(ax.lines[2])
-    expected = 1 / (
-        1
-        + np.exp(-(fit.coefficients["const"] + fit.coefficients["x1"] * np.array(grid)))
-    )
-    assert ys(ax.lines[2]) == pytest.approx(expected)</p>
-<p>def test_線形確率モデルの直線は範囲の外に出る() -&gt; None:
-    s = draw_binary_sample(300, "logit", np.random.default_rng(0))
-    ax = plot_probability_curves(s["x1"].to_numpy(), s["y"].to_numpy()).axes[0]
-    values = ys(ax.lines[1])
-    assert max(values) &gt; 1 or min(values) &lt; 0</p>
-<p>def test_曲線の範囲はデータの範囲の両側に1ずつ広げる() -&gt; None:
-    s = draw_binary_sample(300, "logit", np.random.default_rng(0))
-    x = s["x1"].to_numpy()
-    ax = plot_probability_curves(x, s["y"].to_numpy()).axes[0]
-    grid = xs(ax.lines[2])
-    assert grid[0] == pytest.approx(x.min() - 1)
-    assert grid[-1] == pytest.approx(x.max() + 1)
-    assert len(grid) == 100</p>
-<p>def plot_probability_curves(x: NDArray[np.float64], y: NDArray[np.float64]) -&gt; Figure:
-    """0 か 1 のデータと、線形確率モデルの直線、ロジット・プロビットの曲線を描く。"""
-    grid = np.linspace(float(x.min()) - 1, float(x.max()) + 1, 100)
-    ols = fit_ols(y, x).coefficients
-    fig, ax = plt.subplots()
-    ax.plot(x, y, "o", alpha=0.3, label="Data")
-    ax.plot(grid, ols["const"] + ols["x1"] * grid, label="Linear probability")
-    for link, name in (("logit", "Logit"), ("probit", "Probit")):
-        fit = fit_binary(y, x, link)
-        ax.plot(grid, predicted_probabilities(fit, grid), label=name)
-    ax.set_xlabel("x")
-    ax.set_ylabel("P(y = 1)")
-    ax.legend()
-    plt.close(fig)
-    return fig</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">xs</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="n">values</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">get_xdata</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ys</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="n">values</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">get_ydata</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_データと3つの曲線</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_binary_sample</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="s2">"logit"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_probability_curves</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span>
+        <span class="s2">"Data"</span><span class="p">,</span>
+        <span class="s2">"Linear probability"</span><span class="p">,</span>
+        <span class="s2">"Logit"</span><span class="p">,</span>
+        <span class="s2">"Probit"</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ロジットとプロビットの曲線は0と1の間で単調に増える</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_binary_sample</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="s2">"logit"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_probability_curves</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">ys</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="nb">min</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
+        <span class="k">assert</span> <span class="nb">max</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span>
+        <span class="k">assert</span> <span class="n">values</span> <span class="o">==</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ロジットの曲線は最尤推定の確率</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_binary_sample</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="s2">"logit"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_probability_curves</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s2">"logit"</span><span class="p">)</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">xs</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span>
+        <span class="mi">1</span>
+        <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">+</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">grid</span><span class="p">)))</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_線形確率モデルの直線は範囲の外に出る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_binary_sample</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="s2">"logit"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_probability_curves</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(),</span> <span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="nb">max</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="nb">min</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_曲線の範囲はデータの範囲の両側に1ずつ広げる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_binary_sample</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="s2">"logit"</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_probability_curves</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">xs</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">grid</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">grid</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span> <span class="o">==</span> <span class="mi">100</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_probability_curves</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">y</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""0 か 1 のデータと、線形確率モデルの直線、ロジット・プロビットの曲線を描く。"""</span>
+    <span class="n">grid</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">())</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">())</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+    <span class="n">ols</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">"o"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Data"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">ols</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">+</span> <span class="n">ols</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">*</span> <span class="n">grid</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Linear probability"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">link</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">"logit"</span><span class="p">,</span> <span class="s2">"Logit"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"probit"</span><span class="p">,</span> <span class="s2">"Probit"</span><span class="p">)):</span>
+        <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">link</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">predicted_probabilities</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">grid</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"P(y = 1)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+</code></pre></div>
 <h3 id="_14">実行結果<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter14
 </code></pre></div>

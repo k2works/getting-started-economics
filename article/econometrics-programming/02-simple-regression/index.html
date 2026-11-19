@@ -6458,90 +6458,115 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="n">Y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
 </code></pre></div>
 <p>予想した、手計算の値を、テストにします。x̄ = 2.5、ȳ = 5、Σ(x − x̄)(y − ȳ) = 11、Σ(x − x̄)² = 5 なので、傾きは 11 ÷ 5 = 2.2、切片は 5 − 2.2 × 2.5 = −0.5 です。</p>
-<p>def test_手計算の例の傾きと切片() -&gt; None:
-    fit = fit_simple(X, Y)
-    assert fit.slope == pytest.approx(2.2)
-    assert fit.intercept == pytest.approx(-0.5)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_手計算の例の傾きと切片</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_simple</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">slope</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">2.2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">intercept</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="green-fit_simple">Green: fit_simple を実装する<a class="headerlink" href="#green-fit_simple" title="Permanent link">&para;</a></h3>
 <p>第 1 章の <code>sample_covariance</code> と <code>sample_variance</code> を使います。</p>
-<p>@dataclass(frozen=True)
-class SimpleFit:
-    """単回帰 y = intercept + slope · x の推定結果。"""</p>
-<div class="highlight"><pre><span></span><code>intercept: float
-slope: float
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SimpleFit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""単回帰 y = intercept + slope · x の推定結果。"""</span>
+
+    <span class="n">intercept</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">slope</span><span class="p">:</span> <span class="nb">float</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fit_simple</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SimpleFit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""最小二乗法。傾き = Cov(x, y) ÷ Var(x)、切片 = ȳ − 傾き · x̄。"""</span>
+    <span class="n">var_x</span> <span class="o">=</span> <span class="n">sample_variance</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">var_x</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"説明変数の分散が 0 なので、傾きを推定できない"</span><span class="p">)</span>
+    <span class="n">slope</span> <span class="o">=</span> <span class="n">sample_covariance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">var_x</span>
+    <span class="n">intercept</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="o">-</span> <span class="n">slope</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">SimpleFit</span><span class="p">(</span><span class="n">intercept</span><span class="o">=</span><span class="n">intercept</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="n">slope</span><span class="p">)</span>
 </code></pre></div>
-<p>def fit_simple(x: Array, y: Array) -&gt; SimpleFit:
-    """最小二乗法。傾き = Cov(x, y) ÷ Var(x)、切片 = ȳ − 傾き · x̄。"""
-    var_x = sample_variance(x)
-    if var_x == 0:
-        raise ValueError("説明変数の分散が 0 なので、傾きを推定できない")
-    slope = sample_covariance(x, y) / var_x
-    intercept = float(np.mean(y)) - slope * float(np.mean(x))
-    return SimpleFit(intercept=intercept, slope=slope)</p>
 <p>説明変数にばらつきがない（すべて同じ値）と、傾きは決まらないので、エラーにします。</p>
-<p>def test_説明変数にばらつきがないと推定できない() -&gt; None:
-    with pytest.raises(ValueError, match="分散が 0"):
-        fit_simple([2, 2, 2], [1, 2, 3])</p>
-<p>def test_直線上のデータは傾きと切片を復元する() -&gt; None:
-    x = [0, 1, 2, 5]
-    fit = fit_simple(x, [3 + 2 * v for v in x])
-    assert isinstance(fit, SimpleFit)
-    assert fit.intercept == pytest.approx(3)
-    assert fit.slope == pytest.approx(2)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_説明変数にばらつきがないと推定できない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"分散が 0"</span><span class="p">):</span>
+        <span class="n">fit_simple</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_直線上のデータは傾きと切片を復元する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_simple</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">[</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">x</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">SimpleFit</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">intercept</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">slope</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="_7">当てはめ値・残差・決定係数<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>残差は、手計算で 0.3、0.1、−1.1、0.7 です。残差平方和は 1.8、全平方和は 26 なので、決定係数は 1 − 1.8 ÷ 26 ≈ 0.9308 です。テストでは、手計算の値に加えて、<strong>ちょうど成り立つ関係</strong>（恒等式）も確かめます。残差の和が 0、残差と x が直交、全平方和 = 説明される平方和 + 残差平方和、です。</p>
-<p>def test_当てはめ値と残差() -&gt; None:
-    fit = fit_simple(X, Y)
-    assert fitted_values(fit, X) == pytest.approx([1.7, 3.9, 6.1, 8.3])
-    assert residuals(fit, X, Y) == pytest.approx([0.3, 0.1, -1.1, 0.7])</p>
-<p>def test_残差の和は0で説明変数と直交する() -&gt; None:
-    fit = fit_simple(X, Y)
-    e = residuals(fit, X, Y)
-    assert np.sum(e) == pytest.approx(0, abs=1e-12)
-    assert np.sum(np.asarray(X) * e) == pytest.approx(0, abs=1e-12)</p>
-<p>def test_残差平方和と決定係数() -&gt; None:
-    fit = fit_simple(X, Y)
-    e = residuals(fit, X, Y)
-    assert np.sum(e**2) == pytest.approx(1.8)
-    assert r_squared(fit, X, Y) == pytest.approx(1 - 1.8 / 26)</p>
-<p>def test_全平方和は説明される部分と残差平方和の和() -&gt; None:
-    fit = fit_simple(X, Y)
-    y = np.asarray(Y, dtype=float)
-    total = np.sum((y - y.mean()) ** 2)
-    explained = np.sum((fitted_values(fit, X) - y.mean()) ** 2)
-    unexplained = np.sum(residuals(fit, X, Y) ** 2)
-    assert total == pytest.approx(explained + unexplained)</p>
-<p>def test_直線上のデータの決定係数は1() -&gt; None:
-    fit = fit_simple(X, [1 + 3 * v for v in X])
-    assert r_squared(fit, X, [1 + 3 * v for v in X]) == pytest.approx(1)</p>
-<p>def fitted_values(fit: SimpleFit, x: Array) -&gt; NDArray[np.float64]:
-    """当てはめ値 ŷ = 切片 + 傾き · x。"""
-    return fit.intercept + fit.slope * np.asarray(x, dtype=float)</p>
-<p>def residuals(fit: SimpleFit, x: Array, y: Array) -&gt; NDArray[np.float64]:
-    """残差 e = y − ŷ。"""
-    return np.asarray(y, dtype=float) - fitted_values(fit, x)</p>
-<p>def r_squared(fit: SimpleFit, x: Array, y: Array) -&gt; float:
-    """決定係数 R² = 1 − 残差平方和 ÷ 全平方和。"""
-    rss = float(np.sum(residuals(fit, x, y) ** 2))
-    tss = float(np.sum((np.asarray(y, dtype=float) - np.mean(y)) ** 2))
-    return 1 - rss / tss</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_当てはめ値と残差</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_simple</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fitted_values</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mf">1.7</span><span class="p">,</span> <span class="mf">3.9</span><span class="p">,</span> <span class="mf">6.1</span><span class="p">,</span> <span class="mf">8.3</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">residuals</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.1</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_残差の和は0で説明変数と直交する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_simple</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">residuals</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">e</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">X</span><span class="p">)</span> <span class="o">*</span> <span class="n">e</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_残差平方和と決定係数</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_simple</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">residuals</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">e</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">1.8</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r_squared</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">1.8</span> <span class="o">/</span> <span class="mi">26</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_全平方和は説明される部分と残差平方和の和</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_simple</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">y</span> <span class="o">-</span> <span class="n">y</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">explained</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">fitted_values</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span> <span class="o">-</span> <span class="n">y</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">unexplained</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">residuals</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">total</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">explained</span> <span class="o">+</span> <span class="n">unexplained</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_直線上のデータの決定係数は1</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_simple</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">X</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">r_squared</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">v</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">X</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">fitted_values</span><span class="p">(</span><span class="n">fit</span><span class="p">:</span> <span class="n">SimpleFit</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""当てはめ値 ŷ = 切片 + 傾き · x。"""</span>
+    <span class="k">return</span> <span class="n">fit</span><span class="o">.</span><span class="n">intercept</span> <span class="o">+</span> <span class="n">fit</span><span class="o">.</span><span class="n">slope</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">residuals</span><span class="p">(</span><span class="n">fit</span><span class="p">:</span> <span class="n">SimpleFit</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""残差 e = y − ŷ。"""</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="o">-</span> <span class="n">fitted_values</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">r_squared</span><span class="p">(</span><span class="n">fit</span><span class="p">:</span> <span class="n">SimpleFit</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""決定係数 R² = 1 − 残差平方和 ÷ 全平方和。"""</span>
+    <span class="n">rss</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">residuals</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="n">tss</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">y</span><span class="p">))</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">rss</span> <span class="o">/</span> <span class="n">tss</span>
+</code></pre></div>
 <h3 id="_8">標準誤差<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>σ̂² = 1.8 ÷ 2 = 0.9、Σ(x − x̄)² = 5 なので、傾きの標準誤差は √(0.9 ÷ 5) = √0.18 ≈ 0.4243 です。観測値が 2 個だと、自由度が 0 になり、標準誤差は計算できません。</p>
-<p>def test_傾きの標準誤差() -&gt; None:
-    fit = fit_simple(X, Y)
-    assert slope_standard_error(fit, X, Y) == pytest.approx((0.9 / 5) ** 0.5)</p>
-<p>def test_観測値が2個では標準誤差は計算できない() -&gt; None:
-    fit = fit_simple([1, 2], [1, 3])
-    with pytest.raises(ValueError, match="自由度"):
-        slope_standard_error(fit, [1, 2], [1, 3])</p>
-<p>def slope_standard_error(fit: SimpleFit, x: Array, y: Array) -&gt; float:
-    """傾きの標準誤差 = √(σ̂² ÷ Σ(x − x̄)²)。σ̂² = 残差平方和 ÷ (n − 2)。"""
-    n = len(x)
-    if n &lt;= 2:
-        raise ValueError("自由度（n − 2）が 0 以下なので、標準誤差を計算できない")
-    sigma2 = float(np.sum(residuals(fit, x, y) ** 2)) / (n - 2)
-    sxx = sample_variance(x) * (n - 1)
-    return math.sqrt(sigma2 / sxx)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_傾きの標準誤差</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_simple</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">slope_standard_error</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">((</span><span class="mf">0.9</span> <span class="o">/</span> <span class="mi">5</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_観測値が2個では標準誤差は計算できない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_simple</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"自由度"</span><span class="p">):</span>
+        <span class="n">slope_standard_error</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">slope_standard_error</span><span class="p">(</span><span class="n">fit</span><span class="p">:</span> <span class="n">SimpleFit</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""傾きの標準誤差 = √(σ̂² ÷ Σ(x − x̄)²)。σ̂² = 残差平方和 ÷ (n − 2)。"""</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;=</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"自由度（n − 2）が 0 以下なので、標準誤差を計算できない"</span><span class="p">)</span>
+    <span class="n">sigma2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">residuals</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">sxx</span> <span class="o">=</span> <span class="n">sample_variance</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sigma2</span> <span class="o">/</span> <span class="n">sxx</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter02.simple</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">fit_simple</span><span class="p">,</span>
     <span class="n">fitted_values</span><span class="p">,</span>
@@ -6564,32 +6589,38 @@ slope: float
 <p>予想した 2.2、−0.5 に（浮動小数点の誤差を除いて）一致します。残差の和は 0 です（0.3 + 0.1 − 1.1 + 0.7）。</p>
 <h3 id="statsmodels">statsmodels と照合する<a class="headerlink" href="#statsmodels" title="Permanent link">&para;</a></h3>
 <p>自分で書いた関数が、定評のあるライブラリと同じ答えを返すかを確かめます。乱数で作った標本（真の切片 1、真の傾き 0.5、誤差の標準偏差 1、n = 30）で、<code>statsmodels</code> の <code>OLS</code> と比べます。</p>
-<p>def draw_sample(
-    n: int, intercept: float, slope: float, sigma: float, rng: np.random.Generator
-) -&gt; tuple[NDArray[np.float64], NDArray[np.float64]]:
-    """母集団の式 y = 切片 + 傾き · x + u から、n 個の標本を作る。</p>
-<div class="highlight"><pre><span></span><code>x は標準正規分布、誤差項 u は平均 0・標準偏差 sigma の正規分布。
-"""
-x = rng.standard_normal(n)
-u = sigma * rng.standard_normal(n)
-return x, intercept + slope * x + u
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">draw_sample</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">intercept</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">slope</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""母集団の式 y = 切片 + 傾き · x + u から、n 個の標本を作る。</span>
+
+<span class="sd">    x は標準正規分布、誤差項 u は平均 0・標準偏差 sigma の正規分布。</span>
+<span class="sd">    """</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">sigma</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">intercept</span> <span class="o">+</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">u</span>
 </code></pre></div>
-<p>def test_statsmodelsと一致する() -&gt; None:
-    x, y = draw_sample(30, 1.0, 0.5, 1.0, np.random.default_rng(0))
-    fit = fit_simple(x, y)
-    reference = sm.OLS(y, sm.add_constant(x)).fit()
-    assert [fit.intercept, fit.slope] == pytest.approx(reference.params)
-    assert slope_standard_error(fit, x, y) == pytest.approx(reference.bse[1])
-    assert r_squared(fit, x, y) == pytest.approx(reference.rsquared)</p>
-<p>def test_標本は長さnで同じ種なら同じ() -&gt; None:
-    x1, y1 = draw_sample(10, 1.0, 2.0, 1.0, np.random.default_rng(3))
-    x2, y2 = draw_sample(10, 1.0, 2.0, 1.0, np.random.default_rng(3))
-    assert x1.shape == y1.shape == (10,)
-    assert np.array_equal(x1, x2)
-    assert np.array_equal(y1, y2)</p>
-<p>def test_誤差が0なら母集団の式の上に乗る() -&gt; None:
-    x, y = draw_sample(10, 1.0, 2.0, 0.0, np.random.default_rng(0))
-    assert y == pytest.approx(1.0 + 2.0 * x)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_statsmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">draw_sample</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_simple</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">fit</span><span class="o">.</span><span class="n">intercept</span><span class="p">,</span> <span class="n">fit</span><span class="o">.</span><span class="n">slope</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">params</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">slope_standard_error</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">bse</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">r_squared</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">rsquared</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_標本は長さnで同じ種なら同じ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x1</span><span class="p">,</span> <span class="n">y1</span> <span class="o">=</span> <span class="n">draw_sample</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+    <span class="n">x2</span><span class="p">,</span> <span class="n">y2</span> <span class="o">=</span> <span class="n">draw_sample</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">3</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">x1</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">y1</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">10</span><span class="p">,)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">array_equal</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_誤差が0なら母集団の式の上に乗る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">draw_sample</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">y</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">statsmodels.api</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sm</span>
 
@@ -6606,60 +6637,68 @@ return x, intercept + slope * x + u
 <p>自分の関数と <code>statsmodels</code> が、一致しました。注目してほしいのは、<strong>真の傾きは 0.5 なのに、この標本の推定値は 0.116 だった</strong>ことです。標準誤差が 0.206 なので、真の値から、約 1.9 標準誤差ずれています。1 つの標本の推定値は、真の値からずれます。そのずれ方を調べるのが、次の節です。</p>
 <h3 id="_9">推定値の標本分布<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>標本を取り直して推定する作業を、2000 回繰り返します。真の値を知っているので、推定値の平均が、真の値に近いか（<strong>不偏性</strong>）、ばらつきが、標準誤差と合うか、を確かめられます。</p>
-<p>def sampling_distribution(
-    n: int,
-    repetitions: int,
-    intercept: float,
-    slope: float,
-    sigma: float,
-    rng: np.random.Generator,
-) -&gt; pd.DataFrame:
-    """標本を取り直して推定する作業を繰り返し、切片・傾き・標準誤差の表を返す。"""
-    rows = []
-    for _ in range(repetitions):
-        x, y = draw_sample(n, intercept, slope, sigma, rng)
-        fit = fit_simple(x, y)
-        rows.append((fit.intercept, fit.slope, slope_standard_error(fit, x, y)))
-    return pd.DataFrame(rows, columns=["intercept", "slope", "se"])</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sampling_distribution</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">intercept</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">slope</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">sigma</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""標本を取り直して推定する作業を繰り返し、切片・傾き・標準誤差の表を返す。"""</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">draw_sample</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">intercept</span><span class="p">,</span> <span class="n">slope</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+        <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_simple</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">fit</span><span class="o">.</span><span class="n">intercept</span><span class="p">,</span> <span class="n">fit</span><span class="o">.</span><span class="n">slope</span><span class="p">,</span> <span class="n">slope_standard_error</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"intercept"</span><span class="p">,</span> <span class="s2">"slope"</span><span class="p">,</span> <span class="s2">"se"</span><span class="p">])</span>
+</code></pre></div>
 <p>x を標準正規分布から取ると、傾きの標準偏差の理論値は、σ ÷ √(n − 3) になります（x のばらつきの逆数の期待値が、1 ÷ (n − 3) であることによります）。n = 50、σ = 1 なら、1 ÷ √47 ≈ 0.1459 です。</p>
-<p>def test_標本分布の表の形() -&gt; None:
-    table = sampling_distribution(
-        n=20,
-        repetitions=50,
-        intercept=1,
-        slope=0.5,
-        sigma=1,
-        rng=np.random.default_rng(0),
-    )
-    assert list(table.columns) == ["intercept", "slope", "se"]
-    assert len(table) == 50</p>
-<p>def test_傾きの推定値は不偏() -&gt; None:
-    table = sampling_distribution(
-        n=50,
-        repetitions=2000,
-        intercept=1,
-        slope=0.5,
-        sigma=1,
-        rng=np.random.default_rng(0),
-    )
-    spread = 1 / (50 - 3) ** 0.5
-    assert table["slope"].mean() == pytest.approx(0.5, abs=4 * spread / 2000**0.5)
-    assert table["intercept"].mean() == pytest.approx(1.0, abs=0.02)</p>
-<p>def test_傾きのばらつきは理論値に近く標準誤差の平均と一致する() -&gt; None:
-    table = sampling_distribution(
-        n=50,
-        repetitions=2000,
-        intercept=1,
-        slope=0.5,
-        sigma=1,
-        rng=np.random.default_rng(0),
-    )
-    assert table["slope"].std() == pytest.approx(1 / 47**0.5, rel=0.1)
-    assert table["se"].mean() == pytest.approx(table["slope"].std(), rel=0.1)</p>
-<p>def test_誤差が大きいほど傾きはばらつく() -&gt; None:
-    small = sampling_distribution(30, 500, 1, 0.5, 1, np.random.default_rng(1))
-    large = sampling_distribution(30, 500, 1, 0.5, 3, np.random.default_rng(1))
-    assert large["slope"].std() == pytest.approx(3 * small["slope"].std(), rel=1e-9)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_標本分布の表の形</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">sampling_distribution</span><span class="p">(</span>
+        <span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+        <span class="n">repetitions</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">intercept</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">slope</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"intercept"</span><span class="p">,</span> <span class="s2">"slope"</span><span class="p">,</span> <span class="s2">"se"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">table</span><span class="p">)</span> <span class="o">==</span> <span class="mi">50</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_傾きの推定値は不偏</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">sampling_distribution</span><span class="p">(</span>
+        <span class="n">n</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">repetitions</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+        <span class="n">intercept</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">slope</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="n">spread</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">50</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+    <span class="k">assert</span> <span class="n">table</span><span class="p">[</span><span class="s2">"slope"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="n">spread</span> <span class="o">/</span> <span class="mi">2000</span><span class="o">**</span><span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">table</span><span class="p">[</span><span class="s2">"intercept"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_傾きのばらつきは理論値に近く標準誤差の平均と一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">sampling_distribution</span><span class="p">(</span>
+        <span class="n">n</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span>
+        <span class="n">repetitions</span><span class="o">=</span><span class="mi">2000</span><span class="p">,</span>
+        <span class="n">intercept</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">slope</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">sigma</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+        <span class="n">rng</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">table</span><span class="p">[</span><span class="s2">"slope"</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">47</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">table</span><span class="p">[</span><span class="s2">"se"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">"slope"</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_誤差が大きいほど傾きはばらつく</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">small</span> <span class="o">=</span> <span class="n">sampling_distribution</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">large</span> <span class="o">=</span> <span class="n">sampling_distribution</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">large</span><span class="p">[</span><span class="s2">"slope"</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="n">small</span><span class="p">[</span><span class="s2">"slope"</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter02.simple</span><span class="w"> </span><span class="kn">import</span> <span class="n">sampling_distribution</span>
@@ -6675,46 +6714,52 @@ return x, intercept + slope * x + u
 <p><img alt="傾きの推定値 2000 個のヒストグラム。真の傾き 0.5 を中心に、左右対称に広がる" src="../images/ch02-slope-distribution.png" /></p>
 <h3 id="_10">図<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p>2 つの図は、<code>plot_regression_line</code>（データ・直線・残差）と、<code>plot_slope_distribution</code>（傾きのヒストグラムと真の値の線）で描きます。テストは、線と点の座標、残差の線が当てはめ値とデータを結ぶこと、棒の度数の合計が観測数に等しいこと、を確かめます。</p>
-<p>def test_回帰直線の図はデータと直線と残差を描く() -&gt; None:
-    ax = plot_regression_line(X, Y, fit_simple(X, Y)).axes[0]
-    labels = [line.get_label() for line in ax.lines]
-    assert labels[:2] == ["Data", "Fitted line"]
-    assert labels[2:] == ["_residual"] * 4
-    assert xs(ax.lines[0]) == X
-    assert ys(ax.lines[0]) == Y</p>
-<p>def test_傾きの分布の図は棒と真の値の線() -&gt; None:
-    slopes = [0.4, 0.5, 0.5, 0.6, 0.5, 0.45]
-    ax = plot_slope_distribution(slopes, 0.5).axes[0]
-    assert len(ax.patches) == 10
-    assert [line.get_label() for line in ax.lines] == ["True slope"]
-    assert xs(ax.lines[0]) == [0.5, 0.5]
-    assert ax.get_xlabel() == "Estimated slope"
-    assert ax.get_ylabel() == "Frequency"
-    bars: list[Any] = list(ax.patches)
-    assert sum(p.get_height() for p in bars) == len(slopes)</p>
-<p>def plot_regression_line(x: Array, y: Array, fit: SimpleFit) -&gt; Figure:
-    """データ・回帰直線・残差（データと直線を結ぶ縦線）を描く。"""
-    fig, ax = plt.subplots()
-    ax.plot(x, y, "o", label="Data")
-    ends = [float(np.min(x)), float(np.max(x))]
-    ax.plot(ends, fitted_values(fit, ends), label="Fitted line")
-    for xi, yi, fi in zip(x, y, fitted_values(fit, x), strict=True):
-        ax.plot([xi, xi], [fi, yi], color="gray", linestyle=":", label="_residual")
-    ax.set_xlabel("x")
-    ax.set_ylabel("y")
-    ax.legend()
-    plt.close(fig)
-    return fig</p>
-<p>def plot_slope_distribution(slopes: Sequence[float], true_slope: float) -&gt; Figure:
-    """傾きの推定値のヒストグラムと、真の傾きの線を描く。"""
-    fig, ax = plt.subplots()
-    ax.hist(slopes, bins=10)
-    ax.axvline(true_slope, color="red", label="True slope")
-    ax.set_xlabel("Estimated slope")
-    ax.set_ylabel("Frequency")
-    ax.legend()
-    plt.close(fig)
-    return fig</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_回帰直線の図はデータと直線と残差を描く</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_regression_line</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">fit_simple</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">))</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">labels</span><span class="p">[:</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"Data"</span><span class="p">,</span> <span class="s2">"Fitted line"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">labels</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"_residual"</span><span class="p">]</span> <span class="o">*</span> <span class="mi">4</span>
+    <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">X</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">Y</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_傾きの分布の図は棒と真の値の線</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">slopes</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.45</span><span class="p">]</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_slope_distribution</span><span class="p">(</span><span class="n">slopes</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">patches</span><span class="p">)</span> <span class="o">==</span> <span class="mi">10</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"True slope"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlabel</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"Estimated slope"</span>
+    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylabel</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"Frequency"</span>
+    <span class="n">bars</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">patches</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">bars</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">slopes</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_regression_line</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">fit</span><span class="p">:</span> <span class="n">SimpleFit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""データ・回帰直線・残差（データと直線を結ぶ縦線）を描く。"""</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">"o"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Data"</span><span class="p">)</span>
+    <span class="n">ends</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">x</span><span class="p">))]</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ends</span><span class="p">,</span> <span class="n">fitted_values</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">ends</span><span class="p">),</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Fitted line"</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">xi</span><span class="p">,</span> <span class="n">yi</span><span class="p">,</span> <span class="n">fi</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">fitted_values</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">x</span><span class="p">),</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">xi</span><span class="p">,</span> <span class="n">xi</span><span class="p">],</span> <span class="p">[</span><span class="n">fi</span><span class="p">,</span> <span class="n">yi</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"_residual"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"y"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_slope_distribution</span><span class="p">(</span><span class="n">slopes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">true_slope</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""傾きの推定値のヒストグラムと、真の傾きの線を描く。"""</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">slopes</span><span class="p">,</span> <span class="n">bins</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">true_slope</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"red"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"True slope"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Estimated slope"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Frequency"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+</code></pre></div>
 <h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter02
 </code></pre></div>

@@ -6458,79 +6458,96 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="n">X</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
 <span class="n">Y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">9</span><span class="p">]</span>
 </code></pre></div>
-<p>def test_手計算の例のHC0とHC1() -&gt; None:
-    hc0 = robust_standard_errors(Y, X, "HC0")
-    hc1 = robust_standard_errors(Y, X, "HC1")
-    assert hc0["x1"] == pytest.approx((1.61 / 25) ** 0.5)
-    assert hc1["x1"] == pytest.approx((2 * 1.61 / 25) ** 0.5)
-    assert hc0["x1"] == pytest.approx(0.2538, abs=1e-4)
-    assert hc1["x1"] == pytest.approx(0.3589, abs=1e-4)</p>
-<p>def test_既定はHC1() -&gt; None:
-    assert (
-        robust_standard_errors(Y, X).tolist()
-        == robust_standard_errors(Y, X, "HC1").tolist()
-    )</p>
-<p>def test_知らない種類は受け付けない() -&gt; None:
-    with pytest.raises(ValueError, match="種類"):
-        robust_standard_errors(Y, X, "HC9")</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_手計算の例のHC0とHC1</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">hc0</span> <span class="o">=</span> <span class="n">robust_standard_errors</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="s2">"HC0"</span><span class="p">)</span>
+    <span class="n">hc1</span> <span class="o">=</span> <span class="n">robust_standard_errors</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="s2">"HC1"</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">hc0</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">((</span><span class="mf">1.61</span> <span class="o">/</span> <span class="mi">25</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">hc1</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="mf">1.61</span> <span class="o">/</span> <span class="mi">25</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">hc0</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.2538</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">hc1</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.3589</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_既定はHC1</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="n">robust_standard_errors</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+        <span class="o">==</span> <span class="n">robust_standard_errors</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="s2">"HC1"</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_知らない種類は受け付けない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"種類"</span><span class="p">):</span>
+        <span class="n">robust_standard_errors</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="s2">"HC9"</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="green-robust_standard_errors">Green: robust_standard_errors を実装する<a class="headerlink" href="#green-robust_standard_errors" title="Permanent link">&para;</a></h3>
-<p>def _frame(x: ArrayLike) -&gt; pd.DataFrame:
-    """説明変数を、列の名前のある表にそろえる。"""
-    if isinstance(x, pd.DataFrame):
-        return x
-    values = np.asarray(x, dtype=float)
-    if values.ndim == 1:
-        values = values.reshape(-1, 1)
-    return pd.DataFrame(values, columns=[f"x{i + 1}" for i in range(values.shape[1])])</p>
-<p>def robust_standard_errors(y: ArrayLike, x: ArrayLike, kind: str = "HC1") -&gt; pd.Series:
-    """不均一分散に頑健な標準誤差（サンドイッチ推定量）。</p>
-<div class="highlight"><pre><span></span><code>Var(b) = (X'X)⁻¹ · X' diag(w·e²) X · (X'X)⁻¹。重み w は HC0: 1、
-HC1: n ÷ (n − k)、HC2: 1 ÷ (1 − h)、HC3: 1 ÷ (1 − h)²（h はてこ比）。
-"""
-if kind not in KINDS:
-    raise ValueError(f"知らない種類: {kind}（HC0〜HC3 のどれか）")
-frame = _frame(x)
-result = fit_ols(y, frame)
-design = np.column_stack([np.ones(len(frame)), frame.to_numpy(dtype=float)])
-n, k = design.shape
-h = leverage(frame)
-weights = {
-    "HC0": np.ones(n),
-    "HC1": np.full(n, n / (n - k)),
-    "HC2": 1 / (1 - h),
-    "HC3": 1 / (1 - h) ** 2,
-}[kind]
-bread = np.linalg.inv(design.T @ design)
-meat = design.T @ (design * (weights * result.residuals**2)[:, None])
-variance = bread @ meat @ bread
-return pd.Series(np.sqrt(np.diag(variance)), index=result.coefficients.index)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_frame</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""説明変数を、列の名前のある表にそろえる。"""</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">values</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="sa">f</span><span class="s2">"x</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">"</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">robust_standard_errors</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">kind</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"HC1"</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""不均一分散に頑健な標準誤差（サンドイッチ推定量）。</span>
+
+<span class="sd">    Var(b) = (X'X)⁻¹ · X' diag(w·e²) X · (X'X)⁻¹。重み w は HC0: 1、</span>
+<span class="sd">    HC1: n ÷ (n − k)、HC2: 1 ÷ (1 − h)、HC3: 1 ÷ (1 − h)²（h はてこ比）。</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">kind</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">KINDS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"知らない種類: </span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2">（HC0〜HC3 のどれか）"</span><span class="p">)</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">_frame</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+    <span class="n">design</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">frame</span><span class="p">)),</span> <span class="n">frame</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)])</span>
+    <span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">design</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">leverage</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"HC0"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">),</span>
+        <span class="s2">"HC1"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">n</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">k</span><span class="p">)),</span>
+        <span class="s2">"HC2"</span><span class="p">:</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">h</span><span class="p">),</span>
+        <span class="s2">"HC3"</span><span class="p">:</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">h</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span>
+    <span class="p">}[</span><span class="n">kind</span><span class="p">]</span>
+    <span class="n">bread</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">design</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">design</span><span class="p">)</span>
+    <span class="n">meat</span> <span class="o">=</span> <span class="n">design</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="p">(</span><span class="n">design</span> <span class="o">*</span> <span class="p">(</span><span class="n">weights</span> <span class="o">*</span> <span class="n">result</span><span class="o">.</span><span class="n">residuals</span><span class="o">**</span><span class="mi">2</span><span class="p">)[:,</span> <span class="kc">None</span><span class="p">])</span>
+    <span class="n">variance</span> <span class="o">=</span> <span class="n">bread</span> <span class="o">@</span> <span class="n">meat</span> <span class="o">@</span> <span class="n">bread</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">variance</span><span class="p">)),</span> <span class="n">index</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
 </code></pre></div>
 <p><code>statsmodels</code> の <code>cov_type="HC0"</code>〜<code>"HC3"</code> と一致することを、4 つの種類で確かめます。</p>
-<p>def two_variable_data(n: int = 80, seed: int = 0) -&gt; tuple[pd.Series, pd.DataFrame]:
-    rng = np.random.default_rng(seed)
-    x = pd.DataFrame({"x1": rng.standard_normal(n), "x2": rng.standard_normal(n)})
-    y = 1 + x["x1"] + 0.5 * x["x2"] + (0.5 + np.abs(x["x1"])) * rng.standard_normal(n)
-    return y, x</p>
-<p>@pytest.mark.parametrize("kind", ["HC0", "HC1", "HC2", "HC3"])
-def test_頑健な標準誤差はstatsmodelsと一致する(kind: str) -&gt; None:
-    y, x = two_variable_data()
-    reference = sm.OLS(y, sm.add_constant(x)).fit(cov_type=kind).bse
-    assert robust_standard_errors(y, x, kind).to_numpy() == pytest.approx(
-        reference.to_numpy()
-    )</p>
-<p>def test_HC3はHC2より大きくHC2はHC0より大きい() -&gt; None:
-    se = {k: robust_standard_errors(Y, X, k)["x1"] for k in ("HC0", "HC2", "HC3")}
-    assert se["HC0"] &lt; se["HC2"] &lt; se["HC3"]</p>
-<p>def test_配列でも使える() -&gt; None:
-    assert list(robust_standard_errors(Y, np.array(X, dtype=float)).index) == [
-        "const",
-        "x1",
-    ]</p>
-<p>def test_頑健な標準誤差の係数は通常の最小二乗法と同じ() -&gt; None:
-    y, x = two_variable_data()
-    assert list(robust_standard_errors(y, x).index) == list(
-        fit_ols(y, x).coefficients.index
-    )</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">two_variable_data</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">80</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]:</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"x1"</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">),</span> <span class="s2">"x2"</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)})</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span><span class="p">[</span><span class="s2">"x2"</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">]))</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">y</span><span class="p">,</span> <span class="n">x</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">"kind"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"HC0"</span><span class="p">,</span> <span class="s2">"HC1"</span><span class="p">,</span> <span class="s2">"HC2"</span><span class="p">,</span> <span class="s2">"HC3"</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_頑健な標準誤差はstatsmodelsと一致する</span><span class="p">(</span><span class="n">kind</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">two_variable_data</span><span class="p">()</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">cov_type</span><span class="o">=</span><span class="n">kind</span><span class="p">)</span><span class="o">.</span><span class="n">bse</span>
+    <span class="k">assert</span> <span class="n">robust_standard_errors</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">reference</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_HC3はHC2より大きくHC2はHC0より大きい</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">se</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">robust_standard_errors</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">k</span><span class="p">)[</span><span class="s2">"x1"</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"HC0"</span><span class="p">,</span> <span class="s2">"HC2"</span><span class="p">,</span> <span class="s2">"HC3"</span><span class="p">)}</span>
+    <span class="k">assert</span> <span class="n">se</span><span class="p">[</span><span class="s2">"HC0"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">se</span><span class="p">[</span><span class="s2">"HC2"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">se</span><span class="p">[</span><span class="s2">"HC3"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_配列でも使える</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">robust_standard_errors</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span>
+        <span class="s2">"const"</span><span class="p">,</span>
+        <span class="s2">"x1"</span><span class="p">,</span>
+    <span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_頑健な標準誤差の係数は通常の最小二乗法と同じ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">two_variable_data</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">robust_standard_errors</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">(</span>
+        <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">index</span>
+    <span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.hetero</span><span class="w"> </span><span class="kn">import</span> <span class="n">robust_standard_errors</span>
 
 <span class="n">x</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
@@ -6545,83 +6562,99 @@ HC3 {'const': 1.5383, 'x1': 0.7778}
 </code></pre></div>
 <p>HC0 は 0.2538、HC1 は 0.3589（予想 1）。HC0 &lt; HC1 &lt; HC2 &lt; HC3 の順に大きく、観測値が 4 つと少ないので、種類による差が大きく出ます（通常の標準誤差は 0.4243）。</p>
 <h3 id="_6">検定を実装する<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
-<p>def _squared_residual_test(
-    y: ArrayLike, x: ArrayLike, auxiliary: pd.DataFrame
-) -&gt; TestResult:
-    """残差の 2 乗を auxiliary で回帰し、LM = n · R² を、χ² 検定する。"""
-    residuals = fit_ols(y, _frame(x)).residuals
-    fit = fit_ols(residuals**2, auxiliary)
-    statistic = len(residuals) * fit.r_squared
-    return TestResult(
-        float(statistic), float(stats.chi2.sf(statistic, auxiliary.shape[1]))
-    )</p>
-<p>def breusch_pagan(y: ArrayLike, x: ArrayLike) -&gt; TestResult:
-    """Breusch-Pagan 検定: 残差の 2 乗が、説明変数で決まるか（帰無仮説: 均一分散）。"""
-    frame = _frame(x)
-    return _squared_residual_test(y, frame, frame)</p>
-<p>def white_test(y: ArrayLike, x: ArrayLike) -&gt; TestResult:
-    """White 検定: 説明変数・その 2 乗・交差項で、残差の 2 乗を説明する。"""
-    frame = _frame(x)
-    columns = {name: frame[name] for name in frame.columns}
-    for name in frame.columns:
-        columns[f"{name}^2"] = frame[name] ** 2
-    for a, b in combinations(frame.columns, 2):
-        columns[f"{a}*{b}"] = frame[a] * frame[b]
-    return _squared_residual_test(y, frame, pd.DataFrame(columns))</p>
-<p>def reset_test(y: ArrayLike, x: ArrayLike) -&gt; TestResult:
-    """RESET: 当てはめ値の 2 乗・3 乗を足し、係数が 0 か F 検定する（線形性の検定）。"""
-    frame = _frame(x)
-    result = fit_ols(y, frame)
-    fitted = np.asarray(y, dtype=float) - result.residuals
-    augmented = frame.assign(fitted2=fitted<strong>2, fitted3=fitted</strong>3)
-    return f_test(y, augmented, ["fitted2", "fitted3"])</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_squared_residual_test</span><span class="p">(</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">auxiliary</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TestResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""残差の 2 乗を auxiliary で回帰し、LM = n · R² を、χ² 検定する。"""</span>
+    <span class="n">residuals</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">_frame</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">residuals</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">residuals</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">auxiliary</span><span class="p">)</span>
+    <span class="n">statistic</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span> <span class="o">*</span> <span class="n">fit</span><span class="o">.</span><span class="n">r_squared</span>
+    <span class="k">return</span> <span class="n">TestResult</span><span class="p">(</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">statistic</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">chi2</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">statistic</span><span class="p">,</span> <span class="n">auxiliary</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">breusch_pagan</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TestResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Breusch-Pagan 検定: 残差の 2 乗が、説明変数で決まるか（帰無仮説: 均一分散）。"""</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">_frame</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_squared_residual_test</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">white_test</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TestResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""White 検定: 説明変数・その 2 乗・交差項で、残差の 2 乗を説明する。"""</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">_frame</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">frame</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">columns</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">frame</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">columns</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">^2"</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">combinations</span><span class="p">(</span><span class="n">frame</span><span class="o">.</span><span class="n">columns</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+        <span class="n">columns</span><span class="p">[</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">a</span><span class="si">}</span><span class="s2">*</span><span class="si">{</span><span class="n">b</span><span class="si">}</span><span class="s2">"</span><span class="p">]</span> <span class="o">=</span> <span class="n">frame</span><span class="p">[</span><span class="n">a</span><span class="p">]</span> <span class="o">*</span> <span class="n">frame</span><span class="p">[</span><span class="n">b</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">_squared_residual_test</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">frame</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">reset_test</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TestResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""RESET: 当てはめ値の 2 乗・3 乗を足し、係数が 0 か F 検定する（線形性の検定）。"""</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="n">_frame</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">frame</span><span class="p">)</span>
+    <span class="n">fitted</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="o">-</span> <span class="n">result</span><span class="o">.</span><span class="n">residuals</span>
+    <span class="n">augmented</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">fitted2</span><span class="o">=</span><span class="n">fitted</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">fitted3</span><span class="o">=</span><span class="n">fitted</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">f_test</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">augmented</span><span class="p">,</span> <span class="p">[</span><span class="s2">"fitted2"</span><span class="p">,</span> <span class="s2">"fitted3"</span><span class="p">])</span>
+</code></pre></div>
 <p><code>statsmodels</code> の <code>het_breuschpagan</code>・<code>het_white</code>・<code>linear_reset</code> と、統計量・p 値が一致することを、テストにします。</p>
-<p>def test_Breusch_Paganはstatsmodelsと一致する() -&gt; None:
-    y, x = two_variable_data()
-    fit = sm.OLS(y, sm.add_constant(x)).fit()
-    lm, p, _, _ = het_breuschpagan(fit.resid, fit.model.exog)
-    test = breusch_pagan(y, x)
-    assert test.statistic == pytest.approx(lm)
-    assert test.p_value == pytest.approx(p)</p>
-<p>def test_Whiteはstatsmodelsと一致する() -&gt; None:
-    y, x = two_variable_data()
-    fit = sm.OLS(y, sm.add_constant(x)).fit()
-    lm, p, _, _ = het_white(fit.resid, fit.model.exog)
-    test = white_test(y, x)
-    assert test.statistic == pytest.approx(lm)
-    assert test.p_value == pytest.approx(p)</p>
-<p>def test_RESETはstatsmodelsと一致する() -&gt; None:
-    y, x = two_variable_data()
-    fit = sm.OLS(y, sm.add_constant(x)).fit()
-    reference = linear_reset(fit, power=3, test_type="fitted", use_f=True)
-    test = reset_test(y, x)
-    assert test.statistic == pytest.approx(float(reference.fvalue))
-    assert test.p_value == pytest.approx(float(reference.pvalue))</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_Breusch_Paganはstatsmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">two_variable_data</span><span class="p">()</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="n">lm</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">het_breuschpagan</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">fit</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog</span><span class="p">)</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">breusch_pagan</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">statistic</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">lm</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">p_value</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_Whiteはstatsmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">two_variable_data</span><span class="p">()</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="n">lm</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">het_white</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">resid</span><span class="p">,</span> <span class="n">fit</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">exog</span><span class="p">)</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">white_test</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">statistic</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">lm</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">p_value</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_RESETはstatsmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">y</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">two_variable_data</span><span class="p">()</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">linear_reset</span><span class="p">(</span><span class="n">fit</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">test_type</span><span class="o">=</span><span class="s2">"fitted"</span><span class="p">,</span> <span class="n">use_f</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">reset_test</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">statistic</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">fvalue</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">p_value</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">pvalue</span><span class="p">))</span>
+</code></pre></div>
 <h3 id="_7">不均一分散の標本を作る<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>x を 0〜4 の一様乱数、誤差の標準偏差を 0.05 + 0.25x²（x が大きいほど大きい）にします。比較のため、標準偏差が 1 で一定の標本も作れます。</p>
-<p>def draw_fan_sample(
-    n: int, rng: np.random.Generator, heteroskedastic: bool
-) -&gt; tuple[NDArray[np.float64], NDArray[np.float64]]:
-    """y = 1 + 2x + u。x は 0〜4 の一様乱数。</p>
-<div class="highlight"><pre><span></span><code>不均一分散なら、u の標準偏差は 0.05 + 0.25x²（x が大きいほど大きい）。
-均一分散なら、1。
-"""
-x = rng.uniform(0, 4, n)
-sd = 0.05 + 0.25 * x**2 if heteroskedastic else 1.0
-return x, 1 + 2 * x + sd * rng.standard_normal(n)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">draw_fan_sample</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">,</span> <span class="n">heteroskedastic</span><span class="p">:</span> <span class="nb">bool</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""y = 1 + 2x + u。x は 0〜4 の一様乱数。</span>
+
+<span class="sd">    不均一分散なら、u の標準偏差は 0.05 + 0.25x²（x が大きいほど大きい）。</span>
+<span class="sd">    均一分散なら、1。</span>
+<span class="sd">    """</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">sd</span> <span class="o">=</span> <span class="mf">0.05</span> <span class="o">+</span> <span class="mf">0.25</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="k">if</span> <span class="n">heteroskedastic</span> <span class="k">else</span> <span class="mf">1.0</span>
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">sd</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
 </code></pre></div>
-<p>def test_標本の形() -&gt; None:
-    x, y = draw_fan_sample(30, np.random.default_rng(0), True)
-    assert x.shape == y.shape == (30,)
-    assert x.min() &gt;= 0
-    assert x.max() &lt;= 4</p>
-<p>def test_誤差の大きさは不均一分散なら_x_が大きいほど大きい() -&gt; None:
-    x, y = draw_fan_sample(20000, np.random.default_rng(0), True)
-    e = y - 1 - 2 * x
-    assert np.std(e[x &gt; 3]) &gt; 5 * np.std(e[x &lt; 1])
-    x, y = draw_fan_sample(20000, np.random.default_rng(0), False)
-    e = y - 1 - 2 * x
-    assert np.std(e[x &gt; 3]) == pytest.approx(np.std(e[x &lt; 1]), rel=0.1)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_標本の形</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">draw_fan_sample</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">30</span><span class="p">,)</span>
+    <span class="k">assert</span> <span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+    <span class="k">assert</span> <span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">&lt;=</span> <span class="mi">4</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_誤差の大きさは不均一分散なら_x_が大きいほど大きい</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">draw_fan_sample</span><span class="p">(</span><span class="mi">20000</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">draw_fan_sample</span><span class="p">(</span><span class="mi">20000</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="n">e</span> <span class="o">=</span> <span class="n">y</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">e</span><span class="p">[</span><span class="n">x</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">]),</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="_8">検定が、不均一分散を見つけるか<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
@@ -6636,14 +6669,17 @@ return x, 1 + 2 * x + sd * rng.standard_normal(n)
 False 0.29946135 0.20126174
 </code></pre></div>
 <p>不均一分散のデータ（True）では、p 値が 10⁻⁶ 台で、均一分散の帰無仮説を強く棄却します。均一分散のデータ（False）では、0.30 と 0.20 で、棄却しません。</p>
-<p>def test_不均一分散のデータでは均一分散の帰無仮説を棄却する() -&gt; None:
-    x, y = draw_fan_sample(200, np.random.default_rng(1), True)
-    assert breusch_pagan(y, x).p_value &lt; 0.001
-    assert white_test(y, x).p_value &lt; 0.001</p>
-<p>def test_均一分散のデータでは棄却しない() -&gt; None:
-    x, y = draw_fan_sample(200, np.random.default_rng(1), False)
-    assert breusch_pagan(y, x).p_value &gt; 0.05
-    assert white_test(y, x).p_value &gt; 0.05</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_不均一分散のデータでは均一分散の帰無仮説を棄却する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">draw_fan_sample</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="kc">True</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">breusch_pagan</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&lt;</span> <span class="mf">0.001</span>
+    <span class="k">assert</span> <span class="n">white_test</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&lt;</span> <span class="mf">0.001</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_均一分散のデータでは棄却しない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">draw_fan_sample</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span> <span class="kc">False</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">breusch_pagan</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&gt;</span> <span class="mf">0.05</span>
+    <span class="k">assert</span> <span class="n">white_test</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&gt;</span> <span class="mf">0.05</span>
+</code></pre></div>
 <h3 id="reset_1">RESET<a class="headerlink" href="#reset_1" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.hetero</span><span class="w"> </span><span class="kn">import</span> <span class="n">reset_test</span>
 
@@ -6658,39 +6694,44 @@ False 0.29946135 0.20126174
 TestResult(statistic=3.5482989645080742, p_value=0.03063623768277364)
 </code></pre></div>
 <p>x² を含む真の関係を、線形で回帰すると、p 値は 10⁻⁶⁰ で、強く棄却されます。線形の関係（2 つ目）でも、p 値は 0.031 で、<strong>5% の水準では棄却されました</strong>。これは、バグではなく、<strong>正しいモデルでも、5% の確率で棄却する</strong>という、検定の性質です（有意水準 5% の意味）。テストでは、しきい値を 1% にしてあります。</p>
-<p>def test_RESETは2乗の項が欠落したモデルを棄却する() -&gt; None:
-    rng = np.random.default_rng(3)
-    x = rng.uniform(0, 3, 200)
-    y = 1 + x + 0.8 * x**2 + 0.3 * rng.standard_normal(200)
-    assert reset_test(y, x).p_value &lt; 0.001
-    linear = 1 + x + 0.3 * rng.standard_normal(200)
-    assert reset_test(linear, x).p_value &gt; 0.01</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_RESETは2乗の項が欠落したモデルを棄却する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">0.8</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">reset_test</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&lt;</span> <span class="mf">0.001</span>
+    <span class="n">linear</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="mf">0.3</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">reset_test</span><span class="p">(</span><span class="n">linear</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&gt;</span> <span class="mf">0.01</span>
+</code></pre></div>
 <h3 id="_9">標準誤差は、どれだけ違うか<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>標本を 2000 回作り直して、傾きの推定値の標準偏差（実際のばらつき）と、通常の標準誤差・HC1 の標準誤差の平均を、比べます。</p>
-<p>def standard_error_comparison(
-    n: int, repetitions: int, heteroskedastic: bool, rng: np.random.Generator
-) -&gt; dict[str, float]:
-    """傾きの推定値の標準偏差（実際のばらつき）と、通常・頑健（HC1）な標準誤差の平均。"""
-    slopes, classical, robust = [], [], []
-    for _ in range(repetitions):
-        x, y = draw_fan_sample(n, rng, heteroskedastic)
-        result = fit_ols(y, x)
-        slopes.append(result.coefficients["x1"])
-        classical.append(result.standard_errors["x1"])
-        robust.append(robust_standard_errors(y, x)["x1"])
-    return {
-        "sd": float(np.std(slopes, ddof=1)),
-        "classical": float(np.mean(classical)),
-        "hc1": float(np.mean(robust)),
-    }</p>
-<p>def test_均一分散なら通常の標準誤差も頑健な標準誤差も実際のばらつきに近い() -&gt; None:
-    r = standard_error_comparison(50, 2000, False, np.random.default_rng(0))
-    assert r["classical"] == pytest.approx(r["sd"], rel=0.05)
-    assert r["hc1"] == pytest.approx(r["sd"], rel=0.05)</p>
-<p>def test_不均一分散なら通常の標準誤差は過小で頑健な標準誤差は近い() -&gt; None:
-    r = standard_error_comparison(50, 2000, True, np.random.default_rng(0))
-    assert r["classical"] &lt; 0.85 * r["sd"]
-    assert r["hc1"] == pytest.approx(r["sd"], rel=0.06)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">standard_error_comparison</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">heteroskedastic</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""傾きの推定値の標準偏差（実際のばらつき）と、通常・頑健（HC1）な標準誤差の平均。"""</span>
+    <span class="n">slopes</span><span class="p">,</span> <span class="n">classical</span><span class="p">,</span> <span class="n">robust</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">draw_fan_sample</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">rng</span><span class="p">,</span> <span class="n">heteroskedastic</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">slopes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">])</span>
+        <span class="n">classical</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"x1"</span><span class="p">])</span>
+        <span class="n">robust</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">robust_standard_errors</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)[</span><span class="s2">"x1"</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"sd"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">slopes</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span>
+        <span class="s2">"classical"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">classical</span><span class="p">)),</span>
+        <span class="s2">"hc1"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">robust</span><span class="p">)),</span>
+    <span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_均一分散なら通常の標準誤差も頑健な標準誤差も実際のばらつきに近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">standard_error_comparison</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="p">[</span><span class="s2">"classical"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">],</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="p">[</span><span class="s2">"hc1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">],</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_不均一分散なら通常の標準誤差は過小で頑健な標準誤差は近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">standard_error_comparison</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">2000</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="p">[</span><span class="s2">"classical"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.85</span> <span class="o">*</span> <span class="n">r</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="p">[</span><span class="s2">"hc1"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">],</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.06</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.hetero</span><span class="w"> </span><span class="kn">import</span> <span class="n">standard_error_comparison</span>
 
 <span class="k">for</span> <span class="n">heteroskedastic</span> <span class="ow">in</span> <span class="p">(</span><span class="kc">False</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
@@ -6704,21 +6745,25 @@ True {'sd': 0.2783, 'classical': 0.222, 'hc1': 0.2694}
 <p><img alt="不均一分散のデータでの、傾きの実際のばらつきと、通常・頑健（HC1）な標準誤差" src="../images/ch08-standard-errors.png" /></p>
 <h3 id="_10">図<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p><code>plot_standard_errors</code> は、3 つの値の棒グラフです。</p>
-<p>def test_3本の棒を描く() -&gt; None:
-    ax = plot_standard_errors(VALUES).axes[0]
-    bars: list[Any] = list(ax.patches)
-    assert [p.get_height() for p in bars] == pytest.approx([0.28, 0.22, 0.27])
-    assert [t.get_text() for t in ax.get_xticklabels()] == list(VALUES)</p>
-<p>def test_軸の名前() -&gt; None:
-    ax = plot_standard_errors(VALUES).axes[0]
-    assert ax.get_ylabel() == "Standard error of the slope"</p>
-<p>def plot_standard_errors(values: Mapping[str, float]) -&gt; Figure:
-    """実際のばらつきと、通常・頑健な標準誤差を、棒グラフで比べる。"""
-    fig, ax = plt.subplots(figsize=(7, 4))
-    ax.bar(list(values), list(values.values()))
-    ax.set_ylabel("Standard error of the slope")
-    plt.close(fig)
-    return fig</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_3本の棒を描く</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_standard_errors</span><span class="p">(</span><span class="n">VALUES</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">bars</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">patches</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">bars</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mf">0.28</span><span class="p">,</span> <span class="mf">0.22</span><span class="p">,</span> <span class="mf">0.27</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xticklabels</span><span class="p">()]</span> <span class="o">==</span> <span class="nb">list</span><span class="p">(</span><span class="n">VALUES</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_軸の名前</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_standard_errors</span><span class="p">(</span><span class="n">VALUES</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylabel</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"Standard error of the slope"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_standard_errors</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""実際のばらつきと、通常・頑健な標準誤差を、棒グラフで比べる。"""</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">values</span><span class="p">),</span> <span class="nb">list</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">values</span><span class="p">()))</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Standard error of the slope"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+</code></pre></div>
 <h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>

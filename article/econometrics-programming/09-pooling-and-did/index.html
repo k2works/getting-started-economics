@@ -6460,41 +6460,51 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>def test_2_x_2の平均() -&gt; None:
-    means = group_period_means(CELLS)
-    assert means.to_numpy().tolist() == [[8, 10], [10, 15]]
-    assert list(means.index) == ["control", "treated"]
-    assert list(means.columns) == ["before", "after"]</p>
-<p>def test_差分の差分の手計算() -&gt; None:
-    assert did_estimate(CELLS) == pytest.approx((15 - 10) - (10 - 8))</p>
-<p>def test_回帰の交差項の係数はDiDにちょうど等しい() -&gt; None:
-    coefficients = did_regression(CELLS).coefficients
-    assert coefficients["treated:post"] == pytest.approx(3)
-    assert coefficients["const"] == pytest.approx(8)
-    assert coefficients["treated"] == pytest.approx(10 - 8)
-    assert coefficients["post"] == pytest.approx(10 - 8)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_2_x_2の平均</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="n">group_period_means</span><span class="p">(</span><span class="n">CELLS</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">means</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">]]</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">means</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"control"</span><span class="p">,</span> <span class="s2">"treated"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">means</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"before"</span><span class="p">,</span> <span class="s2">"after"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_差分の差分の手計算</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">did_estimate</span><span class="p">(</span><span class="n">CELLS</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">((</span><span class="mi">15</span> <span class="o">-</span> <span class="mi">10</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mi">10</span> <span class="o">-</span> <span class="mi">8</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_回帰の交差項の係数はDiDにちょうど等しい</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">coefficients</span> <span class="o">=</span> <span class="n">did_regression</span><span class="p">(</span><span class="n">CELLS</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span>
+    <span class="k">assert</span> <span class="n">coefficients</span><span class="p">[</span><span class="s2">"treated:post"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">coefficients</span><span class="p">[</span><span class="s2">"treated"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">10</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">coefficients</span><span class="p">[</span><span class="s2">"post"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">10</span> <span class="o">-</span> <span class="mi">8</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="green-did">Green: DiD を実装する<a class="headerlink" href="#green-did" title="Permanent link">&para;</a></h3>
-<p>def group_period_means(df: pd.DataFrame) -&gt; pd.DataFrame:
-    """処置群・対照群の、処置の前後の、y の平均（2 × 2 の表）。"""
-    table = df.groupby(["treated", "post"])["y"].mean().unstack()
-    table.index = ["control", "treated"]
-    table.columns = ["before", "after"]
-    return table</p>
-<p>def did_estimate(df: pd.DataFrame) -&gt; float:
-    """差分の差分 = (処置群の変化) − (対照群の変化)。"""
-    means = group_period_means(df)
-    change = means["after"] - means["before"]
-    return float(change["treated"] - change["control"])</p>
-<p>def did_regression(df: pd.DataFrame) -&gt; OlsResult:
-    """y を、処置群ダミー・処置後ダミー・その交差項で回帰する。交差項の係数が DiD。"""
-    x = pd.DataFrame(
-        {
-            "treated": df["treated"],
-            "post": df["post"],
-            "treated:post": with_interaction(df["treated"], df["post"]),
-        }
-    )
-    return fit_ols(df["y"], x)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">group_period_means</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""処置群・対照群の、処置の前後の、y の平均（2 × 2 の表）。"""</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">"treated"</span><span class="p">,</span> <span class="s2">"post"</span><span class="p">])[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">.</span><span class="n">unstack</span><span class="p">()</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"control"</span><span class="p">,</span> <span class="s2">"treated"</span><span class="p">]</span>
+    <span class="n">table</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"before"</span><span class="p">,</span> <span class="s2">"after"</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">table</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">did_estimate</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""差分の差分 = (処置群の変化) − (対照群の変化)。"""</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="n">group_period_means</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">change</span> <span class="o">=</span> <span class="n">means</span><span class="p">[</span><span class="s2">"after"</span><span class="p">]</span> <span class="o">-</span> <span class="n">means</span><span class="p">[</span><span class="s2">"before"</span><span class="p">]</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">change</span><span class="p">[</span><span class="s2">"treated"</span><span class="p">]</span> <span class="o">-</span> <span class="n">change</span><span class="p">[</span><span class="s2">"control"</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">did_regression</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">OlsResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""y を、処置群ダミー・処置後ダミー・その交差項で回帰する。交差項の係数が DiD。"""</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">"treated"</span><span class="p">:</span> <span class="n">df</span><span class="p">[</span><span class="s2">"treated"</span><span class="p">],</span>
+            <span class="s2">"post"</span><span class="p">:</span> <span class="n">df</span><span class="p">[</span><span class="s2">"post"</span><span class="p">],</span>
+            <span class="s2">"treated:post"</span><span class="p">:</span> <span class="n">with_interaction</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"treated"</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="s2">"post"</span><span class="p">]),</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">x</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter09.did</span><span class="w"> </span><span class="kn">import</span> <span class="n">did_estimate</span><span class="p">,</span> <span class="n">did_regression</span><span class="p">,</span> <span class="n">group_period_means</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">group_period_means</span><span class="p">(</span><span class="n">CELLS</span><span class="p">))</span>
@@ -6510,45 +6520,55 @@ treated    10.0   15.0
 <p>DiD は 3 で、効果は、前後の差の 5 ではありません（予想 1）。回帰の係数も、<code>treated:post</code> が 3、<code>const</code> が対照群の処置前の平均 8、<code>treated</code> が処置前の群の差 2、<code>post</code> が対照群の時間変化 2 で、すべて、4 つの平均から作った値と一致します（予想 2）。</p>
 <h3 id="_5">乱数の標本で、効果を復元する<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>各セルに n 個の標本を作ります。母集団の式は、y = 5 + 3·treated + 2·post + 効果·treated·post + u です。群の差 3 と、時間変化 2 は、DiD で除かれます。</p>
-<p>def draw_did_sample(n: int, effect: float, rng: np.random.Generator) -&gt; pd.DataFrame:
-    """2 × 2（処置群・対照群 × 処置の前後）に、n 個ずつの標本を作る。</p>
-<div class="highlight"><pre><span></span><code>y = 5 + 3·treated + 2·post + effect·treated·post + u（u は標準正規）。
-群の差 3 と、共通の時間変化 2 は、DiD で除かれる。
-"""
-treated = np.repeat([0.0, 0.0, 1.0, 1.0], n)
-post = np.repeat([0.0, 1.0, 0.0, 1.0], n)
-y = 5 + 3 * treated + 2 * post + effect * treated * post
-return pd.DataFrame(
-    {"y": y + rng.standard_normal(4 * n), "treated": treated, "post": post}
-)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">draw_did_sample</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">effect</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""2 × 2（処置群・対照群 × 処置の前後）に、n 個ずつの標本を作る。</span>
+
+<span class="sd">    y = 5 + 3·treated + 2·post + effect·treated·post + u（u は標準正規）。</span>
+<span class="sd">    群の差 3 と、共通の時間変化 2 は、DiD で除かれる。</span>
+<span class="sd">    """</span>
+    <span class="n">treated</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">post</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="n">n</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">treated</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">post</span> <span class="o">+</span> <span class="n">effect</span> <span class="o">*</span> <span class="n">treated</span> <span class="o">*</span> <span class="n">post</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span><span class="s2">"y"</span><span class="p">:</span> <span class="n">y</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">4</span> <span class="o">*</span> <span class="n">n</span><span class="p">),</span> <span class="s2">"treated"</span><span class="p">:</span> <span class="n">treated</span><span class="p">,</span> <span class="s2">"post"</span><span class="p">:</span> <span class="n">post</span><span class="p">}</span>
+    <span class="p">)</span>
 </code></pre></div>
-<p>def test_乱数の標本でも回帰の交差項はDiDに等しい() -&gt; None:
-    sample = draw_did_sample(100, 1.5, np.random.default_rng(1))
-    assert did_regression(sample).coefficients["treated:post"] == pytest.approx(
-        did_estimate(sample)
-    )</p>
-<p>def test_標本の形() -&gt; None:
-    sample = draw_did_sample(10, 1.5, np.random.default_rng(0))
-    assert len(sample) == 40
-    assert sample.groupby(["treated", "post"]).size().tolist() == [10, 10, 10, 10]</p>
-<p>def test_処置の効果は標準誤差の4倍以内で復元される() -&gt; None:
-    sample = draw_did_sample(500, 1.5, np.random.default_rng(0))
-    result = did_regression(sample)
-    assert (
-        abs(result.coefficients["treated:post"] - 1.5)
-        &lt; 4 * (result.standard_errors["treated:post"])
-    )
-    assert (
-        abs(result.coefficients["treated"] - 3) &lt; 4 * result.standard_errors["treated"]
-    )
-    assert abs(result.coefficients["post"] - 2) &lt; 4 * result.standard_errors["post"]</p>
-<p>def test_効果が0なら差分の差分は0に近い() -&gt; None:
-    sample = draw_did_sample(2000, 0.0, np.random.default_rng(0))
-    assert did_estimate(sample) == pytest.approx(0, abs=0.1)</p>
-<p>def test_群の差と共通の時間変化だけでは差分の差分は0() -&gt; None:
-    df = CELLS.copy()
-    df["y"] = 5 + 3 * df["treated"] + 2 * df["post"]
-    assert did_estimate(df) == pytest.approx(0)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_乱数の標本でも回帰の交差項はDiDに等しい</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="n">draw_did_sample</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">did_regression</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"treated:post"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">did_estimate</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_標本の形</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="n">draw_did_sample</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span> <span class="o">==</span> <span class="mi">40</span>
+    <span class="k">assert</span> <span class="n">sample</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s2">"treated"</span><span class="p">,</span> <span class="s2">"post"</span><span class="p">])</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_処置の効果は標準誤差の4倍以内で復元される</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="n">draw_did_sample</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">did_regression</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">abs</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"treated:post"</span><span class="p">]</span> <span class="o">-</span> <span class="mf">1.5</span><span class="p">)</span>
+        <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"treated:post"</span><span class="p">])</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span>
+        <span class="nb">abs</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"treated"</span><span class="p">]</span> <span class="o">-</span> <span class="mi">3</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">result</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"treated"</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"post"</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">result</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"post"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_効果が0なら差分の差分は0に近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">sample</span> <span class="o">=</span> <span class="n">draw_did_sample</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">did_estimate</span><span class="p">(</span><span class="n">sample</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_群の差と共通の時間変化だけでは差分の差分は0</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">CELLS</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">df</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">"treated"</span><span class="p">]</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">df</span><span class="p">[</span><span class="s2">"post"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">did_estimate</span><span class="p">(</span><span class="n">df</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter09.did</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_did_sample</span>
 
 <span class="n">sample</span> <span class="o">=</span> <span class="n">draw_did_sample</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
@@ -6563,43 +6583,49 @@ return pd.DataFrame(
 </code></pre></div>
 <p>DiD は 1.4249 で、真の効果 1.5 から、標準誤差 0.0894 の、1 つ分弱だけずれています。群の差（3.0775、真の値 3）と時間変化（1.9577、真の値 2）も、近い値です。</p>
 <h3 id="_6">図<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
-<p>def ys(line: Any) -&gt; list[float]:
-    values: Any = line.get_ydata()
-    return [float(v) for v in values]</p>
-<p>def test_処置群と対照群と反事実を描く() -&gt; None:
-    ax = plot_did(group_period_means(CELLS)).axes[0]
-    assert [line.get_label() for line in ax.lines] == [
-        "Control",
-        "Treated",
-        "Counterfactual",
-    ]
-    assert ys(ax.lines[0]) == [8, 10]
-    assert ys(ax.lines[1]) == [10, 15]</p>
-<p>def test_反事実は処置群の処置前から対照群と同じだけ動く() -&gt; None:
-    ax = plot_did(group_period_means(CELLS)).axes[0]
-    assert ys(ax.lines[2]) == pytest.approx([10, 12])
-    assert ax.lines[2].get_linestyle() == "--"</p>
-<p>def plot_did(means: pd.DataFrame) -&gt; Figure:
-    """処置群・対照群の平均と、反事実（処置がなかったときの処置群）を描く。</p>
-<div class="highlight"><pre><span></span><code>反事実は、処置群の処置前の平均から、対照群と同じだけ動く（平行トレンド）。
-"""
-values = means.to_numpy(dtype=float)  # 1 行目が対照群、2 行目が処置群
-control, treated = values[0], values[1]
-fig, ax = plt.subplots()
-ax.plot([0, 1], control, marker="o", label="Control")
-ax.plot([0, 1], treated, marker="o", label="Treated")
-ax.plot(
-    [0, 1],
-    [treated[0], treated[0] + control[1] - control[0]],
-    "--",
-    marker="o",
-    label="Counterfactual",
-)
-ax.set_xticks([0, 1], ["Before", "After"])
-ax.set_ylabel("Mean of y")
-ax.legend()
-plt.close(fig)
-return fig
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">ys</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="n">values</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">get_ydata</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_処置群と対照群と反事実を描く</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_did</span><span class="p">(</span><span class="n">group_period_means</span><span class="p">(</span><span class="n">CELLS</span><span class="p">))</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span>
+        <span class="s2">"Control"</span><span class="p">,</span>
+        <span class="s2">"Treated"</span><span class="p">,</span>
+        <span class="s2">"Counterfactual"</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_反事実は処置群の処置前から対照群と同じだけ動く</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_did</span><span class="p">(</span><span class="n">group_period_means</span><span class="p">(</span><span class="n">CELLS</span><span class="p">))</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">get_linestyle</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"--"</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_did</span><span class="p">(</span><span class="n">means</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""処置群・対照群の平均と、反事実（処置がなかったときの処置群）を描く。</span>
+
+<span class="sd">    反事実は、処置群の処置前の平均から、対照群と同じだけ動く（平行トレンド）。</span>
+<span class="sd">    """</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">means</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>  <span class="c1"># 1 行目が対照群、2 行目が処置群</span>
+    <span class="n">control</span><span class="p">,</span> <span class="n">treated</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">control</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Control"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">treated</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Treated"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
+        <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+        <span class="p">[</span><span class="n">treated</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">treated</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">control</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">control</span><span class="p">[</span><span class="mi">0</span><span class="p">]],</span>
+        <span class="s2">"--"</span><span class="p">,</span>
+        <span class="n">marker</span><span class="o">=</span><span class="s2">"o"</span><span class="p">,</span>
+        <span class="n">label</span><span class="o">=</span><span class="s2">"Counterfactual"</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xticks</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="s2">"Before"</span><span class="p">,</span> <span class="s2">"After"</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Mean of y"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 <h3 id="1_1">パネルの 1 階差分<a class="headerlink" href="#1_1" title="Permanent link">&para;</a></h3>
 <p>3 人の、2 期のパネルで、手計算します。y = a_i + 2·x（真の傾き 2）で、a は 1、6、−1（個人効果）です。</p>
@@ -6613,27 +6639,37 @@ return fig
     <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>def first_difference(panel: pd.DataFrame) -&gt; pd.DataFrame:
-    """個人ごとに、1 期前との差（Δy・Δx）を取る。最初の期は、差が取れないので除く。"""
-    ordered = panel.sort_values(["entity", "time"])
-    differences = ordered.groupby("entity")[["x", "y"]].diff().dropna()
-    return differences.rename(columns={"x": "dx", "y": "dy"})</p>
-<p>def first_difference_estimate(panel: pd.DataFrame) -&gt; float:
-    """1 階差分推定: Δy を Δx で回帰した傾き。個人ごとの効果 a が差で消える。"""
-    d = first_difference(panel)
-    return float(fit_ols(d["dy"], d[["dx"]]).coefficients["dx"])</p>
-<p>def pooled_estimate(panel: pd.DataFrame) -&gt; float:
-    """プーリング OLS: 個人を区別せず、y を x で回帰した傾き。"""
-    return float(fit_ols(panel["y"], panel[["x"]]).coefficients["x"])</p>
-<p>def test_1階差分は個人ごとの前期との差() -&gt; None:
-    d = first_difference(PANEL.sample(frac=1, random_state=0))
-    assert d["dx"].tolist() == [1, 2, 3]
-    assert d["dy"].tolist() == [2, 4, 6]
-    assert list(d.columns) == ["dx", "dy"]</p>
-<p>def test_1階差分推定は個人の効果を除いて真の傾きを復元する() -&gt; None:
-    assert first_difference_estimate(PANEL) == pytest.approx(2)</p>
-<p>def test_プーリングOLSは個人の効果のため偏る() -&gt; None:
-    assert pooled_estimate(PANEL) == pytest.approx(3.2)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">first_difference</span><span class="p">(</span><span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""個人ごとに、1 期前との差（Δy・Δx）を取る。最初の期は、差が取れないので除く。"""</span>
+    <span class="n">ordered</span> <span class="o">=</span> <span class="n">panel</span><span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s2">"entity"</span><span class="p">,</span> <span class="s2">"time"</span><span class="p">])</span>
+    <span class="n">differences</span> <span class="o">=</span> <span class="n">ordered</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"entity"</span><span class="p">)[[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">]]</span><span class="o">.</span><span class="n">diff</span><span class="p">()</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">differences</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="s2">"x"</span><span class="p">:</span> <span class="s2">"dx"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">:</span> <span class="s2">"dy"</span><span class="p">})</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">first_difference_estimate</span><span class="p">(</span><span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""1 階差分推定: Δy を Δx で回帰した傾き。個人ごとの効果 a が差で消える。"""</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">first_difference</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">fit_ols</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"dy"</span><span class="p">],</span> <span class="n">d</span><span class="p">[[</span><span class="s2">"dx"</span><span class="p">]])</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"dx"</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pooled_estimate</span><span class="p">(</span><span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""プーリング OLS: 個人を区別せず、y を x で回帰した傾き。"""</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">fit_ols</span><span class="p">(</span><span class="n">panel</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">panel</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]])</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_1階差分は個人ごとの前期との差</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">first_difference</span><span class="p">(</span><span class="n">PANEL</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">d</span><span class="p">[</span><span class="s2">"dx"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">d</span><span class="p">[</span><span class="s2">"dy"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">6</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"dx"</span><span class="p">,</span> <span class="s2">"dy"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_1階差分推定は個人の効果を除いて真の傾きを復元する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">first_difference_estimate</span><span class="p">(</span><span class="n">PANEL</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_プーリングOLSは個人の効果のため偏る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">pooled_estimate</span><span class="p">(</span><span class="n">PANEL</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">3.2</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter09.did</span><span class="w"> </span><span class="kn">import</span> <span class="n">first_difference</span><span class="p">,</span> <span class="n">first_difference_estimate</span><span class="p">,</span> <span class="n">pooled_estimate</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">first_difference</span><span class="p">(</span><span class="n">PANEL</span><span class="p">))</span>
@@ -6647,62 +6683,74 @@ return fig
 </code></pre></div>
 <p>差を取ると、Δy = 2·Δx（ちょうど）で、傾きは 2.0 です。個人効果 a は、差で消えました。<strong>プーリング OLS は 3.2</strong> で、真の値 2 より大きく偏ります（予想 3）。x が大きい個人は、a も大きいためです（a = 1、6、−1 に対し、x の平均は 1.5、3、1.5）。</p>
 <h3 id="_7">乱数のパネルで、偏りを確かめる<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
-<p>def draw_panel(
-    entities: int, periods: int, correlation: float, rng: np.random.Generator
-) -&gt; pd.DataFrame:
-    """個人ごとの効果 a が x と相関するパネル・データ。真の傾きは 1。</p>
-<div class="highlight"><pre><span></span><code>x = correlation·a + v、y = 1 + x + a + 0.5·u。
-"""
-a = np.repeat(rng.standard_normal(entities), periods)
-x = correlation * a + rng.standard_normal(entities * periods)
-y = 1 + x + a + 0.5 * rng.standard_normal(entities * periods)
-return pd.DataFrame(
-    {
-        "entity": np.repeat(np.arange(entities), periods),
-        "time": np.tile(np.arange(periods), entities),
-        "x": x,
-        "y": y,
-    }
-)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">draw_panel</span><span class="p">(</span>
+    <span class="n">entities</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">periods</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">correlation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""個人ごとの効果 a が x と相関するパネル・データ。真の傾きは 1。</span>
+
+<span class="sd">    x = correlation·a + v、y = 1 + x + a + 0.5·u。</span>
+<span class="sd">    """</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">entities</span><span class="p">),</span> <span class="n">periods</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">correlation</span> <span class="o">*</span> <span class="n">a</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">entities</span> <span class="o">*</span> <span class="n">periods</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">a</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">entities</span> <span class="o">*</span> <span class="n">periods</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">"entity"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">entities</span><span class="p">),</span> <span class="n">periods</span><span class="p">),</span>
+            <span class="s2">"time"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">periods</span><span class="p">),</span> <span class="n">entities</span><span class="p">),</span>
+            <span class="s2">"x"</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+            <span class="s2">"y"</span><span class="p">:</span> <span class="n">y</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">panel_estimators</span><span class="p">(</span>
+    <span class="n">entities</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">periods</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">correlation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""パネルを作り直して、プーリング OLS と 1 階差分推定を繰り返す（真の傾きは 1）。"""</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
+        <span class="n">panel</span> <span class="o">=</span> <span class="n">draw_panel</span><span class="p">(</span><span class="n">entities</span><span class="p">,</span> <span class="n">periods</span><span class="p">,</span> <span class="n">correlation</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">pooled_estimate</span><span class="p">(</span><span class="n">panel</span><span class="p">),</span> <span class="n">first_difference_estimate</span><span class="p">(</span><span class="n">panel</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"pooled"</span><span class="p">,</span> <span class="s2">"first_difference"</span><span class="p">])</span>
 </code></pre></div>
-<p>def panel_estimators(
-    entities: int,
-    periods: int,
-    correlation: float,
-    repetitions: int,
-    rng: np.random.Generator,
-) -&gt; pd.DataFrame:
-    """パネルを作り直して、プーリング OLS と 1 階差分推定を繰り返す（真の傾きは 1）。"""
-    rows = []
-    for _ in range(repetitions):
-        panel = draw_panel(entities, periods, correlation, rng)
-        rows.append((pooled_estimate(panel), first_difference_estimate(panel)))
-    return pd.DataFrame(rows, columns=["pooled", "first_difference"])</p>
 <p>x = 相関 × a + v、y = 1 + x + a + 0.5·u（真の傾きは 1）。個人 200 人、2 期、相関 0 と 1 で、500 回繰り返します。理論上、プーリング OLS の傾きは、1 + 相関 ÷ (相関² + 1) に近づきます（相関 1 で 1.5）。</p>
-<p>def test_パネルの形() -&gt; None:
-    panel = draw_panel(10, 4, 0.5, np.random.default_rng(0))
-    assert len(panel) == 40
-    assert list(panel.columns) == ["entity", "time", "x", "y"]
-    assert panel["entity"].nunique() == 10
-    assert panel.groupby("entity")["time"].apply(list).iloc[0] == [0, 1, 2, 3]</p>
-<p>def test_個人の効果は期をまたいで同じ() -&gt; None:
-    a = draw_panel(5, 3, 1.0, np.random.default_rng(0))
-    b = draw_panel(5, 3, 1.0, np.random.default_rng(0))
-    pd.testing.assert_frame_equal(a, b)</p>
-<p>def test_相関があるとプーリングは偏り差分は偏らない() -&gt; None:
-    table = panel_estimators(200, 2, 1.0, 500, np.random.default_rng(0))
-    se = table.std() / 500**0.5
-    assert abs(table["pooled"].mean() - 1.5) &lt; 4 * se["pooled"]
-    assert abs(table["first_difference"].mean() - 1.0) &lt; 4 * se["first_difference"]</p>
-<p>def test_相関がなければプーリングも偏らない() -&gt; None:
-    table = panel_estimators(200, 2, 0.0, 500, np.random.default_rng(0))
-    se = table.std() / 500**0.5
-    assert abs(table["pooled"].mean() - 1.0) &lt; 4 * se["pooled"]
-    assert abs(table["first_difference"].mean() - 1.0) &lt; 4 * se["first_difference"]</p>
-<p>def test_期が多くても1階差分は偏らない() -&gt; None:
-    table = panel_estimators(100, 5, 1.0, 200, np.random.default_rng(0))
-    se = table.std() / 200**0.5
-    assert abs(table["first_difference"].mean() - 1.0) &lt; 4 * se["first_difference"]</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_パネルの形</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="n">draw_panel</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span> <span class="o">==</span> <span class="mi">40</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">panel</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"entity"</span><span class="p">,</span> <span class="s2">"time"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">panel</span><span class="p">[</span><span class="s2">"entity"</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span> <span class="o">==</span> <span class="mi">10</span>
+    <span class="k">assert</span> <span class="n">panel</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"entity"</span><span class="p">)[</span><span class="s2">"time"</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_個人の効果は期をまたいで同じ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">draw_panel</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">draw_panel</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_frame_equal</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_相関があるとプーリングは偏り差分は偏らない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">panel_estimators</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">se</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="mi">500</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">"pooled"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.5</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">se</span><span class="p">[</span><span class="s2">"pooled"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">"first_difference"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">se</span><span class="p">[</span><span class="s2">"first_difference"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_相関がなければプーリングも偏らない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">panel_estimators</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">se</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="mi">500</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">"pooled"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">se</span><span class="p">[</span><span class="s2">"pooled"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">"first_difference"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">se</span><span class="p">[</span><span class="s2">"first_difference"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_期が多くても1階差分は偏らない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">panel_estimators</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">se</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="mi">200</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">"first_difference"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">se</span><span class="p">[</span><span class="s2">"first_difference"</span><span class="p">]</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter09.did</span><span class="w"> </span><span class="kn">import</span> <span class="n">panel_estimators</span>
 
 <span class="k">for</span> <span class="n">correlation</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">):</span>

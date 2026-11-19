@@ -6565,27 +6565,35 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter16.heckit</span><span class="w"> </span><span class="kn">import</span> <span class="n">inverse_mills_ratio</span>
 </code></pre></div>
-<p>def test_逆ミルズ比の手計算() -&gt; None:
-    assert inverse_mills_ratio(0.0) == pytest.approx(math.sqrt(2 / math.pi))
-    assert inverse_mills_ratio(0.0) == pytest.approx(0.7979, abs=1e-4)
-    expected = stats.norm.pdf(1.0) / stats.norm.cdf(1.0)
-    assert inverse_mills_ratio(1.0) == pytest.approx(expected)
-    assert inverse_mills_ratio(1.0) == pytest.approx(0.2876, abs=1e-4)</p>
-<p>def test_逆ミルズ比は常に正で_c_が大きいほど小さい() -&gt; None:
-    values = inverse_mills_ratio(np.linspace(-5, 5, 41))
-    assert (values &gt; 0).all()
-    assert (np.diff(values) &lt; 0).all()</p>
-<p>def test_cが非常に小さいと逆ミルズ比はcの符号を変えた値に近づく() -&gt; None:
-    assert inverse_mills_ratio(-10.0) == pytest.approx(10.098, abs=0.01)
-    assert inverse_mills_ratio(5.0) &lt; 1e-5</p>
-<p>def test_配列を渡すと配列が返る() -&gt; None:
-    assert inverse_mills_ratio([0.0, 1.0]).shape == (2,)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_逆ミルズ比の手計算</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">inverse_mills_ratio</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span> <span class="o">/</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">inverse_mills_ratio</span><span class="p">(</span><span class="mf">0.0</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.7979</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">/</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">inverse_mills_ratio</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">inverse_mills_ratio</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.2876</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-4</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_逆ミルズ比は常に正で_c_が大きいほど小さい</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">inverse_mills_ratio</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">41</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">values</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diff</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_cが非常に小さいと逆ミルズ比はcの符号を変えた値に近づく</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">inverse_mills_ratio</span><span class="p">(</span><span class="o">-</span><span class="mf">10.0</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">10.098</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">inverse_mills_ratio</span><span class="p">(</span><span class="mf">5.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-5</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_配列を渡すと配列が返る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">inverse_mills_ratio</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">2</span><span class="p">,)</span>
+</code></pre></div>
 <h3 id="green">Green: 逆ミルズ比を実装する<a class="headerlink" href="#green" title="Permanent link">&para;</a></h3>
-<p>def inverse_mills_ratio(c: ArrayLike) -&gt; NDArray[np.float64]:
-    """逆ミルズ比 λ(c) = φ(c) ÷ Φ(c)。選択された観測値の、誤差項の平均の補正に使う。"""
-    values = np.asarray(c, dtype=float)
-    result: NDArray[np.float64] = stats.norm.pdf(values) / stats.norm.cdf(values)
-    return result</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">inverse_mills_ratio</span><span class="p">(</span><span class="n">c</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""逆ミルズ比 λ(c) = φ(c) ÷ Φ(c)。選択された観測値の、誤差項の平均の補正に使う。"""</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">result</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">pdf</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">/</span> <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter16.heckit</span><span class="w"> </span><span class="kn">import</span> <span class="n">inverse_mills_ratio</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">inverse_mills_ratio</span><span class="p">([</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">])</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
@@ -6594,100 +6602,114 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <p>λ(0) = 0.7979、λ(1) = 0.2876 は、手計算と一致します。c が小さい（選ばれにくい）ほど、λ は大きく、c = −10 では、ほぼ −c（10.0981）です。</p>
 <h3 id="_7">選択のある標本を作る<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
-<p>def draw_selection_sample(
-    n: int, correlation: float, rng: np.random.Generator
-) -&gt; pd.DataFrame:
-    """選択（selected）と、選択された人だけで観測される y の標本。</p>
-<div class="highlight"><pre><span></span><code>選択: 0.5 + x + z + v &gt; 0、結果: y = 1 + 2x + u。z は結果の式に入らない。
-u = correlation·v + √(1 − correlation²)·w（選択と結果の誤差の相関が correlation）。
-"""
-x, z, v, w = rng.standard_normal((4, n))
-u = correlation * v + math.sqrt(1 - correlation**2) * w
-selected = (0.5 + x + z + v &gt; 0).astype(float)
-y = np.where(selected == 1, 1 + 2 * x + u, np.nan)
-return pd.DataFrame({"x": x, "z": z, "selected": selected, "y": y})
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">draw_selection_sample</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">correlation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""選択（selected）と、選択された人だけで観測される y の標本。</span>
+
+<span class="sd">    選択: 0.5 + x + z + v &gt; 0、結果: y = 1 + 2x + u。z は結果の式に入らない。</span>
+<span class="sd">    u = correlation·v + √(1 − correlation²)·w（選択と結果の誤差の相関が correlation）。</span>
+<span class="sd">    """</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="n">n</span><span class="p">))</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">correlation</span> <span class="o">*</span> <span class="n">v</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">correlation</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">w</span>
+    <span class="n">selected</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">z</span> <span class="o">+</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">selected</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">u</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"x"</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">:</span> <span class="n">z</span><span class="p">,</span> <span class="s2">"selected"</span><span class="p">:</span> <span class="n">selected</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">:</span> <span class="n">y</span><span class="p">})</span>
 </code></pre></div>
-<p>def sample(correlation: float = 0.7, n: int = 5000, seed: int = 0) -&gt; pd.DataFrame:
-    return draw_selection_sample(n, correlation, np.random.default_rng(seed))</p>
-<p>def test_標本は乱数列から決まる式で作られる() -&gt; None:
-    x, z, v, w = np.random.default_rng(11).standard_normal((4, 300))
-    u = 0.7 * v + math.sqrt(1 - 0.7**2) * w
-    selected = (0.5 + x + z + v &gt; 0).astype(float)
-    df = draw_selection_sample(300, 0.7, np.random.default_rng(11))
-    assert df["x"].to_numpy() == pytest.approx(x)
-    assert df["selected"].to_numpy() == pytest.approx(selected)
-    chosen = selected == 1
-    assert df["y"].to_numpy()[chosen] == pytest.approx((1 + 2 * x + u)[chosen])</p>
-<p>def test_標本の形() -&gt; None:
-    df = sample(n=50000)
-    assert list(df.columns) == ["x", "z", "selected", "y"]
-    assert df["selected"].mean() == pytest.approx(
-        stats.norm.cdf(0.5 / 3**0.5), abs=0.01
-    )
-    assert (df["y"].isna() == (df["selected"] == 0)).all()</p>
-<p>def test_選択された人の結果は選択の誤差と相関するときだけ偏る() -&gt; None:
-    biased = sample(0.7, 50000)
-    independent = sample(0.0, 50000)
-    for df, expect_bias in ((biased, True), (independent, False)):
-        chosen = df[df["selected"] == 1]
-        residual = chosen["y"] - 1 - 2 * chosen["x"]
-        assert (abs(residual.mean()) &gt; 0.2) == expect_bias</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span><span class="n">correlation</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span> <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">draw_selection_sample</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">correlation</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_標本は乱数列から決まる式で作られる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">11</span><span class="p">)</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">((</span><span class="mi">4</span><span class="p">,</span> <span class="mi">300</span><span class="p">))</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="mf">0.7</span> <span class="o">*</span> <span class="n">v</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">0.7</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">w</span>
+    <span class="n">selected</span> <span class="o">=</span> <span class="p">(</span><span class="mf">0.5</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">z</span> <span class="o">+</span> <span class="n">v</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">draw_selection_sample</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">11</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">df</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">df</span><span class="p">[</span><span class="s2">"selected"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span>
+    <span class="n">chosen</span> <span class="o">=</span> <span class="n">selected</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">df</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()[</span><span class="n">chosen</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">u</span><span class="p">)[</span><span class="n">chosen</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_標本の形</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">50000</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">,</span> <span class="s2">"selected"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">df</span><span class="p">[</span><span class="s2">"selected"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">stats</span><span class="o">.</span><span class="n">norm</span><span class="o">.</span><span class="n">cdf</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">/</span> <span class="mi">3</span><span class="o">**</span><span class="mf">0.5</span><span class="p">),</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.01</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"selected"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_選択された人の結果は選択の誤差と相関するときだけ偏る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">biased</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="mi">50000</span><span class="p">)</span>
+    <span class="n">independent</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">50000</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">df</span><span class="p">,</span> <span class="n">expect_bias</span> <span class="ow">in</span> <span class="p">((</span><span class="n">biased</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span> <span class="p">(</span><span class="n">independent</span><span class="p">,</span> <span class="kc">False</span><span class="p">)):</span>
+        <span class="n">chosen</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"selected"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">residual</span> <span class="o">=</span> <span class="n">chosen</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">chosen</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">residual</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mf">0.2</span><span class="p">)</span> <span class="o">==</span> <span class="n">expect_bias</span>
+</code></pre></div>
 <h3 id="2_1">ヘックマンの 2 段階推定を実装する<a class="headerlink" href="#2_1" title="Permanent link">&para;</a></h3>
-<p>@dataclass(frozen=True)
-class HeckitFit:
-    """2 段階推定の結果。係数の最後の <code>lambda</code> は、逆ミルズ比の係数（= ρ·σ_u）。"""</p>
-<div class="highlight"><pre><span></span><code>coefficients: pd.Series
-naive_standard_errors: pd.Series
-selection: BinaryFit
-n_selected: int
-</code></pre></div>
-<p>def heckit_two_step(
-    df: pd.DataFrame, x_columns: list[str], selection_columns: list[str]
-) -&gt; HeckitFit:
-    """ヘックマンの 2 段階推定。</p>
-<div class="highlight"><pre><span></span><code>第 1 段階: 選択（selected）を、selection_columns でプロビット（全標本）。
-第 2 段階: 選択された観測値だけで、y を、x_columns と逆ミルズ比 λ で回帰する。
-selection_columns には、x_columns に入らない変数（除外制約）を、含める。
-"""
-selection = fit_binary(df["selected"], df[selection_columns], "probit")
-index = selection.coefficients.drop("const")
-linear = selection.coefficients["const"] + df[selection_columns] @ index
-chosen = df["selected"] == 1
-mills = pd.Series(inverse_mills_ratio(linear), index=df.index, name="lambda")
-columns = df.loc[chosen, x_columns].join(mills[chosen])
-second = fit_ols(df.loc[chosen, "y"], columns)
-return HeckitFit(
-    coefficients=second.coefficients,
-    naive_standard_errors=second.standard_errors,
-    selection=selection,
-    n_selected=int(chosen.sum()),
-)
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">HeckitFit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""2 段階推定の結果。係数の最後の `lambda` は、逆ミルズ比の係数（= ρ·σ_u）。"""</span>
+
+    <span class="n">coefficients</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>
+    <span class="n">naive_standard_errors</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>
+    <span class="n">selection</span><span class="p">:</span> <span class="n">BinaryFit</span>
+    <span class="n">n_selected</span><span class="p">:</span> <span class="nb">int</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">heckit_two_step</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">x_columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">selection_columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HeckitFit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""ヘックマンの 2 段階推定。</span>
+
+<span class="sd">    第 1 段階: 選択（selected）を、selection_columns でプロビット（全標本）。</span>
+<span class="sd">    第 2 段階: 選択された観測値だけで、y を、x_columns と逆ミルズ比 λ で回帰する。</span>
+<span class="sd">    selection_columns には、x_columns に入らない変数（除外制約）を、含める。</span>
+<span class="sd">    """</span>
+    <span class="n">selection</span> <span class="o">=</span> <span class="n">fit_binary</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"selected"</span><span class="p">],</span> <span class="n">df</span><span class="p">[</span><span class="n">selection_columns</span><span class="p">],</span> <span class="s2">"probit"</span><span class="p">)</span>
+    <span class="n">index</span> <span class="o">=</span> <span class="n">selection</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">"const"</span><span class="p">)</span>
+    <span class="n">linear</span> <span class="o">=</span> <span class="n">selection</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">+</span> <span class="n">df</span><span class="p">[</span><span class="n">selection_columns</span><span class="p">]</span> <span class="o">@</span> <span class="n">index</span>
+    <span class="n">chosen</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"selected"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">mills</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">inverse_mills_ratio</span><span class="p">(</span><span class="n">linear</span><span class="p">),</span> <span class="n">index</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">"lambda"</span><span class="p">)</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">chosen</span><span class="p">,</span> <span class="n">x_columns</span><span class="p">]</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">mills</span><span class="p">[</span><span class="n">chosen</span><span class="p">])</span>
+    <span class="n">second</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">chosen</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">],</span> <span class="n">columns</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">HeckitFit</span><span class="p">(</span>
+        <span class="n">coefficients</span><span class="o">=</span><span class="n">second</span><span class="o">.</span><span class="n">coefficients</span><span class="p">,</span>
+        <span class="n">naive_standard_errors</span><span class="o">=</span><span class="n">second</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">,</span>
+        <span class="n">selection</span><span class="o">=</span><span class="n">selection</span><span class="p">,</span>
+        <span class="n">n_selected</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">chosen</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
+    <span class="p">)</span>
 </code></pre></div>
 <p>第 1 段階のプロビットは、第 14 章の <code>fit_binary</code> です。<code>statsmodels</code> の <code>Probit</code> と、逆ミルズ比・OLS で作った値と、一致することを、テストで確認します。</p>
-<p>def test_2段階推定はstatsmodelsのプロビットとOLSで作った値に一致する() -&gt; None:
-    df = sample()
-    fit = heckit_two_step(df, ["x"], ["x", "z"])
-    probit = sm.Probit(df["selected"], sm.add_constant(df[["x", "z"]])).fit(disp=0)
-    linear = probit.params["const"] + df[["x", "z"]] @ probit.params[["x", "z"]]
-    chosen = df["selected"] == 1
-    columns = df.loc[chosen, ["x"]].assign(
-        **{"lambda": inverse_mills_ratio(linear[chosen])}
-    )
-    reference = fit_ols(df.loc[chosen, "y"], columns)
-    assert fit.coefficients.to_numpy() == pytest.approx(
-        reference.coefficients.to_numpy()
-    )
-    assert fit.naive_standard_errors.to_numpy() == pytest.approx(
-        reference.standard_errors.to_numpy()
-    )
-    assert fit.n_selected == int(chosen.sum())
-    assert list(fit.coefficients.index) == ["const", "x", "lambda"]</p>
-<p>def test_第1段階の選択の係数は真の値に近い() -&gt; None:
-    fit = heckit_two_step(sample(), ["x"], ["x", "z"])
-    truth = {"const": 0.5, "x": 1.0, "z": 1.0}
-    for name, value in truth.items():
-        error = fit.selection.standard_errors[name]
-        assert abs(fit.selection.coefficients[name] - value) &lt; 4 * error</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_2段階推定はstatsmodelsのプロビットとOLSで作った値に一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">sample</span><span class="p">()</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">heckit_two_step</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">])</span>
+    <span class="n">probit</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">Probit</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"selected"</span><span class="p">],</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">]]))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">disp</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">linear</span> <span class="o">=</span> <span class="n">probit</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">+</span> <span class="n">df</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">]]</span> <span class="o">@</span> <span class="n">probit</span><span class="o">.</span><span class="n">params</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">]]</span>
+    <span class="n">chosen</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">"selected"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">chosen</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">]]</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+        <span class="o">**</span><span class="p">{</span><span class="s2">"lambda"</span><span class="p">:</span> <span class="n">inverse_mills_ratio</span><span class="p">(</span><span class="n">linear</span><span class="p">[</span><span class="n">chosen</span><span class="p">])}</span>
+    <span class="p">)</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">chosen</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">],</span> <span class="n">columns</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">reference</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">naive_standard_errors</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">reference</span><span class="o">.</span><span class="n">standard_errors</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">n_selected</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">chosen</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"const"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">,</span> <span class="s2">"lambda"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_第1段階の選択の係数は真の値に近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">heckit_two_step</span><span class="p">(</span><span class="n">sample</span><span class="p">(),</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">])</span>
+    <span class="n">truth</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"const"</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">truth</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="n">fit</span><span class="o">.</span><span class="n">selection</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">selection</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">-</span> <span class="n">value</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">error</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter03.multiple</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_ols</span>
@@ -6711,89 +6733,101 @@ return HeckitFit(
 <p>n = 5000 のうち、61.7%（3087 人）が選択されました。<strong>選択された人だけの OLS は、傾き 1.8108、切片 1.3102</strong> で、真の値（2、1）から、偏っています（予想 2）。ヘックマンの 2 段階推定は、<strong>傾き 1.9694、切片 1.0008</strong>、逆ミルズ比の係数 <strong>0.7186</strong>（真の値 ρ·σ_u = 0.7）です（予想 3）。第 1 段階のプロビットも、真の値（0.5、1、1）に近い（0.4952、0.9864、1.029）。</p>
 <h3 id="_8">標準誤差<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>第 2 段階の OLS の標準誤差（上の最後の行）は、正しくありません。ブートストラップで、標本を復元抽出し、2 段階推定を 200 回繰り返して、標準偏差を求めます。</p>
-<p>def heckit_bootstrap_standard_errors(
-    df: pd.DataFrame,
-    x_columns: list[str],
-    selection_columns: list[str],
-    repetitions: int,
-    rng: np.random.Generator,
-) -&gt; pd.Series:
-    """ブートストラップ標準誤差: 全標本から復元抽出して、2 段階推定を繰り返す。</p>
-<div class="highlight"><pre><span></span><code>λ は、第 1 段階の推定値なので、第 2 段階の OLS の標準誤差は、正しくない。
-"""
-rows = []
-for _ in range(repetitions):
-    sample = df.iloc[rng.integers(0, len(df), len(df))].reset_index(drop=True)
-    rows.append(heckit_two_step(sample, x_columns, selection_columns).coefficients)
-return pd.DataFrame(rows).std(ddof=1)
-</code></pre></div>
-<p>def test_選択された標本のOLSは偏りヘックマンは真の値を復元する() -&gt; None:
-    df = sample()
-    chosen = df[df["selected"] == 1]
-    ols = fit_ols(chosen["y"], chosen[["x"]]).coefficients["x"]
-    fit = heckit_two_step(df, ["x"], ["x", "z"])
-    errors = heckit_bootstrap_standard_errors(
-        df, ["x"], ["x", "z"], 200, np.random.default_rng(1)
-    )
-    assert ols &lt; 1.9
-    truth = {"const": 1.0, "x": 2.0, "lambda": 0.7}
-    for name, value in truth.items():
-        assert abs(fit.coefficients[name] - value) &lt; 4 * errors[name]</p>
-<p>def test_ブートストラップ標準誤差は標本標準偏差_n_引く1で割る() -&gt; None:
-    df = sample(n=500)
-    errors = heckit_bootstrap_standard_errors(
-        df, ["x"], ["x", "z"], 2, np.random.default_rng(5)
-    )
-    rng = np.random.default_rng(5)
-    rows = []
-    for _ in range(2):
-        resampled = df.iloc[rng.integers(0, len(df), len(df))].reset_index(drop=True)
-        rows.append(heckit_two_step(resampled, ["x"], ["x", "z"]).coefficients)
-    expected = pd.DataFrame(rows).std(ddof=1)
-    assert errors.to_numpy() == pytest.approx(expected.to_numpy())</p>
-<p>def test_ブートストラップは全標本から復元抽出する(
-    monkeypatch: pytest.MonkeyPatch,
-) -&gt; None:
-    df = sample(n=400)
-    seen: list[pd.DataFrame] = []
-    original = heckit_two_step</p>
-<div class="highlight"><pre><span></span><code>def spy(
-    frame: pd.DataFrame, x_columns: list[str], selection_columns: list[str]
-) -&gt; HeckitFit:
-    seen.append(frame)
-    return original(frame, x_columns, selection_columns)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">heckit_bootstrap_standard_errors</span><span class="p">(</span>
+    <span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">x_columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">selection_columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+    <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""ブートストラップ標準誤差: 全標本から復元抽出して、2 段階推定を繰り返す。</span>
 
-monkeypatch.setattr("lib.chapter16.heckit.heckit_two_step", spy)
-heckit_bootstrap_standard_errors(df, ["x"], ["x", "z"], 3, np.random.default_rng(0))
-second_half = set(df["x"].iloc[200:])
-assert len(seen) == 3
-for frame in seen:
-    assert len(frame) == 400
-    assert set(frame["x"]) &amp; second_half
+<span class="sd">    λ は、第 1 段階の推定値なので、第 2 段階の OLS の標準誤差は、正しくない。</span>
+<span class="sd">    """</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heckit_two_step</span><span class="p">(</span><span class="n">sample</span><span class="p">,</span> <span class="n">x_columns</span><span class="p">,</span> <span class="n">selection_columns</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 </code></pre></div>
-<p>def test_ブートストラップ標準誤差は同じ種なら同じ() -&gt; None:
-    df = sample(n=500)
-    a = heckit_bootstrap_standard_errors(
-        df, ["x"], ["x", "z"], 30, np.random.default_rng(3)
-    )
-    b = heckit_bootstrap_standard_errors(
-        df, ["x"], ["x", "z"], 30, np.random.default_rng(3)
-    )
-    assert a.tolist() == b.tolist()
-    assert list(a.index) == ["const", "x", "lambda"]</p>
-<p>def test_ブートストラップ標準誤差は第2段階のOLSの標準誤差と違う() -&gt; None:
-    df = sample(n=2000)
-    fit = heckit_two_step(df, ["x"], ["x", "z"])
-    errors = heckit_bootstrap_standard_errors(
-        df, ["x"], ["x", "z"], 100, np.random.default_rng(3)
-    )
-    assert errors["x"] != pytest.approx(fit.naive_standard_errors["x"], rel=1e-3)</p>
-<p>def test_ブートストラップ標準誤差は推定値の実際のばらつきに近い() -&gt; None:
-    table = selection_bias_experiment(1000, 0.7, 150, np.random.default_rng(0))
-    errors = heckit_bootstrap_standard_errors(
-        sample(n=1000), ["x"], ["x", "z"], 150, np.random.default_rng(1)
-    )
-    assert errors["x"] == pytest.approx(table["heckit"].std(), rel=0.3)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_選択された標本のOLSは偏りヘックマンは真の値を復元する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">sample</span><span class="p">()</span>
+    <span class="n">chosen</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"selected"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">ols</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">chosen</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">chosen</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]])</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">heckit_two_step</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">])</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="n">heckit_bootstrap_standard_errors</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">],</span> <span class="mi">200</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">ols</span> <span class="o">&lt;</span> <span class="mf">1.9</span>
+    <span class="n">truth</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"const"</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">:</span> <span class="mf">2.0</span><span class="p">,</span> <span class="s2">"lambda"</span><span class="p">:</span> <span class="mf">0.7</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">truth</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">-</span> <span class="n">value</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">errors</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ブートストラップ標準誤差は標本標準偏差_n_引く1で割る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="n">heckit_bootstrap_standard_errors</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">],</span> <span class="mi">2</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">):</span>
+        <span class="n">resampled</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">rng</span><span class="o">.</span><span class="n">integers</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">))]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">heckit_two_step</span><span class="p">(</span><span class="n">resampled</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">])</span><span class="o">.</span><span class="n">coefficients</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">errors</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">expected</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ブートストラップは全標本から復元抽出する</span><span class="p">(</span>
+    <span class="n">monkeypatch</span><span class="p">:</span> <span class="n">pytest</span><span class="o">.</span><span class="n">MonkeyPatch</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">400</span><span class="p">)</span>
+    <span class="n">seen</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">original</span> <span class="o">=</span> <span class="n">heckit_two_step</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">spy</span><span class="p">(</span>
+        <span class="n">frame</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">x_columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">selection_columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">HeckitFit</span><span class="p">:</span>
+        <span class="n">seen</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">original</span><span class="p">(</span><span class="n">frame</span><span class="p">,</span> <span class="n">x_columns</span><span class="p">,</span> <span class="n">selection_columns</span><span class="p">)</span>
+
+    <span class="n">monkeypatch</span><span class="o">.</span><span class="n">setattr</span><span class="p">(</span><span class="s2">"lib.chapter16.heckit.heckit_two_step"</span><span class="p">,</span> <span class="n">spy</span><span class="p">)</span>
+    <span class="n">heckit_bootstrap_standard_errors</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">],</span> <span class="mi">3</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">second_half</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">200</span><span class="p">:])</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">seen</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
+    <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="n">seen</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">frame</span><span class="p">)</span> <span class="o">==</span> <span class="mi">400</span>
+        <span class="k">assert</span> <span class="nb">set</span><span class="p">(</span><span class="n">frame</span><span class="p">[</span><span class="s2">"x"</span><span class="p">])</span> <span class="o">&amp;</span> <span class="n">second_half</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ブートストラップ標準誤差は同じ種なら同じ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">500</span><span class="p">)</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">heckit_bootstrap_standard_errors</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">],</span> <span class="mi">30</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">heckit_bootstrap_standard_errors</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">],</span> <span class="mi">30</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">a</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="n">b</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"const"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">,</span> <span class="s2">"lambda"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ブートストラップ標準誤差は第2段階のOLSの標準誤差と違う</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">heckit_two_step</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">])</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="n">heckit_bootstrap_standard_errors</span><span class="p">(</span>
+        <span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">],</span> <span class="mi">100</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">!=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">naive_standard_errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-3</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ブートストラップ標準誤差は推定値の実際のばらつきに近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">selection_bias_experiment</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="n">heckit_bootstrap_standard_errors</span><span class="p">(</span>
+        <span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1000</span><span class="p">),</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">],</span> <span class="mi">150</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">"heckit"</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter16.heckit</span><span class="w"> </span><span class="kn">import</span> <span class="n">heckit_bootstrap_standard_errors</span>
 
 <span class="n">errors</span> <span class="o">=</span> <span class="n">heckit_bootstrap_standard_errors</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">],</span> <span class="mi">200</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
@@ -6803,37 +6837,43 @@ for frame in seen:
 </code></pre></div>
 <p>ブートストラップの標準誤差は、x で 0.0228（第 2 段階の OLS では 0.0212）、切片で 0.0303（0.0281）と、少し大きい値です（予想 4: 正しくない。この標本では、差は 1 割程度）。逆ミルズ比の係数の標準誤差は、同じ 0.0513 です。</p>
 <h3 id="_9">偏りと、ヘックマンの効果を、繰り返しで確かめる<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
-<p>def selection_bias_experiment(
-    n: int, correlation: float, repetitions: int, rng: np.random.Generator
-) -&gt; pd.DataFrame:
-    """選択された標本の OLS と、2 段階推定の x の傾き（真の値 2）を繰り返す。"""
-    rows = []
-    for _ in range(repetitions):
-        df = draw_selection_sample(n, correlation, rng)
-        chosen = df[df["selected"] == 1]
-        ols = fit_ols(chosen["y"], chosen[["x"]]).coefficients["x"]
-        heckit = heckit_two_step(df, ["x"], ["x", "z"]).coefficients["x"]
-        rows.append((ols, heckit))
-    return pd.DataFrame(rows, columns=["ols_selected", "heckit"])</p>
-<p>def test_相関があるとOLSは偏りヘックマンは偏らない() -&gt; None:
-    table = selection_bias_experiment(1000, 0.7, 200, np.random.default_rng(0))
-    se = table.std() / 200**0.5
-    assert list(table.columns) == ["ols_selected", "heckit"]
-    assert abs(table["heckit"].mean() - 2.0) &lt; 4 * se["heckit"]
-    assert table["ols_selected"].mean() &lt; 1.9
-    assert abs(table["ols_selected"].mean() - 2.0) &gt; 4 * se["ols_selected"]</p>
-<p>def test_相関がなければOLSも偏らない() -&gt; None:
-    table = selection_bias_experiment(1000, 0.0, 200, np.random.default_rng(0))
-    se = table.std() / 200**0.5
-    assert abs(table["ols_selected"].mean() - 2.0) &lt; 4 * se["ols_selected"]
-    assert abs(table["heckit"].mean() - 2.0) &lt; 4 * se["heckit"]</p>
-<p>def test_相関がなければ選択のバイアスもなくlambdaの係数は0に近い() -&gt; None:
-    df = sample(0.0, 20000, seed=2)
-    chosen = df[df["selected"] == 1]
-    ols = fit_ols(chosen["y"], chosen[["x"]])
-    fit = heckit_two_step(df, ["x"], ["x", "z"])
-    assert abs(ols.coefficients["x"] - 2.0) &lt; 4 * ols.standard_errors["x"]
-    assert abs(fit.coefficients["lambda"]) &lt; 4 * fit.naive_standard_errors["lambda"]</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">selection_bias_experiment</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">correlation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""選択された標本の OLS と、2 段階推定の x の傾き（真の値 2）を繰り返す。"""</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">draw_selection_sample</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">correlation</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+        <span class="n">chosen</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"selected"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="n">ols</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">chosen</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">chosen</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]])</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span>
+        <span class="n">heckit</span> <span class="o">=</span> <span class="n">heckit_two_step</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">])</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">ols</span><span class="p">,</span> <span class="n">heckit</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"ols_selected"</span><span class="p">,</span> <span class="s2">"heckit"</span><span class="p">])</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_相関があるとOLSは偏りヘックマンは偏らない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">selection_bias_experiment</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">se</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="mi">200</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"ols_selected"</span><span class="p">,</span> <span class="s2">"heckit"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">"heckit"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">se</span><span class="p">[</span><span class="s2">"heckit"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">table</span><span class="p">[</span><span class="s2">"ols_selected"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mf">1.9</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">"ols_selected"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">se</span><span class="p">[</span><span class="s2">"ols_selected"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_相関がなければOLSも偏らない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">selection_bias_experiment</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">se</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="mi">200</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">"ols_selected"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">se</span><span class="p">[</span><span class="s2">"ols_selected"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">"heckit"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">se</span><span class="p">[</span><span class="s2">"heckit"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_相関がなければ選択のバイアスもなくlambdaの係数は0に近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">sample</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mi">20000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">chosen</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"selected"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">ols</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">chosen</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">chosen</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]])</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">heckit_two_step</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">ols</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">-</span> <span class="mf">2.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">ols</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"lambda"</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">fit</span><span class="o">.</span><span class="n">naive_standard_errors</span><span class="p">[</span><span class="s2">"lambda"</span><span class="p">]</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter16.heckit</span><span class="w"> </span><span class="kn">import</span> <span class="n">selection_bias_experiment</span>
 
 <span class="k">for</span> <span class="n">correlation</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">):</span>
@@ -6850,54 +6890,64 @@ for frame in seen:
 </ul>
 <p><img alt="傾きの推定値の分布（n = 1000、200 回）。選択された標本の OLS（ols_selected）は、2 より小さい値のまわりに偏り、ヘックマン（heckit）は 2 のまわり" src="../images/ch16-heckit-distributions.png" /></p>
 <h3 id="_10">図<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
-<p>def xs(line: Any) -&gt; list[float]:
-    values: Any = line.get_xdata()
-    return [float(v) for v in values]</p>
-<p>def ys(line: Any) -&gt; list[float]:
-    values: Any = line.get_ydata()
-    return [float(v) for v in values]</p>
-<p>def slope(line: Any) -&gt; float:
-    x, y = xs(line), ys(line)
-    return (y[1] - y[0]) / (x[1] - x[0])</p>
-<p>def test_選択されたデータと3本の直線() -&gt; None:
-    df = draw_selection_sample(3000, 0.7, np.random.default_rng(0))
-    ax = plot_selection(df).axes[0]
-    assert [line.get_label() for line in ax.lines] == [
-        "Selected",
-        "True line",
-        "OLS (selected)",
-        "Heckit",
-    ]
-    chosen = df[df["selected"] == 1]
-    assert len(xs(ax.lines[0])) == len(chosen)</p>
-<p>def test_直線の傾き() -&gt; None:
-    df = draw_selection_sample(3000, 0.7, np.random.default_rng(0))
-    ax = plot_selection(df).axes[0]
-    chosen = df[df["selected"] == 1]
-    assert slope(ax.lines[1]) == pytest.approx(2)
-    assert slope(ax.lines[2]) == pytest.approx(
-        fit_ols(chosen["y"], chosen[["x"]]).coefficients["x"]
-    )
-    assert slope(ax.lines[3]) == pytest.approx(
-        heckit_two_step(df, ["x"], ["x", "z"]).coefficients["x"]
-    )
-    assert slope(ax.lines[2]) &lt; slope(ax.lines[3])</p>
-<p>def plot_selection(df: pd.DataFrame) -&gt; Figure:
-    """選択された人のデータと、真の直線、OLS（選択された標本）、ヘックマンの直線を描く。"""
-    chosen = df[df["selected"] == 1]
-    ends = np.array([float(df["x"].min()), float(df["x"].max())])
-    ols = fit_ols(chosen["y"], chosen[["x"]]).coefficients
-    heckit = heckit_two_step(df, ["x"], ["x", "z"]).coefficients
-    fig, ax = plt.subplots()
-    ax.plot(chosen["x"], chosen["y"], "o", alpha=0.3, label="Selected")
-    ax.plot(ends, 1 + 2 * ends, "--", label="True line")
-    ax.plot(ends, ols["const"] + ols["x"] * ends, label="OLS (selected)")
-    ax.plot(ends, heckit["const"] + heckit["x"] * ends, label="Heckit")
-    ax.set_xlabel("x")
-    ax.set_ylabel("y (observed only if selected)")
-    ax.legend()
-    plt.close(fig)
-    return fig</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">xs</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="n">values</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">get_xdata</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ys</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+    <span class="n">values</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">get_ydata</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">values</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">slope</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">xs</span><span class="p">(</span><span class="n">line</span><span class="p">),</span> <span class="n">ys</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_選択されたデータと3本の直線</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">draw_selection_sample</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_selection</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span>
+        <span class="s2">"Selected"</span><span class="p">,</span>
+        <span class="s2">"True line"</span><span class="p">,</span>
+        <span class="s2">"OLS (selected)"</span><span class="p">,</span>
+        <span class="s2">"Heckit"</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="n">chosen</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"selected"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">chosen</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_直線の傾き</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">draw_selection_sample</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_selection</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">chosen</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"selected"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">slope</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">slope</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">fit_ols</span><span class="p">(</span><span class="n">chosen</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">chosen</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]])</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">slope</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">heckit_two_step</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">])</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">slope</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">&lt;</span> <span class="n">slope</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_selection</span><span class="p">(</span><span class="n">df</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""選択された人のデータと、真の直線、OLS（選択された標本）、ヘックマンの直線を描く。"""</span>
+    <span class="n">chosen</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s2">"selected"</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">ends</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">()),</span> <span class="nb">float</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">())])</span>
+    <span class="n">ols</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">chosen</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">chosen</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]])</span><span class="o">.</span><span class="n">coefficients</span>
+    <span class="n">heckit</span> <span class="o">=</span> <span class="n">heckit_two_step</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">])</span><span class="o">.</span><span class="n">coefficients</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">chosen</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">chosen</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="s2">"o"</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Selected"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ends</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">ends</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"True line"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ends</span><span class="p">,</span> <span class="n">ols</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">+</span> <span class="n">ols</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">*</span> <span class="n">ends</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"OLS (selected)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ends</span><span class="p">,</span> <span class="n">heckit</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">+</span> <span class="n">heckit</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">*</span> <span class="n">ends</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Heckit"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"y (observed only if selected)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+</code></pre></div>
 <h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter16
 </code></pre></div>

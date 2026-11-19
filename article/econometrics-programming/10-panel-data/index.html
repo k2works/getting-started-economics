@@ -6644,64 +6644,76 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>def test_ウィズイン変換は個人ごとの平均を引く() -&gt; None:
-    tilde = within_transform(PANEL, ["x", "y"])
-    assert tilde["x"].tolist() == [-0.5, 0.5, -1, 1, -1.5, 1.5]
-    assert tilde["y"].tolist() == [-1, 1, -2, 2, -3, 3]</p>
-<p>def test_ウィズイン変換すると個人ごとの平均は0() -&gt; None:
-    panel = sample()
-    tilde = within_transform(panel, ["x", "y"])
-    means = tilde.groupby(panel["entity"]).mean()
-    assert means.to_numpy() == pytest.approx(0, abs=1e-12)</p>
-<p>def test_固定効果は個人の効果を除いて真の傾きを復元する() -&gt; None:
-    fit = fixed_effects(PANEL, "y", ["x"])
-    assert fit.coefficients["x"] == pytest.approx(2)
-    assert fit.standard_errors["x"] == pytest.approx(0, abs=1e-9)
-    assert fit.df_resid == 6 - 3 - 1
-    assert fit.n_obs == 6</p>
-<h3 id="green">Green: ウィズイン変換と固定効果を実装する<a class="headerlink" href="#green" title="Permanent link">&para;</a></h3>
-<p>@dataclass(frozen=True)
-class PanelFit:
-    """パネル・データの推定結果（係数・標準誤差・共分散行列・誤差の分散の推定値）。"""</p>
-<div class="highlight"><pre><span></span><code>coefficients: pd.Series
-standard_errors: pd.Series
-covariance: pd.DataFrame
-sigma2: float
-r_squared: float
-n_obs: int
-df_resid: int
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_ウィズイン変換は個人ごとの平均を引く</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">tilde</span> <span class="o">=</span> <span class="n">within_transform</span><span class="p">(</span><span class="n">PANEL</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">tilde</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">tilde</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span> <span class="o">==</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_ウィズイン変換すると個人ごとの平均は0</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="n">sample</span><span class="p">()</span>
+    <span class="n">tilde</span> <span class="o">=</span> <span class="n">within_transform</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">])</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="n">tilde</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">panel</span><span class="p">[</span><span class="s2">"entity"</span><span class="p">])</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">means</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_固定効果は個人の効果を除いて真の傾きを復元する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fixed_effects</span><span class="p">(</span><span class="n">PANEL</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">df_resid</span> <span class="o">==</span> <span class="mi">6</span> <span class="o">-</span> <span class="mi">3</span> <span class="o">-</span> <span class="mi">1</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">n_obs</span> <span class="o">==</span> <span class="mi">6</span>
 </code></pre></div>
-<p>def within_transform(
-    panel: pd.DataFrame, columns: list[str], entity: str = "entity"
-) -&gt; pd.DataFrame:
-    """ウィズイン変換: 各列から、個人ごとの平均を引く。"""
-    means = panel.groupby(entity)[columns].transform("mean")
-    return panel[columns] - means</p>
-<p>def _fit_without_constant(y: pd.Series, x: pd.DataFrame, df_resid: int) -&gt; PanelFit:
-    """定数項なしの回帰。誤差の分散は、指定した自由度 df_resid で割って推定する。"""
-    result = fit_ols(y, x, constant=False)
-    design = x.to_numpy(dtype=float)
-    sigma2 = float(result.residuals @ result.residuals) / df_resid
-    covariance = sigma2 * np.linalg.inv(design.T @ design)
-    names = list(x.columns)
-    return PanelFit(
-        coefficients=result.coefficients,
-        standard_errors=pd.Series(np.sqrt(np.diag(covariance)), index=names),
-        covariance=pd.DataFrame(covariance, index=names, columns=names),
-        sigma2=sigma2,
-        r_squared=result.r_squared,
-        n_obs=len(y),
-        df_resid=df_resid,
-    )</p>
-<p>def fixed_effects(
-    panel: pd.DataFrame, y: str, xs: list[str], entity: str = "entity"
-) -&gt; PanelFit:
-    """固定効果推定: ウィズイン変換した y を、x で回帰する（定数項なし）。</p>
-<div class="highlight"><pre><span></span><code>個人の数 N を引いた、自由度 n − N − k で、標準誤差を計算する。
-"""
-tilde = within_transform(panel, [y, *xs], entity)
-df_resid = len(panel) - panel[entity].nunique() - len(xs)
-return _fit_without_constant(tilde[y], tilde[xs], df_resid)
+<h3 id="green">Green: ウィズイン変換と固定効果を実装する<a class="headerlink" href="#green" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">PanelFit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""パネル・データの推定結果（係数・標準誤差・共分散行列・誤差の分散の推定値）。"""</span>
+
+    <span class="n">coefficients</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>
+    <span class="n">standard_errors</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>
+    <span class="n">covariance</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span>
+    <span class="n">sigma2</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">r_squared</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">n_obs</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">df_resid</span><span class="p">:</span> <span class="nb">int</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">within_transform</span><span class="p">(</span>
+    <span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">columns</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">entity</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"entity"</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""ウィズイン変換: 各列から、個人ごとの平均を引く。"""</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="n">panel</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">entity</span><span class="p">)[</span><span class="n">columns</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s2">"mean"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">panel</span><span class="p">[</span><span class="n">columns</span><span class="p">]</span> <span class="o">-</span> <span class="n">means</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_fit_without_constant</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">df_resid</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PanelFit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""定数項なしの回帰。誤差の分散は、指定した自由度 df_resid で割って推定する。"""</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">constant</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">design</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">sigma2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">residuals</span> <span class="o">@</span> <span class="n">result</span><span class="o">.</span><span class="n">residuals</span><span class="p">)</span> <span class="o">/</span> <span class="n">df_resid</span>
+    <span class="n">covariance</span> <span class="o">=</span> <span class="n">sigma2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">design</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">design</span><span class="p">)</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">PanelFit</span><span class="p">(</span>
+        <span class="n">coefficients</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">,</span>
+        <span class="n">standard_errors</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">covariance</span><span class="p">)),</span> <span class="n">index</span><span class="o">=</span><span class="n">names</span><span class="p">),</span>
+        <span class="n">covariance</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">covariance</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">names</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">names</span><span class="p">),</span>
+        <span class="n">sigma2</span><span class="o">=</span><span class="n">sigma2</span><span class="p">,</span>
+        <span class="n">r_squared</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">r_squared</span><span class="p">,</span>
+        <span class="n">n_obs</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">),</span>
+        <span class="n">df_resid</span><span class="o">=</span><span class="n">df_resid</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">fixed_effects</span><span class="p">(</span>
+    <span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">xs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">entity</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"entity"</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PanelFit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""固定効果推定: ウィズイン変換した y を、x で回帰する（定数項なし）。</span>
+
+<span class="sd">    個人の数 N を引いた、自由度 n − N − k で、標準誤差を計算する。</span>
+<span class="sd">    """</span>
+    <span class="n">tilde</span> <span class="o">=</span> <span class="n">within_transform</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="n">xs</span><span class="p">],</span> <span class="n">entity</span><span class="p">)</span>
+    <span class="n">df_resid</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span> <span class="o">-</span> <span class="n">panel</span><span class="p">[</span><span class="n">entity</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_fit_without_constant</span><span class="p">(</span><span class="n">tilde</span><span class="p">[</span><span class="n">y</span><span class="p">],</span> <span class="n">tilde</span><span class="p">[</span><span class="n">xs</span><span class="p">],</span> <span class="n">df_resid</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter10.panel</span><span class="w"> </span><span class="kn">import</span> <span class="n">fixed_effects</span><span class="p">,</span> <span class="n">within_transform</span>
 
@@ -6747,128 +6759,150 @@ cre {'coefficient': {'x': 0.9887}, 'standard_error': {'x': 0.0351}}
 pooled {'const': 1.0417, 'x': 1.4342} {'const': 0.0424, 'x': 0.0355}
 </code></pre></div>
 <p>固定効果の傾きは 0.9887 で、真の値 1 に近く、自由度は 399（500 − 100 − 1）です。<strong>ダミー変数推定（LSDV）の係数と標準誤差は、固定効果と、同じ値</strong>です（予想 2）。相関ランダム効果の係数も、0.9887 と同じです（標準誤差は、別の計算なので、0.0351 と違います）。プーリング OLS は、1.4342 と偏ります。</p>
-<p>def least_squares_dummy_variables(
-    panel: pd.DataFrame, y: str, xs: list[str], entity: str = "entity"
-) -&gt; pd.DataFrame:
-    """ダミー変数による固定効果推定: 個人ごとのダミー変数を、説明変数に足して回帰する。</p>
-<div class="highlight"><pre><span></span><code>x の係数と標準誤差の表（列は coefficient・standard_error）を返す。
-"""
-result = fit_ols(panel[y], panel[xs].join(make_dummies(panel[entity])))
-return pd.DataFrame(
-    {
-        "coefficient": result.coefficients[xs],
-        "standard_error": result.standard_errors[xs],
-    }
-)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">least_squares_dummy_variables</span><span class="p">(</span>
+    <span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">xs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">entity</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"entity"</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""ダミー変数による固定効果推定: 個人ごとのダミー変数を、説明変数に足して回帰する。</span>
+
+<span class="sd">    x の係数と標準誤差の表（列は coefficient・standard_error）を返す。</span>
+<span class="sd">    """</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">panel</span><span class="p">[</span><span class="n">y</span><span class="p">],</span> <span class="n">panel</span><span class="p">[</span><span class="n">xs</span><span class="p">]</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">make_dummies</span><span class="p">(</span><span class="n">panel</span><span class="p">[</span><span class="n">entity</span><span class="p">])))</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">"coefficient"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">xs</span><span class="p">],</span>
+            <span class="s2">"standard_error"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="n">xs</span><span class="p">],</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">correlated_random_effects</span><span class="p">(</span>
+    <span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">xs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">entity</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"entity"</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""相関ランダム効果（Mundlak）: x の個人平均を足して、プーリング OLS で回帰する。</span>
+
+<span class="sd">    x の係数は、固定効果推定と、ちょうど一致する。</span>
+<span class="sd">    """</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="n">panel</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">entity</span><span class="p">)[</span><span class="n">xs</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s2">"mean"</span><span class="p">)</span><span class="o">.</span><span class="n">add_suffix</span><span class="p">(</span><span class="s2">"_mean"</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">panel</span><span class="p">[</span><span class="n">y</span><span class="p">],</span> <span class="n">panel</span><span class="p">[</span><span class="n">xs</span><span class="p">]</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">means</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">"coefficient"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">xs</span><span class="p">],</span>
+            <span class="s2">"standard_error"</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="n">xs</span><span class="p">],</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
 </code></pre></div>
-<p>def correlated_random_effects(
-    panel: pd.DataFrame, y: str, xs: list[str], entity: str = "entity"
-) -&gt; pd.DataFrame:
-    """相関ランダム効果（Mundlak）: x の個人平均を足して、プーリング OLS で回帰する。</p>
-<div class="highlight"><pre><span></span><code>x の係数は、固定効果推定と、ちょうど一致する。
-"""
-means = panel.groupby(entity)[xs].transform("mean").add_suffix("_mean")
-result = fit_ols(panel[y], panel[xs].join(means))
-return pd.DataFrame(
-    {
-        "coefficient": result.coefficients[xs],
-        "standard_error": result.standard_errors[xs],
-    }
-)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">sample</span><span class="p">(</span>
+    <span class="n">entities</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">50</span><span class="p">,</span> <span class="n">periods</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">correlation</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.7</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">draw_panel</span><span class="p">(</span><span class="n">entities</span><span class="p">,</span> <span class="n">periods</span><span class="p">,</span> <span class="n">correlation</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_固定効果とダミー変数推定は係数も標準誤差もちょうど一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="n">sample</span><span class="p">()</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fixed_effects</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="n">dummy</span> <span class="o">=</span> <span class="n">least_squares_dummy_variables</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">dummy</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"coefficient"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-10</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">dummy</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"standard_error"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">fit</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-10</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_固定効果はlinearmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="n">sample</span><span class="p">()</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">fixed_effects</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">PanelOLS</span><span class="o">.</span><span class="n">from_formula</span><span class="p">(</span>
+        <span class="s2">"y ~ x + EntityEffects"</span><span class="p">,</span> <span class="n">panel</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s2">"entity"</span><span class="p">,</span> <span class="s2">"time"</span><span class="p">])</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">std_errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_相関ランダム効果の係数は固定効果とちょうど一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="n">sample</span><span class="p">()</span>
+    <span class="n">cre</span> <span class="o">=</span> <span class="n">correlated_random_effects</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">cre</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"coefficient"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">fixed_effects</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-10</span>
+    <span class="p">)</span>
 </code></pre></div>
-<p>def sample(
-    entities: int = 50, periods: int = 4, correlation: float = 0.7
-) -&gt; pd.DataFrame:
-    return draw_panel(entities, periods, correlation, np.random.default_rng(0))</p>
-<p>def test_固定効果とダミー変数推定は係数も標準誤差もちょうど一致する() -&gt; None:
-    panel = sample()
-    fit = fixed_effects(panel, "y", ["x"])
-    dummy = least_squares_dummy_variables(panel, "y", ["x"])
-    assert dummy.loc["x", "coefficient"] == pytest.approx(
-        fit.coefficients["x"], abs=1e-10
-    )
-    assert dummy.loc["x", "standard_error"] == pytest.approx(
-        fit.standard_errors["x"], abs=1e-10
-    )</p>
-<p>def test_固定効果はlinearmodelsと一致する() -&gt; None:
-    panel = sample()
-    fit = fixed_effects(panel, "y", ["x"])
-    reference = PanelOLS.from_formula(
-        "y ~ x + EntityEffects", panel.set_index(["entity", "time"])
-    ).fit()
-    assert fit.coefficients["x"] == pytest.approx(reference.params["x"])
-    assert fit.standard_errors["x"] == pytest.approx(reference.std_errors["x"])</p>
-<p>def test_相関ランダム効果の係数は固定効果とちょうど一致する() -&gt; None:
-    panel = sample()
-    cre = correlated_random_effects(panel, "y", ["x"])
-    assert cre.loc["x", "coefficient"] == pytest.approx(
-        fixed_effects(panel, "y", ["x"]).coefficients["x"], abs=1e-10
-    )</p>
 <p><code>linearmodels</code> の <code>PanelOLS</code> と、係数・標準誤差が一致することも、テストで確かめています。</p>
 <h3 id="_8">ランダム効果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>ランダム効果の θ は、2 つの分散から求めます（<strong>Swamy-Arora</strong>）。σ_u² は固定効果の誤差の分散、σ_b² は、個人平均の回帰の誤差の分散で、σ_a² = σ_b² − σ_u² ÷ T です（負なら 0）。θ = 1 − √(σ_u² ÷ (σ_u² + T·σ_a²)) です。</p>
-<p>def _balanced_periods(panel: pd.DataFrame, entity: str) -&gt; int:
-    counts = panel.groupby(entity).size()
-    if counts.nunique() != 1:
-        raise ValueError("バランスしたパネル（どの個人も同じ期数）だけを扱う")
-    return int(counts.iloc[0])</p>
-<p>def random_effects_theta(
-    panel: pd.DataFrame, y: str, xs: list[str], entity: str = "entity"
-) -&gt; float:
-    """ランダム効果の θ（Swamy-Arora の分散成分から求める）。</p>
-<div class="highlight"><pre><span></span><code>σ_u² は固定効果の誤差の分散、σ_b² = σ_a² + σ_u² ÷ T は個人平均の回帰の
-誤差の分散。θ = 1 − √(σ_u² ÷ (σ_u² + T·σ_a²))。
-"""
-periods = _balanced_periods(panel, entity)
-sigma_u2 = fixed_effects(panel, y, xs, entity).sigma2
-means = panel.groupby(entity)[[y, *xs]].mean()
-between = fit_ols(means[y], means[xs])
-sigma_b2 = float(between.residuals @ between.residuals) / between.df_resid
-sigma_a2 = max(sigma_b2 - sigma_u2 / periods, 0.0)
-return 1 - math.sqrt(sigma_u2 / (sigma_u2 + periods * sigma_a2))
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_balanced_periods</span><span class="p">(</span><span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">entity</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="n">counts</span> <span class="o">=</span> <span class="n">panel</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">entity</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">counts</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"バランスしたパネル（どの個人も同じ期数）だけを扱う"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">counts</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">random_effects_theta</span><span class="p">(</span>
+    <span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">xs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">entity</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"entity"</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""ランダム効果の θ（Swamy-Arora の分散成分から求める）。</span>
+
+<span class="sd">    σ_u² は固定効果の誤差の分散、σ_b² = σ_a² + σ_u² ÷ T は個人平均の回帰の</span>
+<span class="sd">    誤差の分散。θ = 1 − √(σ_u² ÷ (σ_u² + T·σ_a²))。</span>
+<span class="sd">    """</span>
+    <span class="n">periods</span> <span class="o">=</span> <span class="n">_balanced_periods</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="n">entity</span><span class="p">)</span>
+    <span class="n">sigma_u2</span> <span class="o">=</span> <span class="n">fixed_effects</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">entity</span><span class="p">)</span><span class="o">.</span><span class="n">sigma2</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="n">panel</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">entity</span><span class="p">)[[</span><span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="n">xs</span><span class="p">]]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">between</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">means</span><span class="p">[</span><span class="n">y</span><span class="p">],</span> <span class="n">means</span><span class="p">[</span><span class="n">xs</span><span class="p">])</span>
+    <span class="n">sigma_b2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">between</span><span class="o">.</span><span class="n">residuals</span> <span class="o">@</span> <span class="n">between</span><span class="o">.</span><span class="n">residuals</span><span class="p">)</span> <span class="o">/</span> <span class="n">between</span><span class="o">.</span><span class="n">df_resid</span>
+    <span class="n">sigma_a2</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">sigma_b2</span> <span class="o">-</span> <span class="n">sigma_u2</span> <span class="o">/</span> <span class="n">periods</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sigma_u2</span> <span class="o">/</span> <span class="p">(</span><span class="n">sigma_u2</span> <span class="o">+</span> <span class="n">periods</span> <span class="o">*</span> <span class="n">sigma_a2</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">random_effects</span><span class="p">(</span>
+    <span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">xs</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">entity</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">"entity"</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PanelFit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""ランダム効果推定: 個人平均の θ 倍を引いた（準差分の）変数で、回帰する。"""</span>
+    <span class="n">theta</span> <span class="o">=</span> <span class="n">random_effects_theta</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">xs</span><span class="p">,</span> <span class="n">entity</span><span class="p">)</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span><span class="p">,</span> <span class="o">*</span><span class="n">xs</span><span class="p">]</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="n">panel</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">entity</span><span class="p">)[</span><span class="n">columns</span><span class="p">]</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="s2">"mean"</span><span class="p">)</span>
+    <span class="n">quasi</span> <span class="o">=</span> <span class="n">panel</span><span class="p">[</span><span class="n">columns</span><span class="p">]</span> <span class="o">-</span> <span class="n">theta</span> <span class="o">*</span> <span class="n">means</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">quasi</span><span class="p">[</span><span class="n">xs</span><span class="p">]</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">const</span><span class="o">=</span><span class="mi">1</span> <span class="o">-</span> <span class="n">theta</span><span class="p">)[[</span><span class="s2">"const"</span><span class="p">,</span> <span class="o">*</span><span class="n">xs</span><span class="p">]]</span>
+    <span class="k">return</span> <span class="n">_fit_without_constant</span><span class="p">(</span><span class="n">quasi</span><span class="p">[</span><span class="n">y</span><span class="p">],</span> <span class="n">x</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 </code></pre></div>
-<p>def random_effects(
-    panel: pd.DataFrame, y: str, xs: list[str], entity: str = "entity"
-) -&gt; PanelFit:
-    """ランダム効果推定: 個人平均の θ 倍を引いた（準差分の）変数で、回帰する。"""
-    theta = random_effects_theta(panel, y, xs, entity)
-    columns = [y, *xs]
-    means = panel.groupby(entity)[columns].transform("mean")
-    quasi = panel[columns] - theta * means
-    x = quasi[xs].assign(const=1 - theta)[["const", *xs]]
-    return _fit_without_constant(quasi[y], x, len(panel) - len(xs) - 1)</p>
-<p>def test_ランダム効果はlinearmodelsと一致する() -&gt; None:
-    panel = sample()
-    fit = random_effects(panel, "y", ["x"])
-    reference = RandomEffects.from_formula(
-        "y ~ 1 + x", panel.set_index(["entity", "time"])
-    ).fit()
-    assert fit.coefficients["x"] == pytest.approx(reference.params["x"])
-    assert fit.coefficients["const"] == pytest.approx(reference.params["Intercept"])
-    assert fit.standard_errors["x"] == pytest.approx(reference.std_errors["x"])
-    assert random_effects_theta(panel, "y", ["x"]) == pytest.approx(
-        float(np.asarray(reference.theta)[0, 0])
-    )</p>
-<p>def test_θは0から1の間() -&gt; None:
-    assert 0 &lt; random_effects_theta(sample(), "y", ["x"]) &lt; 1</p>
-<p>def test_個人の効果がなければθは0でランダム効果はプーリングに一致する() -&gt; None:
-    rng = np.random.default_rng(4)
-    panel = pd.DataFrame(
-        {
-            "entity": np.repeat(range(4), 6),
-            "time": np.tile(range(6), 4),
-            "x": rng.standard_normal(24),
-        }
-    )
-    panel["y"] = 1 + panel["x"] + rng.standard_normal(24)
-    assert random_effects_theta(panel, "y", ["x"]) == 0
-    pooled = fit_ols(panel["y"], panel[["x"]])
-    fit = random_effects(panel, "y", ["x"])
-    assert fit.coefficients["x"] == pytest.approx(pooled.coefficients["x"])
-    assert fit.coefficients["const"] == pytest.approx(pooled.coefficients["const"])</p>
-<p>def test_期数がそろっていないパネルは扱わない() -&gt; None:
-    with pytest.raises(ValueError, match="バランス"):
-        random_effects_theta(sample().iloc[:-1], "y", ["x"])</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_ランダム効果はlinearmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="n">sample</span><span class="p">()</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">random_effects</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">RandomEffects</span><span class="o">.</span><span class="n">from_formula</span><span class="p">(</span>
+        <span class="s2">"y ~ 1 + x"</span><span class="p">,</span> <span class="n">panel</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s2">"entity"</span><span class="p">,</span> <span class="s2">"time"</span><span class="p">])</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">"Intercept"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">std_errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">random_effects_theta</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">theta</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_θは0から1の間</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">random_effects_theta</span><span class="p">(</span><span class="n">sample</span><span class="p">(),</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">1</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_個人の効果がなければθは0でランダム効果はプーリングに一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="s2">"entity"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">),</span> <span class="mi">6</span><span class="p">),</span>
+            <span class="s2">"time"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">tile</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span> <span class="mi">4</span><span class="p">),</span>
+            <span class="s2">"x"</span><span class="p">:</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">24</span><span class="p">),</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="n">panel</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">panel</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">random_effects_theta</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="n">pooled</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">panel</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">panel</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]])</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">random_effects</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">pooled</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">pooled</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_期数がそろっていないパネルは扱わない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"バランス"</span><span class="p">):</span>
+        <span class="n">random_effects_theta</span><span class="p">(</span><span class="n">sample</span><span class="p">()</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter10.panel</span><span class="w"> </span><span class="kn">import</span> <span class="n">hausman_test</span>
 
 <span class="n">re</span> <span class="o">=</span> <span class="n">random_effects</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
@@ -6883,40 +6917,46 @@ hausman 184.07 6.258411565090162e-42
 </code></pre></div>
 <p>θ は 0.6297 で、0 と 1 の間です。ランダム効果の傾きは 1.0847 で、固定効果（0.9887）と、プーリング OLS（1.4342）の<strong>中間</strong>です。<code>linearmodels</code> の <code>RandomEffects</code> と、係数・標準誤差・θ が一致します。Hausman 検定は、統計量 184.07、p 値 6 × 10⁻⁴² で、「固定効果とランダム効果の係数は同じ」を、強く棄却します。この標本では、固定効果を使うべきです（予想 3）。</p>
 <h3 id="hausman_1">Hausman 検定を実装する<a class="headerlink" href="#hausman_1" title="Permanent link">&para;</a></h3>
-<p>def hausman_test(fixed: PanelFit, random: PanelFit, names: list[str]) -&gt; TestResult:
-    """Hausman 検定: 固定効果とランダム効果の係数が、同じか（帰無仮説: 同じ）。</p>
-<div class="highlight"><pre><span></span><code>H = (b_fe − b_re)′ (V_fe − V_re)⁻¹ (b_fe − b_re) は、χ²(k) に従う。
-2 つの推定で誤差の分散の推定値が違うと、H が負になることがある。
-そこで、ランダム効果の共分散行列を、固定効果の σ² に、そろえて使う。
-"""
-diff = (fixed.coefficients[names] - random.coefficients[names]).to_numpy()
-scale = fixed.sigma2 / random.sigma2
-variance = (
-    fixed.covariance.loc[names, names] - scale * random.covariance.loc[names, names]
-).to_numpy()
-statistic = float(diff @ np.linalg.inv(variance) @ diff)
-return TestResult(statistic, float(stats.chi2.sf(statistic, len(names))))
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">hausman_test</span><span class="p">(</span><span class="n">fixed</span><span class="p">:</span> <span class="n">PanelFit</span><span class="p">,</span> <span class="n">random</span><span class="p">:</span> <span class="n">PanelFit</span><span class="p">,</span> <span class="n">names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">TestResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Hausman 検定: 固定効果とランダム効果の係数が、同じか（帰無仮説: 同じ）。</span>
+
+<span class="sd">    H = (b_fe − b_re)′ (V_fe − V_re)⁻¹ (b_fe − b_re) は、χ²(k) に従う。</span>
+<span class="sd">    2 つの推定で誤差の分散の推定値が違うと、H が負になることがある。</span>
+<span class="sd">    そこで、ランダム効果の共分散行列を、固定効果の σ² に、そろえて使う。</span>
+<span class="sd">    """</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">fixed</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">names</span><span class="p">]</span> <span class="o">-</span> <span class="n">random</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">names</span><span class="p">])</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">scale</span> <span class="o">=</span> <span class="n">fixed</span><span class="o">.</span><span class="n">sigma2</span> <span class="o">/</span> <span class="n">random</span><span class="o">.</span><span class="n">sigma2</span>
+    <span class="n">variance</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">fixed</span><span class="o">.</span><span class="n">covariance</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">names</span><span class="p">,</span> <span class="n">names</span><span class="p">]</span> <span class="o">-</span> <span class="n">scale</span> <span class="o">*</span> <span class="n">random</span><span class="o">.</span><span class="n">covariance</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">names</span><span class="p">,</span> <span class="n">names</span><span class="p">]</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">statistic</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">diff</span> <span class="o">@</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">variance</span><span class="p">)</span> <span class="o">@</span> <span class="n">diff</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">TestResult</span><span class="p">(</span><span class="n">statistic</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">chi2</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="n">statistic</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">names</span><span class="p">))))</span>
 </code></pre></div>
 <blockquote>
 <p><strong>実装の注意</strong>: 固定効果とランダム効果は、それぞれ、誤差の分散 σ² を推定します。個人効果と x が相関していると、ランダム効果の σ² が、大きく出て、分散の差 V_FE − V_RE が<strong>負</strong>になり、統計量が負になることがあります（この標本では、−68.7 でした）。そこで、ランダム効果の共分散行列を、固定効果の σ² に、そろえて使います。</p>
 </blockquote>
-<p>def known_fit(coefficient: float, variance: float, sigma2: float) -&gt; PanelFit:
-    return PanelFit(
-        pd.Series({"x": coefficient}),
-        pd.Series({"x": variance**0.5}),
-        pd.DataFrame({"x": [variance]}, index=["x"]),
-        sigma2,
-        0.5,
-        10,
-        8,
-    )</p>
-<p>def test_Hausman統計量の手計算() -&gt; None:
-    test = hausman_test(known_fit(1.0, 0.04, 1.0), known_fit(0.7, 0.01, 1.0), ["x"])
-    assert test.statistic == pytest.approx(0.3**2 / (0.04 - 0.01))
-    assert test.p_value == pytest.approx(stats.chi2.sf(3.0, 1))</p>
-<p>def test_Hausman検定はランダム効果の分散を固定効果のσ2にそろえる() -&gt; None:
-    test = hausman_test(known_fit(1.0, 0.04, 1.0), known_fit(0.7, 0.01, 2.0), ["x"])
-    assert test.statistic == pytest.approx(0.09 / 0.035)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">known_fit</span><span class="p">(</span><span class="n">coefficient</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">variance</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">sigma2</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PanelFit</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">PanelFit</span><span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">({</span><span class="s2">"x"</span><span class="p">:</span> <span class="n">coefficient</span><span class="p">}),</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">({</span><span class="s2">"x"</span><span class="p">:</span> <span class="n">variance</span><span class="o">**</span><span class="mf">0.5</span><span class="p">}),</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"x"</span><span class="p">:</span> <span class="p">[</span><span class="n">variance</span><span class="p">]},</span> <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]),</span>
+        <span class="n">sigma2</span><span class="p">,</span>
+        <span class="mf">0.5</span><span class="p">,</span>
+        <span class="mi">10</span><span class="p">,</span>
+        <span class="mi">8</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_Hausman統計量の手計算</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">hausman_test</span><span class="p">(</span><span class="n">known_fit</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">known_fit</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">statistic</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.3</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="mf">0.04</span> <span class="o">-</span> <span class="mf">0.01</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">p_value</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">stats</span><span class="o">.</span><span class="n">chi2</span><span class="o">.</span><span class="n">sf</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_Hausman検定はランダム効果の分散を固定効果のσ2にそろえる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">hausman_test</span><span class="p">(</span><span class="n">known_fit</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">known_fit</span><span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">statistic</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.09</span> <span class="o">/</span> <span class="mf">0.035</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="2-1">2 期間の固定効果と、1 階差分<a class="headerlink" href="#2-1" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter09.did</span><span class="w"> </span><span class="kn">import</span> <span class="n">first_difference</span><span class="p">,</span> <span class="n">first_difference_estimate</span>
 
@@ -6931,76 +6971,89 @@ return TestResult(statistic, float(stats.chi2.sf(statistic, len(names))))
 1.1104
 </code></pre></div>
 <p><strong>2 期間では、固定効果と、定数項なしの 1 階差分が、ちょうど一致します</strong>（1.1161、予想 4）。第 9 章の <code>first_difference_estimate</code> は、定数項を含むので、1.1104 と、少し違います（定数項が、平均的な変化を吸収するため）。</p>
-<p>def test_2期間の固定効果は定数項なしの1階差分とちょうど一致する() -&gt; None:
-    panel = draw_panel(60, 2, 0.8, np.random.default_rng(1))
-    d = first_difference(panel)
-    no_constant = fit_ols(d["dy"], d[["dx"]], constant=False).coefficients["dx"]
-    assert fixed_effects(panel, "y", ["x"]).coefficients["x"] == pytest.approx(
-        no_constant
-    )</p>
-<p>def test_定数項ありの1階差分は固定効果と少しだけ違う() -&gt; None:
-    panel = draw_panel(60, 2, 0.8, np.random.default_rng(1))
-    with_constant = first_difference_estimate(panel)
-    fixed = fixed_effects(panel, "y", ["x"]).coefficients["x"]
-    assert with_constant != pytest.approx(fixed, abs=1e-6)
-    assert with_constant == pytest.approx(fixed, abs=0.05)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_2期間の固定効果は定数項なしの1階差分とちょうど一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="n">draw_panel</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="n">first_difference</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
+    <span class="n">no_constant</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">d</span><span class="p">[</span><span class="s2">"dy"</span><span class="p">],</span> <span class="n">d</span><span class="p">[[</span><span class="s2">"dx"</span><span class="p">]],</span> <span class="n">constant</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"dx"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">fixed_effects</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">no_constant</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_定数項ありの1階差分は固定効果と少しだけ違う</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="n">draw_panel</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">with_constant</span> <span class="o">=</span> <span class="n">first_difference_estimate</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
+    <span class="n">fixed</span> <span class="o">=</span> <span class="n">fixed_effects</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">with_constant</span> <span class="o">!=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">fixed</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">with_constant</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">fixed</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="_9">推定量の性質を、シミュレーションで<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>個人 200 人、5 期で、相関 0 と 1 を、300 回繰り返します（真の傾きは 1）。</p>
-<p>def estimator_comparison(
-    entities: int,
-    periods: int,
-    correlation: float,
-    repetitions: int,
-    rng: np.random.Generator,
-) -&gt; pd.DataFrame:
-    """パネルを作り直し、3 つの推定量（真の傾きは 1）を繰り返す。"""
-    rows = []
-    for _ in range(repetitions):
-        panel = draw_panel(entities, periods, correlation, rng)
-        rows.append(
-            (
-                pooled_estimate(panel),
-                fixed_effects(panel, "y", ["x"]).coefficients["x"],
-                random_effects(panel, "y", ["x"]).coefficients["x"],
-            )
-        )
-    return pd.DataFrame(rows, columns=["pooled", "fixed_effects", "random_effects"])</p>
-<p>def hausman_rejection_rate(
-    entities: int,
-    periods: int,
-    correlation: float,
-    repetitions: int,
-    significance: float,
-    rng: np.random.Generator,
-) -&gt; float:
-    """Hausman 検定が、同じという帰無仮説を、棄却する割合。"""
-    rejected = 0
-    for _ in range(repetitions):
-        panel = draw_panel(entities, periods, correlation, rng)
-        test = hausman_test(
-            fixed_effects(panel, "y", ["x"]), random_effects(panel, "y", ["x"]), ["x"]
-        )
-        rejected += test.p_value &lt; significance
-    return rejected / repetitions</p>
-<p>def test_相関があるとプーリングは偏りランダム効果は中間で固定効果は偏らない() -&gt; None:
-    table = estimator_comparison(200, 5, 1.0, 300, np.random.default_rng(0))
-    means = table.mean()
-    se = table.std() / 300**0.5
-    assert abs(means["fixed_effects"] - 1.0) &lt; 4 * se["fixed_effects"]
-    assert abs(means["pooled"] - 1.5) &lt; 4 * se["pooled"]
-    assert means["fixed_effects"] &lt; means["random_effects"] &lt; means["pooled"]</p>
-<p>def test_相関がなければ3つの推定量はどれも偏らない() -&gt; None:
-    table = estimator_comparison(200, 5, 0.0, 300, np.random.default_rng(0))
-    se = table.std() / 300**0.5
-    for name in table.columns:
-        assert abs(table[name].mean() - 1.0) &lt; 4 * se[name]
-    assert table["pooled"].std() &gt; table["fixed_effects"].std()</p>
-<p>def test_個人の効果が説明変数と相関するとHausman検定は棄却する() -&gt; None:
-    rate = hausman_rejection_rate(100, 5, 1.0, 100, 0.05, np.random.default_rng(0))
-    assert rate &gt; 0.95</p>
-<p>def test_相関がなければHausman検定の棄却率は有意水準に近い() -&gt; None:
-    rate = hausman_rejection_rate(200, 5, 0.0, 300, 0.05, np.random.default_rng(0))
-    assert rate == pytest.approx(0.05, abs=4 * (0.05 * 0.95 / 300) ** 0.5)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">estimator_comparison</span><span class="p">(</span>
+    <span class="n">entities</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">periods</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">correlation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""パネルを作り直し、3 つの推定量（真の傾きは 1）を繰り返す。"""</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
+        <span class="n">panel</span> <span class="o">=</span> <span class="n">draw_panel</span><span class="p">(</span><span class="n">entities</span><span class="p">,</span> <span class="n">periods</span><span class="p">,</span> <span class="n">correlation</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">pooled_estimate</span><span class="p">(</span><span class="n">panel</span><span class="p">),</span>
+                <span class="n">fixed_effects</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span>
+                <span class="n">random_effects</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"pooled"</span><span class="p">,</span> <span class="s2">"fixed_effects"</span><span class="p">,</span> <span class="s2">"random_effects"</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">hausman_rejection_rate</span><span class="p">(</span>
+    <span class="n">entities</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">periods</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">correlation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="n">significance</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""Hausman 検定が、同じという帰無仮説を、棄却する割合。"""</span>
+    <span class="n">rejected</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
+        <span class="n">panel</span> <span class="o">=</span> <span class="n">draw_panel</span><span class="p">(</span><span class="n">entities</span><span class="p">,</span> <span class="n">periods</span><span class="p">,</span> <span class="n">correlation</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+        <span class="n">test</span> <span class="o">=</span> <span class="n">hausman_test</span><span class="p">(</span>
+            <span class="n">fixed_effects</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">]),</span> <span class="n">random_effects</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">]),</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="n">rejected</span> <span class="o">+=</span> <span class="n">test</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&lt;</span> <span class="n">significance</span>
+    <span class="k">return</span> <span class="n">rejected</span> <span class="o">/</span> <span class="n">repetitions</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_相関があるとプーリングは偏りランダム効果は中間で固定効果は偏らない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">estimator_comparison</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">means</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">se</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="mi">300</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">means</span><span class="p">[</span><span class="s2">"fixed_effects"</span><span class="p">]</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">se</span><span class="p">[</span><span class="s2">"fixed_effects"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">means</span><span class="p">[</span><span class="s2">"pooled"</span><span class="p">]</span> <span class="o">-</span> <span class="mf">1.5</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">se</span><span class="p">[</span><span class="s2">"pooled"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">means</span><span class="p">[</span><span class="s2">"fixed_effects"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">means</span><span class="p">[</span><span class="s2">"random_effects"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">means</span><span class="p">[</span><span class="s2">"pooled"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_相関がなければ3つの推定量はどれも偏らない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">estimator_comparison</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">se</span> <span class="o">=</span> <span class="n">table</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="mi">300</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">table</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">4</span> <span class="o">*</span> <span class="n">se</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">table</span><span class="p">[</span><span class="s2">"pooled"</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">&gt;</span> <span class="n">table</span><span class="p">[</span><span class="s2">"fixed_effects"</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_個人の効果が説明変数と相関するとHausman検定は棄却する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">rate</span> <span class="o">=</span> <span class="n">hausman_rejection_rate</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">rate</span> <span class="o">&gt;</span> <span class="mf">0.95</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_相関がなければHausman検定の棄却率は有意水準に近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">rate</span> <span class="o">=</span> <span class="n">hausman_rejection_rate</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">rate</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="mf">0.05</span> <span class="o">*</span> <span class="mf">0.95</span> <span class="o">/</span> <span class="mi">300</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter10.panel</span><span class="w"> </span><span class="kn">import</span> <span class="n">estimator_comparison</span><span class="p">,</span> <span class="n">hausman_rejection_rate</span>
 
 <span class="k">for</span> <span class="n">correlation</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">):</span>
@@ -7018,64 +7071,70 @@ return TestResult(statistic, float(stats.chi2.sf(statistic, len(names))))
 </ul>
 <p><img alt="推定値の分布（相関 1）。固定効果は真の値 1 に集まり、ランダム効果は偏り、プーリング OLS は、さらに偏る" src="../images/ch10-estimate-comparison.png" /></p>
 <h3 id="_10">クラスター標準誤差<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
-<p>def cluster_standard_errors(
-    y: pd.Series, x: pd.DataFrame, groups: pd.Series
-) -&gt; pd.Series:
-    """個人（クラスター）ごとの相関に頑健な標準誤差。同じ個人の誤差は、相関してよい。</p>
-<div class="highlight"><pre><span></span><code>Var(b) = (X′X)⁻¹ · Σ_g X_g′ e_g e_g′ X_g · (X′X)⁻¹ に、
-G ÷ (G − 1) · (n − 1) ÷ (n − k) を掛ける。
-"""
-result = fit_ols(y, x)
-design = np.column_stack([np.ones(len(x)), x.to_numpy(dtype=float)])
-n, k = design.shape
-scores = (
-    pd.DataFrame(design * result.residuals[:, None])
-    .groupby(groups.to_numpy())
-    .sum()
-)
-meat = scores.to_numpy().T @ scores.to_numpy()
-g = len(scores)
-bread = np.linalg.inv(design.T @ design)
-variance = g / (g - 1) * (n - 1) / (n - k) * bread @ meat @ bread
-return pd.Series(np.sqrt(np.diag(variance)), index=result.coefficients.index)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">cluster_standard_errors</span><span class="p">(</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">groups</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""個人（クラスター）ごとの相関に頑健な標準誤差。同じ個人の誤差は、相関してよい。</span>
+
+<span class="sd">    Var(b) = (X′X)⁻¹ · Σ_g X_g′ e_g e_g′ X_g · (X′X)⁻¹ に、</span>
+<span class="sd">    G ÷ (G − 1) · (n − 1) ÷ (n − k) を掛ける。</span>
+<span class="sd">    """</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">design</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)),</span> <span class="n">x</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)])</span>
+    <span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">design</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">design</span> <span class="o">*</span> <span class="n">result</span><span class="o">.</span><span class="n">residuals</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">])</span>
+        <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="n">groups</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+        <span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="p">)</span>
+    <span class="n">meat</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">scores</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span>
+    <span class="n">bread</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">design</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">design</span><span class="p">)</span>
+    <span class="n">variance</span> <span class="o">=</span> <span class="n">g</span> <span class="o">/</span> <span class="p">(</span><span class="n">g</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span> <span class="o">*</span> <span class="n">bread</span> <span class="o">@</span> <span class="n">meat</span> <span class="o">@</span> <span class="n">bread</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">variance</span><span class="p">)),</span> <span class="n">index</span><span class="o">=</span><span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">index</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">pooled_standard_errors</span><span class="p">(</span>
+    <span class="n">entities</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">periods</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""プーリング OLS の傾きのばらつきと、通常・クラスター標準誤差の平均。</span>
+
+<span class="sd">    x = m + v（m は個人ごとの成分）、y = 1 + x + a + 0.5·u（a は個人ごとの効果）。</span>
+<span class="sd">    a と m は無関係なので、推定値は偏らないが、同じ個人の誤差と x が、相関する。</span>
+<span class="sd">    """</span>
+    <span class="n">slopes</span><span class="p">,</span> <span class="n">classical</span><span class="p">,</span> <span class="n">clustered</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
+        <span class="n">entity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">entities</span><span class="p">),</span> <span class="n">periods</span><span class="p">)</span>
+        <span class="n">n</span> <span class="o">=</span> <span class="n">entities</span> <span class="o">*</span> <span class="n">periods</span>
+        <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">entities</span><span class="p">),</span> <span class="n">periods</span><span class="p">)</span>
+        <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">repeat</span><span class="p">(</span><span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">entities</span><span class="p">),</span> <span class="n">periods</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"x"</span><span class="p">:</span> <span class="n">m</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)})</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">x</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">+</span> <span class="n">a</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="n">slopes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+        <span class="n">classical</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+        <span class="n">clustered</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">cluster_standard_errors</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">entity</span><span class="p">))[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">"sd"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">slopes</span><span class="p">,</span> <span class="n">ddof</span><span class="o">=</span><span class="mi">1</span><span class="p">)),</span>
+        <span class="s2">"classical"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">classical</span><span class="p">)),</span>
+        <span class="s2">"clustered"</span><span class="p">:</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">clustered</span><span class="p">)),</span>
+    <span class="p">}</span>
 </code></pre></div>
-<p>def pooled_standard_errors(
-    entities: int, periods: int, repetitions: int, rng: np.random.Generator
-) -&gt; dict[str, float]:
-    """プーリング OLS の傾きのばらつきと、通常・クラスター標準誤差の平均。</p>
-<div class="highlight"><pre><span></span><code>x = m + v（m は個人ごとの成分）、y = 1 + x + a + 0.5·u（a は個人ごとの効果）。
-a と m は無関係なので、推定値は偏らないが、同じ個人の誤差と x が、相関する。
-"""
-slopes, classical, clustered = [], [], []
-for _ in range(repetitions):
-    entity = np.repeat(np.arange(entities), periods)
-    n = entities * periods
-    m = np.repeat(rng.standard_normal(entities), periods)
-    a = np.repeat(rng.standard_normal(entities), periods)
-    x = pd.DataFrame({"x": m + rng.standard_normal(n)})
-    y = pd.Series(1 + x["x"] + a + 0.5 * rng.standard_normal(n))
-    result = fit_ols(y, x)
-    slopes.append(result.coefficients["x"])
-    classical.append(result.standard_errors["x"])
-    clustered.append(cluster_standard_errors(y, x, pd.Series(entity))["x"])
-return {
-    "sd": float(np.std(slopes, ddof=1)),
-    "classical": float(np.mean(classical)),
-    "clustered": float(np.mean(clustered)),
-}
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_クラスター標準誤差はstatsmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="n">sample</span><span class="p">()</span>
+    <span class="n">robust</span> <span class="o">=</span> <span class="n">cluster_standard_errors</span><span class="p">(</span><span class="n">panel</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">panel</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]],</span> <span class="n">panel</span><span class="p">[</span><span class="s2">"entity"</span><span class="p">])</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">panel</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">panel</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]]))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span>
+        <span class="n">cov_type</span><span class="o">=</span><span class="s2">"cluster"</span><span class="p">,</span> <span class="n">cov_kwds</span><span class="o">=</span><span class="p">{</span><span class="s2">"groups"</span><span class="p">:</span> <span class="n">panel</span><span class="p">[</span><span class="s2">"entity"</span><span class="p">]}</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">robust</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">bse</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">())</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">robust</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"const"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_個人内で相関があると通常の標準誤差は過小でクラスターは近い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">pooled_standard_errors</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="p">[</span><span class="s2">"classical"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mf">0.75</span> <span class="o">*</span> <span class="n">r</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">r</span><span class="p">[</span><span class="s2">"clustered"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="s2">"sd"</span><span class="p">],</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 </code></pre></div>
-<p>def test_クラスター標準誤差はstatsmodelsと一致する() -&gt; None:
-    panel = sample()
-    robust = cluster_standard_errors(panel["y"], panel[["x"]], panel["entity"])
-    reference = sm.OLS(panel["y"], sm.add_constant(panel[["x"]])).fit(
-        cov_type="cluster", cov_kwds={"groups": panel["entity"]}
-    )
-    assert robust.to_numpy() == pytest.approx(reference.bse.to_numpy())
-    assert list(robust.index) == ["const", "x"]</p>
-<p>def test_個人内で相関があると通常の標準誤差は過小でクラスターは近い() -&gt; None:
-    r = pooled_standard_errors(100, 5, 500, np.random.default_rng(0))
-    assert r["classical"] &lt; 0.75 * r["sd"]
-    assert r["clustered"] == pytest.approx(r["sd"], rel=0.1)</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter10.panel</span><span class="w"> </span><span class="kn">import</span> <span class="n">cluster_standard_errors</span><span class="p">,</span> <span class="n">pooled_standard_errors</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">cluster_standard_errors</span><span class="p">(</span><span class="n">panel</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">panel</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]],</span> <span class="n">panel</span><span class="p">[</span><span class="s2">"entity"</span><span class="p">])</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
@@ -7087,81 +7146,91 @@ return {
 <p>上の標本で、プーリング OLS の x の標準誤差は、通常 0.0355、クラスター 0.0467 です。クラスター標準誤差は、<code>statsmodels</code> の <code>cov_type="cluster"</code> と一致します。2 行目は、x にも個人ごとの成分があり、個人効果と無関係な設計で、1000 回繰り返した結果です。<strong>実際のばらつき 0.057 に対し、通常の標準誤差は 0.0354 と、約 4 割小さく、クラスターは 0.056 で近い</strong>値です。同じ個人の誤差が相関しているのに、通常の標準誤差を使うと、有意になりすぎます。</p>
 <h3 id="_11">図<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p><code>plot_entity_lines</code> は、個人ごとのデータと、固定効果の傾きの直線、プーリング OLS の直線を描きます。<code>plot_estimate_comparison</code> は、推定量ごとの推定値のヒストグラムです。</p>
-<p>def test_個人ごとのデータと直線とプーリングの直線() -&gt; None:
-    panel = draw_panel(8, 5, 1.0, np.random.default_rng(0))
-    ax = plot_entity_lines(panel, entities=3).axes[0]
-    labels = [line.get_label() for line in ax.lines]
-    assert labels == [
-        "Entity 0",
-        "_fit",
-        "Entity 1",
-        "_fit",
-        "Entity 2",
-        "_fit",
-        "Pooled OLS",
-    ]</p>
-<p>def test_個人ごとの直線の傾きは固定効果の傾き() -&gt; None:
-    panel = draw_panel(8, 5, 1.0, np.random.default_rng(0))
-    beta = fixed_effects(panel, "y", ["x"]).coefficients["x"]
-    ax = plot_entity_lines(panel, entities=2).axes[0]
-    for line in (ax.lines[1], ax.lines[3]):
-        x, y = xs(line), ys(line)
-        assert (y[1] - y[0]) / (x[1] - x[0]) == pytest.approx(beta)</p>
-<p>def test_プーリングの直線の傾きはプーリングの推定値() -&gt; None:
-    panel = draw_panel(8, 5, 1.0, np.random.default_rng(0))
-    ax = plot_entity_lines(panel, entities=3).axes[0]
-    x, y = xs(ax.lines[-1]), ys(ax.lines[-1])
-    shown = panel[panel["entity"] &lt; 3]
-    expected = np.polyfit(shown["x"], shown["y"], 1)[0]
-    assert (y[1] - y[0]) / (x[1] - x[0]) == pytest.approx(expected)
-    assert ax.lines[-1].get_linestyle() == "--"</p>
-<p>def test_推定値の比較の図は3つのヒストグラムと真の値の線() -&gt; None:
-    table = estimator_comparison(50, 3, 1.0, 30, np.random.default_rng(0))
-    ax = plot_estimate_comparison(table, 1.0).axes[0]
-    assert len(ax.patches) == 3 * 20
-    assert [line.get_label() for line in ax.lines] == ["True value"]
-    legend = ax.get_legend()
-    assert legend is not None
-    assert [t.get_text() for t in legend.get_texts()] == [
-        "pooled",
-        "fixed_effects",
-        "random_effects",
-        "True value",
-    ]</p>
-<p>def plot_entity_lines(panel: pd.DataFrame, entities: int = 5) -&gt; Figure:
-    """最初の数人のデータと、固定効果の傾きの直線（個人ごと）、プーリング OLS の直線。</p>
-<div class="highlight"><pre><span></span><code>個人ごとの直線は平行（同じ傾き）で、プーリング OLS の直線は、傾きが違う。
-"""
-beta = fixed_effects(panel, "y", ["x"]).coefficients["x"]
-fig, ax = plt.subplots()
-for entity in range(entities):
-    data = panel[panel["entity"] == entity]
-    ax.plot(data["x"], data["y"], "o", label=f"Entity {entity}")
-    ends = np.array([data["x"].min(), data["x"].max()])
-    center = data["y"].mean() + beta * (ends - data["x"].mean())
-    ax.plot(ends, center, color="gray", label="_fit")
-shown = panel[panel["entity"] &lt; entities]
-ends = np.array([shown["x"].min(), shown["x"].max()])
-pooled = pooled_estimate(shown)
-line = shown["y"].mean() + pooled * (ends - shown["x"].mean())
-ax.plot(ends, line, "--", color="black", label="Pooled OLS")
-ax.set_xlabel("x")
-ax.set_ylabel("y")
-ax.legend()
-plt.close(fig)
-return fig
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_個人ごとのデータと直線とプーリングの直線</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="n">draw_panel</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_entity_lines</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="n">entities</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">labels</span> <span class="o">==</span> <span class="p">[</span>
+        <span class="s2">"Entity 0"</span><span class="p">,</span>
+        <span class="s2">"_fit"</span><span class="p">,</span>
+        <span class="s2">"Entity 1"</span><span class="p">,</span>
+        <span class="s2">"_fit"</span><span class="p">,</span>
+        <span class="s2">"Entity 2"</span><span class="p">,</span>
+        <span class="s2">"_fit"</span><span class="p">,</span>
+        <span class="s2">"Pooled OLS"</span><span class="p">,</span>
+    <span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_個人ごとの直線の傾きは固定効果の傾き</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="n">draw_panel</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">fixed_effects</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_entity_lines</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="n">entities</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">3</span><span class="p">]):</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">xs</span><span class="p">(</span><span class="n">line</span><span class="p">),</span> <span class="n">ys</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_プーリングの直線の傾きはプーリングの推定値</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">panel</span> <span class="o">=</span> <span class="n">draw_panel</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_entity_lines</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="n">entities</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">xs</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">shown</span> <span class="o">=</span> <span class="n">panel</span><span class="p">[</span><span class="n">panel</span><span class="p">[</span><span class="s2">"entity"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">]</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">shown</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">shown</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">get_linestyle</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"--"</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_推定値の比較の図は3つのヒストグラムと真の値の線</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">table</span> <span class="o">=</span> <span class="n">estimator_comparison</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_estimate_comparison</span><span class="p">(</span><span class="n">table</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">patches</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="o">*</span> <span class="mi">20</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">line</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"True value"</span><span class="p">]</span>
+    <span class="n">legend</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="n">legend</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">t</span><span class="o">.</span><span class="n">get_text</span><span class="p">()</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">legend</span><span class="o">.</span><span class="n">get_texts</span><span class="p">()]</span> <span class="o">==</span> <span class="p">[</span>
+        <span class="s2">"pooled"</span><span class="p">,</span>
+        <span class="s2">"fixed_effects"</span><span class="p">,</span>
+        <span class="s2">"random_effects"</span><span class="p">,</span>
+        <span class="s2">"True value"</span><span class="p">,</span>
+    <span class="p">]</span>
 </code></pre></div>
-<p>def plot_estimate_comparison(estimates: pd.DataFrame, true_value: float) -&gt; Figure:
-    """推定量ごとの、傾きの推定値のヒストグラムと、真の値の線を重ねて描く。"""
-    fig, ax = plt.subplots()
-    for name in estimates.columns:
-        ax.hist(estimates[name], bins=20, alpha=0.5, label=name)
-    ax.axvline(true_value, color="black", linestyle="--", label="True value")
-    ax.set_xlabel("Estimated slope")
-    ax.set_ylabel("Frequency")
-    ax.legend()
-    plt.close(fig)
-    return fig</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_entity_lines</span><span class="p">(</span><span class="n">panel</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">entities</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""最初の数人のデータと、固定効果の傾きの直線（個人ごと）、プーリング OLS の直線。</span>
+
+<span class="sd">    個人ごとの直線は平行（同じ傾き）で、プーリング OLS の直線は、傾きが違う。</span>
+<span class="sd">    """</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="n">fixed_effects</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="s2">"y"</span><span class="p">,</span> <span class="p">[</span><span class="s2">"x"</span><span class="p">])</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">entity</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">entities</span><span class="p">):</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="n">panel</span><span class="p">[</span><span class="n">panel</span><span class="p">[</span><span class="s2">"entity"</span><span class="p">]</span> <span class="o">==</span> <span class="n">entity</span><span class="p">]</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">data</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="s2">"o"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Entity </span><span class="si">{</span><span class="n">entity</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="n">ends</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">data</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">data</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()])</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">*</span> <span class="p">(</span><span class="n">ends</span> <span class="o">-</span> <span class="n">data</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ends</span><span class="p">,</span> <span class="n">center</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"gray"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"_fit"</span><span class="p">)</span>
+    <span class="n">shown</span> <span class="o">=</span> <span class="n">panel</span><span class="p">[</span><span class="n">panel</span><span class="p">[</span><span class="s2">"entity"</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">entities</span><span class="p">]</span>
+    <span class="n">ends</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">shown</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">shown</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()])</span>
+    <span class="n">pooled</span> <span class="o">=</span> <span class="n">pooled_estimate</span><span class="p">(</span><span class="n">shown</span><span class="p">)</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">shown</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">+</span> <span class="n">pooled</span> <span class="o">*</span> <span class="p">(</span><span class="n">ends</span> <span class="o">-</span> <span class="n">shown</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">ends</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Pooled OLS"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"y"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_estimate_comparison</span><span class="p">(</span><span class="n">estimates</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">true_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""推定量ごとの、傾きの推定値のヒストグラムと、真の値の線を重ねて描く。"""</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">estimates</span><span class="o">.</span><span class="n">columns</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">hist</span><span class="p">(</span><span class="n">estimates</span><span class="p">[</span><span class="n">name</span><span class="p">],</span> <span class="n">bins</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="n">name</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="n">true_value</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">"black"</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"True value"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Estimated slope"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Frequency"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+</code></pre></div>
 <h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter10
 </code></pre></div>

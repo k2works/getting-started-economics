@@ -6453,40 +6453,48 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="n">Y</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">]</span>
 <span class="n">Z</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
 </code></pre></div>
-<p>def test_手計算の単純なIV推定() -&gt; None:
-    fit = iv_estimate(Y, X, Z)
-    assert fit.slope == pytest.approx(6.5 / 5.5)
-    assert fit.intercept == pytest.approx(1.0)</p>
-<p>def test_同じデータのOLSとは傾きが違う() -&gt; None:
-    assert fit_simple(X, Y).slope == pytest.approx(9 / 7)
-    assert iv_estimate(Y, X, Z).slope != pytest.approx(9 / 7)</p>
-<p>def test_操作変数が説明変数そのものならOLSと一致する() -&gt; None:
-    fit = iv_estimate(Y, X, X)
-    assert fit.slope == pytest.approx(fit_simple(X, Y).slope)</p>
-<h3 id="green-iv_estimate">Green: iv_estimate を実装する<a class="headerlink" href="#green-iv_estimate" title="Permanent link">&para;</a></h3>
-<p>def iv_estimate(y: Array, x: Array, z: Array) -&gt; SimpleFit:
-    """単純な IV 推定（内生変数 x が 1 つ、操作変数 z が 1 つ）。</p>
-<div class="highlight"><pre><span></span><code>傾き = Cov(z, y) ÷ Cov(z, x)、切片 = ȳ − 傾き · x̄。
-"""
-slope = sample_covariance(z, y) / sample_covariance(z, x)
-mean_y = float(np.mean(np.asarray(y, dtype=float)))
-mean_x = float(np.mean(np.asarray(x, dtype=float)))
-return SimpleFit(intercept=mean_y - slope * mean_x, slope=slope)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_手計算の単純なIV推定</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">iv_estimate</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Z</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">slope</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">6.5</span> <span class="o">/</span> <span class="mf">5.5</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">intercept</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_同じデータのOLSとは傾きが違う</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">fit_simple</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span><span class="o">.</span><span class="n">slope</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">9</span> <span class="o">/</span> <span class="mi">7</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">iv_estimate</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Z</span><span class="p">)</span><span class="o">.</span><span class="n">slope</span> <span class="o">!=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">9</span> <span class="o">/</span> <span class="mi">7</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_操作変数が説明変数そのものならOLSと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">iv_estimate</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">X</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">fit</span><span class="o">.</span><span class="n">slope</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">fit_simple</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span><span class="o">.</span><span class="n">slope</span><span class="p">)</span>
 </code></pre></div>
-<p>def iv_slope_standard_error(y: Array, x: Array, z: Array, fit: SimpleFit) -&gt; float:
-    """単純な IV 推定の、傾きの標準誤差。</p>
-<div class="highlight"><pre><span></span><code>残差は、元の x で計算する: u = y − 切片 − 傾き · x。
-Var = σ̂² · Σ(z − z̄)² ÷ (Σ(z − z̄)(x − x̄))²、σ̂² = Σu² ÷ (n − 2)。
-"""
-values_z = np.asarray(z, dtype=float)
-centered_z = values_z - values_z.mean()
-values_x = np.asarray(x, dtype=float)
-centered_x = values_x - values_x.mean()
-u = np.asarray(y, dtype=float) - fit.intercept - fit.slope * values_x
-sigma2 = float(u @ u) / (len(u) - 2)
-return math.sqrt(
-    sigma2 * float(centered_z @ centered_z) / float(centered_z @ centered_x) ** 2
-)
+<h3 id="green-iv_estimate">Green: iv_estimate を実装する<a class="headerlink" href="#green-iv_estimate" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">iv_estimate</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SimpleFit</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""単純な IV 推定（内生変数 x が 1 つ、操作変数 z が 1 つ）。</span>
+
+<span class="sd">    傾き = Cov(z, y) ÷ Cov(z, x)、切片 = ȳ − 傾き · x̄。</span>
+<span class="sd">    """</span>
+    <span class="n">slope</span> <span class="o">=</span> <span class="n">sample_covariance</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">sample_covariance</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">mean_y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)))</span>
+    <span class="n">mean_x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">SimpleFit</span><span class="p">(</span><span class="n">intercept</span><span class="o">=</span><span class="n">mean_y</span> <span class="o">-</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">mean_x</span><span class="p">,</span> <span class="n">slope</span><span class="o">=</span><span class="n">slope</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">iv_slope_standard_error</span><span class="p">(</span><span class="n">y</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">z</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">fit</span><span class="p">:</span> <span class="n">SimpleFit</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""単純な IV 推定の、傾きの標準誤差。</span>
+
+<span class="sd">    残差は、元の x で計算する: u = y − 切片 − 傾き · x。</span>
+<span class="sd">    Var = σ̂² · Σ(z − z̄)² ÷ (Σ(z − z̄)(x − x̄))²、σ̂² = Σu² ÷ (n − 2)。</span>
+<span class="sd">    """</span>
+    <span class="n">values_z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">z</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">centered_z</span> <span class="o">=</span> <span class="n">values_z</span> <span class="o">-</span> <span class="n">values_z</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">values_x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">centered_x</span> <span class="o">=</span> <span class="n">values_x</span> <span class="o">-</span> <span class="n">values_x</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span> <span class="o">-</span> <span class="n">fit</span><span class="o">.</span><span class="n">intercept</span> <span class="o">-</span> <span class="n">fit</span><span class="o">.</span><span class="n">slope</span> <span class="o">*</span> <span class="n">values_x</span>
+    <span class="n">sigma2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">u</span> <span class="o">@</span> <span class="n">u</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span>
+        <span class="n">sigma2</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">centered_z</span> <span class="o">@</span> <span class="n">centered_z</span><span class="p">)</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">centered_z</span> <span class="o">@</span> <span class="n">centered_x</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter02.simple</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_simple</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.iv</span><span class="w"> </span><span class="kn">import</span> <span class="n">iv_estimate</span><span class="p">,</span> <span class="n">iv_slope_standard_error</span>
@@ -6504,137 +6512,157 @@ SimpleFit(intercept=0.714285714285714, slope=1.2857142857142858)
 0.17725
 </code></pre></div>
 <p>IV の傾きは 1.1818、OLS は 1.2857 です（予想 1）。IV の標準誤差は 0.17725 です。残差は、元の x で計算します（u = y − 1.0 − 1.1818·x）。</p>
-<p>def test_手計算の例の傾きの標準誤差() -&gt; None:
-    fit = iv_estimate(Y, X, Z)
-    assert iv_slope_standard_error(Y, X, Z, fit) == pytest.approx(0.17725, abs=1e-5)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_手計算の例の傾きの標準誤差</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">iv_estimate</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Z</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">iv_slope_standard_error</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">fit</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.17725</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-5</span><span class="p">)</span>
+</code></pre></div>
 <h3 id="2sls">2SLS を実装する<a class="headerlink" href="#2sls" title="Permanent link">&para;</a></h3>
 <p>操作変数の数が、内生変数の数より少ないと、識別されません（式の数が足りない）。</p>
-<p>@dataclass(frozen=True)
-class IvResult:
-    """2SLS の推定結果。"""</p>
-<div class="highlight"><pre><span></span><code>coefficients: pd.Series
-standard_errors: pd.Series
-residuals: NDArray[np.float64]
-n_obs: int
-df_resid: int
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">IvResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""2SLS の推定結果。"""</span>
+
+    <span class="n">coefficients</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>
+    <span class="n">standard_errors</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span>
+    <span class="n">residuals</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span>
+    <span class="n">n_obs</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">df_resid</span><span class="p">:</span> <span class="nb">int</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_design</span><span class="p">(</span>
+    <span class="n">columns</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span> <span class="n">exogenous</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""定数項・外生の説明変数・columns の順に並べた行列と、名前。"""</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="nb">len</span><span class="p">(</span><span class="n">columns</span><span class="p">),</span> <span class="mi">1</span><span class="p">))]</span>
+    <span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"const"</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">exogenous</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">exogenous</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+        <span class="n">names</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">exogenous</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">columns</span><span class="o">.</span><span class="n">to_numpy</span><span class="p">(</span><span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">))</span>
+    <span class="n">names</span> <span class="o">+=</span> <span class="nb">list</span><span class="p">(</span><span class="n">columns</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">(</span><span class="n">parts</span><span class="p">),</span> <span class="n">names</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_fitted_regressors</span><span class="p">(</span>
+    <span class="n">endogenous</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">instruments</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">exogenous</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">],</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
+<span class="w">    </span><span class="sd">"""第 1 段階: 説明変数 R を、操作変数と外生の説明変数 Q で回帰した当てはめ値 R̂。"""</span>
+    <span class="k">if</span> <span class="n">instruments</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">endogenous</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"操作変数の数が、内生変数の数より少ないので、識別されない"</span><span class="p">)</span>
+    <span class="n">regressors</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="n">_design</span><span class="p">(</span><span class="n">endogenous</span><span class="p">,</span> <span class="n">exogenous</span><span class="p">)</span>
+    <span class="n">exogenous_part</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_design</span><span class="p">(</span><span class="n">instruments</span><span class="p">,</span> <span class="n">exogenous</span><span class="p">)</span>
+    <span class="n">projection</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">exogenous_part</span><span class="p">,</span> <span class="n">regressors</span><span class="p">,</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">regressors</span><span class="p">,</span> <span class="n">exogenous_part</span> <span class="o">@</span> <span class="n">projection</span><span class="p">,</span> <span class="n">names</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">two_stage_least_squares</span><span class="p">(</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">endogenous</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">instruments</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">exogenous</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">IvResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""2SLS: β = (R̂′R)⁻¹ R̂′y。標準誤差の残差は、R̂ でなく、元の R で計算する。</span>
+
+<span class="sd">    Var(β) = σ̂² · (R̂′R̂)⁻¹、σ̂² = Σ(y − Rβ)² ÷ (n − k)。</span>
+<span class="sd">    """</span>
+    <span class="n">target</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">regressors</span><span class="p">,</span> <span class="n">fitted</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="n">_fitted_regressors</span><span class="p">(</span><span class="n">endogenous</span><span class="p">,</span> <span class="n">instruments</span><span class="p">,</span> <span class="n">exogenous</span><span class="p">)</span>
+    <span class="n">coefficients</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">fitted</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">regressors</span><span class="p">,</span> <span class="n">fitted</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">target</span><span class="p">)</span>
+    <span class="n">residuals</span><span class="p">:</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]</span> <span class="o">=</span> <span class="n">target</span> <span class="o">-</span> <span class="n">regressors</span> <span class="o">@</span> <span class="n">coefficients</span>
+    <span class="n">n</span><span class="p">,</span> <span class="n">k</span> <span class="o">=</span> <span class="n">regressors</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">sigma2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">residuals</span> <span class="o">@</span> <span class="n">residuals</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="n">k</span><span class="p">)</span>
+    <span class="n">errors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">sigma2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">diag</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">inv</span><span class="p">(</span><span class="n">fitted</span><span class="o">.</span><span class="n">T</span> <span class="o">@</span> <span class="n">fitted</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">IvResult</span><span class="p">(</span>
+        <span class="n">coefficients</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">coefficients</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">names</span><span class="p">),</span>
+        <span class="n">standard_errors</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">errors</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">names</span><span class="p">),</span>
+        <span class="n">residuals</span><span class="o">=</span><span class="n">residuals</span><span class="p">,</span>
+        <span class="n">n_obs</span><span class="o">=</span><span class="n">n</span><span class="p">,</span>
+        <span class="n">df_resid</span><span class="o">=</span><span class="n">n</span> <span class="o">-</span> <span class="n">k</span><span class="p">,</span>
+    <span class="p">)</span>
 </code></pre></div>
-<p>def _design(
-    columns: pd.DataFrame, exogenous: pd.DataFrame | None
-) -&gt; tuple[NDArray[np.float64], list[str]]:
-    """定数項・外生の説明変数・columns の順に並べた行列と、名前。"""
-    parts = [np.ones((len(columns), 1))]
-    names = ["const"]
-    if exogenous is not None:
-        parts.append(exogenous.to_numpy(dtype=float))
-        names += list(exogenous.columns)
-    parts.append(columns.to_numpy(dtype=float))
-    names += list(columns.columns)
-    return np.column_stack(parts), names</p>
-<p>def _fitted_regressors(
-    endogenous: pd.DataFrame,
-    instruments: pd.DataFrame,
-    exogenous: pd.DataFrame | None,
-) -&gt; tuple[NDArray[np.float64], NDArray[np.float64], list[str]]:
-    """第 1 段階: 説明変数 R を、操作変数と外生の説明変数 Q で回帰した当てはめ値 R̂。"""
-    if instruments.shape[1] &lt; endogenous.shape[1]:
-        raise ValueError("操作変数の数が、内生変数の数より少ないので、識別されない")
-    regressors, names = _design(endogenous, exogenous)
-    exogenous_part, _ = <em>design(instruments, exogenous)
-    projection, *</em> = np.linalg.lstsq(exogenous_part, regressors, rcond=None)
-    return regressors, exogenous_part @ projection, names</p>
-<p>def two_stage_least_squares(
-    y: ArrayLike,
-    endogenous: pd.DataFrame,
-    instruments: pd.DataFrame,
-    exogenous: pd.DataFrame | None = None,
-) -&gt; IvResult:
-    """2SLS: β = (R̂′R)⁻¹ R̂′y。標準誤差の残差は、R̂ でなく、元の R で計算する。</p>
-<div class="highlight"><pre><span></span><code>Var(β) = σ̂² · (R̂′R̂)⁻¹、σ̂² = Σ(y − Rβ)² ÷ (n − k)。
-"""
-target = np.asarray(y, dtype=float)
-regressors, fitted, names = _fitted_regressors(endogenous, instruments, exogenous)
-coefficients = np.linalg.solve(fitted.T @ regressors, fitted.T @ target)
-residuals: NDArray[np.float64] = target - regressors @ coefficients
-n, k = regressors.shape
-sigma2 = float(residuals @ residuals) / (n - k)
-errors = np.sqrt(sigma2 * np.diag(np.linalg.inv(fitted.T @ fitted)))
-return IvResult(
-    coefficients=pd.Series(coefficients, index=names),
-    standard_errors=pd.Series(errors, index=names),
-    residuals=residuals,
-    n_obs=n,
-    df_resid=n - k,
-)
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_識別のちょうどの場合2SLSは単純なIV推定と係数も標準誤差も一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">two_stage_least_squares</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"x"</span><span class="p">:</span> <span class="n">X</span><span class="p">}),</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"z"</span><span class="p">:</span> <span class="n">Z</span><span class="p">}))</span>
+    <span class="n">fit</span> <span class="o">=</span> <span class="n">iv_estimate</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Z</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">slope</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">fit</span><span class="o">.</span><span class="n">intercept</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">iv_slope_standard_error</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Z</span><span class="p">,</span> <span class="n">fit</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">df_resid</span> <span class="o">==</span> <span class="mi">2</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">n_obs</span> <span class="o">==</span> <span class="mi">4</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">sample_with_control</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">300</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">base</span> <span class="o">=</span> <span class="n">draw_iv_sample</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+    <span class="n">base</span><span class="p">[</span><span class="s2">"z2"</span><span class="p">]</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">base</span><span class="p">[</span><span class="s2">"z"</span><span class="p">]</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">base</span><span class="p">[</span><span class="s2">"w"</span><span class="p">]</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">base</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="n">base</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">base</span><span class="p">[</span><span class="s2">"w"</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_操作変数が内生変数より少ないと識別されない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">sample_with_control</span><span class="p">()</span>
+    <span class="n">endogenous</span> <span class="o">=</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z2"</span><span class="p">]]</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"識別"</span><span class="p">):</span>
+        <span class="n">two_stage_least_squares</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">endogenous</span><span class="p">,</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">]])</span>
 </code></pre></div>
-<p>def test_識別のちょうどの場合2SLSは単純なIV推定と係数も標準誤差も一致する() -&gt; None:
-    result = two_stage_least_squares(Y, pd.DataFrame({"x": X}), pd.DataFrame({"z": Z}))
-    fit = iv_estimate(Y, X, Z)
-    assert result.coefficients["x"] == pytest.approx(fit.slope)
-    assert result.coefficients["const"] == pytest.approx(fit.intercept)
-    assert result.standard_errors["x"] == pytest.approx(
-        iv_slope_standard_error(Y, X, Z, fit)
-    )
-    assert result.df_resid == 2
-    assert result.n_obs == 4</p>
-<p>def sample_with_control(n: int = 300) -&gt; pd.DataFrame:
-    rng = np.random.default_rng(0)
-    base = draw_iv_sample(n, 1.0, 0.5, rng)
-    base["z2"] = 0.5 * base["z"] + rng.standard_normal(n)
-    base["w"] = rng.standard_normal(n)
-    return base.assign(y=base["y"] + 0.5 * base["w"])</p>
-<p>def test_操作変数が内生変数より少ないと識別されない() -&gt; None:
-    s = sample_with_control()
-    endogenous = s[["x", "z2"]]
-    with pytest.raises(ValueError, match="識別"):
-        two_stage_least_squares(s["y"], endogenous, s[["z"]])</p>
 <p><code>linearmodels</code> の <code>IV2SLS</code> と、係数・標準誤差が一致することを、確かめます。外生の説明変数と、複数の操作変数がある場合も、一致します。</p>
-<p>def test_2SLSはlinearmodelsと一致する() -&gt; None:
-    s = draw_iv_sample(500, 1.0, 0.5, np.random.default_rng(0))
-    result = two_stage_least_squares(s["y"], s[["x"]], s[["z"]])
-    reference = IV2SLS(
-        s["y"], pd.DataFrame({"const": np.ones(500)}), s[["x"]], s[["z"]]
-    ).fit(cov_type="unadjusted", debiased=True)
-    assert result.coefficients["x"] == pytest.approx(reference.params["x"])
-    assert result.coefficients["const"] == pytest.approx(reference.params["const"])
-    assert result.standard_errors["x"] == pytest.approx(reference.std_errors["x"])</p>
-<p>def test_外生の説明変数と複数の操作変数でもlinearmodelsと一致する() -&gt; None:
-    s = sample_with_control()
-    result = two_stage_least_squares(s["y"], s[["x"]], s[["z", "z2"]], s[["w"]])
-    reference = IV2SLS(
-        s["y"],
-        pd.DataFrame({"const": np.ones(len(s)), "w": s["w"]}),
-        s[["x"]],
-        s[["z", "z2"]],
-    ).fit(cov_type="unadjusted", debiased=True)
-    assert list(result.coefficients.index) == ["const", "w", "x"]
-    for name in ("const", "w", "x"):
-        assert result.coefficients[name] == pytest.approx(reference.params[name])
-        assert result.standard_errors[name] == pytest.approx(reference.std_errors[name])</p>
-<h3 id="2_1">手作業の 2 段階の、標準誤差<a class="headerlink" href="#2_1" title="Permanent link">&para;</a></h3>
-<p>def manual_second_stage(
-    y: ArrayLike,
-    endogenous: pd.DataFrame,
-    instruments: pd.DataFrame,
-    exogenous: pd.DataFrame | None = None,
-) -&gt; tuple[pd.Series, pd.Series]:
-    """手作業の 2 段階: 第 2 段階の OLS の、係数と標準誤差。</p>
-<div class="highlight"><pre><span></span><code>係数は 2SLS と同じだが、標準誤差は、当てはめ値 x̂ の残差で計算するので、正しくない。
-"""
-_, fitted, names = _fitted_regressors(endogenous, instruments, exogenous)
-second = fit_ols(y, pd.DataFrame(fitted[:, 1:], columns=names[1:]))
-return second.coefficients, second.standard_errors
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_2SLSはlinearmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_iv_sample</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">two_stage_least_squares</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">]])</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">IV2SLS</span><span class="p">(</span>
+        <span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"const"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">500</span><span class="p">)}),</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">]]</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">cov_type</span><span class="o">=</span><span class="s2">"unadjusted"</span><span class="p">,</span> <span class="n">debiased</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="s2">"const"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">std_errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_外生の説明変数と複数の操作変数でもlinearmodelsと一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">sample_with_control</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">two_stage_least_squares</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">,</span> <span class="s2">"z2"</span><span class="p">]],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"w"</span><span class="p">]])</span>
+    <span class="n">reference</span> <span class="o">=</span> <span class="n">IV2SLS</span><span class="p">(</span>
+        <span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span>
+        <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"const"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)),</span> <span class="s2">"w"</span><span class="p">:</span> <span class="n">s</span><span class="p">[</span><span class="s2">"w"</span><span class="p">]}),</span>
+        <span class="n">s</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]],</span>
+        <span class="n">s</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">,</span> <span class="s2">"z2"</span><span class="p">]],</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">cov_type</span><span class="o">=</span><span class="s2">"unadjusted"</span><span class="p">,</span> <span class="n">debiased</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="o">.</span><span class="n">index</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"const"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"const"</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">params</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
+        <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">reference</span><span class="o">.</span><span class="n">std_errors</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
 </code></pre></div>
-<p>def test_手作業の2段階は係数は同じだが標準誤差が合わない() -&gt; None:
-    endogenous, instruments = pd.DataFrame({"x": X}), pd.DataFrame({"z": Z})
-    result = two_stage_least_squares(Y, endogenous, instruments)
-    coefficients, errors = manual_second_stage(Y, endogenous, instruments)
-    assert coefficients["x"] == pytest.approx(result.coefficients["x"])
-    assert errors["x"] &gt; 3 * result.standard_errors["x"]</p>
-<p>def test_手作業の2段階の標準誤差は乱数の標本でも過大() -&gt; None:
-    s = draw_iv_sample(500, 1.0, 0.5, np.random.default_rng(0))
-    result = two_stage_least_squares(s["y"], s[["x"]], s[["z"]])
-    _, errors = manual_second_stage(s["y"], s[["x"]], s[["z"]])
-    assert errors["x"] != pytest.approx(result.standard_errors["x"], rel=0.05)</p>
+<h3 id="2_1">手作業の 2 段階の、標準誤差<a class="headerlink" href="#2_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">manual_second_stage</span><span class="p">(</span>
+    <span class="n">y</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span>
+    <span class="n">endogenous</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">instruments</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">exogenous</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""手作業の 2 段階: 第 2 段階の OLS の、係数と標準誤差。</span>
+
+<span class="sd">    係数は 2SLS と同じだが、標準誤差は、当てはめ値 x̂ の残差で計算するので、正しくない。</span>
+<span class="sd">    """</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">fitted</span><span class="p">,</span> <span class="n">names</span> <span class="o">=</span> <span class="n">_fitted_regressors</span><span class="p">(</span><span class="n">endogenous</span><span class="p">,</span> <span class="n">instruments</span><span class="p">,</span> <span class="n">exogenous</span><span class="p">)</span>
+    <span class="n">second</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">fitted</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">:],</span> <span class="n">columns</span><span class="o">=</span><span class="n">names</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+    <span class="k">return</span> <span class="n">second</span><span class="o">.</span><span class="n">coefficients</span><span class="p">,</span> <span class="n">second</span><span class="o">.</span><span class="n">standard_errors</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_手作業の2段階は係数は同じだが標準誤差が合わない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">endogenous</span><span class="p">,</span> <span class="n">instruments</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"x"</span><span class="p">:</span> <span class="n">X</span><span class="p">}),</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"z"</span><span class="p">:</span> <span class="n">Z</span><span class="p">})</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">two_stage_least_squares</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">endogenous</span><span class="p">,</span> <span class="n">instruments</span><span class="p">)</span>
+    <span class="n">coefficients</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">manual_second_stage</span><span class="p">(</span><span class="n">Y</span><span class="p">,</span> <span class="n">endogenous</span><span class="p">,</span> <span class="n">instruments</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">result</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_手作業の2段階の標準誤差は乱数の標本でも過大</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_iv_sample</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">two_stage_least_squares</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">]])</span>
+    <span class="n">_</span><span class="p">,</span> <span class="n">errors</span> <span class="o">=</span> <span class="n">manual_second_stage</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"x"</span><span class="p">]],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">]])</span>
+    <span class="k">assert</span> <span class="n">errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span> <span class="o">!=</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">standard_errors</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.iv</span><span class="w"> </span><span class="kn">import</span> <span class="n">manual_second_stage</span><span class="p">,</span> <span class="n">two_stage_least_squares</span>
@@ -6650,34 +6678,40 @@ return second.coefficients, second.standard_errors
 <p>1 行目が 2SLS の係数・標準誤差・自由度、2 行目が手作業の 2 段階の係数・標準誤差です。<strong>係数は、2SLS と同じ（1.1818）</strong>ですが、手作業の標準誤差は <strong>0.7216</strong> で、正しい値 0.1773 の、約 4 倍です（予想 2）。</p>
 <h3 id="ols-iv">乱数の標本で、OLS と IV を比べる<a class="headerlink" href="#ols-iv" title="Permanent link">&para;</a></h3>
 <p>x = strength·z + v、y = 1 + x + u、u と v の相関 = endogeneity（真の傾き 1）。OLS の傾きは、1 + endogeneity ÷ (1 + strength²) に近づきます（strength = 1、endogeneity = 0.5 で 1.25）。</p>
-<p>def draw_iv_sample(
-    n: int, strength: float, endogeneity: float, rng: np.random.Generator
-) -&gt; pd.DataFrame:
-    """y = 1 + x + u、x = strength·z + v。u と v の相関は endogeneity（分散は 1）。</p>
-<div class="highlight"><pre><span></span><code>z は操作変数（x と相関し、u と無関係）。
-OLS の傾きは、1 + endogeneity ÷ (1 + strength²) に近づく。
-"""
-z = rng.standard_normal(n)
-v = rng.standard_normal(n)
-u = endogeneity * v + math.sqrt(1 - endogeneity**2) * rng.standard_normal(n)
-x = strength * z + v
-return pd.DataFrame({"y": 1 + x + u, "x": x, "z": z})
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">draw_iv_sample</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">strength</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">endogeneity</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""y = 1 + x + u、x = strength·z + v。u と v の相関は endogeneity（分散は 1）。</span>
+
+<span class="sd">    z は操作変数（x と相関し、u と無関係）。</span>
+<span class="sd">    OLS の傾きは、1 + endogeneity ÷ (1 + strength²) に近づく。</span>
+<span class="sd">    """</span>
+    <span class="n">z</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">endogeneity</span> <span class="o">*</span> <span class="n">v</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">endogeneity</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">rng</span><span class="o">.</span><span class="n">standard_normal</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">strength</span> <span class="o">*</span> <span class="n">z</span> <span class="o">+</span> <span class="n">v</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"y"</span><span class="p">:</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">u</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">:</span> <span class="n">z</span><span class="p">})</span>
 </code></pre></div>
-<p>def test_標本の列と分散と相関() -&gt; None:
-    s = draw_iv_sample(50000, 1.0, 0.5, np.random.default_rng(0))
-    assert list(s.columns) == ["y", "x", "z"]
-    u = s["y"] - 1 - s["x"]
-    assert np.cov(s["x"], u)[0, 1] == pytest.approx(0.5, abs=0.03)
-    assert np.cov(s["z"], u)[0, 1] == pytest.approx(0, abs=0.03)
-    assert np.cov(s["z"], s["x"])[0, 1] == pytest.approx(1.0, abs=0.03)
-    assert np.var(u) == pytest.approx(1, rel=0.05)</p>
-<p>def test_OLSは内生性で偏りIVは偏らない() -&gt; None:
-    s = draw_iv_sample(100000, 1.0, 0.5, np.random.default_rng(0))
-    assert fit_simple(s["x"], s["y"]).slope == pytest.approx(1.25, abs=0.01)
-    assert iv_estimate(s["y"], s["x"], s["z"]).slope == pytest.approx(1.0, abs=0.01)</p>
-<p>def test_内生性がなければOLSも偏らない() -&gt; None:
-    s = draw_iv_sample(100000, 1.0, 0.0, np.random.default_rng(0))
-    assert fit_simple(s["x"], s["y"]).slope == pytest.approx(1.0, abs=0.01)</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_標本の列と分散と相関</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_iv_sample</span><span class="p">(</span><span class="mi">50000</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">s</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"y"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">,</span> <span class="s2">"z"</span><span class="p">]</span>
+    <span class="n">u</span> <span class="o">=</span> <span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">s</span><span class="p">[</span><span class="s2">"x"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">u</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.03</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"z"</span><span class="p">],</span> <span class="n">u</span><span class="p">)[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.03</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"z"</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="s2">"x"</span><span class="p">])[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.03</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">np</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">u</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">0.05</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_OLSは内生性で偏りIVは偏らない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_iv_sample</span><span class="p">(</span><span class="mi">100000</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">fit_simple</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">])</span><span class="o">.</span><span class="n">slope</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">1.25</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">iv_estimate</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="s2">"z"</span><span class="p">])</span><span class="o">.</span><span class="n">slope</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_内生性がなければOLSも偏らない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_iv_sample</span><span class="p">(</span><span class="mi">100000</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">fit_simple</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">s</span><span class="p">[</span><span class="s2">"y"</span><span class="p">])</span><span class="o">.</span><span class="n">slope</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.iv</span><span class="w"> </span><span class="kn">import</span> <span class="n">draw_iv_sample</span><span class="p">,</span> <span class="n">first_stage_f</span>
@@ -6699,56 +6733,68 @@ return pd.DataFrame({"y": 1 + x + u, "x": x, "z": z})
 <p>4 行は、順に、2SLS の係数・標準誤差、OLS の傾き、手作業の 2 段階の標準誤差、n = 100000 での OLS と IV の傾きです。</p>
 <p>n = 500 の標本で、2SLS の傾きは 1.0242（標準誤差 0.0428）で、真の値 1 に近く、<strong>OLS は 1.2319 と、1.25 の方向に偏っています</strong>。手作業の標準誤差は 0.0721 で、正しい値（0.0428）の約 1.7 倍です。n = 100000 では、OLS は 1.2502（理論値 1.25）、IV は 0.9997 です（4 行目）。<strong>標本を増やしても、OLS の偏りは消えず、IV は真の値に収束します。</strong></p>
 <h3 id="_5">弱操作変数<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
-<p>def first_stage_f(
-    endogenous: pd.Series,
-    instruments: pd.DataFrame,
-    exogenous: pd.DataFrame | None = None,
-) -&gt; TestResult:
-    """第 1 段階の F 検定: 操作変数の係数がすべて 0 という仮説（弱操作変数の目安）。"""
-    columns = instruments if exogenous is None else exogenous.join(instruments)
-    return f_test(endogenous, columns, list(instruments.columns))</p>
-<p>def weak_instrument_experiment(
-    n: int, strength: float, repetitions: int, rng: np.random.Generator
-) -&gt; pd.DataFrame:
-    """OLS と IV の傾きと第 1 段階の F 値を繰り返す（真の傾き 1、内生性 0.5）。"""
-    rows = []
-    for _ in range(repetitions):
-        sample = draw_iv_sample(n, strength, 0.5, rng)
-        stage = first_stage_f(sample["x"], sample[["z"]])
-        rows.append(
-            (
-                fit_simple(sample["x"], sample["y"]).slope,
-                iv_estimate(sample["y"], sample["x"], sample["z"]).slope,
-                stage.statistic,
-            )
-        )
-    return pd.DataFrame(rows, columns=["ols", "iv", "f"])</p>
-<p>def test_第1段階のF値は操作変数のt値の2乗() -&gt; None:
-    s = draw_iv_sample(200, 0.5, 0.5, np.random.default_rng(1))
-    first = fit_ols(s["x"], s[["z"]])
-    assert first_stage_f(s["x"], s[["z"]]).statistic == pytest.approx(
-        t_statistics(first)["z"] ** 2
-    )</p>
-<p>def test_外生の説明変数があっても第1段階のF値を求められる() -&gt; None:
-    s = sample_with_control()
-    test = first_stage_f(s["x"], s[["z", "z2"]], s[["w"]])
-    assert test.statistic &gt; 10
-    assert test.p_value &lt; 0.001</p>
-<p>def spread(values: pd.Series) -&gt; float:
-    return float(values.quantile(0.95) - values.quantile(0.05))</p>
-<p>def test_強い操作変数ではF値が大きくIVは真の値に集まる() -&gt; None:
-    t = weak_instrument_experiment(100, 1.0, 1000, np.random.default_rng(0))
-    assert list(t.columns) == ["ols", "iv", "f"]
-    assert t["f"].mean() &gt; 50
-    assert t["iv"].median() == pytest.approx(1.0, abs=0.02)
-    assert t["ols"].median() == pytest.approx(1.25, abs=0.03)</p>
-<p>def test_弱い操作変数ではF値が小さくIVは広くばらつきOLSの方向に偏る() -&gt; None:
-    strong = weak_instrument_experiment(100, 1.0, 1000, np.random.default_rng(0))
-    weak = weak_instrument_experiment(100, 0.1, 1000, np.random.default_rng(0))
-    assert weak["f"].mean() &lt; 5
-    assert spread(weak["iv"]) &gt; 5 * spread(strong["iv"])
-    assert abs(weak["iv"].median() - 1) &gt; abs(strong["iv"].median() - 1)
-    assert weak["iv"].median() &gt; 1.1</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">first_stage_f</span><span class="p">(</span>
+    <span class="n">endogenous</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">,</span>
+    <span class="n">instruments</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">,</span>
+    <span class="n">exogenous</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TestResult</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""第 1 段階の F 検定: 操作変数の係数がすべて 0 という仮説（弱操作変数の目安）。"""</span>
+    <span class="n">columns</span> <span class="o">=</span> <span class="n">instruments</span> <span class="k">if</span> <span class="n">exogenous</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">exogenous</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">instruments</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">f_test</span><span class="p">(</span><span class="n">endogenous</span><span class="p">,</span> <span class="n">columns</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">instruments</span><span class="o">.</span><span class="n">columns</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">weak_instrument_experiment</span><span class="p">(</span>
+    <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">strength</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">repetitions</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">rng</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">Generator</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""OLS と IV の傾きと第 1 段階の F 値を繰り返す（真の傾き 1、内生性 0.5）。"""</span>
+    <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">repetitions</span><span class="p">):</span>
+        <span class="n">sample</span> <span class="o">=</span> <span class="n">draw_iv_sample</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">strength</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+        <span class="n">stage</span> <span class="o">=</span> <span class="n">first_stage_f</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">sample</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">]])</span>
+        <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">(</span>
+                <span class="n">fit_simple</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">sample</span><span class="p">[</span><span class="s2">"y"</span><span class="p">])</span><span class="o">.</span><span class="n">slope</span><span class="p">,</span>
+                <span class="n">iv_estimate</span><span class="p">(</span><span class="n">sample</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="n">sample</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">sample</span><span class="p">[</span><span class="s2">"z"</span><span class="p">])</span><span class="o">.</span><span class="n">slope</span><span class="p">,</span>
+                <span class="n">stage</span><span class="o">.</span><span class="n">statistic</span><span class="p">,</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">"ols"</span><span class="p">,</span> <span class="s2">"iv"</span><span class="p">,</span> <span class="s2">"f"</span><span class="p">])</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_第1段階のF値は操作変数のt値の2乗</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">draw_iv_sample</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+    <span class="n">first</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">]])</span>
+    <span class="k">assert</span> <span class="n">first_stage_f</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">]])</span><span class="o">.</span><span class="n">statistic</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
+        <span class="n">t_statistics</span><span class="p">(</span><span class="n">first</span><span class="p">)[</span><span class="s2">"z"</span><span class="p">]</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_外生の説明変数があっても第1段階のF値を求められる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">sample_with_control</span><span class="p">()</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">first_stage_f</span><span class="p">(</span><span class="n">s</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"z"</span><span class="p">,</span> <span class="s2">"z2"</span><span class="p">]],</span> <span class="n">s</span><span class="p">[[</span><span class="s2">"w"</span><span class="p">]])</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">statistic</span> <span class="o">&gt;</span> <span class="mi">10</span>
+    <span class="k">assert</span> <span class="n">test</span><span class="o">.</span><span class="n">p_value</span> <span class="o">&lt;</span> <span class="mf">0.001</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">spread</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)</span> <span class="o">-</span> <span class="n">values</span><span class="o">.</span><span class="n">quantile</span><span class="p">(</span><span class="mf">0.05</span><span class="p">))</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_強い操作変数ではF値が大きくIVは真の値に集まる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">t</span> <span class="o">=</span> <span class="n">weak_instrument_experiment</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="nb">list</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="s2">"ols"</span><span class="p">,</span> <span class="s2">"iv"</span><span class="p">,</span> <span class="s2">"f"</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="p">[</span><span class="s2">"f"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">50</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="p">[</span><span class="s2">"iv"</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.02</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">t</span><span class="p">[</span><span class="s2">"ols"</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">1.25</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">0.03</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_弱い操作変数ではF値が小さくIVは広くばらつきOLSの方向に偏る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">strong</span> <span class="o">=</span> <span class="n">weak_instrument_experiment</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">weak</span> <span class="o">=</span> <span class="n">weak_instrument_experiment</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">weak</span><span class="p">[</span><span class="s2">"f"</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span> <span class="o">&lt;</span> <span class="mi">5</span>
+    <span class="k">assert</span> <span class="n">spread</span><span class="p">(</span><span class="n">weak</span><span class="p">[</span><span class="s2">"iv"</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">spread</span><span class="p">(</span><span class="n">strong</span><span class="p">[</span><span class="s2">"iv"</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="nb">abs</span><span class="p">(</span><span class="n">weak</span><span class="p">[</span><span class="s2">"iv"</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="nb">abs</span><span class="p">(</span><span class="n">strong</span><span class="p">[</span><span class="s2">"iv"</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">weak</span><span class="p">[</span><span class="s2">"iv"</span><span class="p">]</span><span class="o">.</span><span class="n">median</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mf">1.1</span>
+</code></pre></div>
 <p>n = 100、操作変数の強さ（strength）を 1、0.3、0.1 と変えて、1000 回繰り返します。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.iv</span><span class="w"> </span><span class="kn">import</span> <span class="n">weak_instrument_experiment</span>
 
