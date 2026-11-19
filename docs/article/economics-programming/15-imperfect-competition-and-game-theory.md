@@ -106,6 +106,7 @@ def marginal_revenue(
     quantity: float, demand_intercept: float, demand_slope: float
 ) -> float:
     """限界収入 MR = (a - 2Q) ÷ b。逆需要曲線 P = (a - Q) ÷ b の 2 倍の傾き。"""
+    check_slope(demand_slope, "需要曲線の傾き")
     return (demand_intercept - 2 * quantity) / demand_slope
 
 
@@ -135,8 +136,8 @@ def monopoly_outcome(
     """MR = MC で数量を決め、価格は需要曲線の上で決まる。"""
     competitive = competitive_quantity(demand_intercept, demand_slope, marginal_cost)
     quantity = (demand_intercept - demand_slope * marginal_cost) / 2
-    price = (demand_intercept - quantity) / demand_slope
-    highest_price = demand_intercept / demand_slope
+    price = inverse_demand(quantity, demand_intercept, demand_slope)
+    highest_price = choke_price(demand_intercept, demand_slope)
     return MonopolyOutcome(
         quantity=quantity,
         price=price,
@@ -145,6 +146,8 @@ def monopoly_outcome(
         deadweight_loss=0.5 * (competitive - quantity) * (price - marginal_cost),
     )
 ```
+
+第 1 章の `choke_price` と、第 7 章の `inverse_demand` を使って、需要曲線の縦軸の切片と、数量から価格を求める式を、新しく書かずに済ませています。傾きが 0 以下の需要曲線は、第 1 章の `check_slope` で、受け付けません。
 
 MR = (100 − 2Q) ÷ 2 = MC = 10 から、Q = 40 です。価格は、需要曲線 P = (100 − 40) ÷ 2 = 30 の上で決まります。結果は、次のとおりです。
 
@@ -230,7 +233,7 @@ def best_response(
 
     q = (A - MC - B × 相手の生産量) ÷ 2B（A = a/b、B = 1/b）。負にはならない。
     """
-    highest_price = demand_intercept / demand_slope
+    highest_price = choke_price(demand_intercept, demand_slope)
     price_slope = 1 / demand_slope
     quantity = (highest_price - marginal_cost - price_slope * opponent_quantity) / (
         2 * price_slope
@@ -336,7 +339,7 @@ def cournot_symmetric(
     """
     if firms < 1:
         raise ValueError("企業の数は 1 以上でなければならない")
-    highest_price = demand_intercept / demand_slope
+    highest_price = choke_price(demand_intercept, demand_slope)
     price_slope = 1 / demand_slope
     quantity = (highest_price - marginal_cost) / (price_slope * (firms + 1))
     price = highest_price - price_slope * firms * quantity
@@ -492,20 +495,29 @@ def social_optimum_quantity(
     supply_slope: float,
     external_cost: float,
 ) -> float:
-    """社会的に最適な数量。(a - Q) ÷ b = (Q - c) ÷ d + e を Q について解く。"""
+    """社会的に最適な数量。(a - Q) ÷ b = (Q - c) ÷ d + e を Q について解く。
+
+    社会的な供給曲線は、私的な供給曲線を e だけ上にずらしたもの。
+    Q = c + d(P - e) = (c - d·e) + dP なので、第 7 章の従量税（税額 e）と同じ形で、
+    供給曲線の切片を c - d·e にずらした市場の均衡数量になる。
+    外部費用が大きく、最適な数量が 0 以下になるときは、NoEquilibriumError にする。
+    """
     if external_cost < 0:
         raise ValueError("外部費用は 0 以上でなければならない")
-    numerator = (
-        demand_intercept / demand_slope
-        + supply_intercept / supply_slope
-        - external_cost
+    _, quantity = equilibrium(
+        demand_intercept,
+        demand_slope,
+        supply_intercept - supply_slope * external_cost,
+        supply_slope,
     )
-    return numerator / (1 / demand_slope + 1 / supply_slope)
+    return quantity
 ```
+
+社会的な供給曲線は、私的な供給曲線を、外部費用 e だけ上にずらしたものです。式 Q = c + d(P − e) は、(c − d·e) + dP と変形できます。これは、第 7 章の従量税（税額 e）と同じ形で、**供給曲線の切片を c − d·e にずらした市場の均衡数量**です。そのため、`social_optimum_quantity` は、新しい式を書かずに、第 7 章の `equilibrium` を呼んでいます。外部費用が大きすぎて、最適な数量が 0 以下になるときは、`equilibrium` が `NoEquilibriumError` にします。
 
 放任すると、数量は 60 ですが、社会的に最適なのは 54 です。6 だけ過剰供給で、死荷重は 0.5 × 5 × 6 = 15 です。
 
-ピグー税は、外部費用と同じ額の税を課して、外部費用を価格に織り込ませます。第 7 章の `equilibrium_with_tax` が、そのまま使えます。
+ピグー税は、外部費用と同じ額の税を課して、外部費用を価格に織り込ませます。第 7 章の `equilibrium_with_tax` が、そのまま使えます。税額 e の従量税も、外部費用 e の社会的な供給曲線も、同じ「切片を c − d·e にずらした市場」なので、「ピグー税 = 外部費用と同額の税」が、コードの構造にも現れています。
 
 ```python
 def test_外部費用と同じ額のピグー税で社会的に最適な数量になる() -> None:
@@ -532,7 +544,7 @@ uv run pytest test/chapter15
 ```
 
 ```text
-38 passed
+42 passed
 ```
 
 ## 15.5 規則で言うと

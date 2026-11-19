@@ -17,7 +17,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | :--- | :--- |
 | 経済学の題材 | 需要曲線 Q = a − bP（マインドマップ [5-1](<../経済学・経済政策 トピック別マインドマップ.md#t1>)） |
 | 使う Python の機能 | 関数、`if`、`max`、例外、型ヒント |
-| 完成形 | 価格を入れると需要量を返す `quantity_demanded` 関数と、5 つのテスト |
+| 完成形 | 価格を入れると需要量を返す `quantity_demanded` 関数と、6 つのテスト |
 | ファイル | 実装: `lib/chapter01/demand.py`／テスト: `test/chapter01/test_demand.py`（自分で書くときは、`practice/chapter01/` に、同じ名前で作ります） |
 
 ### 既に知っていることとの対応
@@ -102,10 +102,10 @@ uv run pytest test/chapter01
 ```
 
 ```text
-5 passed
+6 passed
 ```
 
-`uv sync` は、必要なライブラリを用意します（初回は、時間がかかります）。5 つのテストが通れば、準備は完了です。
+`uv sync` は、必要なライブラリを用意します（初回は、時間がかかります）。6 つのテストが通れば、準備は完了です。
 
 各章のコマンドの最初の行 `cd apps/economics-programming/python` は、リポジトリの最上位（`getting-started-economics`）からの道のりです。すでにこのディレクトリにいるときは、その行を省略してください。
 
@@ -280,26 +280,42 @@ def quantity_demanded(price: float, intercept: float, slope: float) -> float:
     return max(intercept - slope * price, 0)
 
 
+def check_slope(slope: float, name: str = "傾き") -> None:
+    """曲線の傾きが正であることを確かめる。0 以下では、ゼロ除算や右上がりになる。"""
+    if slope <= 0:
+        raise ValueError(f"{name}は正でなければならない")
+
+
 def choke_price(intercept: float, slope: float) -> float:
     """需要量がちょうど 0 になる価格 P = a / b を返す。"""
+    check_slope(slope, "需要曲線の傾き")
     return intercept / slope
 ```
 
 ```python
 def test_需要が0になる最低の価格を求める() -> None:
     assert choke_price(intercept=100, slope=2) == 50
+
+
+def test_傾きが0以下ではチョーク価格を求められない() -> None:
+    with pytest.raises(ValueError, match="傾き"):
+        choke_price(intercept=100, slope=0)
+    with pytest.raises(ValueError, match="傾き"):
+        choke_price(intercept=100, slope=-2)
 ```
+
+傾き b が 0 のままだと、`intercept / slope` はゼロで割ることになり、Python の `ZeroDivisionError` が出ます。経済学の意味からも、需要曲線の傾きは正でなければ（価格が上がると需要量が減る）なりません。そこで、傾きを確かめる `check_slope` を作り、`choke_price` の最初で呼んで、意味のあるエラーメッセージにしています。この `check_slope` は、第 7 章以降の関数でも使い回します。
 
 テストの追加では、`test_demand.py` の `import` の行を、`from practice.chapter01.demand import choke_price, quantity_demanded` に書き換えます。また、`ValueError` のテストで使う `pytest` を、この `import` で読み込んでいます。
 
-自分のコードで、テストを実行します。5 つのテストがすべて通ります。
+自分のコードで、テストを実行します。6 つのテストがすべて通ります。
 
 ```bash
 uv run pytest practice/chapter01
 ```
 
 ```text
-5 passed
+6 passed
 ```
 
 最後に、答え合わせをします。`lib/chapter01/demand.py` を開いて、自分の実装と見比べてください。完成形のテストも、実行できます。
@@ -310,7 +326,7 @@ uv run pytest test/chapter01
 ```
 
 ```text
-5 passed
+6 passed
 ```
 
 章ごとにテストを実行するときは、`uv run pytest test/chapter02` のように、章のディレクトリを指定します。全章分をまとめて実行するときは、ディレクトリを指定せずに `uv run pytest` とします。
@@ -336,7 +352,7 @@ uv run pytest test/chapter01
 | :--- | :--- |
 | 想起 | 本文を閉じて、`quantity_demanded` を、`practice/chapter01/demand.py` に、自分で書いてください。その後、本文と見比べて違いを確かめます |
 | 生成 | 供給曲線 Q = c + dP の関数 `quantity_supplied` を、解説を見る前に、`practice/chapter01/` に、テストから書いてください。価格が 0 のときの供給量は c です |
-| 多様 | `intercept=100, slope=2` を `intercept=50, slope=5` に変えて、5 つのテストの期待値を手計算で作り直してください |
+| 多様 | `intercept=100, slope=2` を `intercept=50, slope=5` に変えて、6 つのテストの期待値を手計算で作り直してください |
 | 交互 | 需要曲線 Q = 100 − 2P と、供給曲線 Q = 3P を使って、需要量と供給量が等しくなる価格を、紙の上で求めてください（第 5 章で、コードで求めます） |
 
 ??? note "解答（先に自分で取り組んでから、開いてください）"

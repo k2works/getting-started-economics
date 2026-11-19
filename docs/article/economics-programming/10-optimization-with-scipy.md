@@ -134,6 +134,10 @@ def maximize_utility(
     price_x: float, price_y: float, income: float, alpha: float = 0.5
 ) -> tuple[float, float]:
     """予算 price_x·x + price_y·y = income のもとで、効用を最大にする (x, y) を返す。"""
+    if price_x <= 0 or price_y <= 0:
+        raise ValueError("財の価格は正でなければならない")
+    if income <= 0:
+        raise ValueError("所得は正でなければならない")
     result = minimize(
         lambda v: -cobb_douglas_utility(v[0], v[1], alpha),
         x0=[income / (2 * price_x), income / (2 * price_y)],
@@ -199,9 +203,7 @@ def test_価格が操業停止点の6ちょうどなら生産量は3() -> None:
 ```
 
 ```python
-# 限界費用が最低になる生産量。これより右では限界費用が右上がり
-_MC_MINIMUM_QUANTITY = 2
-# 生産量を探す範囲の上限
+# 生産量を探す範囲の上限（下限は 0）
 _MAX_QUANTITY = 10
 # 数値計算の誤差を許す幅
 _EPSILON = 1e-9
@@ -210,32 +212,37 @@ _EPSILON = 1e-9
 def profit_maximizing_quantity(price: float) -> float:
     """価格 price のとき、利潤を最大にする生産量を返す。
 
-    価格が平均可変費用の最低値（操業停止点）を下回れば、生産しない。
-    そうでなければ、P = MC（限界費用が右上がりの部分）を満たす生産量を求める。
+    P = MC（限界費用が右上がりの部分）を満たす生産量を求める。その生産量で
+    価格が平均可変費用を下回るなら、操業を停止して、生産しない。
+    探索範囲（0〜10）の上限での限界費用より高い価格は、受け付けない。
     """
-    shutdown_price = minimize_scalar(
-        average_variable_cost, bounds=(0, _MAX_QUANTITY), method="bounded"
-    ).fun
-    if price < shutdown_price - _EPSILON:
-        return 0
-    return float(
-        brentq(
-            lambda q: marginal_cost(q) - price,
-            _MC_MINIMUM_QUANTITY,
-            _MAX_QUANTITY,
-        )
+    # 限界費用が最低になる生産量。これより右では、限界費用が右上がり
+    rising_start = float(
+        minimize_scalar(marginal_cost, bounds=(0, _MAX_QUANTITY), method="bounded").x
     )
+    if price <= marginal_cost(rising_start):
+        return 0
+    if price > marginal_cost(_MAX_QUANTITY):
+        raise ValueError("価格が高すぎて、生産量の探索範囲（0〜10）に解がない")
+    quantity = float(
+        brentq(lambda q: marginal_cost(q) - price, rising_start, _MAX_QUANTITY)
+    )
+    if price < average_variable_cost(quantity) - _EPSILON:
+        return 0
+    return quantity
 ```
 
-操業停止点の価格は、`minimize_scalar` で平均可変費用の最低値を探して求めています（結果は 6.0）。第 4 章では、q = 3 で MC と AVC が交わることを、テストで確かめました。ここでは、その値を式に書かずに、数値で探しています。
+限界費用の右上がりの部分は、限界費用が最低になる生産量から始まります。その生産量は、第 4 章の係数から手計算で求められます（q = 2）が、ここでは値を式に書かず、`minimize_scalar` で限界費用の最低点を探しています。第 4 章の費用関数を変えても、第 10 章のコードは変えずに済みます。
 
-結果は、価格 15 のとき生産量 3.9999999999996683（≈ 4）、最大利潤は 22 です。第 4 章の練習問題「価格 15、生産量 4 のとき利潤 22」と一致します。価格 6 のとき 2.9999999999999996（≈ 3）、価格 30 のとき 4.999999999999528（≈ 5）、価格 5 のときは生産しないので 0 です。
+操業を停止するかどうかは、P = MC で求めた生産量で、価格が平均可変費用を下回るかどうかで決めます。価格が平均可変費用を下回れば、売るほど損が増えるので、生産しません。限界費用の最低値以下の価格のときは、解を探すまでもなく、生産しません。価格が高すぎて、探索範囲（0〜10）の上限での限界費用を超えるときは、解を探せないので、`ValueError` にします（SciPy の英語のエラーにしない）。
+
+結果は、価格 15 のとき生産量 3.9999999999996683（≈ 4）、最大利潤は 22 です。第 4 章の練習問題「価格 15、生産量 4 のとき利潤 22」と一致します。価格 6 のとき 3.0、価格 30 のとき 4.999999999999528（≈ 5）、価格 5 のときは生産しないので 0 です。
 
 価格が高いほど、生産量が増えます。マインドマップの「供給曲線は MC の右上がりの部分」が、数値で確かめられました。
 
 ### 費用最小化
 
-産出量 Q を作る費用 w·L + r·K を最小にします。生産関数は、第 4 章の効用関数と同じ形の L^0.5 · K^0.5 で、産出量が Q に等しいことが制約です。賃金 w = 1、資本の価格 r = 4、産出量 10 のとき、手計算では L = 10 × √(4 ÷ 1) = 20、K = 10 × √(1 ÷ 4) = 5、費用は 20 + 20 = 40 です。
+産出量 Q を作る費用 w·L + r·K を最小にします。生産関数は、効用関数と同じ形（コブ・ダグラス型）の L^0.5 · K^0.5 で、産出量が Q に等しいことが制約です。形が同じでも、効用と産出量は別のものなので、効用関数を流用せず、生産関数 `production` を別に定義しています。賃金 w = 1、資本の価格 r = 4、産出量 10 のとき、手計算では L = 10 × √(4 ÷ 1) = 20、K = 10 × √(1 ÷ 4) = 5、費用は 20 + 20 = 40 です。
 
 ```python
 def test_費用最小化では生産要素の価格が高い要素を少なく使う() -> None:
@@ -248,7 +255,23 @@ def test_費用最小化では生産要素の価格が高い要素を少なく�
 
 def test_費用最小化の解は目標の産出量を満たす() -> None:
     labor, capital, _ = minimize_cost(output=10, wage=1, rental=4)
-    assert cobb_douglas_utility(labor, capital) == pytest.approx(10, abs=1e-4)
+    assert production(labor, capital) == pytest.approx(10, abs=1e-4)
+```
+
+```python
+# 生産量を探す範囲の上限（下限は 0）
+_MAX_QUANTITY = 10
+# 数値計算の誤差を許す幅
+_EPSILON = 1e-9
+# 生産関数 Q = L^0.5 · K^0.5 の、労働の指数
+_LABOR_SHARE = 0.5
+
+
+def production(labor: float, capital: float) -> float:
+    """生産関数 Q = L^0.5 · K^0.5（コブ・ダグラス型）。第 4 章の効用関数とは別。"""
+    if labor < 0 or capital < 0:
+        raise ValueError("生産要素の量は 0 以上でなければならない")
+    return float(labor**_LABOR_SHARE * capital ** (1 - _LABOR_SHARE))
 ```
 
 ```python
@@ -257,15 +280,19 @@ def minimize_cost(
 ) -> tuple[float, float, float]:
     """産出量 output を作る費用 wage·L + rental·K を最小にする (L, K, 費用) を返す。
 
-    生産関数は、コブ・ダグラス型 Q = L^0.5 · K^0.5（第 4 章の関数と同じ形）。
+    生産関数は、コブ・ダグラス型 Q = L^0.5 · K^0.5（上の `production`）。
     """
+    if output <= 0:
+        raise ValueError("産出量は正でなければならない")
+    if wage <= 0 or rental <= 0:
+        raise ValueError("生産要素の価格は正でなければならない")
     result = minimize(
         lambda v: wage * v[0] + rental * v[1],
         x0=[output, output],
         bounds=[(_EPSILON, None), (_EPSILON, None)],
         constraints={
             "type": "eq",
-            "fun": lambda v: cobb_douglas_utility(v[0], v[1]) - output,
+            "fun": lambda v: production(v[0], v[1]) - output,
         },
         method="SLSQP",
         options={"ftol": 1e-12},
@@ -279,20 +306,24 @@ def minimize_cost(
 
 ### 解がないときの扱い
 
-実行可能な点がないとき（所得や産出量が負のとき）は、最適化が収束しません。その場合は、結果を返さず、`RuntimeError` にします。
+実行可能な点がない入力（所得や産出量が 0 以下、価格が 0 以下）は、ソルバーに渡す前に、`ValueError` にします。SciPy の収束の失敗に任せると、原因が分かりにくく、SciPy のバージョンで挙動も変わりうるためです。価格が高すぎて、探索範囲に解がない場合も、同じです。
 
 ```python
-def test_所得が負なら効用最大化はできない() -> None:
-    with pytest.raises(RuntimeError):
+def test_所得が0以下なら効用最大化はできない() -> None:
+    with pytest.raises(ValueError, match="所得"):
         maximize_utility(price_x=2, price_y=4, income=-40)
+    with pytest.raises(ValueError, match="所得"):
+        maximize_utility(price_x=2, price_y=4, income=0)
 
 
-def test_産出量が負なら費用最小化はできない() -> None:
-    with pytest.raises(RuntimeError):
+def test_産出量が0以下なら費用最小化はできない() -> None:
+    with pytest.raises(ValueError, match="産出量"):
         minimize_cost(output=-10, wage=1, rental=4)
+    with pytest.raises(ValueError, match="産出量"):
+        minimize_cost(output=0, wage=1, rental=4)
 ```
 
-最適化の結果が、見かけ上は数値でも、収束していないことがあります。そのため、`result.success` を、必ず確かめます。
+入力が正しくても、最適化が収束しないことがあります。見かけ上は数値でも、収束していない結果を返さないために、`result.success` を、必ず確かめて、収束しなかったときは `RuntimeError` にします（テストでは、ソルバーを、失敗を返す偽物に差し替えて、確かめています）。
 
 ### 実行結果
 
@@ -302,7 +333,7 @@ uv run pytest test/chapter10
 ```
 
 ```text
-13 passed
+20 passed
 ```
 
 ## 10.5 規則で言うと

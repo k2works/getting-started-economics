@@ -142,9 +142,11 @@ def equilibrium(
 ) -> tuple[float, float]:
     """均衡価格と均衡数量を返す。a - bP = c + dP を P について解く。
 
-    価格が負、または数量が 0 以下になる市場には、均衡がないので、
-    NoEquilibriumError にする。
+    傾きが 0 以下の曲線は受け付けない。価格が負、または数量が 0 以下になる市場には、
+    均衡がないので、NoEquilibriumError にする。
     """
+    check_slope(demand_slope, "需要曲線の傾き")
+    check_slope(supply_slope, "供給曲線の傾き")
     price = (demand_intercept - supply_intercept) / (demand_slope + supply_slope)
     quantity = demand_intercept - demand_slope * price
     check_equilibrium_exists(price, quantity)
@@ -161,7 +163,7 @@ def consumer_surplus(
     price, quantity = equilibrium(
         demand_intercept, demand_slope, supply_intercept, supply_slope
     )
-    highest_price = demand_intercept / demand_slope
+    highest_price = choke_price(demand_intercept, demand_slope)
     return 0.5 * quantity * (highest_price - price)
 
 
@@ -180,6 +182,8 @@ def producer_surplus(
     lowest_price = -supply_intercept / supply_slope
     return 0.5 * quantity * (price - lowest_price)
 ```
+
+`equilibrium` は、最初に、需要曲線と供給曲線の傾きが正であることを確かめます（第 1 章の `check_slope`）。傾きが 0 以下だと、`demand_slope + supply_slope` が 0 になって、ゼロ除算になるためです。
 
 `equilibrium` は、価格と数量の 2 つの値を、まとめて（タプルで）返します。`price, quantity = equilibrium(...)` のように、2 つの変数に分けて受け取れます。
 
@@ -288,14 +292,18 @@ def equilibrium_with_tax(
     """売り手に 1 単位あたり tax の従量税を課したときの均衡を返す。
 
     買い手の払う価格を P とすると、売り手の受取は P - tax になる。
-    a - bP = c + d(P - tax) を P について解く。
+    a - bP = c + d(P - tax) = (c - d·tax) + dP なので、供給曲線の切片を
+    c - d·tax にずらした市場の均衡と同じ。税額が大きく、取引が成立しない
+    ときは、NoEquilibriumError にする。
     """
     if tax < 0:
         raise ValueError("税額は 0 以上でなければならない")
-    consumer_price = (demand_intercept - supply_intercept + supply_slope * tax) / (
-        demand_slope + supply_slope
+    consumer_price, quantity = equilibrium(
+        demand_intercept,
+        demand_slope,
+        supply_intercept - supply_slope * tax,
+        supply_slope,
     )
-    quantity = demand_intercept - demand_slope * consumer_price
     _, quantity_without_tax = equilibrium(
         demand_intercept, demand_slope, supply_intercept, supply_slope
     )
@@ -307,6 +315,8 @@ def equilibrium_with_tax(
         deadweight_loss=0.5 * tax * (quantity_without_tax - quantity),
     )
 ```
+
+`equilibrium_with_tax` は、新しい式を導くのではなく、`equilibrium` を呼んでいます。売り手が税を払うと、買い手の価格 P のときの売り手の受取は P − t です。式 a − bP = c + d(P − t) は、c + dP − d·t と変形できるので、**供給曲線の切片を c − d·t にずらした市場の均衡**と同じです。税が大きく、ずらした市場で取引が成立しないとき（税額が 100 のときなど）は、`equilibrium` が `NoEquilibriumError` にします。
 
 結果は、買い手の価格が 23（税なしより 3 上がる）、売り手の受取が 18（2 下がる）、取引量が 54（6 減る）、税収が 270、死荷重が 15 です。
 
@@ -353,6 +363,17 @@ def test_需要曲線は数量が0のとき価格50で数量60のとき価格20(
     assert points[60] == pytest.approx(20)
 ```
 
+需要曲線 Q = a − bP を P について解いた P = (a − Q) ÷ b を、逆需要曲線と呼びます。図の縦軸は価格、横軸は数量なので、数量から価格を求める関数 `inverse_demand` を、`surplus.py` に作って、図でも使います（独占の章でも使います）。
+
+```python
+def inverse_demand(quantity: float, intercept: float, slope: float) -> float:
+    """需要曲線 Q = a - bP を P について解いた、逆需要曲線 P = (a - Q) / b を返す。"""
+    check_slope(slope, "需要曲線の傾き")
+    if quantity < 0:
+        raise ValueError("数量は 0 以上でなければならない")
+    return (intercept - quantity) / slope
+```
+
 ```python
 def draw_market(
     demand_intercept: float,
@@ -362,8 +383,9 @@ def draw_market(
 ) -> Figure:
     """需要曲線・供給曲線・均衡点を描いた図を返す。"""
     quantities = [float(q) for q in range(int(demand_intercept) + 1)]
-    # 需要曲線 Q = a - bP を P について解くと P = (a - Q) / b
-    demand_prices = [(demand_intercept - q) / demand_slope for q in quantities]
+    demand_prices = [
+        inverse_demand(q, demand_intercept, demand_slope) for q in quantities
+    ]
     # 供給曲線 Q = c + dP を P について解くと P = (Q - c) / d
     supply_prices = [(q - supply_intercept) / supply_slope for q in quantities]
     price, quantity = equilibrium(
@@ -403,7 +425,7 @@ uv run pytest test/chapter07
 ```
 
 ```text
-23 passed
+28 passed
 ```
 
 ## 7.5 規則で言うと
