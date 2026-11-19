@@ -122,6 +122,8 @@ nav:
           - 第 3 章 回帰分析: article/macro-programming/03-regression.md
           - 第 4 章 差分方程式と経済分析: article/macro-programming/04-difference-equations.md
           - 第 5 章 ソロー・モデル: article/macro-programming/05-solow-model.md
+          - 第 6 章 所得分布と所得収斂: article/macro-programming/06-income-convergence.md
+          - 第 7 章 一物一価と購買力平価: article/macro-programming/07-purchasing-power-parity.md
   - リファレンス:
       - 概要: reference/index.md
       - よいソフトウェアとは: reference/よいソフトウェアとは.md
