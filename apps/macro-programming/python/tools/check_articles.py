@@ -164,6 +164,7 @@ def _answer_module(chapter: int, markdown: str) -> str | None:
         f"from lib.{f.parent.name}.{f.stem} import *"
         for f in sorted(APP_DIR.glob("lib/chapter*/*.py"))
         if f.stem != "__init__"
+        and int(f.parent.name.removeprefix("chapter")) <= chapter
     )
     header = (
         "import math, random, statistics, dataclasses\n"

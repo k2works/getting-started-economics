@@ -77,6 +77,18 @@ from lib.chapter13.adas import (  # noqa: E402
 from lib.chapter13.plot import plot_moment_comparison  # noqa: E402
 from lib.chapter14.plot import plot_impulse_response, plot_simulation  # noqa: E402
 from lib.chapter14.simulation import impulse_response, simulate  # noqa: E402
+from lib.chapter15.ismppc import IsMpPcParameters  # noqa: E402
+from lib.chapter15.ismppc import impulse_response as ismppc_impulse  # noqa: E402
+from lib.chapter15.plot import plot_responses, plot_stance_comparison  # noqa: E402
+from lib.chapter16.plot import plot_decomposition, plot_solow_simulation  # noqa: E402
+from lib.chapter16.solow_stochastic import (  # noqa: E402
+    SolowParameters,
+    business_cycle_components,
+    decompose_business_cycle,
+    load_solow_quarterly,
+    log_deviations,
+    stochastic_solow,
+)
 
 # 記事に載せる図。名前が、画像のファイル名（名前.png）になる
 FIGURES: dict[str, Callable[[], Figure]] = {
@@ -214,6 +226,29 @@ FIGURES: dict[str, Callable[[], Figure]] = {
     ),
     "ch14-simulation": lambda: plot_simulation(
         simulate(AdasParameters(0.8, 0.3, 1.5, 1.2), 100, np.random.default_rng(0))
+    ),
+    "ch15-impulse-pc": lambda: plot_responses(
+        ismppc_impulse(IsMpPcParameters(), shock_pc=1.0)
+    ),
+    "ch15-impulse-mp": lambda: plot_responses(
+        ismppc_impulse(IsMpPcParameters(), shock_mp=1.0)
+    ),
+    "ch15-policy-stance": lambda: plot_stance_comparison(
+        ismppc_impulse(IsMpPcParameters(), shock_pc=1.0),
+        ismppc_impulse(IsMpPcParameters(c=0.5, d=1.5), shock_pc=1.0),
+    ),
+    "ch16-decomposition": lambda: plot_decomposition(
+        decompose_business_cycle(
+            business_cycle_components(load_solow_quarterly(), 0.36), 0.36
+        )
+    ),
+    "ch16-solow-simulation": lambda: plot_solow_simulation(
+        log_deviations(
+            stochastic_solow(
+                SolowParameters(rho=0.6, sigma=0.008), 200, np.random.default_rng(123)
+            ),
+            SolowParameters(rho=0.6, sigma=0.008),
+        )
     ),
     "ch03-regression": lambda: plot_regression(
         np.log(load_countries()["k"]),
