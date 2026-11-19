@@ -46,6 +46,8 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 
 ### 関数の部品
 
+次は、部品の説明のために、検証と説明文を省いた形です（完成形は 4.4 節にあります）。
+
 ```python
 def total_cost(quantity: float, fixed_cost: float = 10) -> float:
     return quantity**3 - 6 * quantity**2 + 15 * quantity + fixed_cost

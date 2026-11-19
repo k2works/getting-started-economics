@@ -94,6 +94,8 @@ nav:
           - 第 4 章 関数とメソッド: article/economics-programming/04-functions-and-methods.md
           - 第 5 章 制御フロー: article/economics-programming/05-control-flow.md
           - 第 6 章 モジュール・エラー・アルゴリズム: article/economics-programming/06-modules-errors-and-algorithms.md
+          - 第 7 章 Matplotlib による図示: article/economics-programming/07-plotting-with-matplotlib.md
+          - 第 8 章 乱数とシミュレーション: article/economics-programming/08-random-numbers-and-simulation.md
   - リファレンス:
       - 概要: reference/index.md
       - よいソフトウェアとは: reference/よいソフトウェアとは.md

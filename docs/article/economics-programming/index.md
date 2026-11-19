@@ -22,7 +22,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 | [Ruff](https://docs.astral.sh/ruff/)・[mypy](https://mypy-lang.org/) | 静的解析 |
 | [tox](https://tox.wiki/) | タスクランナー |
 
-数値計算とデータ分析のライブラリ（NumPy・pandas・SciPy・matplotlib）は、初めて使う章で導入します。
+数値計算とデータ分析のライブラリは、初めて使う章で導入します（matplotlib は第 7 章、NumPy・SciPy・pandas は第 9 章以降）。
 
 ## サンプルコード
 
@@ -49,7 +49,16 @@ uv run pytest
 | [第 5 章](05-control-flow.md) | 制御フロー | 執筆済み |
 | [第 6 章](06-modules-errors-and-algorithms.md) | モジュール・エラー・アルゴリズム | 執筆済み |
 
-第 2 部以降は、[執筆計画アウトライン](outline.md) の章構成を参照してください。
+### 第 2 部: 図示と数値計算
+
+| 章 | テーマ | 状況 |
+| :--- | :--- | :--- |
+| [第 7 章](07-plotting-with-matplotlib.md) | Matplotlib による図示 | 執筆済み |
+| [第 8 章](08-random-numbers-and-simulation.md) | 乱数とシミュレーション | 執筆済み |
+| 第 9 章 | NumPy による配列計算 | 計画中 |
+| 第 10 章 | SciPy による最適化 | 計画中 |
+
+第 3 部以降は、[執筆計画アウトライン](outline.md) の章構成を参照してください。
 
 ## 参照
 
