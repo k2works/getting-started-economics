@@ -14,15 +14,22 @@ def social_optimum_quantity(
     supply_slope: float,
     external_cost: float,
 ) -> float:
-    """社会的に最適な数量。(a - Q) ÷ b = (Q - c) ÷ d + e を Q について解く。"""
+    """社会的に最適な数量。(a - Q) ÷ b = (Q - c) ÷ d + e を Q について解く。
+
+    社会的な供給曲線は、私的な供給曲線を e だけ上にずらしたもの。
+    Q = c + d(P - e) = (c - d·e) + dP なので、第 7 章の従量税（税額 e）と同じ形で、
+    供給曲線の切片を c - d·e にずらした市場の均衡数量になる。
+    外部費用が大きく、最適な数量が 0 以下になるときは、NoEquilibriumError にする。
+    """
     if external_cost < 0:
         raise ValueError("外部費用は 0 以上でなければならない")
-    numerator = (
-        demand_intercept / demand_slope
-        + supply_intercept / supply_slope
-        - external_cost
+    _, quantity = equilibrium(
+        demand_intercept,
+        demand_slope,
+        supply_intercept - supply_slope * external_cost,
+        supply_slope,
     )
-    return numerator / (1 / demand_slope + 1 / supply_slope)
+    return quantity
 
 
 def externality_deadweight_loss(

@@ -138,3 +138,10 @@ def test_生産量の選択も囚人のジレンマになる() -> None:
     assert payoffs[("クールノー", "クールノー")] == pytest.approx((3200 / 9, 3200 / 9))
     # 協調すれば両社とも得なのに、均衡は両社がクールノーの生産量を選ぶ点
     assert pure_nash_equilibria(payoffs) == [("クールノー", "クールノー")]
+
+
+def test_需要曲線の傾きが0以下ではクールノー競争を求められない() -> None:
+    with pytest.raises(ValueError, match="傾き"):
+        best_response(0, demand_intercept=100, demand_slope=0, marginal_cost=10)
+    with pytest.raises(ValueError, match="傾き"):
+        cournot_symmetric(2, demand_intercept=100, demand_slope=0, marginal_cost=10)

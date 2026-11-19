@@ -5,6 +5,7 @@
 
 from dataclasses import dataclass
 
+from lib.chapter01.demand import check_slope, choke_price
 from lib.chapter06.bisection import NoEquilibriumError
 
 
@@ -23,6 +24,14 @@ def check_equilibrium_exists(price: float, quantity: float) -> None:
         )
 
 
+def inverse_demand(quantity: float, intercept: float, slope: float) -> float:
+    """需要曲線 Q = a - bP を P について解いた、逆需要曲線 P = (a - Q) / b を返す。"""
+    check_slope(slope, "需要曲線の傾き")
+    if quantity < 0:
+        raise ValueError("数量は 0 以上でなければならない")
+    return (intercept - quantity) / slope
+
+
 def equilibrium(
     demand_intercept: float,
     demand_slope: float,
@@ -31,9 +40,11 @@ def equilibrium(
 ) -> tuple[float, float]:
     """均衡価格と均衡数量を返す。a - bP = c + dP を P について解く。
 
-    価格が負、または数量が 0 以下になる市場には、均衡がないので、
-    NoEquilibriumError にする。
+    傾きが 0 以下の曲線は受け付けない。価格が負、または数量が 0 以下になる市場には、
+    均衡がないので、NoEquilibriumError にする。
     """
+    check_slope(demand_slope, "需要曲線の傾き")
+    check_slope(supply_slope, "供給曲線の傾き")
     price = (demand_intercept - supply_intercept) / (demand_slope + supply_slope)
     quantity = demand_intercept - demand_slope * price
     check_equilibrium_exists(price, quantity)
@@ -50,7 +61,7 @@ def consumer_surplus(
     price, quantity = equilibrium(
         demand_intercept, demand_slope, supply_intercept, supply_slope
     )
-    highest_price = demand_intercept / demand_slope
+    highest_price = choke_price(demand_intercept, demand_slope)
     return 0.5 * quantity * (highest_price - price)
 
 
@@ -91,14 +102,18 @@ def equilibrium_with_tax(
     """売り手に 1 単位あたり tax の従量税を課したときの均衡を返す。
 
     買い手の払う価格を P とすると、売り手の受取は P - tax になる。
-    a - bP = c + d(P - tax) を P について解く。
+    a - bP = c + d(P - tax) = (c - d·tax) + dP なので、供給曲線の切片を
+    c - d·tax にずらした市場の均衡と同じ。税額が大きく、取引が成立しない
+    ときは、NoEquilibriumError にする。
     """
     if tax < 0:
         raise ValueError("税額は 0 以上でなければならない")
-    consumer_price = (demand_intercept - supply_intercept + supply_slope * tax) / (
-        demand_slope + supply_slope
+    consumer_price, quantity = equilibrium(
+        demand_intercept,
+        demand_slope,
+        supply_intercept - supply_slope * tax,
+        supply_slope,
     )
-    quantity = demand_intercept - demand_slope * consumer_price
     _, quantity_without_tax = equilibrium(
         demand_intercept, demand_slope, supply_intercept, supply_slope
     )

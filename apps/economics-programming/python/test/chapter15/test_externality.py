@@ -5,6 +5,7 @@
 
 import pytest
 
+from lib.chapter06.bisection import NoEquilibriumError
 from lib.chapter07.surplus import equilibrium, equilibrium_with_tax
 from lib.chapter15.externality import (
     externality_deadweight_loss,
@@ -81,3 +82,21 @@ def test_供給曲線に切片があるときも外部費用と同額のピグ�
     assert taxed.quantity == pytest.approx(
         social_optimum_quantity(**MARKET_WITH_INTERCEPT, external_cost=5)
     )
+
+
+def test_外部費用が大きすぎて最適な数量が0以下になるときは求められない() -> None:
+    with pytest.raises(NoEquilibriumError):
+        social_optimum_quantity(**MARKET, external_cost=100)
+    with pytest.raises(NoEquilibriumError):
+        externality_deadweight_loss(**MARKET, external_cost=100)
+
+
+def test_傾きが0以下の曲線では社会的に最適な数量を求められない() -> None:
+    with pytest.raises(ValueError, match="傾き"):
+        social_optimum_quantity(
+            demand_intercept=100,
+            demand_slope=0,
+            supply_intercept=0,
+            supply_slope=3,
+            external_cost=5,
+        )

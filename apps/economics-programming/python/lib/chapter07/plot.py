@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 
-from lib.chapter07.surplus import equilibrium
+from lib.chapter07.surplus import equilibrium, inverse_demand
 
 
 def draw_market(
@@ -14,8 +14,9 @@ def draw_market(
 ) -> Figure:
     """需要曲線・供給曲線・均衡点を描いた図を返す。"""
     quantities = [float(q) for q in range(int(demand_intercept) + 1)]
-    # 需要曲線 Q = a - bP を P について解くと P = (a - Q) / b
-    demand_prices = [(demand_intercept - q) / demand_slope for q in quantities]
+    demand_prices = [
+        inverse_demand(q, demand_intercept, demand_slope) for q in quantities
+    ]
     # 供給曲線 Q = c + dP を P について解くと P = (Q - c) / d
     supply_prices = [(q - supply_intercept) / supply_slope for q in quantities]
     price, quantity = equilibrium(

@@ -89,3 +89,8 @@ def test_ラーナー指数は価格弾力性の逆数に等しい() -> None:
 def test_価格が0以下ならラーナー指数は求められない() -> None:
     with pytest.raises(ValueError):
         lerner_index(0, marginal_cost=10)
+
+
+def test_需要曲線の傾きが0以下では独占の結果を求められない() -> None:
+    with pytest.raises(ValueError, match="傾き"):
+        monopoly_outcome(demand_intercept=100, demand_slope=0, marginal_cost=10)

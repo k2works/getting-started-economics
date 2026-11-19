@@ -6,12 +6,14 @@ import pytest
 from matplotlib.figure import Figure
 from matplotlib.lines import Line2D
 
+from lib.chapter01.demand import quantity_demanded
 from lib.chapter06.bisection import NoEquilibriumError
 from lib.chapter07.plot import draw_market
 from lib.chapter07.surplus import (
     consumer_surplus,
     equilibrium,
     equilibrium_with_tax,
+    inverse_demand,
     producer_surplus,
 )
 
@@ -211,3 +213,42 @@ def test_均衡のない市場では余剰も図も求められない() -> None:
         producer_surplus(**MARKET_WITH_NEGATIVE_QUANTITY)
     with pytest.raises(NoEquilibriumError):
         equilibrium_with_tax(**MARKET_WITH_NEGATIVE_PRICE, tax=5)
+
+
+def test_傾きが0以下の曲線では均衡を求められない() -> None:
+    with pytest.raises(ValueError, match="傾き"):
+        equilibrium(
+            demand_intercept=100, demand_slope=0, supply_intercept=0, supply_slope=3
+        )
+    with pytest.raises(ValueError, match="傾き"):
+        equilibrium(
+            demand_intercept=100, demand_slope=2, supply_intercept=0, supply_slope=0
+        )
+
+
+def test_税額が大きすぎて取引が成立しないときは均衡がない() -> None:
+    with pytest.raises(NoEquilibriumError):
+        equilibrium_with_tax(
+            demand_intercept=100,
+            demand_slope=2,
+            supply_intercept=0,
+            supply_slope=3,
+            tax=100,
+        )
+
+
+def test_逆需要曲線は需要量から価格を求める() -> None:
+    assert inverse_demand(quantity=20, intercept=100, slope=2) == 40
+    assert inverse_demand(quantity=100, intercept=100, slope=2) == 0
+
+
+def test_逆需要曲線は需要曲線の逆関数() -> None:
+    price = inverse_demand(quantity=30, intercept=100, slope=2)
+    assert quantity_demanded(price, intercept=100, slope=2) == 30
+
+
+def test_逆需要曲線は負の数量と傾き0以下を受け付けない() -> None:
+    with pytest.raises(ValueError, match="数量"):
+        inverse_demand(quantity=-1, intercept=100, slope=2)
+    with pytest.raises(ValueError, match="傾き"):
+        inverse_demand(quantity=10, intercept=100, slope=0)

@@ -24,3 +24,10 @@ def test_負の価格は受け付けない() -> None:
 
 def test_需要が0になる最低の価格を求める() -> None:
     assert choke_price(intercept=100, slope=2) == 50
+
+
+def test_傾きが0以下ではチョーク価格を求められない() -> None:
+    with pytest.raises(ValueError, match="傾き"):
+        choke_price(intercept=100, slope=0)
+    with pytest.raises(ValueError, match="傾き"):
+        choke_price(intercept=100, slope=-2)

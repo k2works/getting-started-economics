@@ -1,5 +1,7 @@
 """寡占（クールノー競争）。逆需要曲線 P = a/b - Q/b、限界費用は各社で一定とする。"""
 
+from lib.chapter01.demand import choke_price
+
 
 def best_response(
     opponent_quantity: float,
@@ -11,7 +13,7 @@ def best_response(
 
     q = (A - MC - B × 相手の生産量) ÷ 2B（A = a/b、B = 1/b）。負にはならない。
     """
-    highest_price = demand_intercept / demand_slope
+    highest_price = choke_price(demand_intercept, demand_slope)
     price_slope = 1 / demand_slope
     quantity = (highest_price - marginal_cost - price_slope * opponent_quantity) / (
         2 * price_slope
@@ -51,7 +53,7 @@ def cournot_symmetric(
     """
     if firms < 1:
         raise ValueError("企業の数は 1 以上でなければならない")
-    highest_price = demand_intercept / demand_slope
+    highest_price = choke_price(demand_intercept, demand_slope)
     price_slope = 1 / demand_slope
     quantity = (highest_price - marginal_cost) / (price_slope * (firms + 1))
     price = highest_price - price_slope * firms * quantity
