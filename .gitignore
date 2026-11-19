@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Environment variables (.env.vault は暗号化済みのためコミット対象)
+.env
+.env.*
+!.env.example
+!.env.vault
+.env.keys
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Build outputs
+dist/
+build/
+site/
+coverage/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code local settings
+.claude/settings.local.json
