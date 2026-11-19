@@ -817,6 +817,8 @@ uv run pytest test/chapter10
 
 次のスクリプトを `practice/chapter10/wagepan.py` として保存し、アプリの根で、`uv run --group realdata python -m practice.chapter10.wagepan` で実行します。
 
+このスクリプトは、完成形（`lib/`）の関数を使います。自分で書いた関数で試すときは、`from lib.chapterNN.` を `from practice.chapterNN.` に書き換えます（ファイル名と関数名を、完成形と同じにしてあれば、そのまま動きます）。書き換えた結果が、完成形と同じ出力になれば、自作の関数が、実際のデータでも動いたことになります。
+
 ```python
 import wooldridge
 
