@@ -64,6 +64,10 @@ plugins:
 
 exclude_docs: |
   wiki
+  # 参照用に取得した外部資料（.gitignore の対象。サイトには含めない）
+  article/py4basics.github.io/
+  article/py4etrics.github.io/
+  article/py4macro.github.io/
 
 nav:
   - Home: index.md

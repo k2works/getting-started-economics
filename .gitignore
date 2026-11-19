@@ -29,3 +29,9 @@ Thumbs.db
 
 # Claude Code local settings
 .claude/settings.local.json
+
+# 参照用に取得した外部資料（ライセンスが確認できていないため、コミットしない）
+tmp/
+docs/article/py4basics.github.io/
+docs/article/py4etrics.github.io/
+docs/article/py4macro.github.io/
