@@ -94,7 +94,7 @@ class NoEquilibriumError(ValueError):
 | 4 | [12.5, 25] | 18.75 | 6.25 | [18.75, 25] |
 | 5 | [18.75, 25] | 21.875 | −9.375 | [18.75, 21.875] |
 
-このように区間が縮み、均衡の 20 を含んだまま狭まります。幅が 1 つの回ごとに半分になるので、幅 100 を 10 億分の 1 まで縮めるのに、約 37 回です。
+このように区間が縮み、均衡の 20 を含んだまま狭まります。幅が 1 回ごとに半分になるので、幅 100 を 1e-9 未満にするのに、37 回かかります（36 回では、約 1.46e-9 で、まだ足りません）。
 
 ## 6.4 Red → Green → Refactor
 
@@ -157,10 +157,15 @@ def find_equilibrium_price(
     tolerance: float = 1e-9,
     max_iterations: int = 100,
 ) -> float:
-    """区間 [low, high] を半分ずつに絞り、超過需要が 0 になる価格を返す。"""
+    """区間 [low, high] を半分ずつに絞り、超過需要が 0 になる価格を返す。
+
+    区間の幅が tolerance 未満になる前に、max_iterations 回の反復に達したときは、
+    収束していない値を返さず、RuntimeError にする。
+    """
     if low >= high:
         raise ValueError("下限は上限より小さくなければならない")
-    if excess_demand(low) * excess_demand(high) > 0:
+    excess_low = excess_demand(low)
+    if excess_low * excess_demand(high) > 0:
         raise NoEquilibriumError(
             "区間の両端で超過需要の符号が同じなので均衡が見つからない"
         )
@@ -168,14 +173,75 @@ def find_equilibrium_price(
         if high - low < tolerance:
             break
         middle = (low + high) / 2
-        if excess_demand(low) * excess_demand(middle) <= 0:
+        excess_middle = excess_demand(middle)
+        if excess_low * excess_middle <= 0:
             high = middle
         else:
-            low = middle
+            low, excess_low = middle, excess_middle
+    if high - low >= tolerance:
+        raise RuntimeError("区間が縮まらなかった。max_iterations を増やす")
     return (low + high) / 2
 ```
 
 2 つの数をかけて負（または 0）なら、符号が逆（または片方が 0）なので、その間に均衡があります。実際に動かすと、均衡が 20 のとき 20.00000000007276、18 のとき 17.999999999665306 を返し、どちらも許容誤差 1e-9 の範囲に収まっています。
+
+超過需要は、反復 1 回につき 1 回だけ計算します。下端の値 `excess_low` を覚えておき、区間の下端を動かしたときだけ更新するので、同じ価格の超過需要を、何度も計算しません。第 14 章では、1 回の評価ごとに IS-LM の連立方程式を解くので、この差は、そのまま計算時間の差になります。
+
+### 収束しないときの扱い
+
+反復の上限（`max_iterations`）までに、区間が縮まらなかったとき、収束していない値を返してはいけません。第 5 章の調整過程と同じように、`RuntimeError` にします。「入力が不正」は `ValueError`、「計算が収束しない」は `RuntimeError` と使い分けます。
+
+```python
+def test_反復の上限までに区間が縮まらなければ例外になる() -> None:
+    excess = make_excess_demand(
+        demand_intercept=100, demand_slope=2, supply_intercept=0, supply_slope=3
+    )
+    with pytest.raises(RuntimeError):
+        find_equilibrium_price(excess, low=0, high=100, max_iterations=1)
+
+
+def test_区間の幅を1e_9未満にするには37回の反復が必要() -> None:
+    # 幅 100 を半分ずつにすると、36 回で約 1.46e-9、37 回で約 7.3e-10
+    excess = make_excess_demand(
+        demand_intercept=100, demand_slope=2, supply_intercept=0, supply_slope=3
+    )
+    assert find_equilibrium_price(
+        excess, low=0, high=100, max_iterations=37
+    ) == pytest.approx(20)
+    with pytest.raises(RuntimeError):
+        find_equilibrium_price(excess, low=0, high=100, max_iterations=36)
+```
+
+1 つ目は、上限が 1 回では、区間が縮まらないので例外になることを、2 つ目は、ちょうど 37 回で収束し、36 回では足りないという境目を、確かめます。
+
+```python
+def test_超過需要の評価は1回の反復につき1回だけ() -> None:
+    inner = make_excess_demand(
+        demand_intercept=100, demand_slope=2, supply_intercept=0, supply_slope=3
+    )
+    calls = 0
+
+    def counting(price: float) -> float:
+        nonlocal calls
+        calls += 1
+        return inner(price)
+
+    find_equilibrium_price(counting, low=0, high=100)
+    # 両端の符号の確認で 2 回、反復 37 回で 37 回
+    assert calls == 2 + 37
+```
+
+超過需要の関数を、呼び出した回数を数える関数で包んで、評価の回数も、テストで固定します（両端の確認で 2 回、反復で 37 回）。
+
+端点がちょうど均衡のときも、テストで確かめています。
+
+```python
+def test_区間の下端がちょうど均衡ならその価格を返す() -> None:
+    excess = make_excess_demand(
+        demand_intercept=100, demand_slope=2, supply_intercept=0, supply_slope=3
+    )
+    assert find_equilibrium_price(excess, low=20, high=100) == pytest.approx(20)
+```
 
 ### エラーの扱いをテストで決める
 
@@ -218,7 +284,7 @@ uv run pytest
 ## 6.5 規則で言うと
 
 1. **ファイルを分けて、`import` で再利用する。** 同じ式は、1 か所にだけ書く
-2. **起きてはいけない入力は、意味の分かる例外にする。** 経済学の意味を持つ場面（均衡が見つからない）は、独自の例外にする
+2. **起きてはいけない入力は、意味の分かる例外にする。** 経済学の意味を持つ場面（均衡が見つからない）は、独自の例外にする。計算が収束しないときは、値を返さず `RuntimeError` にする
 3. **アルゴリズムは、「何を保ったまま、何を縮めるか」で理解する。** 二分法では、「均衡を含む」ことを保ったまま、区間を半分にする
 
 混同しやすい点を、表にまとめます。
@@ -239,7 +305,7 @@ uv run pytest
 | 想起 | 本文を閉じて、`find_equilibrium_price` を自分で書いてください |
 | 生成 | 解説を見る前に、二分法が何回で終わったかを数える関数を、テストから書いてください（区間 [0, 100]、許容誤差 1 のとき、幅 100 が 1 未満になるのは 7 回です） |
 | 多様 | 需要を Q = 150 − 2P、供給を Q = 20 + 3P に変えて、均衡価格を手計算し（26）、テストで確かめてください |
-| 交互 | 第 5 章のワルラス調整と二分法で、同じ均衡を求め、答えと、かかった回数を比べてください（ワルラス調整は 27 回、二分法は約 37 回です） |
+| 交互 | 第 5 章のワルラス調整と二分法で、同じ均衡を求め、答えと、かかった回数を比べてください（ワルラス調整は 27 回、二分法は 37 回です。ただし、止める条件が違います。ワルラス調整は超過需要が 1e-6 未満、二分法は区間の幅が 1e-9 未満なので、回数の単純な比較には注意してください） |
 
 ## 6.7 振り返り
 
