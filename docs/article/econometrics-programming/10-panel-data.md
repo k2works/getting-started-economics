@@ -132,6 +132,7 @@ PANEL = pd.DataFrame(
 )
 ```
 
+```python
 def test_ウィズイン変換は個人ごとの平均を引く() -> None:
     tilde = within_transform(PANEL, ["x", "y"])
     assert tilde["x"].tolist() == [-0.5, 0.5, -1, 1, -1.5, 1.5]
@@ -151,9 +152,11 @@ def test_固定効果は個人の効果を除いて真の傾きを復元する()
     assert fit.standard_errors["x"] == pytest.approx(0, abs=1e-9)
     assert fit.df_resid == 6 - 3 - 1
     assert fit.n_obs == 6
+```
 
 ### Green: ウィズイン変換と固定効果を実装する
 
+```python
 @dataclass(frozen=True)
 class PanelFit:
     """パネル・データの推定結果（係数・標準誤差・共分散行列・誤差の分散の推定値）。"""
@@ -203,6 +206,7 @@ def fixed_effects(
     tilde = within_transform(panel, [y, *xs], entity)
     df_resid = len(panel) - panel[entity].nunique() - len(xs)
     return _fit_without_constant(tilde[y], tilde[xs], df_resid)
+```
 
 ```python
 from lib.chapter10.panel import fixed_effects, within_transform
@@ -260,6 +264,7 @@ pooled {'const': 1.0417, 'x': 1.4342} {'const': 0.0424, 'x': 0.0355}
 
 固定効果の傾きは 0.9887 で、真の値 1 に近く、自由度は 399（500 − 100 − 1）です。**ダミー変数推定（LSDV）の係数と標準誤差は、固定効果と、同じ値**です（予想 2）。相関ランダム効果の係数も、0.9887 と同じです（標準誤差は、別の計算なので、0.0351 と違います）。プーリング OLS は、1.4342 と偏ります。
 
+```python
 def least_squares_dummy_variables(
     panel: pd.DataFrame, y: str, xs: list[str], entity: str = "entity"
 ) -> pd.DataFrame:
@@ -291,7 +296,9 @@ def correlated_random_effects(
             "standard_error": result.standard_errors[xs],
         }
     )
+```
 
+```python
 def sample(
     entities: int = 50, periods: int = 4, correlation: float = 0.7
 ) -> pd.DataFrame:
@@ -326,6 +333,7 @@ def test_相関ランダム効果の係数は固定効果とちょうど一致�
     assert cre.loc["x", "coefficient"] == pytest.approx(
         fixed_effects(panel, "y", ["x"]).coefficients["x"], abs=1e-10
     )
+```
 
 `linearmodels` の `PanelOLS` と、係数・標準誤差が一致することも、テストで確かめています。
 
@@ -333,6 +341,7 @@ def test_相関ランダム効果の係数は固定効果とちょうど一致�
 
 ランダム効果の θ は、2 つの分散から求めます（**Swamy-Arora**）。σ_u² は固定効果の誤差の分散、σ_b² は、個人平均の回帰の誤差の分散で、σ_a² = σ_b² − σ_u² ÷ T です（負なら 0）。θ = 1 − √(σ_u² ÷ (σ_u² + T·σ_a²)) です。
 
+```python
 def _balanced_periods(panel: pd.DataFrame, entity: str) -> int:
     counts = panel.groupby(entity).size()
     if counts.nunique() != 1:
@@ -367,7 +376,9 @@ def random_effects(
     quasi = panel[columns] - theta * means
     x = quasi[xs].assign(const=1 - theta)[["const", *xs]]
     return _fit_without_constant(quasi[y], x, len(panel) - len(xs) - 1)
+```
 
+```python
 def test_ランダム効果はlinearmodelsと一致する() -> None:
     panel = sample()
     fit = random_effects(panel, "y", ["x"])
@@ -406,6 +417,7 @@ def test_個人の効果がなければθは0でランダム効果はプーリ�
 def test_期数がそろっていないパネルは扱わない() -> None:
     with pytest.raises(ValueError, match="バランス"):
         random_effects_theta(sample().iloc[:-1], "y", ["x"])
+```
 
 ```python
 from lib.chapter10.panel import hausman_test
@@ -427,6 +439,7 @@ hausman 184.07 6.258411565090162e-42
 
 ### Hausman 検定を実装する
 
+```python
 def hausman_test(fixed: PanelFit, random: PanelFit, names: list[str]) -> TestResult:
     """Hausman 検定: 固定効果とランダム効果の係数が、同じか（帰無仮説: 同じ）。
 
@@ -441,9 +454,11 @@ def hausman_test(fixed: PanelFit, random: PanelFit, names: list[str]) -> TestRes
     ).to_numpy()
     statistic = float(diff @ np.linalg.inv(variance) @ diff)
     return TestResult(statistic, float(stats.chi2.sf(statistic, len(names))))
+```
 
 > **実装の注意**: 固定効果とランダム効果は、それぞれ、誤差の分散 σ² を推定します。個人効果と x が相関していると、ランダム効果の σ² が、大きく出て、分散の差 V_FE − V_RE が**負**になり、統計量が負になることがあります（この標本では、−68.7 でした）。そこで、ランダム効果の共分散行列を、固定効果の σ² に、そろえて使います。
 
+```python
 def known_fit(coefficient: float, variance: float, sigma2: float) -> PanelFit:
     return PanelFit(
         pd.Series({"x": coefficient}),
@@ -465,6 +480,7 @@ def test_Hausman統計量の手計算() -> None:
 def test_Hausman検定はランダム効果の分散を固定効果のσ2にそろえる() -> None:
     test = hausman_test(known_fit(1.0, 0.04, 1.0), known_fit(0.7, 0.01, 2.0), ["x"])
     assert test.statistic == pytest.approx(0.09 / 0.035)
+```
 
 ### 2 期間の固定効果と、1 階差分
 
@@ -486,6 +502,7 @@ print(round(first_difference_estimate(two), 4))
 
 **2 期間では、固定効果と、定数項なしの 1 階差分が、ちょうど一致します**（1.1161、予想 4）。第 9 章の `first_difference_estimate` は、定数項を含むので、1.1104 と、少し違います（定数項が、平均的な変化を吸収するため）。
 
+```python
 def test_2期間の固定効果は定数項なしの1階差分とちょうど一致する() -> None:
     panel = draw_panel(60, 2, 0.8, np.random.default_rng(1))
     d = first_difference(panel)
@@ -501,11 +518,13 @@ def test_定数項ありの1階差分は固定効果と少しだけ違う() -> N
     fixed = fixed_effects(panel, "y", ["x"]).coefficients["x"]
     assert with_constant != pytest.approx(fixed, abs=1e-6)
     assert with_constant == pytest.approx(fixed, abs=0.05)
+```
 
 ### 推定量の性質を、シミュレーションで
 
 個人 200 人、5 期で、相関 0 と 1 を、300 回繰り返します（真の傾きは 1）。
 
+```python
 def estimator_comparison(
     entities: int,
     periods: int,
@@ -544,7 +563,9 @@ def hausman_rejection_rate(
         )
         rejected += test.p_value < significance
     return rejected / repetitions
+```
 
+```python
 def test_相関があるとプーリングは偏りランダム効果は中間で固定効果は偏らない() -> None:
     table = estimator_comparison(200, 5, 1.0, 300, np.random.default_rng(0))
     means = table.mean()
@@ -570,6 +591,7 @@ def test_個人の効果が説明変数と相関するとHausman検定は棄却�
 def test_相関がなければHausman検定の棄却率は有意水準に近い() -> None:
     rate = hausman_rejection_rate(200, 5, 0.0, 300, 0.05, np.random.default_rng(0))
     assert rate == pytest.approx(0.05, abs=4 * (0.05 * 0.95 / 300) ** 0.5)
+```
 
 ```python
 from lib.chapter10.panel import estimator_comparison, hausman_rejection_rate
@@ -594,6 +616,7 @@ for correlation in (0.0, 1.0):
 
 ### クラスター標準誤差
 
+```python
 def cluster_standard_errors(
     y: pd.Series, x: pd.DataFrame, groups: pd.Series
 ) -> pd.Series:
@@ -642,7 +665,9 @@ def pooled_standard_errors(
         "classical": float(np.mean(classical)),
         "clustered": float(np.mean(clustered)),
     }
+```
 
+```python
 def test_クラスター標準誤差はstatsmodelsと一致する() -> None:
     panel = sample()
     robust = cluster_standard_errors(panel["y"], panel[["x"]], panel["entity"])
@@ -657,6 +682,7 @@ def test_個人内で相関があると通常の標準誤差は過小でクラ�
     r = pooled_standard_errors(100, 5, 500, np.random.default_rng(0))
     assert r["classical"] < 0.75 * r["sd"]
     assert r["clustered"] == pytest.approx(r["sd"], rel=0.1)
+```
 
 ```python
 from lib.chapter10.panel import cluster_standard_errors, pooled_standard_errors
@@ -676,6 +702,7 @@ print({k: round(v, 4) for k, v in pooled_standard_errors(100, 5, 1000, np.random
 
 `plot_entity_lines` は、個人ごとのデータと、固定効果の傾きの直線、プーリング OLS の直線を描きます。`plot_estimate_comparison` は、推定量ごとの推定値のヒストグラムです。
 
+```python
 def test_個人ごとのデータと直線とプーリングの直線() -> None:
     panel = draw_panel(8, 5, 1.0, np.random.default_rng(0))
     ax = plot_entity_lines(panel, entities=3).axes[0]
@@ -723,7 +750,9 @@ def test_推定値の比較の図は3つのヒストグラムと真の値の線(
         "random_effects",
         "True value",
     ]
+```
 
+```python
 def plot_entity_lines(panel: pd.DataFrame, entities: int = 5) -> Figure:
     """最初の数人のデータと、固定効果の傾きの直線（個人ごと）、プーリング OLS の直線。
 
@@ -760,6 +789,7 @@ def plot_estimate_comparison(estimates: pd.DataFrame, true_value: float) -> Figu
     ax.legend()
     plt.close(fig)
     return fig
+```
 
 ### 実行結果
 

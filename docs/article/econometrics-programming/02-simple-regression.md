@@ -116,15 +116,18 @@ Y = [2, 4, 5, 9]
 
 予想した、手計算の値を、テストにします。x̄ = 2.5、ȳ = 5、Σ(x − x̄)(y − ȳ) = 11、Σ(x − x̄)² = 5 なので、傾きは 11 ÷ 5 = 2.2、切片は 5 − 2.2 × 2.5 = −0.5 です。
 
+```python
 def test_手計算の例の傾きと切片() -> None:
     fit = fit_simple(X, Y)
     assert fit.slope == pytest.approx(2.2)
     assert fit.intercept == pytest.approx(-0.5)
+```
 
 ### Green: fit_simple を実装する
 
 第 1 章の `sample_covariance` と `sample_variance` を使います。
 
+```python
 @dataclass(frozen=True)
 class SimpleFit:
     """単回帰 y = intercept + slope · x の推定結果。"""
@@ -141,9 +144,11 @@ def fit_simple(x: Array, y: Array) -> SimpleFit:
     slope = sample_covariance(x, y) / var_x
     intercept = float(np.mean(y)) - slope * float(np.mean(x))
     return SimpleFit(intercept=intercept, slope=slope)
+```
 
 説明変数にばらつきがない（すべて同じ値）と、傾きは決まらないので、エラーにします。
 
+```python
 def test_説明変数にばらつきがないと推定できない() -> None:
     with pytest.raises(ValueError, match="分散が 0"):
         fit_simple([2, 2, 2], [1, 2, 3])
@@ -155,11 +160,13 @@ def test_直線上のデータは傾きと切片を復元する() -> None:
     assert isinstance(fit, SimpleFit)
     assert fit.intercept == pytest.approx(3)
     assert fit.slope == pytest.approx(2)
+```
 
 ### 当てはめ値・残差・決定係数
 
 残差は、手計算で 0.3、0.1、−1.1、0.7 です。残差平方和は 1.8、全平方和は 26 なので、決定係数は 1 − 1.8 ÷ 26 ≈ 0.9308 です。テストでは、手計算の値に加えて、**ちょうど成り立つ関係**（恒等式）も確かめます。残差の和が 0、残差と x が直交、全平方和 = 説明される平方和 + 残差平方和、です。
 
+```python
 def test_当てはめ値と残差() -> None:
     fit = fit_simple(X, Y)
     assert fitted_values(fit, X) == pytest.approx([1.7, 3.9, 6.1, 8.3])
@@ -192,7 +199,9 @@ def test_全平方和は説明される部分と残差平方和の和() -> None:
 def test_直線上のデータの決定係数は1() -> None:
     fit = fit_simple(X, [1 + 3 * v for v in X])
     assert r_squared(fit, X, [1 + 3 * v for v in X]) == pytest.approx(1)
+```
 
+```python
 def fitted_values(fit: SimpleFit, x: Array) -> NDArray[np.float64]:
     """当てはめ値 ŷ = 切片 + 傾き · x。"""
     return fit.intercept + fit.slope * np.asarray(x, dtype=float)
@@ -208,11 +217,13 @@ def r_squared(fit: SimpleFit, x: Array, y: Array) -> float:
     rss = float(np.sum(residuals(fit, x, y) ** 2))
     tss = float(np.sum((np.asarray(y, dtype=float) - np.mean(y)) ** 2))
     return 1 - rss / tss
+```
 
 ### 標準誤差
 
 σ̂² = 1.8 ÷ 2 = 0.9、Σ(x − x̄)² = 5 なので、傾きの標準誤差は √(0.9 ÷ 5) = √0.18 ≈ 0.4243 です。観測値が 2 個だと、自由度が 0 になり、標準誤差は計算できません。
 
+```python
 def test_傾きの標準誤差() -> None:
     fit = fit_simple(X, Y)
     assert slope_standard_error(fit, X, Y) == pytest.approx((0.9 / 5) ** 0.5)
@@ -222,7 +233,9 @@ def test_観測値が2個では標準誤差は計算できない() -> None:
     fit = fit_simple([1, 2], [1, 3])
     with pytest.raises(ValueError, match="自由度"):
         slope_standard_error(fit, [1, 2], [1, 3])
+```
 
+```python
 def slope_standard_error(fit: SimpleFit, x: Array, y: Array) -> float:
     """傾きの標準誤差 = √(σ̂² ÷ Σ(x − x̄)²)。σ̂² = 残差平方和 ÷ (n − 2)。"""
     n = len(x)
@@ -231,6 +244,7 @@ def slope_standard_error(fit: SimpleFit, x: Array, y: Array) -> float:
     sigma2 = float(np.sum(residuals(fit, x, y) ** 2)) / (n - 2)
     sxx = sample_variance(x) * (n - 1)
     return math.sqrt(sigma2 / sxx)
+```
 
 ```python
 from lib.chapter02.simple import (
@@ -261,6 +275,7 @@ SimpleFit(intercept=-0.4999999999999991, slope=2.1999999999999997)
 
 自分で書いた関数が、定評のあるライブラリと同じ答えを返すかを確かめます。乱数で作った標本（真の切片 1、真の傾き 0.5、誤差の標準偏差 1、n = 30）で、`statsmodels` の `OLS` と比べます。
 
+```python
 def draw_sample(
     n: int, intercept: float, slope: float, sigma: float, rng: np.random.Generator
 ) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
@@ -271,7 +286,9 @@ def draw_sample(
     x = rng.standard_normal(n)
     u = sigma * rng.standard_normal(n)
     return x, intercept + slope * x + u
+```
 
+```python
 def test_statsmodelsと一致する() -> None:
     x, y = draw_sample(30, 1.0, 0.5, 1.0, np.random.default_rng(0))
     fit = fit_simple(x, y)
@@ -292,6 +309,7 @@ def test_標本は長さnで同じ種なら同じ() -> None:
 def test_誤差が0なら母集団の式の上に乗る() -> None:
     x, y = draw_sample(10, 1.0, 2.0, 0.0, np.random.default_rng(0))
     assert y == pytest.approx(1.0 + 2.0 * x)
+```
 
 ```python
 import numpy as np
@@ -316,6 +334,7 @@ SimpleFit(intercept=1.2293834080948305, slope=0.11563757995920465)
 
 標本を取り直して推定する作業を、2000 回繰り返します。真の値を知っているので、推定値の平均が、真の値に近いか（**不偏性**）、ばらつきが、標準誤差と合うか、を確かめられます。
 
+```python
 def sampling_distribution(
     n: int,
     repetitions: int,
@@ -331,9 +350,11 @@ def sampling_distribution(
         fit = fit_simple(x, y)
         rows.append((fit.intercept, fit.slope, slope_standard_error(fit, x, y)))
     return pd.DataFrame(rows, columns=["intercept", "slope", "se"])
+```
 
 x を標準正規分布から取ると、傾きの標準偏差の理論値は、σ ÷ √(n − 3) になります（x のばらつきの逆数の期待値が、1 ÷ (n − 3) であることによります）。n = 50、σ = 1 なら、1 ÷ √47 ≈ 0.1459 です。
 
+```python
 def test_標本分布の表の形() -> None:
     table = sampling_distribution(
         n=20,
@@ -378,6 +399,7 @@ def test_誤差が大きいほど傾きはばらつく() -> None:
     small = sampling_distribution(30, 500, 1, 0.5, 1, np.random.default_rng(1))
     large = sampling_distribution(30, 500, 1, 0.5, 3, np.random.default_rng(1))
     assert large["slope"].std() == pytest.approx(3 * small["slope"].std(), rel=1e-9)
+```
 
 ```python
 import numpy as np
@@ -402,6 +424,7 @@ print(round(table["slope"].std(), 4), round(1 / 47**0.5, 4))
 
 2 つの図は、`plot_regression_line`（データ・直線・残差）と、`plot_slope_distribution`（傾きのヒストグラムと真の値の線）で描きます。テストは、線と点の座標、残差の線が当てはめ値とデータを結ぶこと、棒の度数の合計が観測数に等しいこと、を確かめます。
 
+```python
 def test_回帰直線の図はデータと直線と残差を描く() -> None:
     ax = plot_regression_line(X, Y, fit_simple(X, Y)).axes[0]
     labels = [line.get_label() for line in ax.lines]
@@ -421,7 +444,9 @@ def test_傾きの分布の図は棒と真の値の線() -> None:
     assert ax.get_ylabel() == "Frequency"
     bars: list[Any] = list(ax.patches)
     assert sum(p.get_height() for p in bars) == len(slopes)
+```
 
+```python
 def plot_regression_line(x: Array, y: Array, fit: SimpleFit) -> Figure:
     """データ・回帰直線・残差（データと直線を結ぶ縦線）を描く。"""
     fig, ax = plt.subplots()
@@ -447,6 +472,7 @@ def plot_slope_distribution(slopes: Sequence[float], true_slope: float) -> Figur
     ax.legend()
     plt.close(fig)
     return fig
+```
 
 ### 実行結果
 

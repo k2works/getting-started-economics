@@ -118,6 +118,7 @@ Y = np.r_[np.zeros(30), np.ones(10), np.zeros(10), np.ones(30)]
 X = np.r_[np.zeros(40), np.ones(40)]
 ```
 
+```python
 def test_定数項だけのロジットは対数オッズ() -> None:
     y = np.r_[np.ones(30), np.zeros(10)]
     fit = fit_binary(y, np.empty((40, 0)), "logit")
@@ -130,11 +131,13 @@ def test_定数項だけのプロビットは標準正規分布の分位点() ->
     fit = fit_binary(y, np.empty((40, 0)), "probit")
     assert fit.coefficients["const"] == pytest.approx(stats.norm.ppf(0.75))
     assert fit.coefficients["const"] == pytest.approx(0.6745, abs=1e-4)
+```
 
 ### Green: fit_binary を実装する
 
 対数尤度のスコア（x′β についての 1 階微分）と、2 階微分の符号を変えたものを、リンク関数ごとに求め、ニュートン法を回します。
 
+```python
 LINKS = {"logit": stats.logistic, "probit": stats.norm}
 
 
@@ -222,6 +225,7 @@ def fit_binary(
                 link=link,
             )
     raise ValueError("収束しない（完全分離の可能性がある）")
+```
 
 ```python
 import numpy as np
@@ -245,6 +249,7 @@ probit 0.6745
 
 予想 2 の手計算です。x = 0 の群は、確率 0.25（オッズ 1/3）、x = 1 の群は、0.75（オッズ 3）。ロジットでは、定数項は ln(1/3) = −1.0986、傾きは、**対数オッズ比** ln(3 ÷ (1/3)) = ln 9 ≈ 2.1972 です。プロビットは、定数項が Φ⁻¹(0.25) = −0.6745、傾きが Φ⁻¹(0.75) − Φ⁻¹(0.25) = 1.3490 です。
 
+```python
 def test_ダミー変数1つのロジットの傾きは対数オッズ比() -> None:
     fit = fit_binary(Y, X, "logit")
     assert fit.coefficients["const"] == pytest.approx(np.log(1 / 3))
@@ -264,6 +269,7 @@ def test_予測確率は表の割合に一致する() -> None:
     p = predicted_probabilities(fit, X)
     assert p[0] == pytest.approx(0.25)
     assert p[-1] == pytest.approx(0.75)
+```
 
 ```python
 from lib.chapter14.discrete import predicted_probabilities
@@ -288,6 +294,7 @@ probit {'const': -0.67449, 'x1': 1.34898} -44.9868 5
 
 乱数の標本（ロジットの母集団、n = 500）で、係数・標準誤差・対数尤度・平均限界効果を、`statsmodels` の `Logit`・`Probit` と、照合します。
 
+```python
 def predicted_probabilities(fit: BinaryFit, x: ArrayLike) -> NDArray[np.float64]:
     """P(y = 1 | x) = F(x′β)。"""
     design, _ = _design(x)
@@ -313,7 +320,9 @@ def draw_binary_sample(n: int, link: str, rng: np.random.Generator) -> pd.DataFr
     error = rng.logistic(size=n) if link == "logit" else rng.standard_normal(n)
     latent = 0.5 + x1 - 0.8 * x2 + error
     return pd.DataFrame({"y": (latent > 0).astype(float), "x1": x1, "x2": x2})
+```
 
+```python
 def sample(link: str = "logit", n: int = 500) -> pd.DataFrame:
     return draw_binary_sample(n, link, np.random.default_rng(0))
 
@@ -368,6 +377,7 @@ def test_標本の形と割合() -> None:
     assert set(s["y"]) == {0.0, 1.0}
     expected = stats.norm.cdf(0.5 / (1 + 1 + 0.64) ** 0.5)
     assert s["y"].mean() == pytest.approx(expected, abs=0.01)
+```
 
 ```python
 from lib.chapter03.multiple import fit_ols
@@ -399,6 +409,7 @@ LPM {'const': 0.5841, 'x1': 0.1824, 'x2': -0.0977}
 
 ### 反復と収束
 
+```python
 def test_完全に分離できるデータは収束しない() -> None:
     with pytest.raises(ValueError, match="完全分離"):
         fit_binary([0, 0, 0, 1, 1, 1], [1, 2, 3, 4, 5, 6])
@@ -429,6 +440,7 @@ def test_配列と列の名前() -> None:
     assert list(plain.coefficients.index) == ["const", "x1", "x2"]
     assert list(single.coefficients.index) == ["const", "x1"]
     assert named.coefficients.to_numpy() == pytest.approx(plain.coefficients.to_numpy())
+```
 
 ```python
 try:
@@ -445,6 +457,7 @@ x = 1、2、3 で y = 0、x = 4、5、6 で y = 1 は、完全に分離できま
 
 ### 尤度比検定
 
+```python
 def likelihood_ratio_test(
     log_likelihood_full: float, log_likelihood_restricted: float, restrictions: int
 ) -> TestResult:
@@ -456,7 +469,9 @@ def likelihood_ratio_test(
 def linear_probability(y: ArrayLike, x: ArrayLike) -> pd.Series:
     """線形確率モデル: y（0 か 1）を、OLS で x に回帰した係数。"""
     return fit_ols(y, x).coefficients
+```
 
+```python
 def test_尤度比検定の手計算() -> None:
     test = likelihood_ratio_test(-40.0, -45.0, 2)
     assert test.statistic == pytest.approx(10)
@@ -486,6 +501,7 @@ def test_線形確率モデルはOLSの係数() -> None:
     assert linear_probability(s["y"], x).to_numpy() == pytest.approx(
         fit_ols(s["y"], x).coefficients.to_numpy()
     )
+```
 
 ```python
 full = fit_binary(s["y"], cols)
@@ -504,6 +520,7 @@ print(round(null.log_likelihood, 2), round(lr.statistic, 2), lr.p_value)
 
 n = 100000 の標本を、ロジットの母集団と、プロビットの母集団の、両方から作って、ロジットとプロビットで、推定します。
 
+```python
 def test_ロジットの標本は標準ロジスティック分布の誤差() -> None:
     s = draw_binary_sample(100000, "logit", np.random.default_rng(1))
     fit = fit_binary(s["y"], s[["x1", "x2"]], "logit")
@@ -527,6 +544,7 @@ def test_平均限界効果はロジット_プロビット_線形確率モデル
     lpm = linear_probability(s["y"], x).drop("const")
     assert logit.to_numpy() == pytest.approx(probit.to_numpy(), abs=0.005)
     assert lpm.to_numpy() == pytest.approx(probit.to_numpy(), abs=0.01)
+```
 
 ```python
 for generator in ("logit", "probit"):
@@ -552,6 +570,7 @@ probit {'const': 0.846, 'x1': 1.717, 'x2': -1.372} {'const': 0.49, 'x1': 0.993, 
 
 ### 線形確率モデルは、範囲の外に出る
 
+```python
 def test_線形確率モデルは確率の範囲の外に出ることがある() -> None:
     s = sample(n=2000)
     x = s[["x1", "x2"]]
@@ -560,6 +579,7 @@ def test_線形確率モデルは確率の範囲の外に出ることがある()
     assert (values > 1).any() or (values < 0).any()
     probabilities = predicted_probabilities(fit_binary(s["y"], x), x)
     assert ((probabilities > 0) & (probabilities < 1)).all()
+```
 
 ```python
 from lib.chapter03.multiple import fit_ols
@@ -581,6 +601,7 @@ print(round(float((fitted > 1).mean()), 4), round(float((fitted < 0).mean()), 4)
 
 `plot_probability_curves` は、データ・線形確率モデルの直線・ロジット・プロビットの曲線を描きます。
 
+```python
 def xs(line: Any) -> list[float]:
     values: Any = line.get_xdata()
     return [float(v) for v in values]
@@ -641,7 +662,9 @@ def test_曲線の範囲はデータの範囲の両側に1ずつ広げる() -> N
     assert grid[0] == pytest.approx(x.min() - 1)
     assert grid[-1] == pytest.approx(x.max() + 1)
     assert len(grid) == 100
+```
 
+```python
 def plot_probability_curves(x: NDArray[np.float64], y: NDArray[np.float64]) -> Figure:
     """0 か 1 のデータと、線形確率モデルの直線、ロジット・プロビットの曲線を描く。"""
     grid = np.linspace(float(x.min()) - 1, float(x.max()) + 1, 100)
@@ -657,6 +680,7 @@ def plot_probability_curves(x: NDArray[np.float64], y: NDArray[np.float64]) -> F
     ax.legend()
     plt.close(fig)
     return fig
+```
 
 ### 実行結果
 

@@ -113,6 +113,7 @@ from scipy import stats
 from lib.chapter16.heckit import inverse_mills_ratio
 ```
 
+```python
 def test_逆ミルズ比の手計算() -> None:
     assert inverse_mills_ratio(0.0) == pytest.approx(math.sqrt(2 / math.pi))
     assert inverse_mills_ratio(0.0) == pytest.approx(0.7979, abs=1e-4)
@@ -134,14 +135,17 @@ def test_cが非常に小さいと逆ミルズ比はcの符号を変えた値に
 
 def test_配列を渡すと配列が返る() -> None:
     assert inverse_mills_ratio([0.0, 1.0]).shape == (2,)
+```
 
 ### Green: 逆ミルズ比を実装する
 
+```python
 def inverse_mills_ratio(c: ArrayLike) -> NDArray[np.float64]:
     """逆ミルズ比 λ(c) = φ(c) ÷ Φ(c)。選択された観測値の、誤差項の平均の補正に使う。"""
     values = np.asarray(c, dtype=float)
     result: NDArray[np.float64] = stats.norm.pdf(values) / stats.norm.cdf(values)
     return result
+```
 
 ```python
 from lib.chapter16.heckit import inverse_mills_ratio
@@ -157,6 +161,7 @@ print(inverse_mills_ratio([-10, -1, 0, 1, 3]).round(4).tolist())
 
 ### 選択のある標本を作る
 
+```python
 def draw_selection_sample(
     n: int, correlation: float, rng: np.random.Generator
 ) -> pd.DataFrame:
@@ -170,7 +175,9 @@ def draw_selection_sample(
     selected = (0.5 + x + z + v > 0).astype(float)
     y = np.where(selected == 1, 1 + 2 * x + u, np.nan)
     return pd.DataFrame({"x": x, "z": z, "selected": selected, "y": y})
+```
 
+```python
 def sample(correlation: float = 0.7, n: int = 5000, seed: int = 0) -> pd.DataFrame:
     return draw_selection_sample(n, correlation, np.random.default_rng(seed))
 
@@ -202,9 +209,11 @@ def test_選択された人の結果は選択の誤差と相関するときだ�
         chosen = df[df["selected"] == 1]
         residual = chosen["y"] - 1 - 2 * chosen["x"]
         assert (abs(residual.mean()) > 0.2) == expect_bias
+```
 
 ### ヘックマンの 2 段階推定を実装する
 
+```python
 @dataclass(frozen=True)
 class HeckitFit:
     """2 段階推定の結果。係数の最後の `lambda` は、逆ミルズ比の係数（= ρ·σ_u）。"""
@@ -237,9 +246,11 @@ def heckit_two_step(
         selection=selection,
         n_selected=int(chosen.sum()),
     )
+```
 
 第 1 段階のプロビットは、第 14 章の `fit_binary` です。`statsmodels` の `Probit` と、逆ミルズ比・OLS で作った値と、一致することを、テストで確認します。
 
+```python
 def test_2段階推定はstatsmodelsのプロビットとOLSで作った値に一致する() -> None:
     df = sample()
     fit = heckit_two_step(df, ["x"], ["x", "z"])
@@ -266,6 +277,7 @@ def test_第1段階の選択の係数は真の値に近い() -> None:
     for name, value in truth.items():
         error = fit.selection.standard_errors[name]
         assert abs(fit.selection.coefficients[name] - value) < 4 * error
+```
 
 ```python
 import numpy as np
@@ -297,6 +309,7 @@ n = 5000 のうち、61.7%（3087 人）が選択されました。**選択さ�
 
 第 2 段階の OLS の標準誤差（上の最後の行）は、正しくありません。ブートストラップで、標本を復元抽出し、2 段階推定を 200 回繰り返して、標準偏差を求めます。
 
+```python
 def heckit_bootstrap_standard_errors(
     df: pd.DataFrame,
     x_columns: list[str],
@@ -313,7 +326,9 @@ def heckit_bootstrap_standard_errors(
         sample = df.iloc[rng.integers(0, len(df), len(df))].reset_index(drop=True)
         rows.append(heckit_two_step(sample, x_columns, selection_columns).coefficients)
     return pd.DataFrame(rows).std(ddof=1)
+```
 
+```python
 def test_選択された標本のOLSは偏りヘックマンは真の値を復元する() -> None:
     df = sample()
     chosen = df[df["selected"] == 1]
@@ -391,6 +406,7 @@ def test_ブートストラップ標準誤差は推定値の実際のばらつ�
         sample(n=1000), ["x"], ["x", "z"], 150, np.random.default_rng(1)
     )
     assert errors["x"] == pytest.approx(table["heckit"].std(), rel=0.3)
+```
 
 ```python
 from lib.chapter16.heckit import heckit_bootstrap_standard_errors
@@ -407,6 +423,7 @@ print(errors.round(4).to_dict())
 
 ### 偏りと、ヘックマンの効果を、繰り返しで確かめる
 
+```python
 def selection_bias_experiment(
     n: int, correlation: float, repetitions: int, rng: np.random.Generator
 ) -> pd.DataFrame:
@@ -419,7 +436,9 @@ def selection_bias_experiment(
         heckit = heckit_two_step(df, ["x"], ["x", "z"]).coefficients["x"]
         rows.append((ols, heckit))
     return pd.DataFrame(rows, columns=["ols_selected", "heckit"])
+```
 
+```python
 def test_相関があるとOLSは偏りヘックマンは偏らない() -> None:
     table = selection_bias_experiment(1000, 0.7, 200, np.random.default_rng(0))
     se = table.std() / 200**0.5
@@ -443,6 +462,7 @@ def test_相関がなければ選択のバイアスもなくlambdaの係数は0�
     fit = heckit_two_step(df, ["x"], ["x", "z"])
     assert abs(ols.coefficients["x"] - 2.0) < 4 * ols.standard_errors["x"]
     assert abs(fit.coefficients["lambda"]) < 4 * fit.naive_standard_errors["lambda"]
+```
 
 ```python
 from lib.chapter16.heckit import selection_bias_experiment
@@ -466,6 +486,7 @@ for correlation in (0.0, 0.7):
 
 ### 図
 
+```python
 def xs(line: Any) -> list[float]:
     values: Any = line.get_xdata()
     return [float(v) for v in values]
@@ -506,7 +527,9 @@ def test_直線の傾き() -> None:
         heckit_two_step(df, ["x"], ["x", "z"]).coefficients["x"]
     )
     assert slope(ax.lines[2]) < slope(ax.lines[3])
+```
 
+```python
 def plot_selection(df: pd.DataFrame) -> Figure:
     """選択された人のデータと、真の直線、OLS（選択された標本）、ヘックマンの直線を描く。"""
     chosen = df[df["selected"] == 1]
@@ -523,6 +546,7 @@ def plot_selection(df: pd.DataFrame) -> Figure:
     ax.legend()
     plt.close(fig)
     return fig
+```
 
 ### 実行結果
 

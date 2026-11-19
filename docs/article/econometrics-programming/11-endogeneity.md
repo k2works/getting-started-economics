@@ -108,6 +108,7 @@ X2 = [2.0, 1.0, 4.0, 3.0, 6.0]
 Y = [1 + 2 * a + 3 * b for a, b in zip(X1, X2, strict=True)]
 ```
 
+```python
 def test_ちょうどの関係では長い回帰が真の係数を復元する() -> None:
     d = ovb_decomposition(Y, X1, X2)
     assert d.long == pytest.approx(2)
@@ -124,9 +125,11 @@ def test_短い回帰の傾きは長い回帰の傾きにバイアスを足し�
     d = ovb_decomposition(Y, X1, X2)
     assert d.short == pytest.approx(d.long + d.beta2 * d.delta)
     assert d.short == pytest.approx(2 + 3 * 1.0)
+```
 
 ### Green: ovb_decomposition を実装する
 
+```python
 @dataclass(frozen=True)
 class OvbDecomposition:
     """欠落変数バイアスの分解: 短い回帰の傾き = 長い回帰の傾き + β₂ · δ。"""
@@ -150,6 +153,7 @@ def ovb_decomposition(y: Array, x1: Array, x2: Array) -> OvbDecomposition:
         beta2=float(long["x2"]),
         delta=fit_simple(x1, x2).slope,
     )
+```
 
 ```python
 from lib.chapter11.endogeneity import ovb_decomposition
@@ -173,6 +177,7 @@ OvbDecomposition(short=5.0, long=1.9999999999999973, beta2=3.0000000000000018, d
 
 y = 1 + x₁ + 2·x₂ + u（真の傾きは x₁ が 1、x₂ が 2）。x₁ と x₂ は、どちらも分散 1 で、相関が 0.5 です。x₂ を落とすと、バイアスは 2 × 0.5 = 1 で、x₁ の傾きは 2 に近づくはずです（予想 1）。
 
+```python
 def draw_omitted(
     n: int, correlation: float, rng: np.random.Generator
 ) -> tuple[NDArray[np.float64], NDArray[np.float64], NDArray[np.float64]]:
@@ -196,7 +201,9 @@ def simulate_omitted(
         d = ovb_decomposition(y, x1, x2)
         rows.append((d.short, d.long))
     return pd.DataFrame(rows, columns=["short", "long"])
+```
 
+```python
 def test_恒等式は乱数の標本でも成り立つ() -> None:
     y, x1, x2 = draw_omitted(50, 0.5, np.random.default_rng(0))
     d = ovb_decomposition(y, x1, x2)
@@ -215,6 +222,7 @@ def test_標本の形と相関() -> None:
     assert y.shape == x1.shape == x2.shape == (20000,)
     assert np.corrcoef(x1, x2)[0, 1] == pytest.approx(0.5, abs=0.02)
     assert np.var(x2) == pytest.approx(1, rel=0.05)
+```
 
 ```python
 import numpy as np
@@ -239,6 +247,7 @@ for n in (50, 2000):
 
 1 つの標本（n = 200）では、x₂ を入れた回帰の x₁ の係数は 1.0327（真の値 1 に近い）、落とした回帰は 1.9431（2 に近い）です。500 回繰り返すと、**落とした回帰の平均は、n = 50 で 1.9949、n = 2000 で 2.0009**。標本を増やしても、ばらつき（0.288 → 0.0442）が小さくなるだけで、**偏りは消えません**。入れた回帰は、平均が真の値 1 に近いままです。
 
+```python
 def test_x2を落とした回帰は平均して1プラス2ρに近く入れた回帰は真の値() -> None:
     table = simulate_omitted(200, 0.5, 1000, np.random.default_rng(0))
     se = table.std() / 1000**0.5
@@ -259,11 +268,13 @@ def test_標本を増やしても短い回帰のバイアスは消えない() ->
     assert large.mean() == pytest.approx(2.0, abs=0.02)
     assert large.std() < small.std() / 3
     assert abs(large.mean() - 1.0) > 0.9
+```
 
 ![x₂ を落とした回帰（short）は、真の値 1 から大きくずれた 2 のまわりに、入れた回帰（long）は 1 のまわりに分布する](images/ch11-omitted-variable.png)
 
 ### 測定誤差
 
+```python
 def attenuation_factor(var_true: float, var_error: float) -> float:
     """測定誤差による減衰係数 = Var(真の x) ÷ (Var(真の x) + Var(誤差))。"""
     return var_true / (var_true + var_error)
@@ -287,7 +298,9 @@ def simulate_measurement_error(
         y, x = draw_measurement_error(n, error_sd, rng)
         slopes.append(fit_simple(x, y).slope)
     return np.array(slopes)
+```
 
+```python
 def test_減衰係数() -> None:
     assert attenuation_factor(1, 1) == pytest.approx(0.5)
     assert attenuation_factor(1, 0.25) == pytest.approx(0.8)
@@ -319,6 +332,7 @@ def test_誤差がなければ減衰しない() -> None:
 def test_標本を増やしても減衰は消えない() -> None:
     slopes = simulate_measurement_error(5000, 1.0, 300, np.random.default_rng(0))
     assert slopes.mean() == pytest.approx(0.5, abs=0.02)
+```
 
 ```python
 from lib.chapter11.endogeneity import simulate_measurement_error
@@ -339,6 +353,7 @@ for error_sd in (0.5, 1.0):
 
 ### 同時方程式
 
+```python
 def draw_market(
     n: int, sd_demand: float, sd_supply: float, rng: np.random.Generator
 ) -> pd.DataFrame:
@@ -370,7 +385,9 @@ def simulate_simultaneity(
         market = draw_market(n, sd_demand, sd_supply, rng)
         slopes.append(fit_simple(market["p"], market["q"]).slope)
     return np.array(slopes)
+```
 
+```python
 def test_市場の標本の式() -> None:
     market = draw_market(10, 0.0, 0.0, np.random.default_rng(0))
     assert market["p"].tolist() == [5] * 10
@@ -407,6 +424,7 @@ def test_同時性があるとOLSの傾きは需要の傾きにも供給の傾�
 def test_需要の変動が小さいと傾きは需要の傾きに近づく() -> None:
     slopes = simulate_simultaneity(500, 0.05, 1.0, 300, np.random.default_rng(0))
     assert slopes.mean() == pytest.approx(-1, abs=0.02)
+```
 
 ```python
 from lib.chapter11.endogeneity import simulate_simultaneity, simultaneity_slope
@@ -429,6 +447,7 @@ for sd_demand, sd_supply in ((1, 1), (2, 1), (1, 2), (0.05, 1)):
 
 `plot_market` は、均衡の点と、OLS の直線、真の需要・供給の直線を描きます。冒頭の図（需要の変動 2、供給の変動 1）で、OLS の直線は、需要と供給の、間を通ります。
 
+```python
 def test_データと3本の直線() -> None:
     market = draw_market(50, 1.0, 1.0, np.random.default_rng(0))
     ax = plot_market(market).axes[0]
@@ -457,7 +476,9 @@ def test_需要の直線と供給の直線は真の式() -> None:
     supply_x, supply_y = xs(ax.lines[3]), ys(ax.lines[3])
     assert demand_y == pytest.approx([10 - p for p in demand_x])
     assert supply_y == pytest.approx(supply_x)
+```
 
+```python
 def plot_market(market: pd.DataFrame) -> Figure:
     """均衡の点と、OLS の直線、真の需要曲線（q = 10 − p）、供給曲線（q = p）。"""
     fig, ax = plt.subplots()
@@ -476,6 +497,7 @@ def plot_market(market: pd.DataFrame) -> Figure:
     ax.legend()
     plt.close(fig)
     return fig
+```
 
 ### 実行結果
 

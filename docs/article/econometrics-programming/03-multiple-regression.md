@@ -110,6 +110,7 @@ X1 = [1, 2, 3, 4, 5]
 X2 = [2, 1, 4, 3, 6]
 ```
 
+```python
 def test_ちょうどの関係から係数を復元する() -> None:
     x = pd.DataFrame({"x1": X1, "x2": X2})
     y = [1 + 2 * a + 3 * b for a, b in zip(X1, X2, strict=True)]
@@ -117,9 +118,11 @@ def test_ちょうどの関係から係数を復元する() -> None:
     assert result.coefficients.tolist() == pytest.approx([1, 2, 3])
     assert result.standard_errors.tolist() == pytest.approx([0, 0, 0], abs=1e-9)
     assert result.r_squared == pytest.approx(1)
+```
 
 ### Green: fit_ols を実装する
 
+```python
 @dataclass(frozen=True)
 class OlsResult:
     """最小二乗法の推定結果。"""
@@ -175,9 +178,11 @@ def fit_ols(y: ArrayLike, x: ArrayLike, constant: bool = True) -> OlsResult:
         n_obs=n,
         df_resid=n - k,
     )
+```
 
 係数の名前は、列の名前（配列なら `x1`、`x2`…）に、`const`（定数項）を足したものです。説明変数が 1 次元の配列や、名前のある 1 つの列でも使えるようにします。定数項なし（`constant=False`）も選べます（第 10 章で使います）。
 
+```python
 def test_係数の名前は列の名前と定数項() -> None:
     df = random_data()
     result = fit_ols(df["y"], df[["x1", "x2"]])
@@ -207,11 +212,13 @@ def test_定数項なしにできる() -> None:
     df = random_data()
     result = fit_ols(df["y"], df[["x1", "x2"]], constant=False)
     assert list(result.coefficients.index) == ["x1", "x2"]
+```
 
 ### 照合・恒等式・エラー
 
 乱数で作ったデータ（`random_data`）で、`statsmodels` の `OLS` と、係数・標準誤差・決定係数・自由度が一致することを確かめます。残差の和は 0、各説明変数と直交します。完全な線形関係と、観測値の不足は、エラーにします。
 
+```python
 def random_data(n: int = 40, seed: int = 0) -> pd.DataFrame:
     rng = np.random.default_rng(seed)
     x1 = rng.standard_normal(n)
@@ -257,6 +264,7 @@ def test_観測値が係数の数以下だと推定できない() -> None:
     x = pd.DataFrame({"x1": [1, 2, 4], "x2": [2, 1, 5]})
     with pytest.raises(ValueError, match="観測値の数"):
         fit_ols([1, 2, 3], x)
+```
 
 ```python
 import numpy as np
@@ -287,6 +295,7 @@ print(round(result.r_squared, 4), result.n_obs, result.df_resid)
 
 てこ比は、各観測値が、自分自身の当てはめ値に与える影響の大きさです。ハット行列 H = X(X′X)⁻¹X′ の対角成分で、**合計が、係数の数 k に等しく**、各値は 1/n 以上 1 以下です。第 4 章の診断で使います。
 
+```python
 def test_てこ比の和は係数の数でありstatsmodelsと一致する() -> None:
     df = random_data()
     h = leverage(df[["x1", "x2"]])
@@ -297,16 +306,20 @@ def test_てこ比の和は係数の数でありstatsmodelsと一致する() -> 
         sm.OLS(df["y"], sm.add_constant(df[["x1", "x2"]])).fit()
     ).hat_matrix_diag
     assert h == pytest.approx(reference)
+```
 
+```python
 def leverage(x: ArrayLike, constant: bool = True) -> NDArray[np.float64]:
     """てこ比（ハット行列 H = X (X'X)⁻¹ X' の対角成分）。"""
     design, _ = _matrix(x, constant)
     hat = design @ np.linalg.solve(design.T @ design, design.T)
     result: NDArray[np.float64] = np.diag(hat)
     return result
+```
 
 ### FWL: 他の変数の影響を除く
 
+```python
 def partial_out(v: ArrayLike, others: ArrayLike) -> NDArray[np.float64]:
     """v を、定数項と others で回帰した残差（others の影響を除いた v）。"""
     return fit_ols(v, others).residuals
@@ -317,7 +330,9 @@ def fwl_coefficient(y: ArrayLike, x: ArrayLike, others: ArrayLike) -> float:
     y_tilde = partial_out(y, others)
     x_tilde = partial_out(x, others)
     return float(x_tilde @ y_tilde / (x_tilde @ x_tilde))
+```
 
+```python
 def test_偏りを除いた回帰の傾きは重回帰の係数と一致する() -> None:
     df = random_data()
     full = fit_ols(df["y"], df[["x1", "x2"]])
@@ -334,6 +349,7 @@ def test_偏りを除いた変数は他の変数と直交する() -> None:
     z = partial_out(df["x1"], df[["x2"]])
     assert np.sum(z) == pytest.approx(0, abs=1e-10)
     assert np.dot(z, df["x2"]) == pytest.approx(0, abs=1e-10)
+```
 
 ```python
 from lib.chapter03.multiple import fit_ols, fwl_coefficient
@@ -355,11 +371,14 @@ FWL の傾き 2.1476 は、重回帰の x1 の係数に、一致します。一�
 
 x1 を x2 で回帰したときの決定係数が R² なら、VIF = 1 ÷ (1 − R²) です。2 変数の場合、R² は相関係数の 2 乗に等しいので、VIF = 1 ÷ (1 − r²) です。
 
+```python
 def variance_inflation_factor(x: pd.DataFrame, column: str) -> float:
     """分散拡大係数 VIF = 1 ÷ (1 − R²)。R² は、column を他の列で回帰したもの。"""
     result = fit_ols(x[column], x.drop(columns=column))
     return 1 / (1 - result.r_squared)
+```
 
+```python
 def test_分散拡大係数は相関から決まる() -> None:
     df = random_data()
     r = np.corrcoef(df["x1"], df["x2"])[0, 1]
@@ -379,11 +398,13 @@ def test_分散拡大係数はstatsmodelsと一致する() -> None:
 def test_相関のない変数の分散拡大係数は1に近い() -> None:
     x = pd.DataFrame({"a": [1, 2, 3, 4], "b": [1, -1, -1, 1]})
     assert variance_inflation_factor(x, "a") == pytest.approx(1)
+```
 
 ### 多重共線性の影響を、シミュレーションで見る
 
 y = 1 + x1 + x2 + u の係数を、x1 と x2 の相関を指定して、繰り返し推定します。
 
+```python
 def multicollinearity_experiment(
     correlation: float, n: int, repetitions: int, rng: np.random.Generator
 ) -> pd.DataFrame:
@@ -397,7 +418,9 @@ def multicollinearity_experiment(
         result = fit_ols(y, np.column_stack([x1, x2]))
         rows.append((result.coefficients["x1"], result.coefficients["x2"]))
     return pd.DataFrame(rows, columns=["x1", "x2"])
+```
 
+```python
 def test_相関が強くても推定値は不偏() -> None:
     table = multicollinearity_experiment(0.9, 50, 1000, np.random.default_rng(0))
     assert list(table.columns) == ["x1", "x2"]
@@ -420,6 +443,7 @@ def test_1回分の推定を手で再現すると列の順序はx1とx2() -> Non
     assert table.loc[0, "x1"] == pytest.approx(expected["x1"])
     assert table.loc[0, "x2"] == pytest.approx(expected["x2"])
     assert table.loc[0, "x1"] != pytest.approx(table.loc[0, "x2"])
+```
 
 ```python
 import numpy as np
@@ -440,15 +464,19 @@ for rho in (0.0, 0.9):
 
 ### 対数の係数の解釈
 
+```python
 def percent_effect(coefficient: float, change: float = 1) -> float:
     """対数の被説明変数の係数から、説明変数が change 増えたときの変化率（%）。"""
     return (math.exp(coefficient * change) - 1) * 100
+```
 
+```python
 def test_対数の係数の割合への換算() -> None:
     assert percent_effect(0.1) == pytest.approx(10.5171, abs=1e-4)
     assert percent_effect(0) == 0
     assert percent_effect(-0.1) == pytest.approx(-9.5163, abs=1e-4)
     assert percent_effect(0.1, change=2) == pytest.approx(22.1403, abs=1e-4)
+```
 
 係数 0.1 は 10.5171%、−0.1 は −9.5163% です。符号によって、近似の誤差の向きが違います。
 
@@ -456,6 +484,7 @@ def test_対数の係数の割合への換算() -> None:
 
 `plot_collinearity_distributions` は、2 つの分布のヒストグラムと真の値の線を描きます。
 
+```python
 def test_2つの分布のヒストグラムと真の値の線() -> None:
     low = [0.9, 1.0, 1.1, 1.0]
     high = [0.2, 1.0, 1.8, 1.0]
@@ -486,7 +515,9 @@ def test_真の値の線は既定で1の位置() -> None:
     assert line_x(ax) == [1.0, 1.0]
     ax = plot_collinearity_distributions([1.0, 1.1], [0.5, 1.5], 2.0).axes[0]
     assert line_x(ax) == [2.0, 2.0]
+```
 
+```python
 def plot_collinearity_distributions(
     low: Sequence[float], high: Sequence[float], true_value: float = 1.0
 ) -> Figure:
@@ -500,6 +531,7 @@ def plot_collinearity_distributions(
     ax.legend()
     plt.close(fig)
     return fig
+```
 
 ### 実行結果
 

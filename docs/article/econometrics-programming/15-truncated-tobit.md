@@ -120,6 +120,7 @@ PARAMS = np.array([0.5, 1.0, 0.0])
 DESIGN = np.column_stack([np.ones(2), [0.0, 1.0]])
 ```
 
+```python
 def test_トービットの対数尤度の手計算() -> None:
     # y = 0（打ち切り）: ln Φ(−0.5)、y = 2: ln φ(2 − 1.5)
     expected = (
@@ -135,9 +136,11 @@ def test_トービットの対数尤度の手計算() -> None:
 def test_切断回帰の対数尤度の手計算() -> None:
     value = truncreg_log_likelihood(PARAMS, np.array([1.0, 2.0]), DESIGN, 0.0)
     assert value == pytest.approx(-1.6498, abs=1e-4)
+```
 
 ### Green: 対数尤度を実装する
 
+```python
 @dataclass(frozen=True)
 class LimitedFit:
     """トービット・切断回帰の推定結果。係数の最後の `sigma` は、誤差の標準偏差。"""
@@ -187,6 +190,7 @@ def truncreg_log_likelihood(
         - len(y) * params[-1]
         - np.sum(stats.norm.logsf((left - xb) / sigma))
     )
+```
 
 ```python
 from lib.chapter15.limited import tobit_log_likelihood, truncreg_log_likelihood
@@ -208,6 +212,7 @@ print(round(truncreg_log_likelihood(params, np.array([1.0, 2.0]), design, 0.0), 
 
 トービットの勾配は、打ち切られた観測値で**逆ミルズ比** λ = φ(c) ÷ Φ(c)（c = (left − x′β) ÷ σ）を使い、それ以外では標準化残差 z = (y − x′β) ÷ σ を使います。ln σ についての微分は、前者が −λ·c、後者が z² − 1 です。
 
+```python
 def tobit_gradient(
     params: NDArray[np.float64],
     y: NDArray[np.float64],
@@ -261,9 +266,11 @@ def hessian_from_gradient(
         e = np.eye(n)[j] * step
         hessian[:, j] = (gradient(point + e) - gradient(point - e)) / (2 * step)
     return (hessian + hessian.T) / 2
+```
 
 解析的な勾配を、**数値微分と比べる**テストを書きます（式の書き間違いを、見つけられます）。
 
+```python
 def latent(n: int = 20000, seed: int = 0) -> tuple[np.ndarray, np.ndarray]:
     return draw_latent_sample(n, np.random.default_rng(seed))
 
@@ -330,9 +337,11 @@ def test_大きな値のパラメータでもヘッセ行列を求められる()
 
     hessian = hessian_from_gradient(gradient, np.array([1000.0, 5.0]))
     assert hessian == pytest.approx(np.array([[2.0, 0.0], [0.0, 6.0]]), abs=1e-4)
+```
 
 ### fit_tobit と fit_truncreg を実装する
 
+```python
 def _fit(
     log_likelihood: Callable[
         [NDArray[np.float64], NDArray[np.float64], NDArray[np.float64], float], float
@@ -393,9 +402,11 @@ def fit_tobit(y: ArrayLike, x: ArrayLike, left: float = 0.0) -> LimitedFit:
 def fit_truncreg(y: ArrayLike, x: ArrayLike, left: float = 0.0) -> LimitedFit:
     """切断回帰の最尤推定（y > left の観測値だけが標本にある）。"""
     return _fit(truncreg_log_likelihood, truncreg_gradient, y, x, left)
+```
 
 初期値は、OLS の係数と、残差の標準偏差の対数です。最適化に失敗したら、エラーにします。
 
+```python
 def test_係数の名前と標本の大きさ() -> None:
     x, y = latent(2000)
     fit = fit_tobit(censor(y), x)
@@ -440,11 +451,13 @@ def test_最適化が収束しなければエラー(monkeypatch: pytest.MonkeyPa
     x, y = latent(200)
     with pytest.raises(ValueError, match="収束"):
         fit_tobit(censor(y), x)
+```
 
 ### 打ち切りがなければ、OLS と同じ
 
 予想 4 です。下限を、観測値よりずっと低く（−1000）すると、打ち切りがありません。このとき、トービットの β は OLS と同じで、σ は、残差平方和 ÷ n の平方根（最尤推定量）になります。
 
+```python
 def test_打ち切りがなければトービットはOLSと一致する() -> None:
     rng = np.random.default_rng(1)
     x = rng.standard_normal(300)
@@ -458,6 +471,7 @@ def test_打ち切りがなければトービットはOLSと一致する() -> No
     assert tobit.coefficients["sigma"] == pytest.approx(
         math.sqrt(ols.residuals @ ols.residuals / 300), abs=1e-4
     )
+```
 
 ```python
 from lib.chapter03.multiple import fit_ols
@@ -480,6 +494,7 @@ print(ols.coefficients.round(5).to_dict(), round(float(np.sqrt(ols.residuals @ o
 
 ### 乱数の標本で、OLS とトービットを比べる
 
+```python
 def draw_latent_sample(
     n: int, rng: np.random.Generator
 ) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
@@ -500,7 +515,9 @@ def truncate(
     """切断: left 以下の観測値は、標本から消える（観測値の数が減る）。"""
     kept = y_latent > left
     return x[kept], y_latent[kept]
+```
 
+```python
 def test_打ち切りは下限未満を下限にし_切断は下限以下を除く() -> None:
     x = np.array([1.0, 2.0, 3.0, 4.0])
     y = np.array([-1.0, 0.0, 0.5, 2.0])
@@ -518,6 +535,7 @@ def test_潜在変数の標本() -> None:
     assert fit.coefficients.to_numpy() == pytest.approx([1.0, 2.0], abs=0.1)
     assert np.std(fit.residuals) == pytest.approx(2.0, abs=0.05)
     assert (censor(y) == 0).mean() == pytest.approx(0.36, abs=0.02)
+```
 
 n = 20000 の標本で、潜在変数 y* = 1 + 2x + u（σ = 2）から、打ち切りの標本と、切断の標本を作ります。
 
@@ -544,6 +562,7 @@ uncensored only {'const': 2.1632, 'x1': 1.2238}
 
 ### トービットの推定
 
+```python
 def test_トービットは真の値を復元しOLSは0の方向に偏る() -> None:
     x, y = latent()
     observed = censor(y)
@@ -567,6 +586,7 @@ def test_下限が0以外でもトービットは真の値を復元する() -> N
     fit = fit_tobit(censor(y, 2.0), x, left=2.0)
     assert abs(fit.coefficients["x1"] - 2.0) < 4 * fit.standard_errors["x1"]
     assert abs(fit.coefficients["const"] - 1.0) < 4 * fit.standard_errors["const"]
+```
 
 ```python
 tobit = fit_tobit(y, x)
@@ -585,6 +605,7 @@ print(tobit.standard_errors.round(4).to_dict(), round(tobit.log_likelihood, 2))
 
 ### 切断回帰の推定
 
+```python
 def test_切断回帰は真の値を復元しOLSは0の方向に偏る() -> None:
     x, y = latent()
     kept_x, kept_y = truncate(x, y)
@@ -594,6 +615,7 @@ def test_切断回帰は真の値を復元しOLSは0の方向に偏る() -> None
         assert abs(fit.coefficients[name] - value) < 4 * fit.standard_errors[name]
     assert fit_ols(kept_y, kept_x).coefficients["x1"] < 1.5
     assert fit.n_obs == len(kept_y)
+```
 
 ```python
 from lib.chapter15.limited import fit_truncreg
@@ -617,6 +639,7 @@ print(fit_ols(truncated_y, truncated_x).coefficients.round(4).to_dict())
 
 標準誤差は、推定値を、標本を取り直したときの、実際のばらつきに、近いはずです。n = 500 で、150 回繰り返し、傾きの標準誤差の平均と、推定値の標準偏差を比べます。
 
+```python
 def test_標準誤差は推定値の実際のばらつきに近い() -> None:
     slopes, errors = [], []
     for seed in range(150):
@@ -626,6 +649,7 @@ def test_標準誤差は推定値の実際のばらつきに近い() -> None:
         errors.append(fit.standard_errors["x1"])
     assert np.mean(errors) == pytest.approx(np.std(slopes, ddof=1), rel=0.2)
     assert np.mean(slopes) == pytest.approx(2.0, abs=4 * np.std(slopes) / 150**0.5)
+```
 
 ```python
 from lib.chapter15.limited import draw_latent_sample
@@ -647,6 +671,7 @@ print(round(float(np.mean(slopes)), 4), round(float(np.std(slopes, ddof=1)), 4),
 
 ### 期待値と限界効果
 
+```python
 def tobit_expected_value(
     fit: LimitedFit, x: ArrayLike, left: float = 0.0
 ) -> NDArray[np.float64]:
@@ -675,7 +700,9 @@ def tobit_marginal_effects(
     xb = fit.coefficients.iloc[0] + columns.reshape(len(columns), -1) @ beta.to_numpy()
     scale = float(np.mean(stats.norm.cdf((xb - left) / fit.coefficients["sigma"])))
     return scale * beta
+```
 
+```python
 def test_期待値の平均は観測値の平均に近い() -> None:
     x, y = latent()
     observed = censor(y)
@@ -705,6 +732,7 @@ def test_複数の説明変数でも期待値と限界効果を求められる()
     assert list(fit.coefficients.index) == ["const", "x1", "x2", "sigma"]
     assert tobit_expected_value(fit, x).shape == (4000,)
     assert list(tobit_marginal_effects(fit, x).index) == ["x1", "x2"]
+```
 
 ```python
 from lib.chapter15.limited import tobit_expected_value, tobit_marginal_effects
@@ -722,6 +750,7 @@ print(tobit_marginal_effects(tobit, x).round(4).to_dict(), round(float(tobit_exp
 
 `test_yの単位を1000倍しても係数と標準偏差が1000倍になるだけ` は、y の単位を 1000 倍にしても（時間を、分に変えるように）、係数・σ・標準誤差が、1000 倍になるだけ、という性質を確かめます。**最初の実装（数値微分で、勾配とヘッセ行列を求めた版）は、このテストを通りませんでした**。単位を 1000 倍にした標本で、標準誤差が最大 16% ずれました。シミュレーション（y の大きさが 1 程度）では、見つからなかった不具合です（16.6 節の実際のデータで、気づきました）。
 
+```python
 def test_yの単位を1000倍しても係数と標準偏差が1000倍になるだけ() -> None:
     x, y = latent(3000)
     observed = censor(y)
@@ -733,11 +762,13 @@ def test_yの単位を1000倍しても係数と標準偏差が1000倍になる�
     assert large.standard_errors.to_numpy() == pytest.approx(
         small.standard_errors.to_numpy() * 1000, rel=1e-3
     )
+```
 
 ### 図
 
 `plot_censored_data` は、データ・真の直線・OLS・トービットの直線を描きます（冒頭の図）。
 
+```python
 def data() -> tuple[np.ndarray, np.ndarray]:
     x, latent = draw_latent_sample(2000, np.random.default_rng(0))
     return x, censor(latent)
@@ -777,7 +808,9 @@ def test_真の直線の傾きは2でOLSは偏りトービットは真の値に�
     assert slope(ax.lines[2]) == pytest.approx(fit_ols(y, x).coefficients["x1"])
     assert slope(ax.lines[3]) == pytest.approx(fit_tobit(y, x).coefficients["x1"])
     assert slope(ax.lines[2]) < slope(ax.lines[3])
+```
 
+```python
 def plot_censored_data(x: NDArray[np.float64], y: NDArray[np.float64]) -> Figure:
     """0 で打ち切られたデータと、真の直線（1 + 2x）、OLS・トービットの直線を描く。"""
     ends = np.array([float(x.min()), float(x.max())])
@@ -793,6 +826,7 @@ def plot_censored_data(x: NDArray[np.float64], y: NDArray[np.float64]) -> Figure
     ax.legend()
     plt.close(fig)
     return fig
+```
 
 ### 実行結果
 

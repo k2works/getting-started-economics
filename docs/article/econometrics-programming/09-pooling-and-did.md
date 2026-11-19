@@ -116,6 +116,7 @@ CELLS = pd.DataFrame(
 )
 ```
 
+```python
 def test_2_x_2の平均() -> None:
     means = group_period_means(CELLS)
     assert means.to_numpy().tolist() == [[8, 10], [10, 15]]
@@ -133,9 +134,11 @@ def test_回帰の交差項の係数はDiDにちょうど等しい() -> None:
     assert coefficients["const"] == pytest.approx(8)
     assert coefficients["treated"] == pytest.approx(10 - 8)
     assert coefficients["post"] == pytest.approx(10 - 8)
+```
 
 ### Green: DiD を実装する
 
+```python
 def group_period_means(df: pd.DataFrame) -> pd.DataFrame:
     """処置群・対照群の、処置の前後の、y の平均（2 × 2 の表）。"""
     table = df.groupby(["treated", "post"])["y"].mean().unstack()
@@ -161,6 +164,7 @@ def did_regression(df: pd.DataFrame) -> OlsResult:
         }
     )
     return fit_ols(df["y"], x)
+```
 
 ```python
 from lib.chapter09.did import did_estimate, did_regression, group_period_means
@@ -184,6 +188,7 @@ DiD は 3 で、効果は、前後の差の 5 ではありません（予想 1�
 
 各セルに n 個の標本を作ります。母集団の式は、y = 5 + 3·treated + 2·post + 効果·treated·post + u です。群の差 3 と、時間変化 2 は、DiD で除かれます。
 
+```python
 def draw_did_sample(n: int, effect: float, rng: np.random.Generator) -> pd.DataFrame:
     """2 × 2（処置群・対照群 × 処置の前後）に、n 個ずつの標本を作る。
 
@@ -196,7 +201,9 @@ def draw_did_sample(n: int, effect: float, rng: np.random.Generator) -> pd.DataF
     return pd.DataFrame(
         {"y": y + rng.standard_normal(4 * n), "treated": treated, "post": post}
     )
+```
 
+```python
 def test_乱数の標本でも回帰の交差項はDiDに等しい() -> None:
     sample = draw_did_sample(100, 1.5, np.random.default_rng(1))
     assert did_regression(sample).coefficients["treated:post"] == pytest.approx(
@@ -232,6 +239,7 @@ def test_群の差と共通の時間変化だけでは差分の差分は0() -> N
     df = CELLS.copy()
     df["y"] = 5 + 3 * df["treated"] + 2 * df["post"]
     assert did_estimate(df) == pytest.approx(0)
+```
 
 ```python
 from lib.chapter09.did import draw_did_sample
@@ -253,6 +261,7 @@ DiD は 1.4249 で、真の効果 1.5 から、標準誤差 0.0894 の、1 つ�
 
 ### 図
 
+```python
 def ys(line: Any) -> list[float]:
     values: Any = line.get_ydata()
     return [float(v) for v in values]
@@ -273,7 +282,9 @@ def test_反事実は処置群の処置前から対照群と同じだけ動く()
     ax = plot_did(group_period_means(CELLS)).axes[0]
     assert ys(ax.lines[2]) == pytest.approx([10, 12])
     assert ax.lines[2].get_linestyle() == "--"
+```
 
+```python
 def plot_did(means: pd.DataFrame) -> Figure:
     """処置群・対照群の平均と、反事実（処置がなかったときの処置群）を描く。
 
@@ -296,6 +307,7 @@ def plot_did(means: pd.DataFrame) -> Figure:
     ax.legend()
     plt.close(fig)
     return fig
+```
 
 ### パネルの 1 階差分
 
@@ -313,6 +325,7 @@ PANEL = pd.DataFrame(
 )
 ```
 
+```python
 def first_difference(panel: pd.DataFrame) -> pd.DataFrame:
     """個人ごとに、1 期前との差（Δy・Δx）を取る。最初の期は、差が取れないので除く。"""
     ordered = panel.sort_values(["entity", "time"])
@@ -329,7 +342,9 @@ def first_difference_estimate(panel: pd.DataFrame) -> float:
 def pooled_estimate(panel: pd.DataFrame) -> float:
     """プーリング OLS: 個人を区別せず、y を x で回帰した傾き。"""
     return float(fit_ols(panel["y"], panel[["x"]]).coefficients["x"])
+```
 
+```python
 def test_1階差分は個人ごとの前期との差() -> None:
     d = first_difference(PANEL.sample(frac=1, random_state=0))
     assert d["dx"].tolist() == [1, 2, 3]
@@ -343,6 +358,7 @@ def test_1階差分推定は個人の効果を除いて真の傾きを復元す�
 
 def test_プーリングOLSは個人の効果のため偏る() -> None:
     assert pooled_estimate(PANEL) == pytest.approx(3.2)
+```
 
 ```python
 from lib.chapter09.did import first_difference, first_difference_estimate, pooled_estimate
@@ -363,6 +379,7 @@ print(first_difference_estimate(PANEL), pooled_estimate(PANEL))
 
 ### 乱数のパネルで、偏りを確かめる
 
+```python
 def draw_panel(
     entities: int, periods: int, correlation: float, rng: np.random.Generator
 ) -> pd.DataFrame:
@@ -396,9 +413,11 @@ def panel_estimators(
         panel = draw_panel(entities, periods, correlation, rng)
         rows.append((pooled_estimate(panel), first_difference_estimate(panel)))
     return pd.DataFrame(rows, columns=["pooled", "first_difference"])
+```
 
 x = 相関 × a + v、y = 1 + x + a + 0.5·u（真の傾きは 1）。個人 200 人、2 期、相関 0 と 1 で、500 回繰り返します。理論上、プーリング OLS の傾きは、1 + 相関 ÷ (相関² + 1) に近づきます（相関 1 で 1.5）。
 
+```python
 def test_パネルの形() -> None:
     panel = draw_panel(10, 4, 0.5, np.random.default_rng(0))
     assert len(panel) == 40
@@ -431,6 +450,7 @@ def test_期が多くても1階差分は偏らない() -> None:
     table = panel_estimators(100, 5, 1.0, 200, np.random.default_rng(0))
     se = table.std() / 200**0.5
     assert abs(table["first_difference"].mean() - 1.0) < 4 * se["first_difference"]
+```
 
 ```python
 from lib.chapter09.did import panel_estimators

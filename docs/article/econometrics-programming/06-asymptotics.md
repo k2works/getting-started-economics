@@ -107,6 +107,7 @@ from lib.chapter06.asymptotics import jarque_bera, kurtosis, skewness
 SKEWED = [0, 0, 0, 4]
 ```
 
+```python
 def test_歪度は左右対称なら0で裾が長い側が正() -> None:
     assert skewness([1, 2, 3, 4, 5]) == pytest.approx(0)
     assert skewness(SKEWED) == pytest.approx(2 / 3**0.5)
@@ -137,9 +138,11 @@ def test_JB検定はstatsmodelsと一致する() -> None:
     assert isinstance(test, TestResult)
     assert test.statistic == pytest.approx(statistic)
     assert test.p_value == pytest.approx(p)
+```
 
 ### Green: 歪度・尖度・Jarque-Bera を実装する
 
+```python
 def skewness(x: ArrayLike) -> float:
     """歪度 = 3 次の中心モーメント ÷ （2 次の中心モーメント）^(3/2)。"""
     values = np.asarray(x, dtype=float)
@@ -159,6 +162,7 @@ def jarque_bera(x: ArrayLike) -> TestResult:
     n = len(np.asarray(x))
     statistic = n / 6 * (skewness(x) ** 2 + (kurtosis(x) - 3) ** 2 / 4)
     return TestResult(float(statistic), float(stats.chi2.sf(statistic, 2)))
+```
 
 ```python
 from lib.chapter06.asymptotics import jarque_bera
@@ -176,6 +180,7 @@ TestResult(statistic=0.9629629629629629, p_value=0.6178673543839128)
 
 LM 統計量は、n · R²（補助回帰）でした。補助回帰の被説明変数は、制約付き回帰の残差で、その全平方和は、制約付き回帰の残差平方和（RSS_r）に等しく、補助回帰の残差平方和は、制約なしの回帰の残差平方和（RSS_u）に等しくなります。したがって、**LM = n · (1 − RSS_u ÷ RSS_r)** が、ちょうど成り立ちます。この恒等式を、テストにします。
 
+```python
 def lm_test(y: ArrayLike, restricted: pd.DataFrame, extra: pd.DataFrame) -> TestResult:
     """LM 検定: extra の係数が 0 という仮説。LM = n · R²（補助回帰）は、χ²(q) に従う。
 
@@ -187,7 +192,9 @@ def lm_test(y: ArrayLike, restricted: pd.DataFrame, extra: pd.DataFrame) -> Test
     statistic = len(residuals) * auxiliary.r_squared
     q = extra.shape[1]
     return TestResult(float(statistic), float(stats.chi2.sf(statistic, q)))
+```
 
+```python
 def random_data(n: int = 60, seed: int = 0) -> pd.DataFrame:
     rng = np.random.default_rng(seed)
     x1 = rng.standard_normal(n)
@@ -218,6 +225,7 @@ def test_LM検定は複数の変数を同時に検定できる() -> None:
     df = random_data()
     test = lm_test(df["y"], df[["x1"]], df[["x2"]].assign(x3=df["x2"] ** 2))
     assert test.p_value == pytest.approx(stats.chi2.sf(test.statistic, 2))
+```
 
 ```python
 import numpy as np
@@ -244,6 +252,7 @@ x₂ が y に無関係なとき（1 つ目）は、p 値 0.88 で、棄却さ�
 
 標本の大きさごとに、傾きの推定値を、1000 回求めます（真の傾きは 0.5）。
 
+```python
 def _draw(
     n: int, skewed: bool, rng: np.random.Generator
 ) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
@@ -263,7 +272,9 @@ def consistency_experiment(
             slopes.append(fit_ols(y, x).coefficients["x1"])
         estimates[n] = np.array(slopes)
     return estimates
+```
 
+```python
 def test_標本が大きいほど傾きの推定値は真の値に集まる() -> None:
     estimates = consistency_experiment(
         [30, 100, 250, 500], 1000, np.random.default_rng(0)
@@ -276,6 +287,7 @@ def test_標本が大きいほど傾きの推定値は真の値に集まる() ->
         assert slopes.std(ddof=1) == pytest.approx(1 / (n - 3) ** 0.5, rel=0.1)
         sds.append(slopes.std(ddof=1))
     assert sds == sorted(sds, reverse=True)
+```
 
 ```python
 import numpy as np
@@ -300,6 +312,7 @@ for n, slopes in estimates.items():
 
 誤差を、平均 0 に直した指数分布（右に裾が長い、歪度 2）にします。
 
+```python
 def draw_skewed_sample(
     n: int, intercept: float, slope: float, sigma: float, rng: np.random.Generator
 ) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
@@ -319,7 +332,9 @@ def t_value_distribution(
         result = fit_ols(y, x)
         values.append((result.coefficients["x1"] - 0.5) / result.standard_errors["x1"])
     return np.array(values)
+```
 
+```python
 def test_歪んだ誤差は平均0で歪度が2に近い() -> None:
     x, y = draw_skewed_sample(100000, 1.0, 0.5, 1.0, np.random.default_rng(0))
     u = y - 1.0 - 0.5 * x
@@ -351,6 +366,7 @@ def test_標本が大きければ誤差が歪んでいてもt値は標準正規�
 def test_標本が小さく誤差が歪んでいると棄却率が5パーセントを超える() -> None:
     t = t_value_distribution(10, 2000, True, np.random.default_rng(1))
     assert np.mean(np.abs(t) > 1.96) > 0.065
+```
 
 真の傾きを帰無仮説にした t 値 (β̂ − 0.5) ÷ SE を、2000 回求め、平均・標準偏差・|t| > 1.96 の割合を、見ます。
 
@@ -371,6 +387,7 @@ for n, skewed in [(30, False), (30, True), (10, True), (500, True)]:
 
 ### 正規性の検定の、棄却率
 
+```python
 def jarque_bera_rejection_rate(
     n: int, repetitions: int, skewed: bool, rng: np.random.Generator
 ) -> float:
@@ -380,12 +397,15 @@ def jarque_bera_rejection_rate(
         x, y = _draw(n, skewed, rng)
         rejected += jarque_bera(fit_ols(y, x).residuals).p_value < 0.05
     return rejected / repetitions
+```
 
+```python
 def test_JB検定は歪んだ誤差を棄却し正規の誤差をほとんど棄却しない() -> None:
     skewed = jarque_bera_rejection_rate(100, 500, True, np.random.default_rng(2))
     normal = jarque_bera_rejection_rate(100, 500, False, np.random.default_rng(2))
     assert skewed > 0.95
     assert normal < 0.08
+```
 
 ```python
 from lib.chapter06.asymptotics import jarque_bera_rejection_rate
@@ -405,6 +425,7 @@ True 1.0
 
 `plot_estimate_distributions` は、標本の大きさごとのヒストグラム（密度）と、真の値の線を描きます。テストは、密度のヒストグラムの面積が 1 になることを確かめます。
 
+```python
 def test_標本の大きさごとにヒストグラムを描き真の値の線を引く() -> None:
     ax = plot_estimate_distributions(ESTIMATES, 0.5).axes[0]
     assert len(ax.patches) == 2 * 30
@@ -424,7 +445,9 @@ def test_ヒストグラムは密度で描き面積は1() -> None:
     for patches in (bars[:30], bars[30:]):
         area = sum(p.get_height() * p.get_width() for p in patches)
         assert area == pytest.approx(1)
+```
 
+```python
 def plot_estimate_distributions(
     estimates: Mapping[int, NDArray[np.float64]], true_value: float
 ) -> Figure:
@@ -438,6 +461,7 @@ def plot_estimate_distributions(
     ax.legend()
     plt.close(fig)
     return fig
+```
 
 ### 実行結果
 

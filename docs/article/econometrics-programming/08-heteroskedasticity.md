@@ -106,6 +106,7 @@ X = [1, 2, 3, 4]
 Y = [2, 4, 5, 9]
 ```
 
+```python
 def test_手計算の例のHC0とHC1() -> None:
     hc0 = robust_standard_errors(Y, X, "HC0")
     hc1 = robust_standard_errors(Y, X, "HC1")
@@ -125,9 +126,11 @@ def test_既定はHC1() -> None:
 def test_知らない種類は受け付けない() -> None:
     with pytest.raises(ValueError, match="種類"):
         robust_standard_errors(Y, X, "HC9")
+```
 
 ### Green: robust_standard_errors を実装する
 
+```python
 def _frame(x: ArrayLike) -> pd.DataFrame:
     """説明変数を、列の名前のある表にそろえる。"""
     if isinstance(x, pd.DataFrame):
@@ -161,9 +164,11 @@ def robust_standard_errors(y: ArrayLike, x: ArrayLike, kind: str = "HC1") -> pd.
     meat = design.T @ (design * (weights * result.residuals**2)[:, None])
     variance = bread @ meat @ bread
     return pd.Series(np.sqrt(np.diag(variance)), index=result.coefficients.index)
+```
 
 `statsmodels` の `cov_type="HC0"`〜`"HC3"` と一致することを、4 つの種類で確かめます。
 
+```python
 def two_variable_data(n: int = 80, seed: int = 0) -> tuple[pd.Series, pd.DataFrame]:
     rng = np.random.default_rng(seed)
     x = pd.DataFrame({"x1": rng.standard_normal(n), "x2": rng.standard_normal(n)})
@@ -197,6 +202,7 @@ def test_頑健な標準誤差の係数は通常の最小二乗法と同じ() ->
     assert list(robust_standard_errors(y, x).index) == list(
         fit_ols(y, x).coefficients.index
     )
+```
 
 ```python
 from lib.chapter08.hetero import robust_standard_errors
@@ -218,6 +224,7 @@ HC0 は 0.2538、HC1 は 0.3589（予想 1）。HC0 < HC1 < HC2 < HC3 の順に�
 
 ### 検定を実装する
 
+```python
 def _squared_residual_test(
     y: ArrayLike, x: ArrayLike, auxiliary: pd.DataFrame
 ) -> TestResult:
@@ -254,9 +261,11 @@ def reset_test(y: ArrayLike, x: ArrayLike) -> TestResult:
     fitted = np.asarray(y, dtype=float) - result.residuals
     augmented = frame.assign(fitted2=fitted**2, fitted3=fitted**3)
     return f_test(y, augmented, ["fitted2", "fitted3"])
+```
 
 `statsmodels` の `het_breuschpagan`・`het_white`・`linear_reset` と、統計量・p 値が一致することを、テストにします。
 
+```python
 def test_Breusch_Paganはstatsmodelsと一致する() -> None:
     y, x = two_variable_data()
     fit = sm.OLS(y, sm.add_constant(x)).fit()
@@ -282,11 +291,13 @@ def test_RESETはstatsmodelsと一致する() -> None:
     test = reset_test(y, x)
     assert test.statistic == pytest.approx(float(reference.fvalue))
     assert test.p_value == pytest.approx(float(reference.pvalue))
+```
 
 ### 不均一分散の標本を作る
 
 x を 0〜4 の一様乱数、誤差の標準偏差を 0.05 + 0.25x²（x が大きいほど大きい）にします。比較のため、標準偏差が 1 で一定の標本も作れます。
 
+```python
 def draw_fan_sample(
     n: int, rng: np.random.Generator, heteroskedastic: bool
 ) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
@@ -298,7 +309,9 @@ def draw_fan_sample(
     x = rng.uniform(0, 4, n)
     sd = 0.05 + 0.25 * x**2 if heteroskedastic else 1.0
     return x, 1 + 2 * x + sd * rng.standard_normal(n)
+```
 
+```python
 def test_標本の形() -> None:
     x, y = draw_fan_sample(30, np.random.default_rng(0), True)
     assert x.shape == y.shape == (30,)
@@ -313,6 +326,7 @@ def test_誤差の大きさは不均一分散なら_x_が大きいほど大き�
     x, y = draw_fan_sample(20000, np.random.default_rng(0), False)
     e = y - 1 - 2 * x
     assert np.std(e[x > 3]) == pytest.approx(np.std(e[x < 1]), rel=0.1)
+```
 
 ### 検定が、不均一分散を見つけるか
 
@@ -334,6 +348,7 @@ False 0.29946135 0.20126174
 
 不均一分散のデータ（True）では、p 値が 10⁻⁶ 台で、均一分散の帰無仮説を強く棄却します。均一分散のデータ（False）では、0.30 と 0.20 で、棄却しません。
 
+```python
 def test_不均一分散のデータでは均一分散の帰無仮説を棄却する() -> None:
     x, y = draw_fan_sample(200, np.random.default_rng(1), True)
     assert breusch_pagan(y, x).p_value < 0.001
@@ -344,6 +359,7 @@ def test_均一分散のデータでは棄却しない() -> None:
     x, y = draw_fan_sample(200, np.random.default_rng(1), False)
     assert breusch_pagan(y, x).p_value > 0.05
     assert white_test(y, x).p_value > 0.05
+```
 
 ### RESET
 
@@ -365,6 +381,7 @@ TestResult(statistic=3.5482989645080742, p_value=0.03063623768277364)
 
 x² を含む真の関係を、線形で回帰すると、p 値は 10⁻⁶⁰ で、強く棄却されます。線形の関係（2 つ目）でも、p 値は 0.031 で、**5% の水準では棄却されました**。これは、バグではなく、**正しいモデルでも、5% の確率で棄却する**という、検定の性質です（有意水準 5% の意味）。テストでは、しきい値を 1% にしてあります。
 
+```python
 def test_RESETは2乗の項が欠落したモデルを棄却する() -> None:
     rng = np.random.default_rng(3)
     x = rng.uniform(0, 3, 200)
@@ -372,11 +389,13 @@ def test_RESETは2乗の項が欠落したモデルを棄却する() -> None:
     assert reset_test(y, x).p_value < 0.001
     linear = 1 + x + 0.3 * rng.standard_normal(200)
     assert reset_test(linear, x).p_value > 0.01
+```
 
 ### 標準誤差は、どれだけ違うか
 
 標本を 2000 回作り直して、傾きの推定値の標準偏差（実際のばらつき）と、通常の標準誤差・HC1 の標準誤差の平均を、比べます。
 
+```python
 def standard_error_comparison(
     n: int, repetitions: int, heteroskedastic: bool, rng: np.random.Generator
 ) -> dict[str, float]:
@@ -393,7 +412,9 @@ def standard_error_comparison(
         "classical": float(np.mean(classical)),
         "hc1": float(np.mean(robust)),
     }
+```
 
+```python
 def test_均一分散なら通常の標準誤差も頑健な標準誤差も実際のばらつきに近い() -> None:
     r = standard_error_comparison(50, 2000, False, np.random.default_rng(0))
     assert r["classical"] == pytest.approx(r["sd"], rel=0.05)
@@ -404,6 +425,7 @@ def test_不均一分散なら通常の標準誤差は過小で頑健な標準�
     r = standard_error_comparison(50, 2000, True, np.random.default_rng(0))
     assert r["classical"] < 0.85 * r["sd"]
     assert r["hc1"] == pytest.approx(r["sd"], rel=0.06)
+```
 
 ```python
 from lib.chapter08.hetero import standard_error_comparison
@@ -426,6 +448,7 @@ True {'sd': 0.2783, 'classical': 0.222, 'hc1': 0.2694}
 
 `plot_standard_errors` は、3 つの値の棒グラフです。
 
+```python
 def test_3本の棒を描く() -> None:
     ax = plot_standard_errors(VALUES).axes[0]
     bars: list[Any] = list(ax.patches)
@@ -436,7 +459,9 @@ def test_3本の棒を描く() -> None:
 def test_軸の名前() -> None:
     ax = plot_standard_errors(VALUES).axes[0]
     assert ax.get_ylabel() == "Standard error of the slope"
+```
 
+```python
 def plot_standard_errors(values: Mapping[str, float]) -> Figure:
     """実際のばらつきと、通常・頑健な標準誤差を、棒グラフで比べる。"""
     fig, ax = plt.subplots(figsize=(7, 4))
@@ -444,6 +469,7 @@ def plot_standard_errors(values: Mapping[str, float]) -> Figure:
     ax.set_ylabel("Standard error of the slope")
     plt.close(fig)
     return fig
+```
 
 ### 実行結果
 

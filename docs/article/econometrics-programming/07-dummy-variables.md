@@ -102,6 +102,7 @@ Y = pd.Series([10.0, 12.0, 14.0, 20.0, 22.0], name="y")
 GROUP = pd.Series(["a", "a", "a", "b", "b"], name="group")
 ```
 
+```python
 def test_グループごとの平均() -> None:
     means = group_means(Y, GROUP)
     assert means["a"] == pytest.approx(12)
@@ -135,9 +136,11 @@ def test_存在しない基準のカテゴリーは受け付けない() -> None:
 def test_名前のないデータにも名前が付く() -> None:
     d = make_dummies(pd.Series(["x", "y", "x"]))
     assert list(d.columns) == ["d_y"]
+```
 
 ### Green: group_means と make_dummies を実装する
 
+```python
 def group_means(y: pd.Series, groups: pd.Series) -> pd.Series:
     """グループごとの平均。"""
     return y.groupby(groups).mean()
@@ -161,9 +164,11 @@ def make_dummies(values: pd.Series, base: str | None = None) -> pd.DataFrame:
         },
         index=values.index,
     )
+```
 
 ### 係数は、群の平均の差
 
+```python
 def test_定数項だけの回帰の係数は標本平均() -> None:
     result = fit_ols(Y, np.empty((5, 0)))
     assert result.coefficients["const"] == pytest.approx(Y.mean())
@@ -190,6 +195,7 @@ def test_カテゴリーのダミー変数の係数は基準との平均の差()
     assert result.coefficients["const"] == pytest.approx(2)
     assert result.coefficients["g_q"] == pytest.approx(5.5 - 2)
     assert result.coefficients["g_r"] == pytest.approx(11 - 2)
+```
 
 ```python
 import numpy as np
@@ -217,13 +223,16 @@ print(fit_ols(y, make_dummies(group, base="b")).coefficients.to_dict())
 
 ### ダミー変数の罠
 
+```python
 def has_dummy_trap(x: pd.DataFrame, constant: bool = True) -> bool:
     """ダミー変数の罠: 定数項があり、ダミー変数が全カテゴリー分そろっているか。
 
     すべてのダミー変数の和が、どの行でも 1（定数項と同じ）になると、推定できない。
     """
     return constant and bool((x.sum(axis=1) == 1).all())
+```
 
+```python
 def test_ダミー変数の罠() -> None:
     assert has_dummy_trap(FULL)
     assert not has_dummy_trap(make_dummies(GROUP))
@@ -236,6 +245,7 @@ def test_定数項を外すと全カテゴリーの係数が群の平均にな�
     result = fit_ols(Y, FULL, constant=False)
     assert result.coefficients["a"] == pytest.approx(12)
     assert result.coefficients["b"] == pytest.approx(21)
+```
 
 ```python
 full = pd.DataFrame({"a": (group == "a") * 1.0, "b": (group == "b") * 1.0})
@@ -255,18 +265,22 @@ print(fit_ols(y, full, constant=False).coefficients.to_dict())
 
 ### 交差項
 
+```python
 def with_interaction(x: pd.Series, d: pd.Series) -> pd.Series:
     """交差項（2 つの変数の積）。"""
     product = x * d
     product.name = f"{x.name}:{d.name}"
     return product
+```
 
+```python
 def test_交差項は2つの変数の積() -> None:
     x = pd.Series([1.0, 2.0, 3.0, 4.0], name="x")
     d = pd.Series([0.0, 1.0, 0.0, 1.0], name="d")
     z = with_interaction(x, d)
     assert z.name == "x:d"
     assert z.tolist() == [0, 2, 0, 4]
+```
 
 ### 乱数の賃金データ
 
@@ -276,6 +290,7 @@ def test_交差項は2つの変数の積() -> None:
 
 地域の効果は、north が 0（基準）、south が −0.1、west が 0.15 です。教育 1 年あたりの賃金は、男性で 8%、女性で 10%（0.08 + 0.02）です。
 
+```python
 def draw_wage_sample(n: int, rng: np.random.Generator) -> pd.DataFrame:
     """対数賃金・教育年数・女性ダミー・地域の標本を、母集団の式から作る。
 
@@ -290,7 +305,9 @@ def draw_wage_sample(n: int, rng: np.random.Generator) -> pd.DataFrame:
     return pd.DataFrame(
         {"lwage": lwage, "educ": educ, "female": female, "region": region}
     )
+```
 
+```python
 def wage_sample(n: int = 20000) -> pd.DataFrame:
     return draw_wage_sample(n, np.random.default_rng(0))
 
@@ -308,9 +325,11 @@ def test_同じ種なら同じ標本() -> None:
     a = draw_wage_sample(50, np.random.default_rng(2))
     b = draw_wage_sample(50, np.random.default_rng(2))
     pd.testing.assert_frame_equal(a, b)
+```
 
 交差項つきの回帰が、**男女別の回帰と、ちょうど一致する**ことを、テストにします。
 
+```python
 def test_交差項つきの回帰は群ごとの回帰と一致する() -> None:
     df = wage_sample(400)
     x = pd.DataFrame(
@@ -329,6 +348,7 @@ def test_交差項つきの回帰は群ごとの回帰と一致する() -> None:
     assert pooled["educ"] == pytest.approx(m["educ"])
     assert pooled["const"] + pooled["female"] == pytest.approx(f["const"])
     assert pooled["educ"] + pooled["educ:female"] == pytest.approx(f["educ"])
+```
 
 ```python
 from lib.chapter07.dummies import draw_wage_sample, with_interaction
@@ -365,6 +385,7 @@ print(round(joint["educ"] + joint["educ:female"], 4), round(f["educ"], 4))
 
 n = 20000 の標本で、地域ダミー変数も入れて推定し、真の値と比べます。許容誤差は、標準誤差の 4 倍です。
 
+```python
 def test_真の係数は標準誤差の4倍以内で復元される() -> None:
     df = wage_sample()
     result = fit_ols(df["lwage"], full_design(df))
@@ -378,6 +399,7 @@ def test_真の係数は標準誤差の4倍以内で復元される() -> None:
     }
     for name, value in truth.items():
         assert abs(result.coefficients[name] - value) < 4 * result.standard_errors[name]
+```
 
 ```python
 from lib.chapter07.dummies import draw_wage_sample, make_dummies, with_interaction
@@ -412,6 +434,7 @@ region_west   0.1594  0.0052
 
 ![交差項つき。女性（Group 1）の傾きが、男性（Group 0）より急](images/ch07-interaction.png)
 
+```python
 def test_群ごとにデータと直線を描く() -> None:
     ax = plot_group_lines(X, Y, D, interaction=False).axes[0]
     assert [line.get_label() for line in ax.lines] == [
@@ -436,7 +459,9 @@ def test_交差項があると傾きも変わる() -> None:
     ax = plot_group_lines(X, y, D, interaction=True).axes[0]
     assert ys(ax.lines[2]) == pytest.approx([1, 3])
     assert ys(ax.lines[3]) == pytest.approx([3, 7])
+```
 
+```python
 def plot_group_lines(
     x: NDArray[np.float64],
     y: NDArray[np.float64],
@@ -467,6 +492,7 @@ def plot_group_lines(
     ax.legend()
     plt.close(fig)
     return fig
+```
 
 ### 実行結果
 

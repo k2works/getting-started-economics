@@ -111,6 +111,7 @@ X = [1, 2, 3, 4]
 Y = [2, 4, 5, 9]
 ```
 
+```python
 def test_標準化残差は残差を誤差の標準偏差の推定値で割る() -> None:
     result = fit_ols(Y, X)
     z = standardized_residuals(result)
@@ -127,9 +128,11 @@ def test_手計算の例のスチューデント化残差とクックの距離()
     r = studentized_residuals(result, h)
     assert r[0] == pytest.approx(0.3 / (0.9**0.5 * 0.3**0.5))
     assert cooks_distance(result, h)[0] == pytest.approx(r[0] ** 2 / 2 * 0.7 / 0.3)
+```
 
 ### Green: 標準化残差・スチューデント化残差・クックの距離
 
+```python
 def _sigma_hat(result: OlsResult) -> float:
     """誤差項の標準偏差の推定値 σ̂ = √(残差平方和 ÷ (n − k))。"""
     return math.sqrt(float(result.residuals @ result.residuals) / result.df_resid)
@@ -155,9 +158,11 @@ def cooks_distance(
     r = studentized_residuals(result, leverage)
     distance: NDArray[np.float64] = r**2 / k * leverage / (1 - leverage)
     return distance
+```
 
 `statsmodels` の `OLSInfluence` と、一致することも確かめます。
 
+```python
 def random_data(n: int = 40, seed: int = 0) -> pd.DataFrame:
     rng = np.random.default_rng(seed)
     x1 = rng.standard_normal(n)
@@ -176,6 +181,7 @@ def test_スチューデント化残差とクックの距離はstatsmodelsと一
         influence.resid_studentized_internal
     )
     assert cooks_distance(result, h) == pytest.approx(influence.cooks_distance[0])
+```
 
 ```python
 import numpy as np
@@ -210,13 +216,16 @@ print(cooks_distance(result, h).round(4))
 
 標準化して小さい順に並べた値と、標準正規分布の分位点 Φ⁻¹((i − 0.5) ÷ n) を、組にします。
 
+```python
 def qq_points(values: ArrayLike) -> tuple[NDArray[np.float64], NDArray[np.float64]]:
     """Q-Q プロットの点: 標準正規分布の分位点と、標準化して小さい順に並べた値。"""
     ordered = np.sort(standardize(np.asarray(values, dtype=float)))
     n = len(ordered)
     probabilities = (np.arange(1, n + 1) - 0.5) / n
     return stats.norm.ppf(probabilities), ordered
+```
 
+```python
 def test_Q_Qの点は小さい順で理論分位点と対応する() -> None:
     values = [3.0, -1.0, 0.5, 2.0]
     theoretical, ordered = qq_points(values)
@@ -231,6 +240,7 @@ def test_正規乱数のQ_Q点はほぼ1本の直線上にある() -> None:
     theoretical, ordered = qq_points(values)
     assert sample_correlation(theoretical, ordered) > 0.99
     assert fit_simple(theoretical, ordered).slope == pytest.approx(1, abs=0.05)
+```
 
 標準正規分布から取った 500 個の値と、指数分布（右に裾が長い）から取った 500 個の値で、Q-Q の点の相関を比べると、前者は 0.9965、後者は 0.8909 でした（予想 3）。直線に乗るほど、1 に近づきます。
 
@@ -238,6 +248,7 @@ def test_正規乱数のQ_Q点はほぼ1本の直線上にある() -> None:
 
 平均・標準偏差・相関・回帰直線が、すべて同じでも、散布図の形は、まったく違うことがあります。この 4 組は、形の違う数列を、**平均・標準偏差・相関が指定どおりになるように直して**作ります。x の形を標準化し、y の形から x と直交する部分を取り出して、相関に応じて混ぜます。
 
+```python
 def match_moments(
     x_shape: ArrayLike,
     y_shape: ArrayLike,
@@ -275,7 +286,9 @@ def same_summary_datasets() -> dict[
         name: match_moments(xs, ys, (9, 7.5), (3.3, 2.0), 0.8)
         for name, (xs, ys) in shapes.items()
     }
+```
 
+```python
 def test_モーメントをそろえると平均と標準偏差と相関が指定どおり() -> None:
     x, y = match_moments(
         np.arange(6.0), [1.0, 3.0, 2.0, 5.0, 4.0, 4.5], (9, 7.5), (3.3, 2.0), 0.8
@@ -314,6 +327,7 @@ def test_4組のデータは要約統計量が同じでもクックの距離が�
         maxima[name] = cooks_distance(result, leverage(x)).max()
     assert maxima["outlier"] > 5 * maxima["linear"]
     assert maxima["outlier"] > 1
+```
 
 ![要約統計量が同じ 4 組のデータ。直線は、4 組とも同じ](images/ch04-same-summary.png)
 
@@ -352,6 +366,7 @@ y の平均 7.5、標準偏差 2.0、相関 0.8、傾き 0.4848 は、4 組で�
 
 `plot_diagnostics` は、4 つの図（残差と当てはめ値、Q-Q、スケール、てこ比）を、自分で書いた量から描きます。テストは、各枠に描かれた点の座標が、`fit_ols` の残差・`qq_points`・`leverage` と一致することを確かめます。冒頭の図は、x が大きいほど誤差が大きいデータで、残差が右に行くほど広がっています（**不均一分散**）。次の章以降で、この問題への対処を学びます（第 8 章）。
 
+```python
 def data() -> tuple[np.ndarray, np.ndarray]:
     rng = np.random.default_rng(0)
     x = rng.standard_normal(30)
@@ -400,7 +415,9 @@ def test_てこ比の図はてこ比を横軸にする() -> None:
     ax = plot_diagnostics(y, x).axes[3]
     assert xs(ax.lines[0]) == pytest.approx(leverage(x))
     assert ax.get_xlabel() == "Leverage"
+```
 
+```python
 def plot_diagnostics(y: ArrayLike, x: ArrayLike) -> Figure:
     """回帰の診断図 4 点（残差と当てはめ値、Q-Q、スケール、てこ比）を描く。"""
     target = np.asarray(y, dtype=float)
@@ -450,6 +467,7 @@ def plot_same_summary(
     fig.tight_layout()
     plt.close(fig)
     return fig
+```
 
 ### 実行結果
 

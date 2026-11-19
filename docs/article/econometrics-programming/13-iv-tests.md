@@ -106,6 +106,7 @@ from lib.chapter12.iv import draw_iv_sample
 from lib.chapter13.iv_tests import wu_hausman
 ```
 
+```python
 def with_control(n: int = 400) -> pd.DataFrame:
     rng = np.random.default_rng(2)
     s = draw_iv_sample(n, 1.0, 0.5, rng)
@@ -149,9 +150,11 @@ def test_Wu_Hausmanの統計量は第1段階の残差のt値の2乗() -> None:
 def test_説明変数が内生なら外生という仮説を棄却する() -> None:
     s = draw_iv_sample(500, 1.0, 0.5, np.random.default_rng(0))
     assert wu_hausman(s["y"], s["x"], s[["z"]]).p_value < 1e-10
+```
 
 ### Green: wu_hausman を実装する
 
+```python
 def wu_hausman(
     y: pd.Series,
     endogenous: pd.Series,
@@ -169,6 +172,7 @@ def wu_hausman(
     if exogenous is not None:
         base = exogenous.join(base)
     return f_test(y, base.assign(v_hat=residual), ["v_hat"])
+```
 
 ```python
 from lib.chapter13.iv_tests import wu_hausman
@@ -186,6 +190,7 @@ print(round(test.statistic, 4), test.p_value)
 
 ### 棄却率（大きさと検出力）
 
+```python
 def wu_hausman_rejection_rate(
     n: int,
     endogeneity: float,
@@ -199,12 +204,15 @@ def wu_hausman_rejection_rate(
         s = draw_iv_sample(n, 1.0, endogeneity, rng)
         rejected += wu_hausman(s["y"], s["x"], s[["z"]]).p_value < significance
     return rejected / repetitions
+```
 
+```python
 def test_外生なら棄却率は有意水準に近く内生なら高い() -> None:
     size = wu_hausman_rejection_rate(500, 0.0, 500, 0.05, np.random.default_rng(0))
     power = wu_hausman_rejection_rate(500, 0.3, 500, 0.05, np.random.default_rng(0))
     assert size == pytest.approx(0.05, abs=4 * (0.05 * 0.95 / 500) ** 0.5)
     assert power > 0.95
+```
 
 ```python
 from lib.chapter13.iv_tests import wu_hausman_rejection_rate
@@ -224,6 +232,7 @@ for endogeneity in (0.0, 0.3, 0.5):
 
 ### Sargan 検定
 
+```python
 def sargan_test(
     y: pd.Series,
     endogenous: pd.DataFrame,
@@ -256,7 +265,9 @@ def draw_overid_sample(
     u = 0.5 * v + math.sqrt(0.75) * w + invalid * z2
     x = z1 + z2 + v
     return pd.DataFrame({"y": 1 + x + u, "x": x, "z1": z1, "z2": z2})
+```
 
+```python
 def test_Sarganはlinearmodelsと一致する() -> None:
     for invalid, seed in ((0.0, 1), (0.5, 1)):
         o = draw_overid_sample(500, invalid, np.random.default_rng(seed))
@@ -299,6 +310,7 @@ def test_過剰識別の標本の相関() -> None:
     assert np.cov(o["z1"], u)[0, 1] == pytest.approx(0, abs=0.03)
     assert np.cov(o["z1"], o["x"])[0, 1] == pytest.approx(1, abs=0.03)
     assert np.cov(o["z2"], o["x"])[0, 1] == pytest.approx(1, abs=0.03)
+```
 
 操作変数が 1 つ（識別がちょうど）だと、Sargan 検定の自由度が 0 で、検定できません。エラーにします。
 
@@ -326,6 +338,7 @@ for invalid in (0.0, 0.1, 0.3, 0.5):
 
 後半の 4 行は、棄却率です。有効なら **0.054**（有意水準 5% に近い）、無効の度合いが 0.1 で 0.344、0.3 で 0.998 と、無効なほど高くなります（予想 2）。**0.1 程度の相関は、n = 500 では、3 分の 2 の標本で、見逃されます**。
 
+```python
 def sargan_rejection_rate(
     n: int,
     invalid: float,
@@ -340,7 +353,9 @@ def sargan_rejection_rate(
         test = sargan_test(s["y"], s[["x"]], s[["z1", "z2"]])
         rejected += test.p_value < significance
     return rejected / repetitions
+```
 
+```python
 def test_操作変数が有効なら棄却率は有意水準に近く無効なほど高い() -> None:
     size = sargan_rejection_rate(500, 0.0, 500, 0.05, np.random.default_rng(0))
     weak = sargan_rejection_rate(500, 0.1, 500, 0.05, np.random.default_rng(0))
@@ -348,9 +363,11 @@ def test_操作変数が有効なら棄却率は有意水準に近く無効な�
     assert size == pytest.approx(0.05, abs=4 * (0.05 * 0.95 / 500) ** 0.5)
     assert 0.2 < weak < strong
     assert strong > 0.95
+```
 
 ### 図
 
+```python
 RATES = {"Valid (0)": 0.054, "Invalid (0.1)": 0.344, "Invalid (0.3)": 0.998}
 
 
@@ -368,7 +385,9 @@ def test_軸の名前と範囲() -> None:
     ax = plot_rejection_rates(RATES, 0.05).axes[0]
     assert ax.get_ylabel() == "Rejection rate"
     assert ax.get_ylim() == (0, 1)
+```
 
+```python
 def plot_rejection_rates(rates: Mapping[str, float], level: float) -> Figure:
     """検定の棄却率の棒グラフと、有意水準の線。"""
     fig, ax = plt.subplots(figsize=(7, 4))
@@ -379,11 +398,13 @@ def plot_rejection_rates(rates: Mapping[str, float], level: float) -> Figure:
     ax.legend()
     plt.close(fig)
     return fig
+```
 
 ### 同時方程式に IV を使う
 
 需要: q = 10 − p + u_d、供給: q = p + 2·w + u_s（w は需要に入らない供給の変動要因）。
 
+```python
 def draw_market_with_shifter(n: int, rng: np.random.Generator) -> pd.DataFrame:
     """需要曲線を識別できる、供給の変動要因 w（たとえば天候）つきの市場の標本。
 
@@ -398,7 +419,9 @@ def draw_market_with_shifter(n: int, rng: np.random.Generator) -> pd.DataFrame:
             "w": w,
         }
     )
+```
 
+```python
 def test_供給の変動要因を操作変数にすると需要の傾きを識別できる() -> None:
     m = draw_market_with_shifter(5000, np.random.default_rng(0))
     ols = fit_simple(m["p"], m["q"]).slope
@@ -413,6 +436,7 @@ def test_供給の変動要因は価格を下げ需要の誤差とは無関係()
     assert np.cov(m["w"], m["p"])[0, 1] == pytest.approx(-1.0, abs=0.03)
     demand_shock = m["q"] - (10 - m["p"])
     assert np.cov(m["w"], demand_shock)[0, 1] == pytest.approx(0, abs=0.03)
+```
 
 ```python
 from lib.chapter02.simple import fit_simple
@@ -433,6 +457,7 @@ print(round(ols, 4), result.coefficients.round(4).to_dict(), result.standard_err
 
 ### 測定誤差に IV を使う
 
+```python
 def draw_two_measurements(
     n: int, error_sd: float, rng: np.random.Generator
 ) -> pd.DataFrame:
@@ -446,7 +471,9 @@ def draw_two_measurements(
             "x2": x_true + error_sd * rng.standard_normal(n),
         }
     )
+```
 
+```python
 def test_2回目の測定を操作変数にすると測定誤差のバイアスが消える() -> None:
     d = draw_two_measurements(5000, 1.0, np.random.default_rng(0))
     ols = fit_simple(d["x1"], d["y"]).slope
@@ -461,6 +488,7 @@ def test_2回の測定の標本の形() -> None:
     assert np.var(d["x1"]) == pytest.approx(2, rel=0.05)
     assert np.var(d["x2"]) == pytest.approx(2, rel=0.05)
     assert np.cov(d["x1"], d["x2"])[0, 1] == pytest.approx(1, abs=0.05)
+```
 
 ```python
 from lib.chapter13.iv_tests import draw_two_measurements

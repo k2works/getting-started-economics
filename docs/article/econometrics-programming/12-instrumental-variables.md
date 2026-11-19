@@ -114,6 +114,7 @@ Y = [2, 5, 3, 7]
 Z = [1, 2, 3, 4]
 ```
 
+```python
 def test_手計算の単純なIV推定() -> None:
     fit = iv_estimate(Y, X, Z)
     assert fit.slope == pytest.approx(6.5 / 5.5)
@@ -128,9 +129,11 @@ def test_同じデータのOLSとは傾きが違う() -> None:
 def test_操作変数が説明変数そのものならOLSと一致する() -> None:
     fit = iv_estimate(Y, X, X)
     assert fit.slope == pytest.approx(fit_simple(X, Y).slope)
+```
 
 ### Green: iv_estimate を実装する
 
+```python
 def iv_estimate(y: Array, x: Array, z: Array) -> SimpleFit:
     """単純な IV 推定（内生変数 x が 1 つ、操作変数 z が 1 つ）。
 
@@ -157,6 +160,7 @@ def iv_slope_standard_error(y: Array, x: Array, z: Array, fit: SimpleFit) -> flo
     return math.sqrt(
         sigma2 * float(centered_z @ centered_z) / float(centered_z @ centered_x) ** 2
     )
+```
 
 ```python
 from lib.chapter02.simple import fit_simple
@@ -179,14 +183,17 @@ SimpleFit(intercept=0.714285714285714, slope=1.2857142857142858)
 
 IV の傾きは 1.1818、OLS は 1.2857 です（予想 1）。IV の標準誤差は 0.17725 です。残差は、元の x で計算します（u = y − 1.0 − 1.1818·x）。
 
+```python
 def test_手計算の例の傾きの標準誤差() -> None:
     fit = iv_estimate(Y, X, Z)
     assert iv_slope_standard_error(Y, X, Z, fit) == pytest.approx(0.17725, abs=1e-5)
+```
 
 ### 2SLS を実装する
 
 操作変数の数が、内生変数の数より少ないと、識別されません（式の数が足りない）。
 
+```python
 @dataclass(frozen=True)
 class IvResult:
     """2SLS の推定結果。"""
@@ -250,7 +257,9 @@ def two_stage_least_squares(
         n_obs=n,
         df_resid=n - k,
     )
+```
 
+```python
 def test_識別のちょうどの場合2SLSは単純なIV推定と係数も標準誤差も一致する() -> None:
     result = two_stage_least_squares(Y, pd.DataFrame({"x": X}), pd.DataFrame({"z": Z}))
     fit = iv_estimate(Y, X, Z)
@@ -276,9 +285,11 @@ def test_操作変数が内生変数より少ないと識別されない() -> No
     endogenous = s[["x", "z2"]]
     with pytest.raises(ValueError, match="識別"):
         two_stage_least_squares(s["y"], endogenous, s[["z"]])
+```
 
 `linearmodels` の `IV2SLS` と、係数・標準誤差が一致することを、確かめます。外生の説明変数と、複数の操作変数がある場合も、一致します。
 
+```python
 def test_2SLSはlinearmodelsと一致する() -> None:
     s = draw_iv_sample(500, 1.0, 0.5, np.random.default_rng(0))
     result = two_stage_least_squares(s["y"], s[["x"]], s[["z"]])
@@ -303,9 +314,11 @@ def test_外生の説明変数と複数の操作変数でもlinearmodelsと一�
     for name in ("const", "w", "x"):
         assert result.coefficients[name] == pytest.approx(reference.params[name])
         assert result.standard_errors[name] == pytest.approx(reference.std_errors[name])
+```
 
 ### 手作業の 2 段階の、標準誤差
 
+```python
 def manual_second_stage(
     y: ArrayLike,
     endogenous: pd.DataFrame,
@@ -319,7 +332,9 @@ def manual_second_stage(
     _, fitted, names = _fitted_regressors(endogenous, instruments, exogenous)
     second = fit_ols(y, pd.DataFrame(fitted[:, 1:], columns=names[1:]))
     return second.coefficients, second.standard_errors
+```
 
+```python
 def test_手作業の2段階は係数は同じだが標準誤差が合わない() -> None:
     endogenous, instruments = pd.DataFrame({"x": X}), pd.DataFrame({"z": Z})
     result = two_stage_least_squares(Y, endogenous, instruments)
@@ -333,6 +348,7 @@ def test_手作業の2段階の標準誤差は乱数の標本でも過大() -> N
     result = two_stage_least_squares(s["y"], s[["x"]], s[["z"]])
     _, errors = manual_second_stage(s["y"], s[["x"]], s[["z"]])
     assert errors["x"] != pytest.approx(result.standard_errors["x"], rel=0.05)
+```
 
 ```python
 import pandas as pd
@@ -356,6 +372,7 @@ print(coefficients.round(4).to_dict(), errors.round(4).to_dict())
 
 x = strength·z + v、y = 1 + x + u、u と v の相関 = endogeneity（真の傾き 1）。OLS の傾きは、1 + endogeneity ÷ (1 + strength²) に近づきます（strength = 1、endogeneity = 0.5 で 1.25）。
 
+```python
 def draw_iv_sample(
     n: int, strength: float, endogeneity: float, rng: np.random.Generator
 ) -> pd.DataFrame:
@@ -369,7 +386,9 @@ def draw_iv_sample(
     u = endogeneity * v + math.sqrt(1 - endogeneity**2) * rng.standard_normal(n)
     x = strength * z + v
     return pd.DataFrame({"y": 1 + x + u, "x": x, "z": z})
+```
 
+```python
 def test_標本の列と分散と相関() -> None:
     s = draw_iv_sample(50000, 1.0, 0.5, np.random.default_rng(0))
     assert list(s.columns) == ["y", "x", "z"]
@@ -389,6 +408,7 @@ def test_OLSは内生性で偏りIVは偏らない() -> None:
 def test_内生性がなければOLSも偏らない() -> None:
     s = draw_iv_sample(100000, 1.0, 0.0, np.random.default_rng(0))
     assert fit_simple(s["x"], s["y"]).slope == pytest.approx(1.0, abs=0.01)
+```
 
 ```python
 import numpy as np
@@ -418,6 +438,7 @@ n = 500 の標本で、2SLS の傾きは 1.0242（標準誤差 0.0428）で、�
 
 ### 弱操作変数
 
+```python
 def first_stage_f(
     endogenous: pd.Series,
     instruments: pd.DataFrame,
@@ -444,7 +465,9 @@ def weak_instrument_experiment(
             )
         )
     return pd.DataFrame(rows, columns=["ols", "iv", "f"])
+```
 
+```python
 def test_第1段階のF値は操作変数のt値の2乗() -> None:
     s = draw_iv_sample(200, 0.5, 0.5, np.random.default_rng(1))
     first = fit_ols(s["x"], s[["z"]])
@@ -479,6 +502,7 @@ def test_弱い操作変数ではF値が小さくIVは広くばらつきOLSの�
     assert spread(weak["iv"]) > 5 * spread(strong["iv"])
     assert abs(weak["iv"].median() - 1) > abs(strong["iv"].median() - 1)
     assert weak["iv"].median() > 1.1
+```
 
 n = 100、操作変数の強さ（strength）を 1、0.3、0.1 と変えて、1000 回繰り返します。
 

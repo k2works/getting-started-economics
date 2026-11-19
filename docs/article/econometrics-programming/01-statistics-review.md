@@ -119,36 +119,43 @@ from lib.chapter01.statistics import sample_variance
 X = [1, 2, 3, 4, 5]
 ```
 
+```python
 def test_不偏分散は分母がn引く1() -> None:
     assert sample_variance(X) == pytest.approx(2.5)
 
 
 def test_分母をnにすると標本分散() -> None:
     assert sample_variance(X, ddof=0) == pytest.approx(2.0)
+```
 
 実行すると、`ModuleNotFoundError`（まだ、`sample_variance` がないので）で、失敗します。これが **Red** です。
 
 ### Green: sample_variance を実装する
 
+```python
 def sample_variance(x: Array, ddof: int = 1) -> float:
     """分散。分母は n - ddof（既定は不偏分散の n - 1）。"""
     values = np.asarray(x, dtype=float)
     if values.size <= ddof:
         raise ValueError("観測値の数が足りない（分母が 0 以下になる）")
     return float(np.sum((values - values.mean()) ** 2) / (values.size - ddof))
+```
 
 テストが通ります（**Green**）。観測値が 1 個だと、分母が 0 になるので、エラーにします。これも、先にテストを書きます。
 
+```python
 def test_観測値が足りないと分散は計算できない() -> None:
     with pytest.raises(ValueError, match="観測値の数"):
         sample_variance([1])
     with pytest.raises(ValueError, match="観測値の数"):
         sample_variance([1, 2], ddof=2)
+```
 
 ### 共分散と相関
 
 共分散は、x = [1, 2, 3]、y = [2, 4, 5] で、手計算できます。平均は 2 と 11/3、ずれの積の合計は (−1)(−5/3) + 0 + (1)(4/3) = 3 なので、n − 1 = 2 で割って、1.5 です。
 
+```python
 def test_共分散() -> None:
     assert sample_covariance([1, 2, 3], [2, 4, 5]) == pytest.approx(1.5)
 
@@ -167,7 +174,9 @@ def test_長さが違うと共分散は計算できない() -> None:
 def test_観測値が1個だと共分散は計算できない() -> None:
     with pytest.raises(ValueError, match="観測値の数"):
         sample_covariance([1], [2])
+```
 
+```python
 def sample_covariance(x: Array, y: Array) -> float:
     """標本共分散（分母は n - 1）。"""
     a = np.asarray(x, dtype=float)
@@ -177,9 +186,11 @@ def sample_covariance(x: Array, y: Array) -> float:
     if a.size < 2:
         raise ValueError("観測値の数が足りない（2 個以上必要）")
     return float(np.sum((a - a.mean()) * (b - b.mean())) / (a.size - 1))
+```
 
 相関係数は、直線上のデータなら、傾きが正で 1、負で −1 になります。単位を変えても、変わりません。
 
+```python
 def test_直線上のデータの相関は1と負の1() -> None:
     assert sample_correlation(X, [2 * v + 1 for v in X]) == pytest.approx(1)
     assert sample_correlation(X, [-3 * v for v in X]) == pytest.approx(-1)
@@ -194,7 +205,9 @@ def test_相関は単位を変えても変わらない() -> None:
 def test_ばらつきのない変数の相関は計算できない() -> None:
     with pytest.raises(ValueError, match="分散が 0"):
         sample_correlation([1, 1, 1], [1, 2, 3])
+```
 
+```python
 def sample_correlation(x: Array, y: Array) -> float:
     """標本相関係数。どちらかの分散が 0 なら、計算できない。"""
     var_x = sample_variance(x)
@@ -202,6 +215,7 @@ def sample_correlation(x: Array, y: Array) -> float:
     if var_x == 0 or var_y == 0:
         raise ValueError("分散が 0 の変数の相関は計算できない")
     return sample_covariance(x, y) / math.sqrt(var_x * var_y)
+```
 
 予想した x = [1, 2, 3, 4]、y = [2, 4, 5, 9] で、実際に計算します。
 
@@ -225,6 +239,7 @@ print(sample_correlation(x, y))
 
 標準化は、平均を引いて標準偏差で割ります。結果は、平均が 0、分散が 1 になります。標本平均の標準誤差は、√(不偏分散 ÷ n) です。1、2、3、4、5 では、√(2.5 ÷ 5) ≈ 0.7071 です。
 
+```python
 def test_標準化すると平均0分散1() -> None:
     z = standardize([1, 2, 3, 4, 10])
     assert np.mean(z) == pytest.approx(0, abs=1e-12)
@@ -233,7 +248,9 @@ def test_標準化すると平均0分散1() -> None:
 
 def test_標本平均の標準誤差() -> None:
     assert standard_error_of_mean(X) == pytest.approx((2.5 / 5) ** 0.5)
+```
 
+```python
 def standardize(x: Array) -> NDArray[np.float64]:
     """平均を引いて、標準偏差で割る（平均 0、分散 1 にする）。"""
     values = np.asarray(x, dtype=float)
@@ -243,11 +260,13 @@ def standardize(x: Array) -> NDArray[np.float64]:
 def standard_error_of_mean(x: Array) -> float:
     """標本平均の標準誤差 = √(不偏分散 ÷ n)。"""
     return math.sqrt(sample_variance(x) / len(x))
+```
 
 ### 確率分布
 
 標準正規分布の分布関数 Φ(z) は、誤差関数 `math.erf` で書けます。Φ(0) = 0.5（左右対称なので）と、Φ(1.96) ≈ 0.975 が、目印です。SciPy の結果と一致することも、テストにします。
 
+```python
 def test_標準正規の分布関数() -> None:
     assert normal_cdf(0) == pytest.approx(0.5)
     assert normal_cdf(1.96) == pytest.approx(0.9750021, abs=1e-6)
@@ -257,13 +276,17 @@ def test_標準正規の分布関数() -> None:
 def test_標準正規の分布関数はSciPyと一致する() -> None:
     for z in (-3.0, -0.5, 0.3, 2.2):
         assert normal_cdf(z) == pytest.approx(stats.norm.cdf(z))
+```
 
+```python
 def normal_cdf(z: float) -> float:
     """標準正規分布の累積分布関数 Φ(z)。誤差関数 erf で書く。"""
     return 0.5 * (1 + math.erf(z / math.sqrt(2)))
+```
 
 臨界値は、`scipy.stats` の分布の `ppf`（下側確率から点を返す関数）を使います。分布の名前を、辞書で引きます。
 
+```python
 def critical_value(name: str, probability: float, *df: float) -> float:
     """分布の下側確率が probability になる点（臨界値）。df は自由度。"""
     if name not in _DISTRIBUTIONS:
@@ -271,9 +294,11 @@ def critical_value(name: str, probability: float, *df: float) -> float:
     if not 0 < probability < 1:
         raise ValueError("確率は 0 と 1 の間（0 と 1 は含まない）")
     return float(_DISTRIBUTIONS[name].ppf(probability, *df))
+```
 
 臨界値のテストは、分布の間の関係で書きます。**t の 2 乗は、F（第 1 の自由度が 1）に等しく、標準正規の 2 乗は、χ²（自由度 1）に等しい**、という関係です。回帰分析で、t 検定と F 検定が、同じ結論になる理由の、土台になります。
 
+```python
 def test_正規分布の臨界値() -> None:
     assert critical_value("normal", 0.975) == pytest.approx(1.959964, abs=1e-6)
 
@@ -309,6 +334,7 @@ def test_確率は0と1の間でなければならない() -> None:
     for p in (0, 1, -0.1, 1.5):
         with pytest.raises(ValueError, match="確率"):
             critical_value("normal", p)
+```
 
 予想した臨界値を、実際に求めます。
 
@@ -338,6 +364,7 @@ print(round(critical_value("f", 0.95, 1, 2), 4))
 
 標準誤差は、「標本平均が、標本ごとに、どれだけ変わるか」でした。実際に、標本を取り直して、確かめます。乱数の生成器を引数にして、種を固定すると、テストが毎回同じ結果になります（[第 1 シリーズの第 8 章](../economics-programming/08-random-numbers-and-simulation.md)）。
 
+```python
 def sampling_distribution_of_mean(
     n: int, repetitions: int, rng: np.random.Generator
 ) -> NDArray[np.float64]:
@@ -345,9 +372,11 @@ def sampling_distribution_of_mean(
     draws = rng.standard_normal((repetitions, n))
     result: NDArray[np.float64] = draws.mean(axis=1)
     return result
+```
 
 標準正規分布（σ = 1）から 25 個を取り出すので、標準誤差の理論値は 1 ÷ √25 = 0.2 です。テストは、2000 回の標本平均の標準偏差が、0.2 の 10% 以内にあることを確かめます。許容誤差は、標準偏差の推定値のばらつき（約 0.2 ÷ √4000 ≈ 0.003、つまり 1.6%）より、十分に大きく取っています。
 
+```python
 def test_標本平均の標準偏差は1をnの平方根で割った値に近づく() -> None:
     means = sampling_distribution_of_mean(
         n=25, repetitions=2000, rng=np.random.default_rng(0)
@@ -361,6 +390,7 @@ def test_同じ種なら同じ標本平均になる() -> None:
     a = sampling_distribution_of_mean(5, 10, np.random.default_rng(1))
     b = sampling_distribution_of_mean(5, 10, np.random.default_rng(1))
     assert np.array_equal(a, b)
+```
 
 ```python
 import numpy as np
@@ -383,6 +413,7 @@ for n in (25, 100):
 
 冒頭の図は、`plot_densities` で描きます。テストは、図に描いた線の名前、中心の高さ（標準正規の φ(0) ≈ 0.3989、t(2) の中心 ≈ 0.3536）、裾の厚さの順序を確かめます。
 
+```python
 def test_中心の高さは理論値と一致する() -> None:
     ax = plot_densities().axes[0]
     middle = len(xs(ax.lines[0])) // 2
@@ -395,7 +426,9 @@ def test_自由度が小さいほど裾が厚い() -> None:
     ax = plot_densities().axes[0]
     tail = [ys(line)[-1] for line in ax.lines]
     assert tail[1] > tail[2] > tail[3] > tail[0]
+```
 
+```python
 def plot_densities(degrees_of_freedom: Sequence[int] = (2, 5, 30)) -> Figure:
     """標準正規分布と、自由度ごとの t 分布の密度関数を重ねて描く。"""
     grid = np.linspace(-4, 4, 201)
@@ -408,6 +441,7 @@ def plot_densities(degrees_of_freedom: Sequence[int] = (2, 5, 30)) -> Figure:
     ax.legend()
     plt.close(fig)
     return fig
+```
 
 ### 実行結果
 

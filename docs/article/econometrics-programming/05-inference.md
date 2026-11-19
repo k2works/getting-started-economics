@@ -111,6 +111,7 @@ X = [1, 2, 3, 4]
 Y = [2, 4, 5, 9]
 ```
 
+```python
 def test_手計算の例のt値() -> None:
     t = t_statistics(fit_ols(Y, X))
     assert t["x1"] == pytest.approx(2.2 / 0.18**0.5)
@@ -121,9 +122,11 @@ def test_帰無仮説の値を変えるとt値が変わる() -> None:
     result = fit_ols(Y, X)
     t = t_statistics(result, null=2.0)
     assert t["x1"] == pytest.approx(0.2 / 0.18**0.5)
+```
 
 ### Green: t 値・p 値を実装する
 
+```python
 @dataclass(frozen=True)
 class TestResult:
     """検定の結果（検定統計量と p 値）。"""
@@ -148,9 +151,11 @@ def p_value(t: float, df: float, alternative: str = "two-sided") -> float:
     if alternative == "less":
         return float(stats.t.cdf(t, df))
     raise ValueError(f"知らない対立仮説: {alternative}")
+```
 
 p 値は、両側が 2 × P(T > |t|)、片側が P(T > t) または P(T < t) です。両側と片側の関係と、t = 0 のときの値をテストにします。
 
+```python
 def test_p値は両側と片側で関係する() -> None:
     two = p_value(5.185, 2)
     assert two == pytest.approx(2 * stats.t.sf(5.185, 2))
@@ -167,9 +172,11 @@ def test_t値が0ならp値は1と半分() -> None:
 def test_知らない対立仮説は受け付けない() -> None:
     with pytest.raises(ValueError, match="対立仮説"):
         p_value(1, 10, "bigger")
+```
 
 ### 信頼区間
 
+```python
 def confidence_interval(result: OlsResult, level: float = 0.95) -> pd.DataFrame:
     """係数の信頼区間 = 係数 ± t の臨界値 × 標準誤差。"""
     critical = float(stats.t.ppf(1 - (1 - level) / 2, result.df_resid))
@@ -177,7 +184,9 @@ def confidence_interval(result: OlsResult, level: float = 0.95) -> pd.DataFrame:
     return pd.DataFrame(
         {"lower": result.coefficients - half, "upper": result.coefficients + half}
     )
+```
 
+```python
 def test_手計算の例の信頼区間() -> None:
     interval = confidence_interval(fit_ols(Y, X))
     half = 4.302653 * 0.18**0.5
@@ -198,6 +207,7 @@ def test_水準が高いほど区間は広い() -> None:
     narrow = confidence_interval(result, 0.9).loc["x1"]
     wide = confidence_interval(result, 0.99).loc["x1"]
     assert wide["upper"] - wide["lower"] > narrow["upper"] - narrow["lower"]
+```
 
 ```python
 import pandas as pd
@@ -228,6 +238,7 @@ x1     0.3745  4.0255
 
 ### F 検定
 
+```python
 def _rss(y: ArrayLike, x: pd.DataFrame) -> tuple[float, int]:
     """残差平方和と、残差の自由度。説明変数がなければ、定数項だけの回帰。"""
     if x.shape[1] == 0:
@@ -244,7 +255,9 @@ def f_test(y: ArrayLike, x: pd.DataFrame, zero: list[str]) -> TestResult:
     q = df_restricted - df_full
     statistic = ((rss_restricted - rss_full) / q) / (rss_full / df_full)
     return TestResult(float(statistic), float(stats.f.sf(statistic, q, df_full)))
+```
 
+```python
 def test_制約が1つならFはtの2乗でp値も一致する() -> None:
     result = fit_ols(Y, X)
     test = f_test(Y, pd.DataFrame({"x": X}), ["x"])
@@ -271,6 +284,7 @@ def test_一部の制約のF検定はstatsmodelsと一致する() -> None:
     assert isinstance(test, TestResult)
     assert test.statistic == pytest.approx(statistic)
     assert test.p_value == pytest.approx(p)
+```
 
 ```python
 x = [1, 2, 3, 4]
@@ -289,6 +303,7 @@ F 統計量は 26.8889 で、t 値の 2 乗（5.1854²）に等しく、p 値も
 
 「95% 信頼区間」は、本当に 95% の割合で、真の値を含むでしょうか。真の傾き 0.5 の母集団から、n = 30 の標本を 2000 回取って、区間を作り、真の値を含む割合を数えます。
 
+```python
 def slope_intervals(
     n: int, repetitions: int, level: float, rng: np.random.Generator
 ) -> pd.DataFrame:
@@ -307,9 +322,11 @@ def coverage_rate(
     """信頼区間が真の傾き（0.5）を含む割合（被覆率）。水準に近いはず。"""
     table = slope_intervals(n, repetitions, level, rng)
     return float(((table["lower"] <= 0.5) & (0.5 <= table["upper"])).mean())
+```
 
 許容誤差は、割合の標準誤差 √(p(1 − p) ÷ 2000) の 4 倍です。
 
+```python
 def test_傾きの信頼区間を繰り返し作る() -> None:
     table = slope_intervals(30, 20, 0.95, np.random.default_rng(0))
     assert list(table.columns) == ["lower", "upper"]
@@ -331,6 +348,7 @@ def test_信頼区間の被覆率は水準に近い() -> None:
 def test_水準を下げると被覆率も下がる() -> None:
     rate = coverage_rate(30, 2000, 0.8, np.random.default_rng(0))
     assert rate == pytest.approx(0.8, abs=4 * (0.8 * 0.2 / 2000) ** 0.5)
+```
 
 ```python
 import numpy as np
@@ -352,6 +370,7 @@ for level in (0.8, 0.95):
 
 帰無仮説が正しいとき（傾き = 0.5 という仮説）の棄却率が、有意水準 5% に近いか、帰無仮説が誤っているとき（傾き = 0.3、傾き = 0）の棄却率（検出力）が、どう変わるかを、見ます。
 
+```python
 def rejection_rate(
     n: int,
     repetitions: int,
@@ -368,7 +387,9 @@ def rejection_rate(
         t = t_statistics(result, null_slope)["x1"]
         rejected += p_value(t, result.df_resid) < significance
     return rejected / repetitions
+```
 
+```python
 def test_帰無仮説が正しいときの棄却率は有意水準に近い() -> None:
     rate = rejection_rate(30, 2000, 0.5, 0.5, 0.05, np.random.default_rng(0))
     assert rate == pytest.approx(0.05, abs=4 * (0.05 * 0.95 / 2000) ** 0.5)
@@ -379,6 +400,7 @@ def test_帰無仮説が誤っているほど棄却率は高い() -> None:
     far = rejection_rate(30, 1000, 0.5, 0.0, 0.05, np.random.default_rng(0))
     assert far > near > 0.05
     assert far > 0.5
+```
 
 ```python
 from lib.chapter05.inference import rejection_rate
@@ -400,6 +422,7 @@ for null in (0.3, 0.0):
 
 `plot_confidence_intervals` は、区間を縦線で描き、真の値を含まないものを赤にします。
 
+```python
 def test_区間ごとに縦線を描き最後に真の値の線を引く() -> None:
     ax = plot_confidence_intervals(TABLE, 0.5).axes[0]
     assert len(ax.lines) == 5
@@ -432,7 +455,9 @@ def test_真の値を含む区間は青で含まない区間は赤() -> None:
     ax = plot_confidence_intervals(TABLE, 0.5).axes[0]
     assert ax.lines[0].get_color() == "tab:blue"
     assert ax.lines[1].get_color() == "tab:red"
+```
 
+```python
 def plot_confidence_intervals(intervals: pd.DataFrame, true_value: float) -> Figure:
     """標本ごとの信頼区間を縦線で描く。真の値を含む区間と、含まない区間で色を変える。"""
     fig, ax = plt.subplots()
@@ -452,6 +477,7 @@ def plot_confidence_intervals(intervals: pd.DataFrame, true_value: float) -> Fig
     ax.legend()
     plt.close(fig)
     return fig
+```
 
 ### 実行結果
 
