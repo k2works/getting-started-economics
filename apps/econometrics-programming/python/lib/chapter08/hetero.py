@@ -7,7 +7,12 @@ import pandas as pd
 from numpy.typing import ArrayLike, NDArray
 from scipy import stats
 
-from lib.chapter03.multiple import fit_ols, leverage, regressor_names
+from lib.chapter03.multiple import (
+    design_matrix,
+    fit_ols,
+    leverage,
+    regressor_names,
+)
 from lib.chapter05.inference import TestResult, f_test
 
 KINDS = ("HC0", "HC1", "HC2", "HC3")
@@ -33,7 +38,7 @@ def robust_standard_errors(y: ArrayLike, x: ArrayLike, kind: str = "HC1") -> pd.
         raise ValueError(f"知らない種類: {kind}（HC0〜HC3 のどれか）")
     frame = _frame(x)
     result = fit_ols(y, frame)
-    design = np.column_stack([np.ones(len(frame)), frame.to_numpy(dtype=float)])
+    design, _ = design_matrix(frame)
     n, k = design.shape
     h = leverage(frame)
     weights = {

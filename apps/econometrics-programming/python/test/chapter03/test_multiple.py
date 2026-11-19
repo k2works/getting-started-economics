@@ -10,6 +10,7 @@ from statsmodels.stats.outliers_influence import (
 )
 
 from lib.chapter03.multiple import (
+    design_matrix,
     fit_ols,
     fwl_coefficient,
     leverage,
@@ -207,3 +208,16 @@ def test_名前のある系列を渡すと係数名はその名前() -> None:
 def test_被説明変数が定数なら決定係数は計算できない() -> None:
     with pytest.raises(ValueError, match="定数"):
         fit_ols([2.0, 2.0, 2.0, 2.0], [1.0, 2.0, 3.0, 5.0])
+
+
+def test_計画行列は定数項を先頭に付け列の名前を返す() -> None:
+    x = pd.DataFrame({"a": [1.0, 2.0, 3.0], "b": [4.0, 5.0, 6.0]})
+    design, names = design_matrix(x)
+    assert names == ["const", "a", "b"]
+    assert design.tolist() == [[1.0, 1.0, 4.0], [1.0, 2.0, 5.0], [1.0, 3.0, 6.0]]
+
+
+def test_定数項なしの計画行列は説明変数だけ() -> None:
+    design, names = design_matrix(pd.Series([1.0, 2.0, 3.0], name="x"), constant=False)
+    assert names == ["x"]
+    assert design.tolist() == [[1.0], [2.0], [3.0]]

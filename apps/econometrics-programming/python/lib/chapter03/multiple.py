@@ -29,7 +29,10 @@ def regressor_names(x: ArrayLike, width: int) -> list[str]:
     return [f"x{i + 1}" for i in range(width)]
 
 
-def _matrix(x: ArrayLike, constant: bool) -> tuple[NDArray[np.float64], list[str]]:
+def design_matrix(
+    x: ArrayLike, constant: bool = True
+) -> tuple[NDArray[np.float64], list[str]]:
+    """説明変数の行列（定数項を先頭に付けたもの）と、係数の名前。"""
     values = np.asarray(x, dtype=float)
     if values.ndim == 1:
         values = values.reshape(-1, 1)
@@ -42,7 +45,7 @@ def _matrix(x: ArrayLike, constant: bool) -> tuple[NDArray[np.float64], list[str
 
 def fit_ols(y: ArrayLike, x: ArrayLike, constant: bool = True) -> OlsResult:
     """正規方程式 (X'X) b = X'y を解いて、係数・標準誤差・決定係数を求める。"""
-    design, names = _matrix(x, constant)
+    design, names = design_matrix(x, constant)
     target = np.asarray(y, dtype=float)
     n, k = design.shape
     if n <= k:
@@ -70,7 +73,7 @@ def fit_ols(y: ArrayLike, x: ArrayLike, constant: bool = True) -> OlsResult:
 
 def leverage(x: ArrayLike, constant: bool = True) -> NDArray[np.float64]:
     """てこ比（ハット行列 H = X (X'X)⁻¹ X' の対角成分）。"""
-    design, _ = _matrix(x, constant)
+    design, _ = design_matrix(x, constant)
     hat = design @ np.linalg.solve(design.T @ design, design.T)
     result: NDArray[np.float64] = np.diag(hat)
     return result

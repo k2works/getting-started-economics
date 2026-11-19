@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-from lib.chapter03.multiple import fit_ols
+from lib.chapter03.multiple import design_matrix, fit_ols
 from lib.chapter05.inference import TestResult
 from lib.chapter07.dummies import make_dummies
 from lib.chapter09.did import draw_panel, pooled_estimate
@@ -160,7 +160,7 @@ def cluster_standard_errors(
     G ÷ (G − 1) · (n − 1) ÷ (n − k) を掛ける。
     """
     result = fit_ols(y, x)
-    design = np.column_stack([np.ones(len(x)), x.to_numpy(dtype=float)])
+    design, _ = design_matrix(x)
     n, k = design.shape
     scores = (
         pd.DataFrame(design * result.residuals[:, None])
