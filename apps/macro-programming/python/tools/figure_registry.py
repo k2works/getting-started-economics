@@ -31,6 +31,16 @@ from lib.chapter05.plot import (  # noqa: E402
     plot_solow_convergence,
     plot_solow_diagram,
 )
+from lib.chapter06.convergence import (  # noqa: E402
+    beta_by_start_year,
+    income_growth,
+)
+from lib.chapter06.plot import plot_beta_over_time  # noqa: E402
+from lib.chapter07.plot import plot_relative_price_levels  # noqa: E402
+from lib.chapter07.ppp import (  # noqa: E402
+    load_prices,
+    relative_price_levels,
+)
 
 # 記事に載せる図。名前が、画像のファイル名（名前.png）になる
 FIGURES: dict[str, Callable[[], Figure]] = {
@@ -57,6 +67,24 @@ FIGURES: dict[str, Callable[[], Figure]] = {
     "ch05-solow-diagram": lambda: plot_solow_diagram(0.2, 0.05, 0.5),
     "ch05-solow-convergence": lambda: plot_solow_convergence(
         [2, 25], 0.2, 0.05, 0.5, periods=150
+    ),
+    "ch06-convergence": lambda: plot_regression(
+        np.log(load_panel().xs(1990, level="year")["y"]),
+        income_growth(load_panel(), 1990, 2019),
+        xlabel="Initial income in 1990 (log)",
+        ylabel="Growth rate 1990-2019 (% per year)",
+    ),
+    "ch06-beta-over-time": lambda: plot_beta_over_time(
+        beta_by_start_year(load_panel(), 10)
+    ),
+    "ch07-relative-prices": lambda: plot_relative_price_levels(
+        relative_price_levels(load_prices())
+    ),
+    "ch07-penn-effect": lambda: plot_regression(
+        np.log(load_prices()["income"]),
+        np.log(relative_price_levels(load_prices())),
+        xlabel="Income per capita (log)",
+        ylabel="Relative price level (log)",
     ),
     "ch03-regression": lambda: plot_regression(
         np.log(load_countries()["k"]),
