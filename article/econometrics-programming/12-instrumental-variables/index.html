@@ -3483,15 +3483,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#125-red-green-refactor" class="md-nav__link">
+  <a href="#125" class="md-nav__link">
     <span class="md-ellipsis">
       
-        12.5 Red → Green → Refactor
+        12.5 プログラミング
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="12.5 Red → Green → Refactor">
+    <nav class="md-nav" aria-label="12.5 プログラミング">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -6440,7 +6440,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>第 2 段階の回帰の標準誤差を、そのまま使うと、<strong>間違えます</strong>。第 2 段階の残差は、当てはめ値 x̂ を使った残差（y − b·x̂）で、元の残差（y − b·x）と違います。正しい標準誤差は、<strong>元の説明変数</strong>で残差を計算して、σ̂² を求めます。手作業の 2 段階は、係数は正しいのに、標準誤差が正しくありません。</p>
 <h3 id="_4">弱操作変数<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
 <p>z と x の相関が小さい（第 1 段階の F 値が小さい）と、IV の分母 Cov(z, x) が 0 に近づき、推定値が、大きくばらつきます。また、標本が有限だと、OLS の方向に偏ります。目安として、第 1 段階の F 値が <strong>10 未満</strong>だと、弱いと考えます。</p>
-<h2 id="125-red-green-refactor">12.5 Red → Green → Refactor<a class="headerlink" href="#125-red-green-refactor" title="Permanent link">&para;</a></h2>
+<h2 id="125">12.5 プログラミング<a class="headerlink" href="#125" title="Permanent link">&para;</a></h2>
 <h3 id="red-iv">Red: 単純な IV 推定の手計算<a class="headerlink" href="#red-iv" title="Permanent link">&para;</a></h3>
 <p>予想 1 の手計算です。z̄ = 2.5、x̄ = 2.75、ȳ = 4.25。Σ(z − z̄)(y − ȳ) = 6.5、Σ(z − z̄)(x − x̄) = 5.5 なので、傾きは 6.5 ÷ 5.5 = 13/11 ≈ 1.1818、切片は ȳ − 傾き × x̄ = 4.25 − 3.25 = 1.0 です。OLS の傾き（11.25 ÷ 8.75 = 9/7 ≈ 1.2857）より小さい値です。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>

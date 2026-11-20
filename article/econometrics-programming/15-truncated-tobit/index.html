@@ -3599,15 +3599,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#155-red-green-refactor" class="md-nav__link">
+  <a href="#155" class="md-nav__link">
     <span class="md-ellipsis">
       
-        15.5 Red → Green → Refactor
+        15.5 プログラミング
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="15.5 Red → Green → Refactor">
+    <nav class="md-nav" aria-label="15.5 プログラミング">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -6529,7 +6529,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <li><strong>勾配は、解析的に与える。</strong> 数値微分に任せると、値のスケールが大きいデータ（労働時間は 0〜5000 時間）で、<strong>収束しないうちに、止まってしまう</strong>ことがあります（労働時間のように、値の大きい実際のデータで起こりやすい）</li>
 <li><strong>標準誤差は、ヘッセ行列（対数尤度の 2 階微分）の逆行列から求める。</strong> 2 階微分は、対数尤度を 2 回差分するのではなく、<strong>解析的な勾配を、1 回差分して</strong>求めます（対数尤度の 2 階差分は、値が大きいと、桁落ちで不正確になります）</li>
 </ol>
-<h2 id="155-red-green-refactor">15.5 Red → Green → Refactor<a class="headerlink" href="#155-red-green-refactor" title="Permanent link">&para;</a></h2>
+<h2 id="155">15.5 プログラミング<a class="headerlink" href="#155" title="Permanent link">&para;</a></h2>
 <h3 id="red">Red: 対数尤度の手計算<a class="headerlink" href="#red" title="Permanent link">&para;</a></h3>
 <p>x = 0、1 の 2 人、β = (0.5, 1)、σ = 1（ln σ = 0）、下限 0 とします。1 人目が y = 0（打ち切り）、2 人目が y = 2 のとき、トービットの対数尤度は、ln Φ((0 − 0.5) ÷ 1) + ln φ((2 − 1.5) ÷ 1) = ln Φ(−0.5) − 0.5·ln(2π) − 0.125 ≈ −1.1759 − 1.0439 = <strong>−2.2199</strong> です。切断回帰（y = 1 と 2 が観測）は、<strong>−1.6498</strong> です（各観測値で、ln φ − ln(1 − Φ(−0.5 または −1.5)) を足します）。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>

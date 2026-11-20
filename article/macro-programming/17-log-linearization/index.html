@@ -2889,15 +2889,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#174-red-green-refactor" class="md-nav__link">
+  <a href="#174" class="md-nav__link">
     <span class="md-ellipsis">
       
-        17.4 Red → Green → Refactor
+        17.4 プログラミング
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="17.4 Red → Green → Refactor">
+    <nav class="md-nav" aria-label="17.4 プログラミング">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -6398,7 +6398,7 @@
 </blockquote>
 <h3 id="linearsolve"><code>linearsolve</code> を使わない理由<a class="headerlink" href="#linearsolve" title="Permanent link">&para;</a></h3>
 <p>元の記事は、<code>linearsolve</code> を使います。導入前に、隔離した環境で確かめました。pandas 3 では、対数線形近似の内部（<code>Series.ravel</code>）が動かず、pandas 2 では動きます（ソロー・モデルで 0.975）。そこで、<strong>自作</strong>し、<code>linearsolve</code>（pandas 2 の隔離環境）の結果 <strong>0.975 を、照合値</strong>にします。</p>
-<h2 id="174-red-green-refactor">17.4 Red → Green → Refactor<a class="headerlink" href="#174-red-green-refactor" title="Permanent link">&para;</a></h2>
+<h2 id="174">17.4 プログラミング<a class="headerlink" href="#174" title="Permanent link">&para;</a></h2>
 <h3 id="_6">数値微分<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="n">PARAMS</span> <span class="o">=</span> <span class="n">SolowParameters</span><span class="p">(</span>
     <span class="n">alpha</span><span class="o">=</span><span class="mf">0.36</span><span class="p">,</span> <span class="n">saving</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">depreciation</span><span class="o">=</span><span class="mf">0.025</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="mf">0.55</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.0078</span><span class="p">,</span> <span class="n">hours</span><span class="o">=</span><span class="mf">1.0</span>

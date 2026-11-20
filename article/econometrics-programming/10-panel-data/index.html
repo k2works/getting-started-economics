@@ -3435,15 +3435,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#105-red-green-refactor" class="md-nav__link">
+  <a href="#105" class="md-nav__link">
     <span class="md-ellipsis">
       
-        10.5 Red → Green → Refactor
+        10.5 プログラミング
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="10.5 Red → Green → Refactor">
+    <nav class="md-nav" aria-label="10.5 プログラミング">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -6625,7 +6625,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>固定効果は、個人効果が x と相関しても偏りませんが、ランダム効果は、相関しないと偏ります。相関しないなら、両者は近く、ランダム効果のほうが効率的です。<strong>Hausman 検定</strong>は、2 つの係数の差が、ゼロとみなせるかを調べます。棄却されたら、固定効果を使います。</p>
 <h3 id="_7">クラスター標準誤差<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>同じ個人の誤差が相関しているとき、通常の標準誤差は、小さすぎます。個人（<strong>クラスター</strong>）ごとに、スコア X_g′e_g を足してから、2 乗するサンドイッチ推定量が、<strong>クラスター標準誤差</strong>です。</p>
-<h2 id="105-red-green-refactor">10.5 Red → Green → Refactor<a class="headerlink" href="#105-red-green-refactor" title="Permanent link">&para;</a></h2>
+<h2 id="105">10.5 プログラミング<a class="headerlink" href="#105" title="Permanent link">&para;</a></h2>
 <h3 id="red">Red: ウィズイン変換と固定効果の手計算<a class="headerlink" href="#red" title="Permanent link">&para;</a></h3>
 <p>予想 1 の手計算です。個人 0 の x の平均は 1.5、y の平均は 4 なので、引いた値は x が −0.5、0.5、y が −1、1。個人 1 は x が −1、1、y が −2、2。個人 2 は x が −1.5、1.5、y が −3、3 です。ỹ = 2·x̃ がちょうど成り立つので、傾きは 2、残差は 0、自由度は n − N − k = 6 − 3 − 1 = 2 です。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>

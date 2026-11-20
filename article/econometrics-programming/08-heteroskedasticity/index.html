@@ -3343,15 +3343,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#85-red-green-refactor" class="md-nav__link">
+  <a href="#85" class="md-nav__link">
     <span class="md-ellipsis">
       
-        8.5 Red → Green → Refactor
+        8.5 プログラミング
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="8.5 Red → Green → Refactor">
+    <nav class="md-nav" aria-label="8.5 プログラミング">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -6445,7 +6445,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p><strong>Breusch-Pagan 検定</strong>は、残差の 2 乗 e² を、説明変数で回帰します。説明変数で e² が説明できる（R² が大きい）なら、ばらつきが x とともに変わっています。LM = n·R² を、自由度が説明変数の数の χ² と比べます（第 6 章の LM 検定と同じ形）。<strong>White 検定</strong>は、説明変数の 2 乗と交差項も加えて、より一般的な形のばらつきの変化を、調べます。</p>
 <h3 id="reset">RESET<a class="headerlink" href="#reset" title="Permanent link">&para;</a></h3>
 <p>関数形が線形でないのに、線形で回帰すると、残差に、当てはめ値の 2 乗・3 乗で説明できる部分が残ります。<strong>RESET</strong> は、当てはめ値の 2 乗・3 乗を説明変数に足して、その係数が 0 かを、F 検定します。</p>
-<h2 id="85-red-green-refactor">8.5 Red → Green → Refactor<a class="headerlink" href="#85-red-green-refactor" title="Permanent link">&para;</a></h2>
+<h2 id="85">8.5 プログラミング<a class="headerlink" href="#85" title="Permanent link">&para;</a></h2>
 <h3 id="red">Red: 手計算の例の頑健な標準誤差<a class="headerlink" href="#red" title="Permanent link">&para;</a></h3>
 <p>予想 1 の手計算です。x̃ = x − x̄ = −1.5、−0.5、0.5、1.5、e = 0.3、0.1、−1.1、0.7 なので、Σx̃²e² = 0.2025 + 0.0025 + 0.3025 + 1.1025 = 1.61 です。HC0 の分散は 1.61 ÷ 25 = 0.0644、標準誤差は √0.0644 ≈ 0.2538 です。HC1 は、n ÷ (n − k) = 4 ÷ 2 = 2 倍の分散、標準誤差は √0.1288 ≈ 0.3589 です。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
