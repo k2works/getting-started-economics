@@ -99,7 +99,7 @@ dataclasses.replace(model, tax=40)    # 既にあるモデルから、税だけ�
 
 `frozen=True` で、作ったモデルの値は書き換えられません。「元のモデル」と「政策後のモデル」を、並べて比べられます。
 
-## 13.4 Red → Green → Refactor
+## 13.4 プログラミング
 
 ### IS 曲線と LM 曲線
 

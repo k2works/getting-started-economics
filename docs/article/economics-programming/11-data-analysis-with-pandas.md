@@ -108,7 +108,7 @@ df.sort_values("exports", ascending=False).head(2).index.tolist()    # [2019, 20
 
 `pct_change()` は、前の行からの変化率を計算します。最初の行は、前がないので、欠損値（`NaN`、値がないこと）になります。この表には欠損値がありません（`df.isna().sum().sum()` は 0 です）。
 
-## 11.4 Red → Green → Refactor
+## 11.4 プログラミング
 
 ### データを読み込む
 

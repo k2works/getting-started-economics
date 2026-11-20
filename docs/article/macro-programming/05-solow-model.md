@@ -64,7 +64,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 
 > **確かめ（`linearsolve`）**: Python のライブラリ `linearsolve`（pandas 2 の隔離環境で実行）で、同じモデルを対数線形近似した遷移係数は 0.975 でした。これは、1 − λ = 1 − 0.5 × 0.05 = 0.975 と、一致します。この記事では、`linearsolve` を使わず、自分で書きます（pandas 3 で動かないため）。
 
-## 5.4 Red → Green → Refactor
+## 5.4 プログラミング
 
 ### 定常状態
 

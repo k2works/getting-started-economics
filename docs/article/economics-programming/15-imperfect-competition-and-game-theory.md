@@ -67,7 +67,7 @@ payoffs = {
 }
 ```
 
-## 15.4 Red → Green → Refactor
+## 15.4 プログラミング
 
 ### 独占
 

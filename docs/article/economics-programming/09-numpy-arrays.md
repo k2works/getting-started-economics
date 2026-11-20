@@ -100,7 +100,7 @@ constants = np.array([5, 11])
 np.linalg.solve(coefficients, constants)    # array([1., 2.])  x = 1、y = 2
 ```
 
-## 9.4 Red → Green → Refactor
+## 9.4 プログラミング
 
 ### 乗数と支出の波及
 

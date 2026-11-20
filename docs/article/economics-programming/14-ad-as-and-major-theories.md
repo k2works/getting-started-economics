@@ -58,7 +58,7 @@ def classical(price: float) -> float:
 
 こう書くと、古典派でもケインズでも、同じ `equilibrium_price_and_income(model, supply)` で解けます。
 
-## 14.4 Red → Green → Refactor
+## 14.4 プログラミング
 
 ### 総需要曲線
 

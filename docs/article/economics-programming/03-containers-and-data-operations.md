@@ -88,7 +88,7 @@ for price, quantity in demand.items():
 [p for p, q in demand.items() if q > 50]   # [0, 10, 20]   需要量が 50 より大きい価格だけ
 ```
 
-## 3.4 Red → Green → Refactor
+## 3.4 プログラミング
 
 ### Red: 供給量のテスト
 

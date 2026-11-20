@@ -80,7 +80,7 @@ series.rolling(3).mean()
 df.diff() > 0        # 前の年より増えたかどうか（True / False の表）
 ```
 
-## 12.4 Red → Green → Refactor
+## 12.4 プログラミング
 
 ### 移動平均
 

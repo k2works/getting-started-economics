@@ -88,7 +88,7 @@ class TaxEquilibrium:
 
 `frozen=True` は、作ったあとに値を書き換えられない、という指定です。`result.quantity` のように、名前で値を取り出せます。
 
-## 7.4 Red → Green → Refactor
+## 7.4 プログラミング
 
 ### 均衡と余剰
 
