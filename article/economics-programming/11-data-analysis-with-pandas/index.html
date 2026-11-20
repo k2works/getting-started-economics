@@ -2155,6 +2155,17 @@
   <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2180,7 +2191,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_16" class="md-nav__link">
+  <a href="#_17" class="md-nav__link">
     <span class="md-ellipsis">
       
         このデータと実際の統計の違い
@@ -6461,7 +6472,6 @@
 <li>三面等価が成り立つなら、分配面の GDP（雇用者報酬 250、営業余剰 124、固定資本減耗と間接税 106）は、いくつになりますか</li>
 <li>支出面の GDP（消費 264、投資 110、政府支出 96、輸出 82、輸入 72）は、いくつになりますか。生産面と同じになるでしょうか</li>
 </ul>
-<p>答えは、生産面が 480、分配面も 250 + 124 + 106 = 480 です。支出面は 264 + 110 + 96 + (82 − 72) = 480 で、2010 年は一致します。ただし、年によっては、1 や 3 の差が出ます（統計上の不突合）。</p>
 <h2 id="113-pandas">11.3 Pandas の基本<a class="headerlink" href="#113-pandas" title="Permanent link">&para;</a></h2>
 <h3 id="dataframe-series">DataFrame と Series<a class="headerlink" href="#dataframe-series" title="Permanent link">&para;</a></h3>
 <p>pandas では、表を <code>DataFrame</code>、表の 1 列（または 1 行）を <code>Series</code> と呼びます。CSV ファイルは、<code>pd.read_csv</code> で読み込みます。<code>index_col="year"</code> で、年の列を、行の名前（インデックス）にします。</p>
@@ -6820,7 +6830,44 @@ year
 <li>同じ統計表一覧の「実質暦年」（連鎖方式の実質 GDP）の成長率と比べると、マイナス成長の年は同じで、成長率の差は、最大でも 0.09 ポイントでした</li>
 </ul>
 <p>名目 GDP をデフレーターで割る方法は、この章で学んだ、簡単な実質化です。公表の実質 GDP は、連鎖方式で、基準年を毎年取り替えながら計算するので、完全には一致しません。</p>
-<h3 id="_15">実行結果<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<h3 id="_15">予想の答え合わせ<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter11.economy</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">expenditure_gdp</span><span class="p">,</span>
+    <span class="n">income_gdp</span><span class="p">,</span>
+    <span class="n">load_economy</span><span class="p">,</span>
+    <span class="n">production_gdp</span><span class="p">,</span>
+    <span class="n">statistical_discrepancy</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">load_economy</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"2010 年 生産面:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">production_gdp</span><span class="p">(</span><span class="n">df</span><span class="p">)[</span><span class="mi">2010</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"2010 年 分配面:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">income_gdp</span><span class="p">(</span><span class="n">df</span><span class="p">)[</span><span class="mi">2010</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"2010 年 支出面:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">expenditure_gdp</span><span class="p">(</span><span class="n">df</span><span class="p">)[</span><span class="mi">2010</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"不突合が 0 でない年:"</span><span class="p">)</span>
+<span class="n">gap</span> <span class="o">=</span> <span class="n">statistical_discrepancy</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">gap</span><span class="p">[</span><span class="n">gap</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>2010 年 生産面: 480.0
+2010 年 分配面: 480.0
+2010 年 支出面: 480.0
+不突合が 0 でない年:
+year
+2011    1
+2012   -1
+2014    2
+2015   -1
+2018   -3
+2020    1
+2021   -1
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: 2010 年の生産面の GDP は 480.0 です（14 + 130 + 336）</li>
+<li>2 つ目の問い: 分配面の GDP も 480.0 です（250 + 124 + 106）</li>
+<li>3 つ目の問い: 支出面の GDP も 480.0 です（264 + 110 + 96 + (82 − 72)）。2010 年は、3 つの面が一致します</li>
+<li>年によっては、一致しません。生産面から支出面を引いた差（統計上の不突合）は、2011 年が 1、2012 年が −1、2014 年が 2、2015 年が −1、2018 年が −3、2020 年が 1、2021 年が −1 で、大きさは 1 から 3 です。それ以外の年は 0 です</li>
+</ul>
+<h3 id="_16">実行結果<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter11
 </code></pre></div>
@@ -6859,7 +6906,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_16">このデータと実際の統計の違い<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_17">このデータと実際の統計の違い<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <p>この章のデータは、生産面と分配面が全年で一致します。実際の統計は、そうではありません。分配面にも、別の資料の誤差が入ります。また、この章の GDP デフレーターは、1 つの数ですが、実際には、財・サービスの種類ごとに、別々のデフレーターを使って、実質化します。さらに、実際の統計は、後から改訂されます。同じ年の値が、公表のたびに変わることがあるので、分析の日付と、データの取得日を、記録しておく必要があります。</p>
 <h2 id="116">11.6 練習問題<a class="headerlink" href="#116" title="Permanent link">&para;</a></h2>
 <table>

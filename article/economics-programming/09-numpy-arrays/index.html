@@ -1980,6 +1980,17 @@
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2005,7 +2016,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -6337,7 +6348,6 @@
 <li>これを足し続けると、合計はいくつに近づきますか</li>
 <li>乗数 1 ÷ (1 − 0.8) は、いくつですか。上の合計と、どう関係しますか</li>
 </ul>
-<p>答えは、2 回目が 80、3 回目が 64 で、合計は 100 × 5 = 500 に近づきます。乗数 5 は、支出 1 が最終的に所得を 5 増やすことを表します。</p>
 <h2 id="93-numpy">9.3 NumPy の配列<a class="headerlink" href="#93-numpy" title="Permanent link">&para;</a></h2>
 <h3 id="_2">配列を作る<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <p>リストと違い、NumPy の配列は、すべての要素が同じ型で、まとめて計算できます。</p>
@@ -6563,7 +6573,29 @@
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">maximum</span><span class="p">(</span><span class="n">intercept</span> <span class="o">-</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">prices</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">float</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
 </code></pre></div>
 <p><code>np.maximum</code> は、配列の各要素と 0 の大きい方を取ります。第 1 章の <code>max(..., 0)</code> を、配列に広げたものです。<code>np.any(prices &lt; 0)</code> は、1 つでも負の価格があれば <code>True</code> です。</p>
-<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_11">予想の答え合わせ<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter09.linear</span><span class="w"> </span><span class="kn">import</span> <span class="n">multiplier</span><span class="p">,</span> <span class="n">spending_rounds</span>
+
+<span class="n">rounds</span> <span class="o">=</span> <span class="n">spending_rounds</span><span class="p">(</span><span class="n">initial_spending</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">mpc</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">count</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"2 回目:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">rounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"3 回目:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">rounds</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"100 回分の合計:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">rounds</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"乗数:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">multiplier</span><span class="p">(</span><span class="mf">0.8</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"100 × 乗数:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">multiplier</span><span class="p">(</span><span class="mf">0.8</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>2 回目: 80.0
+3 回目: 64.0
+100 回分の合計: 500.0
+乗数: 5.0
+100 × 乗数: 500.0
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: 2 回目は 80、3 回目は 64 です。各回の増加は、前の回の 0.8 倍（100 × 0.8 = 80、80 × 0.8 = 64）です</li>
+<li>2 つ目の問い: 100 回分を足すと、合計は 500.0 で、100 × 5 = 500 に近づきます</li>
+<li>3 つ目の問い: 乗数 1 ÷ (1 − 0.8) は 5.0 です。初期支出 100 に乗数をかけた 500.0 が、波及の合計の行き着く先です。乗数 5 は、支出 1 が最終的に所得を 5 増やすことを表します</li>
+</ul>
+<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter09
 </code></pre></div>
@@ -6598,7 +6630,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <p>連立方程式で解く方法は、式が直線（線形）のときに使えます。曲線の式には、第 6 章の二分法や、第 10 章の SciPy の方法が必要です。乗数効果は、供給能力に余裕があり、物価が変わらない前提です。完全雇用に近い経済では、需要が増えても、生産が増えずに、物価が上がります。また、国民所得の決定のモデルは、税や輸入を考えていません。税や輸入があると、所得が増えたときに、消費に回る割合が下がり、乗数が小さくなります。</p>
 <h2 id="96">9.6 練習問題<a class="headerlink" href="#96" title="Permanent link">&para;</a></h2>
 <table>

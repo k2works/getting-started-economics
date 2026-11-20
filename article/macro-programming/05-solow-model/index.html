@@ -2495,6 +2495,17 @@
   <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2520,7 +2531,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -6313,7 +6324,6 @@
 <li>資本が 4 から始まると、次の期の資本は、いくつですか</li>
 <li>資本が 4 から始まる国と、25 から始まる国は、どちらも、定常状態に近づきますか。近づく速さは、定常状態から遠いほど速いでしょうか</li>
 </ul>
-<p>答えは、k* = (0.2 ÷ 0.05)^2 = 16 です（貯蓄 0.2·√16 = 0.8 と、減耗 0.05·16 = 0.8 が等しい）。資本 4 の次の期は、0.2·√4 + 0.95·4 = 0.4 + 3.8 = 4.2 です。どちらも 16 に近づきます。近づく速さは、定常状態から遠いほど速く、近づくにつれて遅くなります。</p>
 <h2 id="53">5.3 ソロー・モデルの考え方<a class="headerlink" href="#53" title="Permanent link">&para;</a></h2>
 <h3 id="_2">貯蓄と減耗<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <p>労働者 1 人当たりの所得は y = A·k^α です。所得の一定割合 s が貯蓄され、資本になります。一方、資本は、毎期 δ の割合で減耗します。したがって、資本は、k(t+1) = s·A·k(t)^α + (1−δ)·k(t) で動きます。</p>
@@ -6643,7 +6653,39 @@
 </tr>
 </tbody>
 </table>
-<h3 id="_7">実行結果<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h3 id="_7">予想の答え合わせ<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。資本の経路は、<code>solow_path</code> で 200 期先まで求めます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter05.solow</span><span class="w"> </span><span class="kn">import</span> <span class="n">solow_path</span><span class="p">,</span> <span class="n">steady_state_capital</span>
+
+<span class="n">kstar</span> <span class="o">=</span> <span class="n">steady_state_capital</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"k*:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">kstar</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">low</span> <span class="o">=</span> <span class="n">solow_path</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">high</span> <span class="o">=</span> <span class="n">solow_path</span><span class="p">(</span><span class="mi">25</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"資本 4 の次の期:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">low</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"資本 4 から 200 期後:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">low</span><span class="p">[</span><span class="mi">200</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"資本 25 から 200 期後:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">high</span><span class="p">[</span><span class="mi">200</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"資本 4 の 1 期目の変化:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">low</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">low</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"資本 4 の 10 期目の変化:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">low</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span> <span class="o">-</span> <span class="n">low</span><span class="p">[</span><span class="mi">10</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"資本 4 の 100 期目の変化:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">low</span><span class="p">[</span><span class="mi">101</span><span class="p">]</span> <span class="o">-</span> <span class="n">low</span><span class="p">[</span><span class="mi">100</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"資本 25 の 1 期目の変化:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">high</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">high</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"資本 25 の 100 期目の変化:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">high</span><span class="p">[</span><span class="mi">101</span><span class="p">]</span> <span class="o">-</span> <span class="n">high</span><span class="p">[</span><span class="mi">100</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>k*: 16.0
+資本 4 の次の期: 4.2
+資本 4 から 200 期後: 15.8981
+資本 25 から 200 期後: 16.0505
+資本 4 の 1 期目の変化: 0.2
+資本 4 の 10 期目の変化: 0.1902
+資本 4 の 100 期目の変化: 0.0308
+資本 25 の 1 期目の変化: -0.25
+資本 25 の 100 期目の変化: -0.0162
+</code></pre></div>
+<ul>
+<li>1 つ目の問い（定常状態）: k* = 16.0 です。(0.2 ÷ 0.05)^2 = 16 で、貯蓄 0.2·√16 = 0.8 と、減耗 0.05·16 = 0.8 が等しくなります</li>
+<li>2 つ目の問い（次の期）: 4.2 です。0.2·√4 + 0.95·4 = 0.4 + 3.8 = 4.2 です</li>
+<li>3 つ目の問い（近づき方）: 資本 4 の国も、資本 25 の国も、200 期後には 15.8981 と 16.0505 で、どちらも 16 に近づきます。1 期当たりの変化は、資本 4 の国で 0.2（1 期目）、0.1902（10 期目）、0.0308（100 期目）と、定常状態に近づくにつれて小さくなります。資本 25 の国も、−0.25（1 期目）から −0.0162（100 期目）へ、小さくなります。同じ国の中では、定常状態から遠いほど速く、近づくにつれて遅くなります</li>
+</ul>
+<h3 id="_8">実行結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter05
 </code></pre></div>
@@ -6678,7 +6720,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_8">このモデルが成り立たない場面<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_9">このモデルが成り立たない場面<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>人口の増加と技術進歩を、考えていません。</strong> 現実の経済は、定常状態でも、成長します。人口と技術を加えると、収束の速さの式は、λ = (1 − α)·(n + g + δ) になります</li>
 <li><strong>貯蓄率は、一定という仮定です。</strong> 実際は、所得や利子率で、変わります</li>

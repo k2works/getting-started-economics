@@ -2832,6 +2832,17 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2868,7 +2879,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -2896,7 +2907,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         できること
@@ -2907,7 +2918,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -2918,7 +2929,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_14" class="md-nav__link">
+  <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -6401,7 +6412,6 @@
 <li>物価の乖離が半分になるのに、何四半期かかりますか</li>
 <li>需要ショックを受けた産出量の反応を、全期間で足し合わせると、いくつになりますか</li>
 </ul>
-<p>答えは、ショックの期は、物価も産出量も<strong>上がります</strong>（物価 +0.65、産出量 +0.81）。次の期は、物価がまだ高いので、AS 曲線が上にあり、産出量は<strong>マイナス</strong>（−0.16）になります。半減期は、ln 0.5 ÷ ln 0.806 = <strong>3.2 四半期</strong>です。足し合わせると、<strong>ちょうど 0</strong> です（14.8 節の練習問題で確かめます）。</p>
 <h2 id="143">14.3 考え方<a class="headerlink" href="#143" title="Permanent link">&para;</a></h2>
 <h3 id="_2">安定性と半減期<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <p>ショックがなければ、p(t) = h·p(t−1)、y(t) = −c·p(t) です。h は、0 と 1 の間なので、乖離は、毎期 h 倍になって 0 に戻ります（<strong>安定</strong>）。p が半分になる期間（半減期）は、h^k = 0.5 から、k = ln 0.5 ÷ ln h です（第 8 章 <code>shock_half_life</code>）。a と c の積が大きい（h が小さい）ほど、早く戻ります。</p>
@@ -6771,7 +6781,33 @@
 <blockquote>
 <p>物価が、ちょうど 50 : 50 になるのは、a²σu² = 0.64 × 2.25 = 1.44 = σv²（= 1.2²）だからです。偶然の一致ですが、公式 a²σu² ÷ (a²σu² + σv²) の意味（AS 曲線の傾きと需要ショックの大きさが、効きを決める）が分かります。</p>
 </blockquote>
-<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">予想の答え合わせ<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter13.adas</span><span class="w"> </span><span class="kn">import</span> <span class="n">AdasParameters</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter14.simulation</span><span class="w"> </span><span class="kn">import</span> <span class="n">impulse_response</span><span class="p">,</span> <span class="n">price_half_life</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="n">AdasParameters</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">c</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">sigma_u</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">sigma_v</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">impulse_response</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">u</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">periods_after</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+<span class="n">shock</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">after</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"shock period: p ="</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">shock</span><span class="p">[</span><span class="s2">"p"</span><span class="p">],</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">", y ="</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">shock</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"next period: y ="</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">after</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"half life (quarters):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">price_half_life</span><span class="p">(</span><span class="n">params</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"sum of y responses is zero:"</span><span class="p">,</span> <span class="nb">bool</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="o">&lt;</span> <span class="mf">1e-9</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>shock period: p = 0.6452 , y = 0.8065
+next period: y = -0.1561
+half life (quarters): 3.22
+sum of y responses is zero: True
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: ショックの期は、物価も産出量も<strong>上がります</strong>（物価 +0.6452、産出量 +0.8065）。</li>
+<li>2 つ目の問い: 次の期は、物価がまだ高く、AS 曲線が上にあるので、産出量は<strong>マイナス</strong>（−0.1561）になります。</li>
+<li>3 つ目の問い: 半減期は、ln 0.5 ÷ ln h = ln 0.5 ÷ ln 0.8065 = <strong>3.22 四半期</strong>です。</li>
+<li>4 つ目の問い: 産出量の反応を、足し合わせると、<strong>0</strong>（誤差の範囲）です。ショックの期のプラスと、その後のマイナスが、打ち消し合います。</li>
+</ul>
+<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter14
 </code></pre></div>
@@ -6897,7 +6933,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>ショックが、独立とは限りません。</strong> ショックに持続性があれば（14.8 節の練習問題）、GDP の持続性は、再現できます。ただし、物価の持続性が、高くなりすぎます</li>
 <li><strong>供給ショックには、一時的なものと、トレンドを変えるものがあります。</strong> この章のショックは、トレンドに影響しない、一時的なものです</li>
@@ -6906,7 +6942,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </ul>
 <h2 id="147-3">14.7 第 3 部の到達チェック<a class="headerlink" href="#147-3" title="Permanent link">&para;</a></h2>
 <p>第 3 部（第 13・14 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。</p>
-<h3 id="_12">できること<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">できること<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -6953,7 +6989,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_13">時間を決めて書く課題<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">時間を決めて書く課題<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、関数とテストを書きます。</p>
 <table>
 <thead>
@@ -6981,7 +7017,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_14">誤りの原因の分類<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_15">誤りの原因の分類<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <p>できなかったときは、原因を分類して、戻る章に戻ります。</p>
 <table>
 <thead>

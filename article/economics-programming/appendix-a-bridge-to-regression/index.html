@@ -2138,6 +2138,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6207,7 +6218,6 @@
 <li>手計算できる 3 点 (0, 1)、(1, 3)、(2, 2) の回帰直線の、傾きと切片は、いくつでしょうか。ヒント: x の平均は 1、y の平均は 2 です</li>
 <li>第 8 章の需要曲線 Q = 100 − 2P で、観測値のばらつき（標準偏差）を 5、10、30 と大きくしていくと、推定した傾きは、−2 からどのくらいずれるでしょうか。決定係数は、大きくなるでしょうか、小さくなるでしょうか</li>
 </ul>
-<p>答えは、傾きが 0.5、切片が 1.5（x̄ = 1、ȳ = 2 を通り、傾き = (−1 × −1 + 0 × 1 + 1 × 0) ÷ 2 = 0.5）。決定係数は、ばらつきが大きいほど小さくなります。</p>
 <h2 id="a3">A.3 プログラミング<a class="headerlink" href="#a3" title="Permanent link">&para;</a></h2>
 <h3 id="_2">回帰直線<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_直線上の点なら切片と傾きがそのまま求まる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -6326,6 +6336,36 @@
 
     <span class="k">assert</span> <span class="n">fit_r2</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">fit_r2</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">fit_r2</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
 </code></pre></div>
+<h3 id="_5">予想の答え合わせ<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.appendix_a.regression</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_line</span><span class="p">,</span> <span class="n">r_squared</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.simulation</span><span class="w"> </span><span class="kn">import</span> <span class="n">simulate_demand</span>
+
+<span class="n">intercept</span><span class="p">,</span> <span class="n">slope</span> <span class="o">=</span> <span class="n">fit_line</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"3 点の切片:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">intercept</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"傾き:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">slope</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">sigma</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">):</span>
+    <span class="n">rng</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">prices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">quantities</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">price</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">21</span><span class="p">):</span>
+        <span class="n">observations</span> <span class="o">=</span> <span class="n">simulate_demand</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+        <span class="n">prices</span><span class="o">.</span><span class="n">extend</span><span class="p">([</span><span class="nb">float</span><span class="p">(</span><span class="n">price</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">observations</span><span class="p">))</span>
+        <span class="n">quantities</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">observations</span><span class="p">)</span>
+    <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span> <span class="o">=</span> <span class="n">fit_line</span><span class="p">(</span><span class="n">prices</span><span class="p">,</span> <span class="n">quantities</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"標準偏差"</span><span class="p">,</span> <span class="n">sigma</span><span class="p">,</span> <span class="s2">"傾き:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">b1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"R²:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">r_squared</span><span class="p">(</span><span class="n">prices</span><span class="p">,</span> <span class="n">quantities</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>3 点の切片: 1.5 傾き: 0.5
+標準偏差 5 傾き: -1.9732 R²: 0.7751
+標準偏差 10 傾き: -1.9465 R²: 0.4561
+標準偏差 30 傾き: -1.8395 R²: 0.0768
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: 3 点 (0, 1)、(1, 3)、(2, 2) の回帰直線は、切片が 1.5、傾きが 0.5 です。x̄ = 1、ȳ = 2 を通り、傾き = (−1 × −1 + 0 × 1 + 1 × 0) ÷ 2 = 0.5 です。決定係数は 0.25 で、直線は y のばらつきの 4 分の 1 しか説明しません</li>
+<li>2 つ目の問い: 観測値のばらつき（標準偏差）を 5、10、30 と大きくすると、推定した傾きは −1.9732、−1.9465、−1.8395 となり、真の値 −2 から、少しずつずれます。決定係数は 0.7751、0.4561、0.0768 と、小さくなります</li>
+</ul>
 <h2 id="a4">A.4 実際のデータで推定するときの注意<a class="headerlink" href="#a4" title="Permanent link">&para;</a></h2>
 <p>この付録のデータは、シミュレーションで作ったので、「価格を、こちらで決めた」ものです。実際の市場データでは、そうはいきません。</p>
 <table>

@@ -2878,6 +2878,17 @@
   <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2903,7 +2914,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -6355,7 +6366,6 @@
 <li>次の期のインフレ率の乖離（π − 2）は、ショックの期の何倍になりますか</li>
 <li>中央銀行が、産出量を重視する（c = 0.5、d = 1.5）と、インフレ率の動きは、どう変わりますか</li>
 </ul>
-<p>答えは、インフレ率 <strong>2.8</strong>（+0.8）、産出量 <strong>99.2</strong>（−0.8）です。次の期の乖離は、毎期 <strong>0.8 倍</strong>（φ = 0.8）になります。産出量を重視すると、産出量の落ち込みは<strong>小さく</strong>（−0.19）なりますが、インフレ率の上昇は<strong>大きく</strong>（+0.95）、<strong>長く続きます</strong>（φ = 0.952）。</p>
 <h2 id="153">15.3 モデルの考え方<a class="headerlink" href="#153" title="Permanent link">&para;</a></h2>
 <h3 id="5">5 本の式<a class="headerlink" href="#5" title="Permanent link">&para;</a></h3>
 <table>
@@ -6900,7 +6910,40 @@
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 <p><strong>産出量とインフレ率の間には、トレードオフがあります</strong>。産出量を重視する政策は、名目利子率を低く抑え、実質利子率の上昇を小さくするので、産出量の落ち込みは小さくなります。その代わり、インフレ率の上昇を許し、目標に戻るまでの時間が長くなります。</p>
-<h3 id="_8">実行結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_8">予想の答え合わせ<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter15.ismppc</span><span class="w"> </span><span class="kn">import</span> <span class="n">IsMpPcParameters</span><span class="p">,</span> <span class="n">impulse_response</span>
+
+<span class="n">default</span> <span class="o">=</span> <span class="n">IsMpPcParameters</span><span class="p">()</span>
+<span class="n">output_focus</span> <span class="o">=</span> <span class="n">IsMpPcParameters</span><span class="p">(</span><span class="n">c</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">d</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="p">[(</span><span class="s2">"default"</span><span class="p">,</span> <span class="n">default</span><span class="p">),</span> <span class="p">(</span><span class="s2">"output focus"</span><span class="p">,</span> <span class="n">output_focus</span><span class="p">)]:</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">impulse_response</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">shock_pc</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="n">shock</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">after</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"  shock period: pi ="</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">shock</span><span class="p">[</span><span class="s2">"pi"</span><span class="p">],</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">", y ="</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">shock</span><span class="p">[</span><span class="s2">"y"</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"  next period pi gap:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">after</span><span class="p">[</span><span class="s2">"pi"</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"  ratio of pi gaps:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">((</span><span class="n">after</span><span class="p">[</span><span class="s2">"pi"</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">shock</span><span class="p">[</span><span class="s2">"pi"</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"  phi:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">phi</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>default
+  shock period: pi = 2.8 , y = 99.2
+  next period pi gap: 0.64
+  ratio of pi gaps: 0.8
+  phi: 0.8
+output focus
+  shock period: pi = 2.9524 , y = 99.8095
+  next period pi gap: 0.907
+  ratio of pi gaps: 0.9524
+  phi: 0.9524
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: ショックの期に、インフレ率は <strong>2.8</strong>（+0.8）、産出量は <strong>99.2</strong>（−0.8）になります。インフレ率は上がり、産出量は下がります。</li>
+<li>2 つ目の問い: 次の期のインフレ率の乖離は、ショックの期の <strong>0.8 倍</strong>（0.64 ÷ 0.8）です。これは、φ = 0.8 と一致します。乖離は、毎期、φ 倍になります。</li>
+<li>3 つ目の問い: 産出量を重視すると（c = 0.5、d = 1.5）、産出量の落ち込みは <strong>−0.19</strong>（99.8095）と<strong>小さく</strong>なります。その代わり、インフレ率の上昇は <strong>+0.95</strong>（2.9524）と<strong>大きく</strong>、次の期の乖離も 0.907（基本は 0.64）と、<strong>長く続きます</strong>。φ が 0.9524 と、1 に近くなるためです。</li>
+</ul>
+<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter15
 </code></pre></div>
@@ -6943,7 +6986,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_9">このモデルが成り立たない場面<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>期待が、後ろ向きです。</strong> 「2 期後に利下げする」と、中央銀行が予告しても、このモデルでは、今期の変数は動きません（係数が固定されている）。将来を見据えた行動（フォワード・ルッキング）が、入っていません</li>
 <li><strong>ルーカス批判に、対応できません。</strong> 係数を推定して、政策変更の効果を予測しても、政策が変われば、家計と企業の行動も変わり、係数が変わります。モデルが、最適化行動に基づいていないためです（次の章以降の RBC モデルは、最適化から出発します）</li>

@@ -2004,6 +2004,17 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2029,7 +2040,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -2090,7 +2101,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -2101,7 +2112,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -6370,7 +6381,6 @@
 <li>第 4 章の費用関数で、価格が 15 のとき、利潤を最大にする生産量は、いくつですか。ヒント: MC = 3q² − 12q + 15 が 15 に等しくなる q を求めます</li>
 <li>価格が 5 のとき、企業は生産しますか。平均可変費用の最低値は 6 です</li>
 </ul>
-<p>答えは、(x, y) = (10, 5)、生産量 4（q = 0 の解もありますが、限界費用が右下がりの側なので、利潤は最大になりません）、価格 5 は 6 を下回るので、生産しません。</p>
 <h2 id="103-scipy">10.3 SciPy の最適化<a class="headerlink" href="#103-scipy" title="Permanent link">&para;</a></h2>
 <h3 id="1">1 変数の最小化<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
 <p><code>minimize_scalar</code> は、1 つの変数の関数の、最小値を探します。範囲を <code>bounds</code> で指定します。</p>
@@ -6632,7 +6642,25 @@
         <span class="n">minimize_cost</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">wage</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">rental</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
 </code></pre></div>
 <p>入力が正しくても、最適化が収束しないことがあります。見かけ上は数値でも、収束していない結果を返さないために、<code>result.success</code> を、必ず確かめて、収束しなかったときは <code>RuntimeError</code> にします（テストでは、ソルバーを、失敗を返す偽物に差し替えて、確かめています）。</p>
-<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_9">予想の答え合わせ<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter10.optimization</span><span class="w"> </span><span class="kn">import</span> <span class="n">maximize_utility</span><span class="p">,</span> <span class="n">profit_maximizing_quantity</span>
+
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">maximize_utility</span><span class="p">(</span><span class="n">price_x</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">price_y</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">income</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"最適な消費 (x, y):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"価格 15 の生産量:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">profit_maximizing_quantity</span><span class="p">(</span><span class="mi">15</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"価格 5 の生産量:"</span><span class="p">,</span> <span class="n">profit_maximizing_quantity</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>最適な消費 (x, y): 10.0 5.0
+価格 15 の生産量: 4.0
+価格 5 の生産量: 0
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: 最適な消費は (x, y) = (10.0, 5.0) です。予算 40 の半分ずつ（20 ずつ）を、価格 2 の財 x と価格 4 の財 y に使うので、20 ÷ 2 = 10、20 ÷ 4 = 5 です</li>
+<li>2 つ目の問い: 価格 15 のとき、利潤を最大にする生産量は 4.0 です。MC = 15 を満たす q は 0 と 4 の 2 つありますが、限界費用が右下がりの側にある q = 0 では、利潤は最大になりません</li>
+<li>3 つ目の問い: 価格 5 のとき、生産量は 0 です。価格 5 は、平均可変費用の最低値 6 を下回るので、生産しません</li>
+</ul>
+<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter10
 </code></pre></div>
@@ -6667,7 +6695,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>数値の最適化は、探し始める点によって、違う解（局所的な最適解）に行き着くことがあります。この章の問題は、効用関数が凹で、制約が直線なので、解が 1 つしかありません。しかし、費用関数や効用関数が複雑になると、解が複数あり、探し始める点を変えて確かめる必要があります。また、この章の SLSQP は、関数が滑らかな場合に使えます。折れ線のような関数では、別の方法が必要です。</p>
 <h2 id="106">10.6 練習問題<a class="headerlink" href="#106" title="Permanent link">&para;</a></h2>
 <table>
@@ -6759,13 +6787,13 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_11">時間を決めて書く課題<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">時間を決めて書く課題<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、次を書いてください。</p>
 <ol>
 <li>需要 Q = 120 − 2P、供給 Q = 20 + 3P の均衡を、<code>np.linalg.solve</code> で求める（10 分）</li>
 <li>所得 60、価格 (3, 2) の消費者が、U = x^0.5 · y^0.5 を最大にする点を、<code>minimize</code> で求め、手計算の (10, 15) と比べる（15 分）</li>
 </ol>
-<h3 id="_12">誤りの原因の分類<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">誤りの原因の分類<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>

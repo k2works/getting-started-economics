@@ -2390,7 +2390,7 @@
   <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
-        結果
+        予想の答え合わせ
       
     </span>
   </a>
@@ -2399,6 +2399,17 @@
         
           <li class="md-nav__item">
   <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        結果
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -2426,7 +2437,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -6312,7 +6323,6 @@
 <li>所得は、1 年当たり何 % 伸びましたか</li>
 <li>所得の成長率のうち、資本・人的資本・TFP は、それぞれ何 % 分ですか</li>
 </ul>
-<p>答えは、資本が (1/3) × 6 = 2%、人的資本が (2/3) × 3 = 2%、TFP が 1% で、合計 5% です。TFP の寄与は、5 分の 1（20%）です。</p>
 <h2 id="23">2.3 成長会計の考え方<a class="headerlink" href="#23" title="Permanent link">&para;</a></h2>
 <h3 id="_2">成長率を足し算にする<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <p>第 1 章の生産関数 ln y = ln A + α·ln k + (1−α)·ln h を、時間で差をとると、</p>
@@ -6506,7 +6516,40 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"成長率が 0 の国があるので、割合は求められない"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">table</span><span class="p">[[</span><span class="s2">"capital"</span><span class="p">,</span> <span class="s2">"human_capital"</span><span class="p">,</span> <span class="s2">"tfp"</span><span class="p">]]</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">table</span><span class="p">[</span><span class="s2">"output"</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="_7">結果<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h3 id="_7">予想の答え合わせ<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。最後の行では、10 年後の資本・人的資本・TFP から所得を作り、成長率を <code>log_growth_rate</code> で逆算します。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter02.growth</span><span class="w"> </span><span class="kn">import</span> <span class="n">log_growth_rate</span>
+
+<span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span>
+<span class="n">capital</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="mi">6</span>
+<span class="n">human_capital</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span> <span class="o">*</span> <span class="mi">3</span>
+<span class="n">tfp_growth</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">income</span> <span class="o">=</span> <span class="n">capital</span> <span class="o">+</span> <span class="n">human_capital</span> <span class="o">+</span> <span class="n">tfp_growth</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"資本の寄与（%）:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">capital</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"人的資本の寄与（%）:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">human_capital</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"TFP の寄与（%）:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">tfp_growth</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"所得の成長率（%）:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"TFP の割合:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">tfp_growth</span> <span class="o">/</span> <span class="n">income</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="c1"># 確認: 10 年後の k・h・A から所得を求め、成長率を逆算する</span>
+<span class="n">k</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">a</span> <span class="o">=</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mf">0.01</span> <span class="o">*</span> <span class="n">r</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">y_end</span> <span class="o">=</span> <span class="n">a</span> <span class="o">*</span> <span class="n">k</span><span class="o">**</span><span class="n">alpha</span> <span class="o">*</span> <span class="n">h</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">alpha</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"確認（所得の成長率、%）:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">log_growth_rate</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">y_end</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>資本の寄与（%）: 2.0
+人的資本の寄与（%）: 2.0
+TFP の寄与（%）: 1
+所得の成長率（%）: 5.0
+TFP の割合: 0.2
+確認（所得の成長率、%）: 5.0
+</code></pre></div>
+<ul>
+<li>1 つ目の問い（所得の成長率）: 5.0%（1 年当たり）です。逆算した値も、5.0% で一致します</li>
+<li>2 つ目の問い（寄与）: 資本が (1/3) × 6 = 2%、人的資本が (2/3) × 3 = 2%、TFP が 1% で、合計 5% です。TFP の寄与は、5 分の 1（0.2、つまり 20%）です</li>
+</ul>
+<h3 id="_8">結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>1990 年から 2019 年までの、国ごとの寄与を求めます。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter02.growth</span><span class="w"> </span><span class="kn">import</span> <span class="n">contribution_shares</span><span class="p">,</span> <span class="n">growth_contribution</span><span class="p">,</span> <span class="n">load_panel</span>
 
@@ -6582,7 +6625,7 @@
 <blockquote>
 <p><strong>これは、架空のデータの結果です。</strong> 実際の統計で試す手順は、第 7 章にあります。</p>
 </blockquote>
-<h3 id="_8">実行結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter02
 </code></pre></div>
@@ -6617,7 +6660,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_9">このモデルが成り立たない場面<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>TFP の成長率は、「残り」です。</strong> 資本や人的資本の測定の誤差は、TFP に入ります。TFP が伸びた、と言っても、技術が進んだとは限りません</li>
 <li><strong>資本分配率 α が、国と時代によらず一定、という仮定です。</strong> α を変えると、結果が変わります（練習問題の「多様」）</li>

@@ -2421,7 +2421,7 @@
   <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
-        結果
+        予想の答え合わせ
       
     </span>
   </a>
@@ -2430,6 +2430,17 @@
         
           <li class="md-nav__item">
   <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        結果
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -2457,7 +2468,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -6445,7 +6456,6 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <li>国 B の TFP は、いくつですか</li>
 <li>国 B の所得は、国 A の 4 分の 1 です。この差の、何割が資本の差で、何割が TFP の差ですか</li>
 </ul>
-<p>答えは、国 A が 1、国 B が 0.5 です。所得の差は、対数で ln(1 ÷ 4) です。資本の差の寄与は (1/3)·ln(1 ÷ 8) = ln(1 ÷ 2)、TFP の差の寄与は ln(0.5) で、<strong>半分ずつ</strong>です（ln(1 ÷ 2) の 2 倍が ln(1 ÷ 4) です）。</p>
 <h2 id="14">1.4 発展会計の考え方<a class="headerlink" href="#14" title="Permanent link">&para;</a></h2>
 <h3 id="tfp">生産関数と TFP<a class="headerlink" href="#tfp" title="Permanent link">&para;</a></h3>
 <p>労働者 1 人当たりの生産関数を、y = A · k^α · h^(1−α) とします。</p>
@@ -6677,7 +6687,36 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
         <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">log_output</span><span class="o">.</span><span class="n">cov</span><span class="p">(</span><span class="n">part</span><span class="p">)</span> <span class="o">/</span> <span class="n">variance</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
     <span class="p">)</span>
 </code></pre></div>
-<h3 id="_7">結果<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h3 id="_7">予想の答え合わせ<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。資本の寄与は、資本の差の対数に α を掛けたものです。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.accounting</span><span class="w"> </span><span class="kn">import</span> <span class="n">tfp</span>
+
+<span class="n">alpha</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span>
+<span class="n">a</span> <span class="o">=</span> <span class="n">tfp</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">capital</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span> <span class="n">human_capital</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">tfp</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">capital</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">human_capital</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="n">alpha</span><span class="p">)</span>
+<span class="n">gap</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mf">0.5</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">capital_part</span> <span class="o">=</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">8</span><span class="p">)</span>
+<span class="n">tfp_part</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">b</span> <span class="o">/</span> <span class="n">a</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"国 A の TFP:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"国 B の TFP:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"所得の差（対数）:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">gap</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"資本の差の寄与の割合:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">capital_part</span> <span class="o">/</span> <span class="n">gap</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"TFP の差の寄与の割合:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">tfp_part</span> <span class="o">/</span> <span class="n">gap</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>国 A の TFP: 1.0
+国 B の TFP: 0.5
+所得の差（対数）: -1.3863
+資本の差の寄与の割合: 0.5
+TFP の差の寄与の割合: 0.5
+</code></pre></div>
+<ul>
+<li>1 つ目の問い（国 A の TFP）: 1.0 です</li>
+<li>2 つ目の問い（国 B の TFP）: 0.5 です</li>
+<li>3 つ目の問い（差の内訳）: 所得の差は、対数で −1.3863（= ln(1 ÷ 4)）です。資本の差の寄与は (1/3)·ln(1 ÷ 8) = ln(1 ÷ 2)、TFP の差の寄与は ln(0.5) で、どちらも 0.5 の割合です。<strong>半分ずつ</strong>です（ln(1 ÷ 2) の 2 倍が ln(1 ÷ 4) です）</li>
+</ul>
+<h3 id="_8">結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>最も貧しい国（C24）を、最も豊かな国（C01）と比べます。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.accounting</span><span class="w"> </span><span class="kn">import</span> <span class="n">income_gap</span><span class="p">,</span> <span class="n">load_countries</span><span class="p">,</span> <span class="n">variance_shares</span>
 
@@ -6762,7 +6801,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <blockquote>
 <p><strong>これは、架空のデータの結果です。</strong> 実際の国のデータで、同じ計算をした結果は、第 7 章の「実際の統計で試す」で確かめます。TFP の割合は、α の値や、人的資本・資本の測り方で変わります（練習問題の「多様」）。</p>
 </blockquote>
-<h3 id="_8">実行結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter01
 </code></pre></div>
@@ -6797,7 +6836,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_9">このモデルが成り立たない場面<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>TFP は、「測定されなかったもの」の集まりです。</strong> 技術の差だけでなく、制度・資源配分・測定の誤差も含みます。TFP の差を、「技術の差」と読むのは、言いすぎです</li>
 <li><strong>資本分配率 α は、仮定です。</strong> 実際の国で、α = 1/3 が成り立つとは限りません。α を変えると、結果が変わります（練習問題の「多様」）</li>

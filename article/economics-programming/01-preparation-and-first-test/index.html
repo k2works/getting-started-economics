@@ -1751,6 +1751,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -6496,7 +6507,6 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <li>価格が 10 のとき、需要量はいくつですか</li>
 <li>価格が 60 のとき、需要量はいくつですか。式のとおりに計算すると、困ったことになりませんか</li>
 </ul>
-<p>3 つ目で「マイナスになる」と気づいたら、経済学の感覚が働いています。需要量は負にならないので、コードでこの場面を扱う必要があります。</p>
 <h2 id="14">1.4 プログラミング<a class="headerlink" href="#14" title="Permanent link">&para;</a></h2>
 <h3 id="_10">コードの読み方（最小限）<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p>これから、Python のコードが出てきます。読むために、最低限の対応を、先に表にします。<strong>全部を覚える必要はありません。</strong> コードを読んでいて、分からなくなったときに、この表に戻ってきてください。詳しい説明は、表の右の章にあります。</p>
@@ -6685,6 +6695,22 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <div class="highlight"><pre><span></span><code>9 passed
 </code></pre></div>
 <p>章ごとにテストを実行するときは、<code>uv run pytest test/chapter02</code> のように、章のディレクトリを指定します。全章分をまとめて実行するときは、ディレクトリを指定せずに <code>uv run pytest</code> とします。</p>
+<h3 id="_12">予想の答え合わせ<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.demand</span><span class="w"> </span><span class="kn">import</span> <span class="n">quantity_demanded</span>
+
+<span class="k">for</span> <span class="n">price</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">60</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="mi">100</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">price</span><span class="p">,</span> <span class="n">quantity_demanded</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>0 100 100
+10 80 80
+60 -20 0
+</code></pre></div>
+<ul>
+<li>1 つ目の問い（価格 0）: 需要量は 100 です。</li>
+<li>2 つ目の問い（価格 10）: 需要量は 80 です。</li>
+<li>3 つ目の問い（価格 60）: 式のとおりに計算すると、100 − 2 × 60 = −20 とマイナスになります。需要量は負にならないので、<code>quantity_demanded</code> は 0 を返します。ここで「マイナスになる」と気づけたら、経済学の感覚が働いています。</li>
+</ul>
 <h2 id="15">1.5 規則で言うと<a class="headerlink" href="#15" title="Permanent link">&para;</a></h2>
 <p>この章で身につけたことを、原則にまとめます。</p>
 <ol>

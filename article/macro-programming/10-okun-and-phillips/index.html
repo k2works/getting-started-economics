@@ -2692,6 +2692,17 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2717,7 +2728,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -6351,7 +6362,6 @@
 <li>失業率が、トレンドより 1%ポイント低いとき、物価上昇率は、平均より、どれだけ高いでしょうか</li>
 <li>2000 年代以降、物価上昇率は、失業率の変化に、あまり反応しなくなった、と言われます。これは、フィリップス曲線の傾きが、どうなったことですか</li>
 </ul>
-<p>この章のデータの値を、回帰で確かめます。3 つ目の問いの答えは、傾きが、<strong>0 に近づく（平らになる）</strong>ことです。</p>
 <h2 id="103">10.3 オークンの法則とフィリップス曲線の考え方<a class="headerlink" href="#103" title="Permanent link">&para;</a></h2>
 <h3 id="_3">オークンの法則<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
 <p>GDP の循環（トレンドからの乖離、%）が大きいとき、企業は労働者を増やすので、失業率の循環（%ポイント）は小さくなります。失業率の循環を、GDP の循環に回帰すると、傾き β は負で、<strong>GDP が 1% 好調なとき、失業率が |β| %ポイント下がる</strong>ことを表します。</p>
@@ -6611,7 +6621,45 @@
 <blockquote>
 <p><strong>これは、架空のデータの結果です。</strong> 実際のデータで、フィリップス曲線が平らになったかは、実際の統計で確かめる必要があります。</p>
 </blockquote>
-<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">予想の答え合わせ<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。第 9 章のデータで、オークンの法則とフィリップス曲線を回帰します。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter09.cycles</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_quarterly</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter10.okun_phillips</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">okun_regression_from_data</span><span class="p">,</span>
+    <span class="n">phillips_by_period</span><span class="p">,</span>
+    <span class="n">phillips_regression_from_data</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">load_quarterly</span><span class="p">()</span>
+<span class="n">okun</span> <span class="o">=</span> <span class="n">okun_regression_from_data</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"オークンの法則の傾き:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">okun</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"output_cycle"</span><span class="p">]),</span> <span class="mi">3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">"GDP が 1% 好調なときの失業率（%ポイント）:"</span><span class="p">,</span>
+    <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">okun</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"output_cycle"</span><span class="p">])</span> <span class="o">*</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">phillips</span> <span class="o">=</span> <span class="n">phillips_regression_from_data</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">slope</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">phillips</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"unemployment_gap"</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"フィリップス曲線の傾き（全期間）:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">slope</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"失業率が 1%ポイント低いときの物価上昇率の上昇（%ポイント）:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="o">-</span><span class="n">slope</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+<span class="n">parts</span> <span class="o">=</span> <span class="n">phillips_by_period</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">split_year</span><span class="o">=</span><span class="mi">2000</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">"before"</span><span class="p">,</span> <span class="s2">"2000 年より前"</span><span class="p">),</span> <span class="p">(</span><span class="s2">"after"</span><span class="p">,</span> <span class="s2">"2000 年以降"</span><span class="p">)):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">label</span><span class="si">}</span><span class="s2">の傾き:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"unemployment_gap"</span><span class="p">]),</span> <span class="mi">3</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>オークンの法則の傾き: -0.496
+GDP が 1% 好調なときの失業率（%ポイント）: -0.496
+フィリップス曲線の傾き（全期間）: -0.337
+失業率が 1%ポイント低いときの物価上昇率の上昇（%ポイント）: 0.337
+2000 年より前の傾き: -0.571
+2000 年以降の傾き: -0.161
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: オークンの法則の傾きは <strong>−0.496</strong> です。GDP がトレンドより 1% 高いとき、失業率は、トレンドより約 <strong>0.5%ポイント低い</strong>です</li>
+<li>2 つ目の問い: フィリップス曲線の傾き（全期間）は −0.337 なので、失業率が 1%ポイント低いとき、物価上昇率は、平均より約 <strong>0.34%ポイント高い</strong>です</li>
+<li>3 つ目の問い: 2000 年より前の傾きは −0.571、2000 年以降は −0.161 です。傾きの大きさが小さくなり、<strong>0 に近づきました（平らになりました）</strong></li>
+</ul>
+<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter10
 </code></pre></div>
@@ -6646,7 +6694,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>フィリップス曲線の傾きの変化は、「失業率の効果が弱まった」ことの証拠とは限りません。</strong> 期待物価上昇率の安定（金融政策の信認）が、物価を動かなくしたのかもしれません。回帰では、区別できません</li>
 <li><strong>オークンの係数 −0.5 は、国と時期で違います。</strong> この記事の値は、架空のデータです</li>

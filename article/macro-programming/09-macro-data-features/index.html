@@ -2657,6 +2657,17 @@
   <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2682,7 +2693,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -6339,7 +6350,6 @@
 <li>失業率の循環は、GDP の循環と、同じ向きですか、逆向きですか</li>
 <li>景気循環は、1 四半期前の循環と、どれくらい似ていますか（自己相関は、高いですか、低いですか）</li>
 </ul>
-<p>答えは、変動が大きいのが投資、小さいのが消費（経済学の景気循環の事実）です。失業率は、GDP と逆に動きます。循環には、持続性があります（自己相関が正）。この章のデータで、実際の値を確かめます。</p>
 <h2 id="93">9.3 トレンドと循環の考え方<a class="headerlink" href="#93" title="Permanent link">&para;</a></h2>
 <h3 id="_2">トレンドをどう決めるか<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <p>マクロの系列は、長期的に伸びます。景気循環を見るには、その成長（トレンド）を取り除く必要があります。トレンドの決め方は、一つではありません。この章では、<strong>HP フィルター</strong>を使います。</p>
@@ -6658,7 +6668,43 @@
 <blockquote>
 <p><strong>これは、架空のデータの結果です。</strong> このデータは、消費が GDP の 0.7 倍、投資が 3 倍で反応するように作りました（HP フィルターで取り出した値は、0.76 倍と 3.7 倍で、それに近い）。実際の景気循環の事実と、傾向は似ていますが、数値は、実際の統計で確かめる必要があります（7 章の方法で、実際の統計を読み込めます）。</p>
 </blockquote>
-<h3 id="_8">実行結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_8">予想の答え合わせ<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。第 9 章のデータで、変数ごとの循環の統計を求めます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter09.cycles</span><span class="w"> </span><span class="kn">import</span> <span class="n">cycle_statistics</span><span class="p">,</span> <span class="n">load_quarterly</span>
+
+<span class="n">stats</span> <span class="o">=</span> <span class="n">cycle_statistics</span><span class="p">(</span><span class="n">load_quarterly</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"変動の大きさ（標準偏差）"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s2">"volatility"</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"GDP との相関"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s2">"correlation_with_gdp"</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"自己相関（ラグ 1）"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s2">"autocorrelation"</span><span class="p">]</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>変動の大きさ（標準偏差）
+gdp             1.008
+consumption     0.768
+investment      3.717
+unemployment    0.520
+inflation       0.300
+GDP との相関
+gdp             1.000
+consumption     0.935
+investment      0.862
+unemployment   -0.963
+inflation       0.474
+自己相関（ラグ 1）
+gdp             0.623
+consumption     0.501
+investment      0.437
+unemployment    0.605
+inflation       0.201
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: 変動の大きさ（標準偏差、%）は、GDP が 1.008、消費が 0.768、投資が 3.717 です。<strong>最も大きいのは投資、最も小さいのは消費</strong>です（投資は GDP の約 3.7 倍）</li>
+<li>2 つ目の問い: 失業率の循環の、GDP の循環との相関は <strong>−0.963</strong> で、<strong>逆向き</strong>です。GDP が好調なとき、失業率は下がります</li>
+<li>3 つ目の問い: ラグ 1 の自己相関は、GDP が 0.623、消費が 0.501、投資が 0.437 で、<strong>いずれも正</strong>です。1 四半期前の循環と、ある程度似ています（持続性があります）</li>
+</ul>
+<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter09
 </code></pre></div>
@@ -6693,7 +6739,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_9">このモデルが成り立たない場面<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>HP フィルターは、標本の端で、不正確です。</strong> 最初と最後のトレンドは、前後のデータが足りないので、不安定です（最新のデータで、循環が大きく変わることがあります）</li>
 <li><strong>平滑化の強さ λ = 1600 は、慣習です。</strong> 理論的に、正しい値ではありません。練習問題の「多様」で、λ を変えると、循環の大きさと自己相関が変わることを確かめます</li>

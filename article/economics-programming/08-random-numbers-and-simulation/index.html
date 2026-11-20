@@ -1923,6 +1923,17 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -1948,7 +1959,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -6307,7 +6318,6 @@
 <li>需要曲線 Q = 100 − 2P で、価格が 10 のとき、需要の期待値は 80 です。標準偏差 10 のばらつきがあるとき、1 回の観測値は、80 にどのくらい近いでしょうか。観測値を増やしていくと、平均は何に近づきますか</li>
 <li>サイコロを 1 回振った目の平均は 3.5 です。サイコロを 30 回振って平均を求める試行を 1000 回行うと、その 1000 個の平均は、どのくらいばらつくでしょうか。サイコロ 1 回のばらつき（標準偏差 約 1.71）より、大きいですか、小さいですか</li>
 </ul>
-<p>答えは、平均は 80 に近づきます。2 つ目は、小さくなり、1.71 ÷ √30 = 約 0.31 です。</p>
 <h2 id="83">8.3 乱数<a class="headerlink" href="#83" title="Permanent link">&para;</a></h2>
 <h3 id="_2">疑似乱数と種<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <p>コンピュータの乱数は、決まった計算で作る疑似乱数です。最初の値（種）を決めると、同じ乱数の列が、何度でも再現できます。</p>
@@ -6491,7 +6501,41 @@
 </code></pre></div>
 <p>サイコロ 1 回の目は 1〜6 が同じ確率（一様分布）なのに、30 回の平均を 1,000 回集めた分布は、3.5 を中心にした釣り鐘の形になります。</p>
 <p><img alt="標本平均のヒストグラム（サイコロ 30 回の平均を 1,000 回）" src="../images/ch08-sample-means.png" /></p>
-<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_9">予想の答え合わせ<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">statistics</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.simulation</span><span class="w"> </span><span class="kn">import</span> <span class="n">running_means</span><span class="p">,</span> <span class="n">sample_means</span><span class="p">,</span> <span class="n">simulate_demand</span>
+
+<span class="n">rng</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">Random</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">values</span> <span class="o">=</span> <span class="n">simulate_demand</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10000</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">means</span> <span class="o">=</span> <span class="n">running_means</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">10000</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">means</span><span class="p">[</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">means30</span> <span class="o">=</span> <span class="n">sample_means</span><span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">rng</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">statistics</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">means30</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">statistics</span><span class="o">.</span><span class="n">stdev</span><span class="p">(</span><span class="n">means30</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">statistics</span><span class="o">.</span><span class="n">pstdev</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">statistics</span><span class="o">.</span><span class="n">pstdev</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">])</span> <span class="o">/</span> <span class="mi">30</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>89.4172
+10 76.3804
+100 79.1634
+1000 80.1785
+10000 79.9924
+3.5102
+0.3094
+1.7078
+0.3118
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: 1 回目の観測値は 89.4172 で、期待値 80 から 10 ほど離れています（標準偏差 10 のばらつきです）。観測値を増やすと、累積平均は 10 個で 76.3804、100 個で 79.1634、1000 個で 80.1785、10000 個で 79.9924 と、80 に近づきます。</li>
+<li>2 つ目の問い: 30 回の平均を 1000 回集めたときの標準偏差は 0.3094 で、サイコロ 1 回の標準偏差 1.7078 より小さくなります。理論値は 1.7078 ÷ √30 = 0.3118 で、ほぼ一致します。1000 個の平均の平均は 3.5102 で、3.5 に近い値です。</li>
+</ul>
+<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
@@ -6526,7 +6570,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>シミュレーションは、観測値が独立で、同じ分布に従う前提です。需要は、前の日の需要に影響されることがあり、その場合、観測値が増えても、平均がこの章の式の速さでは安定しません。また、この章の需要は、<code>max</code> で 0 に切り捨てていません。ばらつきの標準偏差 10 が、期待値 80 に比べて十分小さいので、負になる確率は無視できますが、期待値が小さくなると、無視できなくなります。</p>
 <h2 id="86">8.6 練習問題<a class="headerlink" href="#86" title="Permanent link">&para;</a></h2>
 <table>

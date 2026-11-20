@@ -2946,6 +2946,17 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2971,7 +2982,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -6384,10 +6395,9 @@
 <h2 id="162">16.2 予想する<a class="headerlink" href="#162" title="Permanent link">&para;</a></h2>
 <ul>
 <li>GDP = 4、資本 = 4、総労働時間 = 1、α = 0.5 のとき、TFP はいくつですか</li>
-<li>GDP の変動の何割が、TFP の変動で説明されるでしょうか（TFP が主役だ、という RBC 理論の立場から、予想します）</li>
+<li>この章の架空のデータ（TFP の変動を主役にして作ったもの）では、GDP の変動の何割が、TFP の変動で説明されるでしょうか（資本と労働の寄与も、予想します）</li>
 <li>貯蓄率が一定（s = 0.2）のソロー・モデルで、消費と投資の変動は、GDP の変動に比べて、大きいですか、小さいですか</li>
 </ul>
-<p>答えは、TFP = 4 ÷ (4^0.5 × 1^0.5) = <strong>2</strong> です。（以下の割合は、TFP の変動を主役にして作った<strong>架空のデータ</strong>の結果です。RBC 理論が実証された、という意味ではなく、関数が分解できることの確認です。）この章の架空のデータでは、TFP の寄与は約 <strong>58%</strong>、労働の寄与が約 <strong>42%</strong>、資本の寄与は、ほぼ <strong>0</strong> です。消費も投資も、貯蓄率が一定なら、GDP と<strong>まったく同じ割合</strong>で動きます（相対的な変動 = 1.0）。</p>
 <h2 id="163">16.3 モデルの考え方<a class="headerlink" href="#163" title="Permanent link">&para;</a></h2>
 <h3 id="tfp">TFP と、乖離の恒等式<a class="headerlink" href="#tfp" title="Permanent link">&para;</a></h3>
 <p>生産関数 Y = A·K^α·H^(1−α) の対数をとると、log Y = log A + α·log K + (1−α)·log H。<strong>TFP は、Y を、観測できる要素（K と H）で割った残り</strong>で、「ソロー残差」とも呼ばれます。各変数の、HP フィルター（第 9 章）によるトレンドからの乖離は、同じ関係を満たします（HP フィルターは線形なので）。</p>
@@ -6885,7 +6895,48 @@
 <li>資本の変動が小さいので、<strong>このモデルでは、GDP の変動は、ほぼ、TFP の変動そのもの</strong>です（相関 0.999）。労働は一定と仮定しているため、TFP の効果を、増幅する仕組みがありません</li>
 <li>消費・投資・産出量の変動は、<strong>同じ</strong>です。貯蓄率が一定のため</li>
 </ul>
-<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">予想の答え合わせ<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter16.solow_stochastic</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SolowParameters</span><span class="p">,</span>
+    <span class="n">business_cycle_components</span><span class="p">,</span>
+    <span class="n">decompose_business_cycle</span><span class="p">,</span>
+    <span class="n">load_solow_quarterly</span><span class="p">,</span>
+    <span class="n">log_deviations</span><span class="p">,</span>
+    <span class="n">stochastic_solow</span><span class="p">,</span>
+    <span class="n">total_factor_productivity</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">tfp</span> <span class="o">=</span> <span class="n">total_factor_productivity</span><span class="p">(</span>
+    <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mf">4.0</span><span class="p">]),</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mf">4.0</span><span class="p">]),</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"TFP:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">tfp</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">cycles</span> <span class="o">=</span> <span class="n">business_cycle_components</span><span class="p">(</span><span class="n">load_solow_quarterly</span><span class="p">(),</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.36</span><span class="p">)</span>
+<span class="n">shares</span> <span class="o">=</span> <span class="n">decompose_business_cycle</span><span class="p">(</span><span class="n">cycles</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.36</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"shares of GDP variance:"</span><span class="p">,</span> <span class="n">shares</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="n">SolowParameters</span><span class="p">(</span>
+    <span class="n">alpha</span><span class="o">=</span><span class="mf">0.36</span><span class="p">,</span> <span class="n">saving</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">depreciation</span><span class="o">=</span><span class="mf">0.025</span><span class="p">,</span> <span class="n">rho</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">sigma</span><span class="o">=</span><span class="mf">0.008</span><span class="p">,</span> <span class="n">hours</span><span class="o">=</span><span class="mf">1.0</span>
+<span class="p">)</span>
+<span class="n">dev</span> <span class="o">=</span> <span class="n">log_deviations</span><span class="p">(</span><span class="n">stochastic_solow</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="mi">200</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">123</span><span class="p">)),</span> <span class="n">params</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"std of c / std of y:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">dev</span><span class="p">[</span><span class="s2">"c"</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">dev</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"std of i / std of y:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">dev</span><span class="p">[</span><span class="s2">"i"</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">()</span> <span class="o">/</span> <span class="n">dev</span><span class="p">[</span><span class="s2">"y"</span><span class="p">]</span><span class="o">.</span><span class="n">std</span><span class="p">(),</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>TFP: 2.0
+shares of GDP variance: {'tfp': 0.583, 'capital': -0.003, 'labour': 0.42}
+std of c / std of y: 1.0
+std of i / std of y: 1.0
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: TFP = 4 ÷ (4^0.5 × 1^0.5) = 4 ÷ 2 = <strong>2.0</strong> です。</li>
+<li>2 つ目の問い: この章の架空のデータでは、TFP の寄与は約 <strong>58%</strong>（0.583）、労働の寄与は約 <strong>42%</strong>（0.42）、資本の寄与は、ほぼ <strong>0</strong>（−0.003）です。これは、TFP の変動を主役にして作った<strong>架空のデータ</strong>の結果です。RBC 理論が実証された、という意味ではなく、関数が分解できることの確認です。</li>
+<li>3 つ目の問い: 貯蓄率が一定なら、消費も投資も、GDP と<strong>まったく同じ割合</strong>で動きます。標準偏差の比は、どちらも <strong>1.0</strong> です。</li>
+</ul>
+<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter16
 </code></pre></div>
@@ -6928,7 +6979,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>貯蓄率が一定です。</strong> 家計は、将来を見据えて貯蓄を決めるはずです。次の章以降で、最適化から、貯蓄を内生的に決めます</li>
 <li><strong>労働が一定です。</strong> 労働時間は、景気循環で、大きく動きます（TFP との相関 0.56）</li>

@@ -2565,6 +2565,17 @@
   <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2590,7 +2601,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         データを取得する
@@ -2601,7 +2612,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         ファイルの形（実物で確かめたこと）
@@ -2612,7 +2623,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         読み込む関数
@@ -2634,7 +2645,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         ペン効果を、実際の統計で
@@ -2662,7 +2673,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -2690,7 +2701,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         できること
@@ -2701,7 +2712,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -2712,7 +2723,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_14" class="md-nav__link">
+  <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -6429,7 +6440,6 @@
 <li>PPP レート（一物一価が成り立つ為替レート）は、1 ドル何円ですか</li>
 <li>日本の価格は、米国の価格の何倍ですか（相対価格水準）。日本は、米国より、安いですか、高いですか</li>
 </ul>
-<p>答えは、450 ÷ 150 = 3 ドル、PPP レートは 450 ÷ 5.5 ≈ 81.8 円 / ドル、相対価格水準は 3 ÷ 5.5 ≈ 0.545 です。日本の価格は、ドルで見ると、米国の約 55%（安い）です。</p>
 <h2 id="73">7.3 購買力平価の考え方<a class="headerlink" href="#73" title="Permanent link">&para;</a></h2>
 <h3 id="ppp">一物一価と PPP<a class="headerlink" href="#ppp" title="Permanent link">&para;</a></h3>
 <p>貿易できる同じ商品は、国によって価格が違えば、安い国で買って、高い国で売る（裁定）ことで、価格が揃うはずです（一物一価）。一物一価が成り立つなら、為替レートは、PPP レート（自国の価格 ÷ 米国の価格）に等しくなります。</p>
@@ -6645,7 +6655,27 @@
 <blockquote>
 <p><strong>この結果は、架空のデータの結果です。</strong> このデータは、傾きが 0.25 になるように作りました（推定値 0.233 は、それに近い）。実際の統計では、7.5 節で確かめます。</p>
 </blockquote>
-<h3 id="_6">実行結果<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<h3 id="_6">予想の答え合わせ<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter07.ppp</span><span class="w"> </span><span class="kn">import</span> <span class="n">ppp_rate</span><span class="p">,</span> <span class="n">price_in_dollars</span><span class="p">,</span> <span class="n">relative_price_level</span>
+
+<span class="n">dollars</span> <span class="o">=</span> <span class="n">price_in_dollars</span><span class="p">(</span><span class="mi">450</span><span class="p">,</span> <span class="mi">150</span><span class="p">)</span>
+<span class="n">ppp</span> <span class="o">=</span> <span class="n">ppp_rate</span><span class="p">(</span><span class="mi">450</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">)</span>
+<span class="n">level</span> <span class="o">=</span> <span class="n">relative_price_level</span><span class="p">(</span><span class="mi">450</span><span class="p">,</span> <span class="mi">150</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"日本の価格（ドル）:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">dollars</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"PPP レート（円 / ドル）:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">ppp</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"相対価格水準:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>日本の価格（ドル）: 3.0
+PPP レート（円 / ドル）: 81.8182
+相対価格水準: 0.5455
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: 日本の価格は、ドルで <strong>3 ドル</strong>です（450 ÷ 150）</li>
+<li>2 つ目の問い: PPP レートは、<strong>約 81.8 円 / ドル</strong>です（450 ÷ 5.5）。一物一価が成り立つなら、為替レートは 81.8 円 / ドルのはずですが、実際は 150 円 / ドルです</li>
+<li>3 つ目の問い: 相対価格水準は、<strong>約 0.545</strong>（3 ÷ 5.5）です。日本の価格は、ドルで見ると、米国の約 55% で、<strong>安い</strong>です</li>
+</ul>
+<h3 id="_7">実行結果<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter07
 </code></pre></div>
@@ -6653,7 +6683,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <h2 id="75-penn-world-table">7.5 実際の統計で試す（Penn World Table）<a class="headerlink" href="#75-penn-world-table" title="Permanent link">&para;</a></h2>
 <p>ここまでの第 1〜7 章の関数は、架空のデータで試しました。最後に、<strong>実際の国際比較データ</strong>で、同じ関数を、そのまま使います。</p>
-<h3 id="_7">データを取得する<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h3 id="_8">データを取得する<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p><a href="https://www.rug.nl/ggdc/productivity/pwt/">Penn World Table（PWT）</a>は、フローニンゲン大学の GGDC が公開する、国際比較データです。この記事では、<strong>PWT 10.01</strong> を使います。</p>
 <table>
 <thead>
@@ -6684,7 +6714,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <blockquote>
 <p><strong>PWT は、新しい版が公開されています</strong>（PWT 11.0 が、2025 年 10 月に公開されたと、GGDC のページに載っています）。この記事の数値は、<strong>PWT 10.01</strong> の結果です。別の版を使うと、列の名前や値が、変わることがあります。取得した日と、版を、記録しておきます。</p>
 </blockquote>
-<h3 id="_8">ファイルの形（実物で確かめたこと）<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_9">ファイルの形（実物で確かめたこと）<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -6716,7 +6746,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tbody>
 </table>
 <p>注意: <code>rkna</code> という列は、「資本サービス」の<strong>指数</strong>（2017 年 = 1）で、資本ストックの水準ではありません。第 1 章の k には、<code>cn</code> を使います。</p>
-<h3 id="_9">読み込む関数<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_10">読み込む関数<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p>就業者 1 人当たりの GDP（y = cgdpo ÷ emp）、資本（k = cn ÷ emp）、人的資本（h = hc）に直します。第 1〜3 章と、同じ形の表になるので、これまでの関数を、そのまま使えます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">write_dta</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">,</span> <span class="n">rows</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">object</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span>
@@ -6917,7 +6947,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <blockquote>
 <p><strong>実際の統計の注意点</strong>: 2019 年の就業者 1 人当たりの GDP は、最大のアイルランド（約 22 万ドル）と、最小のベネズエラ（約 600 ドル）で、約 360 倍の差があります。アイルランドの値は、多国籍企業の利益の計上の影響を、受けていると、言われています（この記事では、確かめていません）。1 か国の外れ値が、回帰の結果に、影響することがあります。</p>
 </blockquote>
-<h3 id="_10">ペン効果を、実際の統計で<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">ペン効果を、実際の統計で<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>PWT の <code>pl_gdpo</code>（相対価格水準）を、人口 1 人当たりの GDP（<code>cgdpo</code> ÷ <code>pop</code>）に回帰します（2019 年、144 か国）。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
@@ -6958,7 +6988,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>貿易できない財・サービスがあると、一物一価は成り立ちません。</strong> 理髪や家賃の価格は、国によって違うままです。輸送費・関税・独占も、価格差を生みます</li>
 <li><strong>ペン効果の回帰は、因果ではなく、相関です。</strong> 所得が高いから、物価が高いのか、別の要因が、両方を決めているのかは、分かりません</li>
@@ -6967,7 +6997,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </ul>
 <h2 id="77-1">7.7 第 1 部の到達チェック<a class="headerlink" href="#77-1" title="Permanent link">&para;</a></h2>
 <p>第 1 部（第 1〜7 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。</p>
-<h3 id="_12">できること<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">できること<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -7019,7 +7049,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_13">時間を決めて書く課題<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">時間を決めて書く課題<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、関数とテストを書きます。</p>
 <table>
 <thead>
@@ -7043,7 +7073,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_14">誤りの原因の分類<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_15">誤りの原因の分類<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <p>できなかったときは、原因を分類して、戻る章に戻ります。</p>
 <table>
 <thead>

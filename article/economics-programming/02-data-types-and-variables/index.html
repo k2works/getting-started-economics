@@ -1746,6 +1746,17 @@
   <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -1771,7 +1782,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -6336,7 +6347,6 @@
 <li>需要量 80 → 76 の変化率は何 % ですか</li>
 <li>価格弾力性は、いくつになりますか。値が 1 より大きいか小さいかも答えてください</li>
 </ul>
-<p>答えは、価格が +20%、需要量が −5% で、価格弾力性は 0.25 です。1 より小さいので「非弾力的」、つまり価格が上がっても需要量があまり減らない財です。</p>
 <h2 id="23">2.3 データ型と変数<a class="headerlink" href="#23" title="Permanent link">&para;</a></h2>
 <h3 id="int-float">数値: int と float<a class="headerlink" href="#int-float" title="Permanent link">&para;</a></h3>
 <p>この節のコード片は、第 1 章で紹介した対話モード（<code>uv run python</code>）に、1 行ずつ打ち込んで、試せます。<code>#</code> から後ろは、結果の説明（コメント）なので、打ち込まなくてかまいません。</p>
@@ -6466,7 +6476,25 @@
 <span class="w">    </span><span class="sd">"""価格弾力性が 1 より大きければ弾力的。"""</span>
     <span class="k">return</span> <span class="n">elasticity</span> <span class="o">&gt;</span> <span class="mi">1</span>
 </code></pre></div>
-<h3 id="_7">実行結果<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h3 id="_7">予想の答え合わせ<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter02.elasticity</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_price_elastic</span><span class="p">,</span> <span class="n">price_elasticity</span>
+
+<span class="nb">print</span><span class="p">((</span><span class="mi">12</span> <span class="o">-</span> <span class="mi">10</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">((</span><span class="mi">76</span> <span class="o">-</span> <span class="mi">80</span><span class="p">)</span> <span class="o">/</span> <span class="mi">80</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">price_elasticity</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">76</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">is_price_elastic</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>20.0
+-5.0
+0.25 False
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: 価格の変化率は +20%（20.0）です。</li>
+<li>2 つ目の問い: 需要量の変化率は −5%（−5.0）です。</li>
+<li>3 つ目の問い: 価格弾力性は 0.25 で、<code>is_price_elastic</code> は <code>False</code> です。1 より小さいので「非弾力的」、つまり価格が上がっても需要量があまり減らない財です。</li>
+</ul>
+<h3 id="_8">実行結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter02
 </code></pre></div>
@@ -6501,7 +6529,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_8">このモデルが成り立たない場面<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_9">このモデルが成り立たない場面<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>弾力性は、小さな変化を前提にした値です。価格が大きく変わる場面では、変化前を基準にするか変化後を基準にするかで、値が変わります。また、需要曲線が直線のとき、曲線上の場所によって弾力性が変わります。たとえば Q = 100 − 2P で価格が 10 のときの弾力性は 2 × 10 ÷ 80 = 0.25 ですが、価格が 40 では 2 × 40 ÷ 20 = 4 です。</p>
 <h2 id="26">2.6 練習問題<a class="headerlink" href="#26" title="Permanent link">&para;</a></h2>
 <table>

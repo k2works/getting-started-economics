@@ -2469,7 +2469,7 @@
   <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
-        結果
+        予想の答え合わせ
       
     </span>
   </a>
@@ -2478,6 +2478,17 @@
         
           <li class="md-nav__item">
   <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        結果
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -2505,7 +2516,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -6390,7 +6401,6 @@
 <li>傾き b と切片 c は、いくつになりますか（傾きは、共分散 ÷ 分散で求められます）</li>
 <li>この直線は、データの変動のうち、どれくらい（決定係数）を説明しますか。1 に近いですか</li>
 </ul>
-<p>答えは、傾きが 1.5、切片が 2/3 です（x の平均は 2、y の平均は 11/3 で、傾きは 3 ÷ 2 = 1.5）。残差の二乗和は 1/6、y の変動の二乗和は 14/3 なので、決定係数は 1 − (1/6) ÷ (14/3) = 27/28 ≈ 0.964 で、1 に近いです。</p>
 <h2 id="33">3.3 回帰分析の考え方<a class="headerlink" href="#33" title="Permanent link">&para;</a></h2>
 <h3 id="_2">最小二乗法を行列で書く<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <p>説明変数が 1 つでも 2 つ以上でも、同じ式で書けます。定数項の列（すべて 1）と、説明変数の列を、横に並べた行列を X とします。残差の二乗和を最小にする β̂ は、正規方程式の解です。</p>
@@ -6592,7 +6602,28 @@
     <span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"ln_k"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"k"</span><span class="p">]),</span> <span class="s2">"ln_h"</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s2">"h"</span><span class="p">])})</span>
     <span class="k">return</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 </code></pre></div>
-<h3 id="_7">結果<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h3 id="_7">予想の答え合わせ<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。3 つの点に、<code>fit_ols</code> で直線を当てはめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter03.regression</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_ols</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">"x"</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">]})</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">])</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">fit_ols</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"傾き:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"x"</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"切片:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"const"</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"決定係数:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">r_squared</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>傾き: 1.5
+切片: 0.6667
+決定係数: 0.9643
+</code></pre></div>
+<ul>
+<li>1 つ目の問い（傾きと切片）: 傾きが 1.5、切片が 0.6667（= 2/3）です（x の平均は 2、y の平均は 11/3 で、傾きは 3 ÷ 2 = 1.5）</li>
+<li>2 つ目の問い（決定係数）: 0.9643 で、1 に近いです。残差の二乗和は 1/6、y の変動の二乗和は 14/3 なので、1 − (1/6) ÷ (14/3) = 27/28 ≈ 0.964 です</li>
+</ul>
+<h3 id="_8">結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.accounting</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_countries</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter03.regression</span><span class="w"> </span><span class="kn">import</span> <span class="n">development_accounting_regression</span>
 
@@ -6641,7 +6672,7 @@
 <blockquote>
 <p><strong>回帰の係数を、生産関数の係数と読むと、間違えます。</strong> 発展会計は、α を<strong>外から与えて</strong>、TFP を残りとして求めました。回帰で α を推定しようとすると、TFP が資本と相関している場合、α は過大になります。実際のデータでは、真の値が分からないので、ずれていることにも気づけません。この章のデータが架空で、真の値が分かっているから、確かめられました。</p>
 </blockquote>
-<h3 id="_8">実行結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter03
 </code></pre></div>
@@ -6676,7 +6707,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_9">このモデルが成り立たない場面<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>誤差が、説明変数と無相関、という仮定が、必要です。</strong> 成り立たないと、係数は偏ります（この章の結果）</li>
 <li><strong>観測数が少ないと、標準誤差が大きくなります。</strong> この章は、24 か国で、人的資本の係数の標準誤差が 0.556 と大きい</li>

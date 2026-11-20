@@ -2074,6 +2074,17 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2099,7 +2110,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -2160,7 +2171,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -2171,7 +2182,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -6354,7 +6365,6 @@
 <li>2010 年は、名目と実質のどちらが高いでしょうか。デフレーターは 96.1 で、100 より小さいです</li>
 <li>2013 年と 2020 年の、景気動向指数は、いくつぐらいになるでしょうか</li>
 </ul>
-<p>答えは、2015 年で交わり、2010 年は実質の方が高い（デフレーターが 96.1 と 100 未満なので、名目をデフレーターで割って 100 を掛けると、値が大きくなる）です。2013 年と 2020 年は、第 11 章で、実質成長率がマイナスだった年です。</p>
 <h2 id="123-pandas">12.3 Pandas のプロット<a class="headerlink" href="#123-pandas" title="Permanent link">&para;</a></h2>
 <h3 id="_2">線グラフ<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <p><code>DataFrame</code> の <code>plot()</code> は、列ごとに 1 本の線を描きます。行の名前（年）が、横軸になります。</p>
@@ -6485,7 +6495,32 @@
 </code></pre></div>
 <p><img alt="実質成長率" src="../images/ch12-growth.png" /></p>
 <p><code>dropna()</code> は、欠損値の行を除きます。<code>fig.tight_layout()</code> は、軸のラベルが図からはみ出さないように、余白を調整します（最初に描いたとき、横軸のラベルが切れていたので、足しました）。</p>
-<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_9">予想の答え合わせ<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter11.economy</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_economy</span><span class="p">,</span> <span class="n">production_gdp</span><span class="p">,</span> <span class="n">real_gdp</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.charts</span><span class="w"> </span><span class="kn">import</span> <span class="n">diffusion_index</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">load_economy</span><span class="p">()</span>
+<span class="n">nominal</span> <span class="o">=</span> <span class="n">production_gdp</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="n">real</span> <span class="o">=</span> <span class="n">real_gdp</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2010</span><span class="p">,</span> <span class="mi">2015</span><span class="p">,</span> <span class="mi">2021</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">year</span><span class="p">,</span> <span class="s2">"名目:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">nominal</span><span class="p">[</span><span class="n">year</span><span class="p">]),</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"実質:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">real</span><span class="p">[</span><span class="n">year</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">di</span> <span class="o">=</span> <span class="n">diffusion_index</span><span class="p">(</span><span class="n">df</span><span class="p">[[</span><span class="s2">"consumption"</span><span class="p">,</span> <span class="s2">"investment"</span><span class="p">,</span> <span class="s2">"government"</span><span class="p">,</span> <span class="s2">"exports"</span><span class="p">]])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"景気動向指数 2013:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">di</span><span class="p">[</span><span class="mi">2013</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"景気動向指数 2020:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">di</span><span class="p">[</span><span class="mi">2020</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>2010 名目: 480.0 実質: 499.4797
+2015 名目: 541.0 実質: 541.0
+2021 名目: 596.0 実質: 576.9603
+景気動向指数 2013: 0.0
+景気動向指数 2020: 0.0
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: 2015 年で交わります。2015 年は、名目も実質も 541.0 で、同じ値です</li>
+<li>2 つ目の問い: 2010 年は、実質（499.4797）の方が、名目（480.0）より高くなります。デフレーターが 96.1 と 100 未満なので、名目をデフレーターで割って 100 を掛けると、値が大きくなるからです。2021 年は逆で、名目（596.0）の方が、実質（576.9603）より高くなります</li>
+<li>3 つ目の問い: 景気動向指数は、2013 年も 2020 年も 0.0 です。4 つの支出項目が、どれも前の年より増えなかったからです。この 2 つの年は、第 11 章で、実質成長率がマイナスだった年です</li>
+</ul>
+<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter12
 </code></pre></div>
@@ -6520,7 +6555,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>DI は、系列の増減の「数」しか見ないので、少し減った系列も、大きく減った系列も、同じ 1 つとして数えます。また、4 つの系列では、0% か 100% になりやすく、景気の強さを区別できません。移動平均は、窓の幅によって、結論が変わります。幅を変えて、結論が変わらないかを確かめる必要があります。</p>
 <h2 id="126">12.6 練習問題<a class="headerlink" href="#126" title="Permanent link">&para;</a></h2>
 <table>
@@ -6650,13 +6685,13 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_11">時間を決めて書く課題<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">時間を決めて書く課題<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、次を書いてください。</p>
 <ol>
 <li>表から、実質 GDP を求めて、成長率がマイナスの年を取り出す（15 分）</li>
 <li>移動平均と DI を、手計算できる小さな表でテストする（15 分）</li>
 </ol>
-<h3 id="_12">誤りの原因の分類<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">誤りの原因の分類<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>

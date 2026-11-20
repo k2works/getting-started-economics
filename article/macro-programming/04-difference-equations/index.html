@@ -2493,6 +2493,17 @@
   <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2518,7 +2529,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -6365,7 +6376,6 @@
 <li>繰り返すと、x(t) は、どんな値に近づきますか（近づく値 x* は、x* = 0.5·x* + 1 を満たします）</li>
 <li>係数を a = −0.8 に変えると、x(t) の動き方は、どう変わりますか</li>
 </ul>
-<p>答えは、x(1) = 1、x(2) = 1.5、x(3) = 1.75 で、x* = 2 に近づきます。a = −0.8 なら、x* の上下を、往復しながら近づきます。</p>
 <h2 id="43">4.3 差分方程式の考え方<a class="headerlink" href="#43" title="Permanent link">&para;</a></h2>
 <h3 id="_2">定常状態と安定性<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <p>x(t+1) = a·x(t) + b で、x(t+1) = x(t) = x* とすると、x* = b ÷ (1 − a) です。これが<strong>定常状態</strong>（動かなくなる値）です。</p>
@@ -6629,7 +6639,32 @@
 <li>階段は、「価格 P(t−1) で供給量が決まる（横に動いて供給曲線へ）→ その数量で需要が価格 P(t) を決める（縦に動いて需要曲線へ）」の繰り返しです</li>
 <li>安定なとき、階段は、内側に巻き込んで、均衡（2 本の曲線の交点）に近づきます。不安定なとき、外側に広がります</li>
 </ul>
-<h3 id="_8">実行結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_8">予想の答え合わせ<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。<code>linear_path</code> が経路を、<code>steady_state</code> が定常状態を返します。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter04.difference</span><span class="w"> </span><span class="kn">import</span> <span class="n">linear_path</span><span class="p">,</span> <span class="n">steady_state</span>
+
+<span class="n">path</span> <span class="o">=</span> <span class="n">linear_path</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"x(1), x(2), x(3):"</span><span class="p">,</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">path</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"定常状態 x*:"</span><span class="p">,</span> <span class="n">steady_state</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"x(20):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">path</span><span class="p">[</span><span class="mi">20</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">swing</span> <span class="o">=</span> <span class="n">linear_path</span><span class="p">(</span><span class="n">a</span><span class="o">=-</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"a = -0.8 の定常状態 x*:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">steady_state</span><span class="p">(</span><span class="o">-</span><span class="mf">0.8</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"a = -0.8 の x(1) から x(6):"</span><span class="p">,</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">swing</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">7</span><span class="p">]])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"a = -0.8 の x(20):"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">swing</span><span class="p">[</span><span class="mi">20</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>x(1), x(2), x(3): [1.0, 1.5, 1.75]
+定常状態 x*: 2.0
+x(20): 2.0
+a = -0.8 の定常状態 x*: 0.5556
+a = -0.8 の x(1) から x(6): [1.0, 0.2, 0.84, 0.328, 0.7376, 0.4099]
+a = -0.8 の x(20): 0.5492
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: x(1) = 1、x(2) = 1.5、x(3) = 1.75 です</li>
+<li>2 つ目の問い: x* = 2 に近づきます。20 期目には、x(20) = 2.0（小数第 4 位まで）です</li>
+<li>3 つ目の問い: a = −0.8 なら、定常状態は x* = 0.5556 です。x(t) は、x* の上下を、往復しながら近づきます（0.2、0.84、0.328、0.7376、…）</li>
+</ul>
+<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter04
 </code></pre></div>
@@ -6664,7 +6699,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_9">このモデルが成り立たない場面<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>1 階の線形の式だけを扱っています。</strong> 現実の経済は、非線形（曲線）で、2 期以上前の値にも依存します。非線形の式は、定常状態の近くで、線形に近似できます（第 5 章・第 17 章）</li>
 <li><strong>蜘蛛の巣モデルは、「前の期の価格だけで、生産量を決める」という、近視眼的な予想を前提にしています。</strong> 生産者が、価格の往復を見抜けば、行動が変わり、モデルは成り立ちません</li>

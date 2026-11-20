@@ -2541,6 +2541,17 @@
   <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2566,7 +2577,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -6322,7 +6333,6 @@
 <li>20 年間で、乖離は何倍になりますか（e^(−0.02 × 20)）</li>
 <li>初期の所得が、ln で 1 だけ（約 2.7 倍）高い国は、年の成長率が、どれだけ低くなりますか</li>
 </ul>
-<p>答えは、乖離が e^(−0.4) ≈ 0.670 倍になるので、β = −(1 − 0.670) ÷ 20 ≈ -0.0165（成長率を小数で見たとき）です。初期の所得が 2.7 倍の国は、年の成長率が、約 1.65 ポイント低くなります。</p>
 <h2 id="63">6.3 収斂の考え方<a class="headerlink" href="#63" title="Permanent link">&para;</a></h2>
 <h3 id="_2">収斂の式<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <p>定常状態からの乖離が、毎年一定の割合で縮む（第 5 章の対数線形近似と同じ構造）とすると、T 年後の対数の所得は、ln y_T − c = e^(−λT)·(ln y_0 − c) です（c は、共通の定常状態の対数の所得）。1 年当たりの成長率に直すと、</p>
@@ -6594,7 +6604,27 @@
 <li>すべての開始年で、β は負（−0.42〜−0.60）です。収斂は、特定の時期に限らず、全期間で続いています</li>
 <li>傾きは、年ごとに、上下にゆれます。短い期間の推定は、不安定です</li>
 </ul>
-<h3 id="_8">実行結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_8">予想の答え合わせ<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="n">lam</span> <span class="o">=</span> <span class="mf">0.02</span>
+<span class="n">years</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">ratio</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">lam</span> <span class="o">*</span> <span class="n">years</span><span class="p">)</span>
+<span class="n">beta</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ratio</span><span class="p">)</span> <span class="o">/</span> <span class="n">years</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"乖離の倍率:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">ratio</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"傾き β（小数）:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"初期の対数所得が 1 高い国の成長率の差（ポイント）:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">beta</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>乖離の倍率: 0.6703
+傾き β（小数）: -0.0165
+初期の対数所得が 1 高い国の成長率の差（ポイント）: -1.6484
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: 乖離は、20 年間で 0.6703 倍（= e^(−0.4)）になります</li>
+<li>2 つ目の問い: 傾きは β = −(1 − 0.6703) ÷ 20 ≈ −0.0165（成長率を小数で見たとき）です。初期の対数の所得が 1 高い（約 2.7 倍の）国は、年の成長率が、約 1.65 ポイント（出力では 1.6484）低くなります</li>
+</ul>
+<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter06
 </code></pre></div>
@@ -6629,7 +6659,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_9">このモデルが成り立たない場面<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>回帰の傾きが負でも、収斂の証拠とは限りません。</strong> 豊かな国の成長が、たまたま低いだけ（平均への回帰、ゆらぎ）かもしれません。始まりの年の測定誤差でも、負の傾きが出ます</li>
 <li><strong>成長率の分散が、縮んでいるかは、別の問題です。</strong> 傾きが負でも、国ごとの成長のゆらぎが大きいと、所得の分布は、縮まないことがあります（練習問題の「生成」）</li>

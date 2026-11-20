@@ -2633,6 +2633,17 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2658,7 +2669,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -6379,7 +6390,6 @@
 <li>ラグ 1、ラグ 2 の自己相関は、いくつですか</li>
 <li>ρ を 0.95 に上げると、系列の見た目は、どう変わりますか</li>
 </ul>
-<p>答えは、分散 = 1 ÷ (1 − 0.25) = 4/3 ≈ 1.33、ラグ 1 の自己相関は 0.5、ラグ 2 は 0.25 です。ρ = 0.95 では、ショックの影響が長く残り、系列は、ゆっくりと、大きく動きます。</p>
 <h2 id="83">8.3 確率過程の考え方<a class="headerlink" href="#83" title="Permanent link">&para;</a></h2>
 <h3 id="_3">ホワイト・ノイズ<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
 <p>期ごとに、独立に引かれる、平均 0 の乱数です。過去の値から、未来を予想する手がかりが、ありません（自己相関が 0）。経済のショック（技術・政策・需要の変化）のモデル化に使います。</p>
@@ -6675,7 +6685,41 @@
 <li>棒が、標本の自己相関、赤い線が、理論値 ρ^k です。ラグが増えるにつれて、ρ の累乗で、小さくなります</li>
 <li>標本と理論値は、よく一致します。<strong>自己相関のグラフの形から、ρ を読み取れます</strong>（ラグ 1 の値が、ρ の推定値になります）</li>
 </ul>
-<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_9">予想の答え合わせ<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。ρ = 0.5 と ρ = 0.95 の系列を、同じ種の乱数から 10 万個ずつ作ります。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.stochastic</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">ar1_autocorrelation</span><span class="p">,</span>
+    <span class="n">ar1_series</span><span class="p">,</span>
+    <span class="n">ar1_variance</span><span class="p">,</span>
+    <span class="n">sample_autocorrelation</span><span class="p">,</span>
+    <span class="n">shock_half_life</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"理論の分散（ρ = 0.5）:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">ar1_variance</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"理論の自己相関 ラグ 1・ラグ 2:"</span><span class="p">,</span> <span class="n">ar1_autocorrelation</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">ar1_autocorrelation</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">rho</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">):</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">ar1_series</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mi">100_000</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"ρ = </span><span class="si">{</span><span class="n">rho</span><span class="si">}</span><span class="s2">: 標本の分散 </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">var</span><span class="p">()),</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2">、"</span>
+        <span class="sa">f</span><span class="s2">"ラグ 1 の自己相関 </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">sample_autocorrelation</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2">、"</span>
+        <span class="sa">f</span><span class="s2">"範囲 </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">min</span><span class="p">()),</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2"> から </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">max</span><span class="p">()),</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2">、"</span>
+        <span class="sa">f</span><span class="s2">"半減期 </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">shock_half_life</span><span class="p">(</span><span class="n">rho</span><span class="p">),</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="si">}</span><span class="s2"> 期"</span>
+    <span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>理論の分散（ρ = 0.5）: 1.3333
+理論の自己相関 ラグ 1・ラグ 2: 0.5 0.25
+ρ = 0.5: 標本の分散 1.332、ラグ 1 の自己相関 0.499、範囲 -4.8 から 4.9、半減期 1.0 期
+ρ = 0.95: 標本の分散 10.348、ラグ 1 の自己相関 0.95、範囲 -12.4 から 12.1、半減期 13.5 期
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: 分散は、<strong>4/3 ≈ 1.33</strong> です（1 ÷ (1 − 0.25)）。10 万個の系列の標本の分散は 1.332 で、理論値に近い値です</li>
+<li>2 つ目の問い: 自己相関は、ラグ 1 が <strong>0.5</strong>、ラグ 2 が <strong>0.25</strong>（ρ^k）です。標本のラグ 1 の自己相関は 0.499 でした</li>
+<li>3 つ目の問い: ρ = 0.95 では、分散が 10.348（ρ = 0.5 の約 8 倍）になり、系列の範囲も、−4.8〜4.9 から、−12.4〜12.1 に広がります。ラグ 1 の自己相関は 0.95 で、ショックの半減期は 13.5 期（ρ = 0.5 では 1.0 期）です。ショックの影響が長く残り、系列は、<strong>ゆっくりと、大きく動きます</strong></li>
+</ul>
+<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
@@ -6710,7 +6754,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>実際の景気循環は、AR(1) より、複雑です。</strong> 2 期以上前の値にも依存したり（AR(2)）、ショックが非正規だったり、時期によって性質が変わったりします</li>
 <li><strong>標本の自己相関は、系列が短いと、偏ります。</strong> 実際のマクロ・データは、数十〜百数十個しかなく、ρ の推定は、不確かです</li>

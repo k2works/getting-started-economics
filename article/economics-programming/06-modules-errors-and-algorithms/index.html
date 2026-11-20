@@ -1875,6 +1875,17 @@
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -1900,7 +1911,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -1950,7 +1961,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -1961,7 +1972,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_14" class="md-nav__link">
+  <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -6363,7 +6374,6 @@
 <li>区間 [0, 100] の真ん中、価格 50 の超過需要が負なら、均衡は [0, 50] と [50, 100] のどちらにありますか</li>
 <li>区間を半分にする操作を繰り返すと、区間の幅は何回で 1 未満になりますか</li>
 </ul>
-<p>答えは、符号が逆なので、間に必ずあります（超過需要は連続だからです）。真ん中の価格が負なら、[0, 50] にあります。幅は 100 → 50 → 25 → 12.5 → 6.25 → 3.125 → 1.5625 → 0.78 で、7 回です。</p>
 <h2 id="63">6.3 モジュール・エラー・アルゴリズム<a class="headerlink" href="#63" title="Permanent link">&para;</a></h2>
 <h3 id="_2">モジュールとパッケージ<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <p>Python のファイル 1 つが、モジュールです。他のモジュールの関数は、<code>import</code> で使います。</p>
@@ -6593,7 +6603,36 @@
         <span class="n">find_equilibrium_price</span><span class="p">(</span><span class="n">excess</span><span class="p">,</span> <span class="n">low</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 </code></pre></div>
 <p>区間 [30, 100] は、どちらの端も超過需要が負（−50 と −300）です。このとき、間に均衡があるかどうかは、この方法では判断できないので、例外にします。</p>
-<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_11">予想の答え合わせ<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter06.bisection</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_equilibrium_price</span><span class="p">,</span> <span class="n">make_excess_demand</span>
+
+<span class="n">excess</span> <span class="o">=</span> <span class="n">make_excess_demand</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">excess</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span> <span class="n">excess</span><span class="p">(</span><span class="mi">100</span><span class="p">),</span> <span class="n">excess</span><span class="p">(</span><span class="mi">50</span><span class="p">))</span>
+
+<span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">100.0</span>
+<span class="n">widths</span> <span class="o">=</span> <span class="p">[</span><span class="n">high</span> <span class="o">-</span> <span class="n">low</span><span class="p">]</span>
+<span class="k">while</span> <span class="n">high</span> <span class="o">-</span> <span class="n">low</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+    <span class="n">middle</span> <span class="o">=</span> <span class="p">(</span><span class="n">low</span> <span class="o">+</span> <span class="n">high</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="k">if</span> <span class="n">excess</span><span class="p">(</span><span class="n">low</span><span class="p">)</span> <span class="o">*</span> <span class="n">excess</span><span class="p">(</span><span class="n">middle</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="n">middle</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="n">middle</span>
+    <span class="n">widths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">high</span> <span class="o">-</span> <span class="n">low</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">widths</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">widths</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">find_equilibrium_price</span><span class="p">(</span><span class="n">excess</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>100 -300 -150
+[100.0, 50.0, 25.0, 12.5, 6.25, 3.125, 1.5625, 0.78125]
+7
+20.0
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: 超過需要は、価格 0 で +100、価格 100 で −300 と符号が逆なので、間に必ず均衡があります（超過需要は連続だからです）。真ん中の価格 50 の超過需要は −150 で負なので、均衡は [0, 50] にあります。</li>
+<li>2 つ目の問い: 区間の幅は 100 → 50 → 25 → 12.5 → 6.25 → 3.125 → 1.5625 → 0.78125 と縮み、7 回で 1 未満になります。<code>find_equilibrium_price</code> が返す均衡価格は 20.0 です。</li>
+</ul>
+<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter06
 </code></pre></div>
@@ -6624,7 +6663,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <p>二分法は、区間の両端で超過需要の符号が逆のときだけ使えます。均衡が複数あるモデル（需要や供給が複雑な形のとき）では、区間に均衡が 2 つ以上含まれ、どの均衡が見つかるかは、区間の取り方で決まります。また、超過需要が途中でとびとびになる場合は、符号が変わっても 0 になる点がないことがあります。</p>
 <h2 id="66">6.6 練習問題<a class="headerlink" href="#66" title="Permanent link">&para;</a></h2>
 <table>
@@ -6746,14 +6785,14 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_13">時間を決めて書く課題<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">時間を決めて書く課題<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、次を書いてください。</p>
 <ol>
 <li>需要曲線 Q = 120 − 2P と供給曲線 Q = 20 + 3P の、超過需要の関数を作る（10 分）</li>
 <li>二分法で均衡価格を求め、20 になることを確かめるテストを書く（15 分）</li>
 </ol>
 <p>詰まった所は、その章に戻ってください。</p>
-<h3 id="_14">誤りの原因の分類<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_15">誤りの原因の分類<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <p>テストが通らなかったときは、原因を次のように分けると、戻る先が分かります。</p>
 <table>
 <thead>

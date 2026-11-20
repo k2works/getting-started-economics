@@ -2162,6 +2162,17 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2187,7 +2198,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -2248,7 +2259,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -2259,7 +2270,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -6359,7 +6370,6 @@
 <li>独占企業は、MR = MC の数量を選びます。MR = 50 − Q と MC = 10 から、数量と価格はいくつですか。完全競争より、高いですか、低いですか</li>
 <li>同じ市場に、独占でなく、同じ費用の企業が 2 社いて、お互いの生産量を見ながら生産量を決めたら、合計の生産量は、独占と完全競争のどちらに近いでしょうか</li>
 </ul>
-<p>答えは、完全競争の数量が 80。独占は、数量 40、価格 30（完全競争より価格が高く、数量が少ない）。2 社は、その間（合計約 53.3）になります。具体的な値は、テストで確かめます。</p>
 <h2 id="153">15.3 ゲーム理論の用語<a class="headerlink" href="#153" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -6941,7 +6951,28 @@
 <li>数量が 54 から 60 の間は、買い手の価値（需要曲線）より、社会の費用（緑の線）が高い取引です。この差でできる赤い三角形が<strong>死荷重</strong>で、面積は 0.5 × 5 × 6 = 15 です</li>
 </ul>
 <p>この図は、<code>lib/chapter15/plot.py</code> の <code>plot_externality</code> が描きます。第 7 章の課税の図と、同じ形です。外部費用と同額のピグー税で、供給曲線が緑の線に移り、均衡が黒い四角に動きます。</p>
-<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_9">予想の答え合わせ<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter15.monopoly</span><span class="w"> </span><span class="kn">import</span> <span class="n">competitive_quantity</span><span class="p">,</span> <span class="n">monopoly_outcome</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter15.oligopoly</span><span class="w"> </span><span class="kn">import</span> <span class="n">cournot_by_iteration</span>
+
+<span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">mc</span> <span class="o">=</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">10</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"完全競争の数量:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">competitive_quantity</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">mc</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">m</span> <span class="o">=</span> <span class="n">monopoly_outcome</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">mc</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"独占の数量:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">quantity</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"価格:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">price</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">q1</span><span class="p">,</span> <span class="n">q2</span> <span class="o">=</span> <span class="n">cournot_by_iteration</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">mc</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"2 社の生産量:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">q1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">q2</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"合計:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">q1</span> <span class="o">+</span> <span class="n">q2</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>完全競争の数量: 80
+独占の数量: 40.0 価格: 30.0
+2 社の生産量: 26.6667 26.6667 合計: 53.3333
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: 完全競争の数量は 80 です。価格が限界費用 10 に等しくなる点の需要量です</li>
+<li>2 つ目の問い: 独占の数量は 40.0、価格は 30.0 です。MR = 50 − Q = 10 から Q = 40 になり、需要曲線で価格を読むと 30 です。完全競争（価格 10、数量 80）より、価格は高く、数量は少なくなります</li>
+<li>3 つ目の問い: 2 社が、お互いの生産量を見ながら決めると、各社 26.6667 で、合計は 53.3333 です。独占の 40 と、完全競争の 80 の間です。ただし、独占と完全競争の中点（60）よりは、独占に近い値です</li>
+</ul>
+<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter15
 </code></pre></div>
@@ -6980,7 +7011,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>この章のモデルは、1 回きりのゲームで、費用が一定で、需要が直線の場合です。同じゲームを繰り返すと、「相手が裏切ったら次から裏切る」という脅しで、協調が均衡になりえます（繰り返しゲーム、しっぺ返し戦略）。また、企業の数が変わる（参入・退出）と、利潤は 0 に近づきます。外部費用の大きさは、実際には、測るのが難しく、ピグー税の額を、正確に決められません。コースの定理が言うように、交渉の費用がなければ、課税せずに当事者の交渉で解決することもあります。</p>
 <h2 id="156">15.6 練習問題<a class="headerlink" href="#156" title="Permanent link">&para;</a></h2>
 <table>
@@ -7076,13 +7107,13 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_11">時間を決めて書く課題<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">時間を決めて書く課題<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、次を書いてください。</p>
 <ol>
 <li>需要 Q = 120 − 2P、限界費用 20 の独占企業の、数量・価格・利潤を求める（15 分）。手計算では、数量 (120 − 40) ÷ 2 = 40、価格 (120 − 40) ÷ 2 = 40、利潤 (40 − 20) × 40 = 800</li>
 <li>2 つの均衡を持つペイオフ行列を作り、<code>pure_nash_equilibria</code> で確かめる（15 分）</li>
 </ol>
-<h3 id="_12">誤りの原因の分類<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">誤りの原因の分類<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>

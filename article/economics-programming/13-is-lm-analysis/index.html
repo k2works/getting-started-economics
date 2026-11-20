@@ -2120,6 +2120,17 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2145,7 +2156,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -6342,10 +6353,9 @@
 <ul>
 <li>IS 曲線は、右下がりですか、右上がりですか。利子率が 0 のとき、所得はいくつですか</li>
 <li>LM 曲線は、右下がりですか、右上がりですか。所得が 1050 のとき、利子率はいくつですか</li>
-<li>均衡の所得と利子率は、いくつですか。ヒント: 利子率 5 のとき、IS 曲線の所得は 1250 です</li>
+<li>均衡の所得と利子率は、いくつですか</li>
 <li>政府支出を 100 から 120 に増やすと、所得はいくつ増えますか。利子率が変わらなければ、乗数 5 を使って 100 増えます。実際は、それより多いか、少ないか</li>
 </ul>
-<p>答えは、IS は右下がりで、利子率 0 のとき所得 1500。LM は右上がりで、所得 1050 のとき利子率 0。均衡は所得 1250、利子率 5 です。最後の問いは、<strong>少ない</strong>です。利子率が上がり、民間の投資が減る（クラウディングアウト）からです。具体的な値は、テストで確かめます。</p>
 <h2 id="133">13.3 データクラスの使い方<a class="headerlink" href="#133" title="Permanent link">&para;</a></h2>
 <h3 id="_2">係数をまとめる<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <p>モデルの係数は、10 個あります。バラバラの引数にすると、関数の呼び出しが長くなります。第 7 章で使ったデータクラスにまとめ、<strong>既定値を標準のモデルの値</strong>にします。</p>
@@ -6627,7 +6637,36 @@
     <span class="p">]</span>
 </code></pre></div>
 <p>図を描く部分は、曲線を描く処理を <code>_draw_curves</code> に分け、元のモデルと政策後のモデルの両方に使っています（先頭の <code>_</code> は、この中だけで使う関数という印です）。</p>
-<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">予想の答え合わせ<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">dataclasses</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter13.islm</span><span class="w"> </span><span class="kn">import</span> <span class="n">IsLmModel</span><span class="p">,</span> <span class="n">is_income</span><span class="p">,</span> <span class="n">lm_interest</span><span class="p">,</span> <span class="n">solve_equilibrium</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">IsLmModel</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"IS: 利子率 0 の所得:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">is_income</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"IS: 利子率 5 の所得:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">is_income</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"LM: 所得 1050 の利子率:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">lm_interest</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="mi">1050</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">income</span><span class="p">,</span> <span class="n">rate</span> <span class="o">=</span> <span class="n">solve_equilibrium</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"均衡:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">after</span> <span class="o">=</span> <span class="n">solve_equilibrium</span><span class="p">(</span><span class="n">dataclasses</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">government</span><span class="o">=</span><span class="mi">120</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"G=120 の均衡:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">after</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="mi">4</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">after</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"所得の増加:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">after</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">income</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>IS: 利子率 0 の所得: 1500.0
+IS: 利子率 5 の所得: 1250.0
+LM: 所得 1050 の利子率: 0.0
+均衡: 1250.0 5.0
+G=120 の均衡: 1294.4444 6.1111
+所得の増加: 44.4444
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: IS 曲線は右下がりです。利子率が 0 のとき、所得は 1500.0 で、利子率が 5 のとき 1250.0 です。利子率が上がると、投資が減り、所得が減ります</li>
+<li>2 つ目の問い: LM 曲線は右上がりです。所得が 1050 のとき、利子率は 0.0 です</li>
+<li>3 つ目の問い: 均衡は、所得 1250.0、利子率 5.0 です。利子率 5 のとき、IS 曲線の所得が 1250 で、LM 曲線の利子率も 5 になる点です</li>
+<li>4 つ目の問い: 政府支出を 120 に増やすと、均衡の所得は 1294.4444 になり、増加は 44.4444 です。乗数 5 で考えた 100 より、<strong>少ない</strong>です。均衡の利子率が 5.0 から 6.1111 に上がり、民間の投資が減る（クラウディングアウト）からです</li>
+</ul>
+<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter13
 </code></pre></div>
@@ -6666,7 +6705,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p>IS-LM は、物価が一定で、供給の制約がない（需要が増えれば、その分だけ生産が増える）前提です。完全雇用に近いと、需要の増加は、所得ではなく、物価を上げます（第 14 章）。また、この章のモデルは、直線の式です。実際の IS 曲線や LM 曲線は、曲線で、傾きが場所によって変わります。さらに、利子率の下限（流動性のわな）は、下限の値と、そこに達する条件を、実際のデータで確かめる必要があります。</p>
 <h2 id="136">13.6 練習問題<a class="headerlink" href="#136" title="Permanent link">&para;</a></h2>
 <table>

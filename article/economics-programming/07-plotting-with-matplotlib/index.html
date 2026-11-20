@@ -1877,7 +1877,7 @@
   <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
-        図を描く
+        予想の答え合わせ
       
     </span>
   </a>
@@ -1886,6 +1886,17 @@
         
           <li class="md-nav__item">
   <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        図を描く
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -1913,7 +1924,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -6326,7 +6337,6 @@
 <li>消費者余剰（需要曲線と価格の間の三角形）は、いくつですか。縦軸の切片は、Q = 0 のときの価格 100 ÷ 2 = 50 です</li>
 <li>売り手に 1 単位あたり 5 の税を課すと、買い手が払う価格と、売り手の受取は、いくつになりますか。どちらの負担が大きいと思いますか</li>
 </ul>
-<p>答えは、均衡が価格 20・数量 60、消費者余剰が ½ × 60 × (50 − 20) = 900 です。税については、先に予想を書いてから、次へ進んでください。</p>
 <h2 id="73-matplotlib">7.3 Matplotlib の基本<a class="headerlink" href="#73-matplotlib" title="Permanent link">&para;</a></h2>
 <h3 id="figure-axes">Figure と Axes<a class="headerlink" href="#figure-axes" title="Permanent link">&para;</a></h3>
 <p>matplotlib では、図全体を <code>Figure</code>、その中の 1 つの絵を <code>Axes</code> と呼びます。<code>plt.subplots()</code> で、この 2 つを同時に作ります。</p>
@@ -6604,7 +6614,28 @@
     <span class="k">assert</span> <span class="n">before</span> <span class="o">-</span> <span class="n">after</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">deadweight_loss</span><span class="p">)</span>
 </code></pre></div>
 <p>課税前の余剰の合計は 900 + 600 = 1500 です。課税後は、消費者余剰 729、生産者余剰 486、税収 270 で合計 1485 となり、差の 15 が死荷重と一致します。</p>
-<h3 id="_7">図を描く<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h3 id="_7">予想の答え合わせ<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter07.surplus</span><span class="w"> </span><span class="kn">import</span> <span class="n">consumer_surplus</span><span class="p">,</span> <span class="n">equilibrium</span><span class="p">,</span> <span class="n">equilibrium_with_tax</span>
+
+<span class="n">price</span><span class="p">,</span> <span class="n">quantity</span> <span class="o">=</span> <span class="n">equilibrium</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="n">quantity</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">consumer_surplus</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">taxed</span> <span class="o">=</span> <span class="n">equilibrium_with_tax</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">taxed</span><span class="o">.</span><span class="n">consumer_price</span><span class="p">,</span> <span class="n">taxed</span><span class="o">.</span><span class="n">producer_price</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="n">taxed</span><span class="o">.</span><span class="n">consumer_price</span> <span class="o">-</span> <span class="n">price</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">price</span> <span class="o">-</span> <span class="n">taxed</span><span class="o">.</span><span class="n">producer_price</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>20.0 60.0
+900.0
+23.0 18.0
+3.0 2.0
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: 均衡価格は 20、均衡数量は 60 です。</li>
+<li>2 つ目の問い: 消費者余剰は ½ × 60 × (50 − 20) = 900 です。</li>
+<li>3 つ目の問い: 税を課すと、買い手が払う価格は 23、売り手の受取は 18 になります。均衡価格 20 と比べると、買い手の負担は 3、売り手の負担は 2 で、買い手の方が大きくなります。</li>
+</ul>
+<h3 id="_8">図を描く<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>図そのものは、ピクセルを比べるのではなく、「描いた線のデータが正しいか」をテストします。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">curve_points</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Line2D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""線の (数量, 価格) の組を、数量をキーにした辞書にする。"""</span>
@@ -6668,7 +6699,7 @@ uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </sp
 </code></pre></div>
 <p>この記事の図は、<code>lib/</code> の関数から、コマンド 1 つでまとめて作り直せます（<code>article_tools/render_figures.py</code>）。モデルの係数や関数を変えて、図のデータが変わったときに、記事の図が古いまま残らないように、検査（<code>tox -e articles</code>）でも確かめています。</p>
 <p><img alt="需要曲線・供給曲線・均衡点" src="../images/ch07-market.png" /></p>
-<h3 id="_8">実行結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter07
 </code></pre></div>
@@ -6704,7 +6735,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tbody>
 </table>
 <p>死荷重は、税額の 2 乗に比例して増えます。税額 5 のとき 15 ですが、税額を 2 倍の 10 にすると、取引量は 48 になり、死荷重は 60（4 倍）になります。</p>
-<h3 id="_9">このモデルが成り立たない場面<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p>この章の余剰は、需要曲線と供給曲線が直線であることを使った、三角形の面積です。曲線の形が直線でなければ、面積は積分で求めます。また、課税で買い手の行動が変わらない（需要が完全に非弾力的）なら、死荷重は 0 になります。需要が完全に非弾力的な場面では、この章の式（b &gt; 0）が成り立ちません。</p>
 <h2 id="76">7.6 練習問題<a class="headerlink" href="#76" title="Permanent link">&para;</a></h2>
 <table>

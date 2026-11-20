@@ -2727,6 +2727,17 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2752,7 +2763,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -6334,7 +6345,6 @@
 <li>実質成長率が 3% なら、物価上昇率は、どう変わりますか</li>
 <li>20 か国のデータで、物価上昇率を貨幣の伸び率に回帰したら、傾きは、いくつになりそうですか</li>
 </ul>
-<p>答えは、5 − 1 = 4%、実質成長率が 3% なら 2% です。回帰の傾きは、貨幣数量説が成り立てば、<strong>1</strong> になります。</p>
 <h2 id="113">11.3 貨幣数量説の考え方<a class="headerlink" href="#113" title="Permanent link">&para;</a></h2>
 <h3 id="_2">成長率の式<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <p>MV = PY の両辺の対数をとって、時間で差をとると、成長率の式になります。</p>
@@ -6579,7 +6589,37 @@
 <blockquote>
 <p><strong>これは、架空のデータの結果です。</strong> このデータは、π = μ − g + 誤差（誤差の大きさは、貨幣の伸び率に応じて大きい）として作りました。実際のデータで、長期の関係が、どれだけ成り立つかは、実際の統計で確かめる必要があります。この記事では、貨幣量の統計の取得元を、確認できていないので、実際の統計では試していません。</p>
 </blockquote>
-<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">予想の答え合わせ<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter11.money</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">load_money_panel</span><span class="p">,</span>
+    <span class="n">money_inflation_regression</span><span class="p">,</span>
+    <span class="n">quantity_theory_inflation</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"物価上昇率（貨幣 5%、成長 1%）:"</span><span class="p">,</span> <span class="n">quantity_theory_inflation</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"物価上昇率（貨幣 5%、成長 3%）:"</span><span class="p">,</span> <span class="n">quantity_theory_inflation</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+
+<span class="n">panel</span> <span class="o">=</span> <span class="n">load_money_panel</span><span class="p">()</span>
+<span class="n">whole</span> <span class="o">=</span> <span class="n">money_inflation_regression</span><span class="p">(</span><span class="n">panel</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"回帰の傾き（全体）:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">whole</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"money_growth"</span><span class="p">]),</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">moderate</span> <span class="o">=</span> <span class="n">money_inflation_regression</span><span class="p">(</span><span class="n">panel</span><span class="p">,</span> <span class="n">max_inflation</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span>
+    <span class="s2">"回帰の傾き（ハイパーインフレを除く）:"</span><span class="p">,</span>
+    <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">moderate</span><span class="o">.</span><span class="n">coefficients</span><span class="p">[</span><span class="s2">"money_growth"</span><span class="p">]),</span> <span class="mi">3</span><span class="p">),</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>物価上昇率（貨幣 5%、成長 1%）: 4.0
+物価上昇率（貨幣 5%、成長 3%）: 2.0
+回帰の傾き（全体）: 1.029
+回帰の傾き（ハイパーインフレを除く）: 1.005
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: 物価上昇率は、<strong>4%</strong> です（5 − 1）</li>
+<li>2 つ目の問い: 実質成長率が 3% なら、物価上昇率は <strong>2%</strong> に下がります（5 − 3）。貨幣の伸び率が同じでも、実質成長が高いほど、物価は上がりません</li>
+<li>3 つ目の問い: 貨幣数量説が成り立てば、傾きは <strong>1</strong> になるはずです。20 か国のパネルの回帰の傾きは、全体で <strong>1.029</strong>、ハイパーインフレを除いても <strong>1.005</strong> で、ほぼ 1 です</li>
+</ul>
+<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter11
 </code></pre></div>
@@ -6614,7 +6654,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>流通速度が、安定とは限りません。</strong> 金融の自由化・決済手段の変化・予想の変化で、流通速度は、大きく動きます。短期には、数量説は、成り立ちにくいです</li>
 <li><strong>貨幣量の定義が、国によって、時期によって違います。</strong> 現金・預金・M1・M2 のどれを使うかで、結果が変わります</li>

@@ -2959,6 +2959,17 @@
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
+        予想の答え合わせ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2984,7 +2995,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -6366,7 +6377,6 @@
 <li>資本が、定常状態より 1% 高い状態と、50% 高い状態で、線形近似の精度は、どちらが良いでしょうか</li>
 <li>近似の誤差は、乖離の大きさに、どう依存しますか</li>
 </ul>
-<p>答えは、毎期 1 − λ = 1 − 0.5 × 0.05 = <strong>0.975 倍</strong>です。誤差は、1% の乖離のほうが<strong>ずっと小さく</strong>、乖離の<strong>大きさにほぼ比例して</strong>（誤差の割合が）増えます。</p>
 <h2 id="173">17.3 考え方<a class="headerlink" href="#173" title="Permanent link">&para;</a></h2>
 <h3 id="_2">乖離率と対数線形近似<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <p>定常状態 X と、今期の値 X(t) について、<strong>x̂(t) = ln(X(t) ÷ X)</strong> と書くと、x̂ が小さいとき、X(t) ≈ X·(1 + x̂(t)) です。べき乗は、Z(t)^a ≈ Z^a·(1 + a·ẑ(t)) となります。</p>
@@ -6743,7 +6753,47 @@
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
-<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_11">予想の答え合わせ<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>予想した答えを、プログラムで確かめます。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter16.solow_stochastic</span><span class="w"> </span><span class="kn">import</span> <span class="n">SolowParameters</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter17.loglinear</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">capital_paths</span><span class="p">,</span>
+    <span class="n">linear_transition</span><span class="p">,</span>
+    <span class="n">log_linearize</span><span class="p">,</span>
+    <span class="n">solow_equations</span><span class="p">,</span>
+    <span class="n">steady_state_capital</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="n">SolowParameters</span><span class="p">(</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">saving</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">depreciation</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">hours</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">k_star</span> <span class="o">=</span> <span class="n">steady_state_capital</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+<span class="n">transition</span> <span class="o">=</span> <span class="n">linear_transition</span><span class="p">(</span>
+    <span class="o">*</span><span class="n">log_linearize</span><span class="p">(</span><span class="n">solow_equations</span><span class="p">(</span><span class="n">params</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">k_star</span><span class="p">]))</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"transition coefficient:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">transition</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"1 - (1 - alpha) * delta:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">size</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">):</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">capital_paths</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">initial_deviation</span><span class="o">=</span><span class="n">size</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    <span class="n">max_error</span> <span class="o">=</span> <span class="nb">float</span><span class="p">((</span><span class="n">df</span><span class="p">[</span><span class="s2">"exact"</span><span class="p">]</span> <span class="o">-</span> <span class="n">df</span><span class="p">[</span><span class="s2">"linear"</span><span class="p">])</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">"initial </span><span class="si">{</span><span class="n">size</span><span class="si">:</span><span class="s2">.0%</span><span class="si">}</span><span class="s2">: max error </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">max_error</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="si">}</span><span class="s2"> %,"</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"ratio </span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">max_error</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="mi">100</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">size</span><span class="p">),</span><span class="w"> </span><span class="mi">5</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>transition coefficient: 0.975
+1 - (1 - alpha) * delta: 0.975
+initial 1%: max error 0.0006 %, ratio 0.00058
+initial 10%: max error 0.0581 %, ratio 0.00581
+initial 50%: max error 1.4332 %, ratio 0.02866
+</code></pre></div>
+<ul>
+<li>1 つ目の問い: 遷移係数は、1 − λ = 1 − (1 − 0.5) × 0.05 = <strong>0.975</strong>。毎期、乖離率が <strong>0.975 倍</strong>になります。</li>
+<li>2 つ目の問い: 1% の乖離のほうが、誤差が<strong>ずっと小さく</strong>、線形近似の精度は<strong>良い</strong>です（最大の誤差は 0.0006%。50% の乖離では 1.4332%）。</li>
+<li>3 つ目の問い: 誤差の<strong>割合</strong>は、1% で 0.00058、10% で 0.00581、50% で 0.02866 です。乖離の<strong>大きさにほぼ比例して</strong>増えます（1% から 10% で、約 10 倍）。</li>
+</ul>
+<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter17
 </code></pre></div>
@@ -6783,7 +6833,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>定常状態から遠いショックでは、近似が悪くなります。</strong> 大きなショック（リーマン・ショックなど）の分析には、2 次の近似などが必要です</li>
 <li><strong>確実性等価です。</strong> 線形の解は、ショックの分散を、変数の平均に反映しません（リスクの効果が出ない）</li>
