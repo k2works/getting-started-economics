@@ -46,8 +46,6 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 - 消費者余剰（需要曲線と価格の間の三角形）は、いくつですか。縦軸の切片は、Q = 0 のときの価格 100 ÷ 2 = 50 です
 - 売り手に 1 単位あたり 5 の税を課すと、買い手が払う価格と、売り手の受取は、いくつになりますか。どちらの負担が大きいと思いますか
 
-答えは、均衡が価格 20・数量 60、消費者余剰が ½ × 60 × (50 − 20) = 900 です。税については、先に予想を書いてから、次へ進んでください。
-
 ## 7.3 Matplotlib の基本
 
 ### Figure と Axes
@@ -350,6 +348,32 @@ def test_余剰の合計と税収の合計は課税前より死荷重の分だ�
 ```
 
 課税前の余剰の合計は 900 + 600 = 1500 です。課税後は、消費者余剰 729、生産者余剰 486、税収 270 で合計 1485 となり、差の 15 が死荷重と一致します。
+
+### 予想の答え合わせ
+
+予想した答えを、プログラムで確かめます。
+
+```python
+from lib.chapter07.surplus import consumer_surplus, equilibrium, equilibrium_with_tax
+
+price, quantity = equilibrium(100, 2, 0, 3)
+print(price, quantity)
+print(consumer_surplus(100, 2, 0, 3))
+taxed = equilibrium_with_tax(100, 2, 0, 3, 5)
+print(taxed.consumer_price, taxed.producer_price)
+print(round(taxed.consumer_price - price, 4), round(price - taxed.producer_price, 4))
+```
+
+```text
+20.0 60.0
+900.0
+23.0 18.0
+3.0 2.0
+```
+
+- 1 つ目の問い: 均衡価格は 20、均衡数量は 60 です。
+- 2 つ目の問い: 消費者余剰は ½ × 60 × (50 − 20) = 900 です。
+- 3 つ目の問い: 税を課すと、買い手が払う価格は 23、売り手の受取は 18 になります。均衡価格 20 と比べると、買い手の負担は 3、売り手の負担は 2 で、買い手の方が大きくなります。
 
 ### 図を描く
 

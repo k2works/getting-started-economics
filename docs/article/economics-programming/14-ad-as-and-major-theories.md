@@ -43,8 +43,6 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 - 古典派（完全雇用所得 1250 で垂直な総供給）の経済で、政府支出を 20 増やすと、所得と物価は、どうなりますか
 - ケインズの総供給が、右上がりの部分にあるとき、同じ政策で、所得と物価は、どうなりますか
 
-答えは、総需要は減ります（右下がりの総需要曲線）。古典派では、所得は 1250 のまま、物価だけが上がります。ケインズの右上がりの部分では、所得も物価も上がります。数値は、テストで確かめます。
-
 ## 14.3 関数を値として扱う
 
 総供給は、「物価を受け取り、所得を返す関数」です。第 5 章で、需要と供給の式を関数として引数に渡したのと同じように、**総供給の関数を、引数として渡します**。
@@ -376,6 +374,48 @@ def price_level_by_quantity_theory(
 デフレ（インフレ率 −2%）のとき、名目利子率が 0% でも、実質利子率は +2% です。名目利子率には、下限（0% 近辺）があるので、デフレだと、実質利子率が下げられません。これが、マインドマップの「デフレの影響: 実質利子率の上昇」です。第 13 章の流動性のわなと、つながっています。
 
 貨幣数量説では、貨幣量が 2 倍（525 → 1050）になると、実質所得と貨幣の流通速度が変わらなければ、物価も 2 倍（1 → 2）になります。
+
+### 予想の答え合わせ
+
+予想した答えを、プログラムで確かめます。
+
+```python
+import dataclasses
+
+from lib.chapter13.islm import IsLmModel
+from lib.chapter14.adas import (
+    aggregate_demand,
+    classical_supply,
+    equilibrium_price_and_income,
+    keynesian_supply,
+)
+
+model = IsLmModel()
+expanded = dataclasses.replace(model, government=120)
+print("総需要 P=1:", round(aggregate_demand(model, 1.0), 4))
+print("総需要 P=1.1:", round(aggregate_demand(model, 1.1), 4))
+classical = lambda p: classical_supply(p, 1250)
+for label, m in (("標準", model), ("G+20", expanded)):
+    price, income = equilibrium_price_and_income(m, classical)
+    print("古典派", label, "物価:", round(price, 4), "所得:", round(income, 4))
+keynes = lambda p: keynesian_supply(p, 1300, 1.0, 500)
+for label, m in (("標準", model), ("G+20", expanded)):
+    price, income = equilibrium_price_and_income(m, keynes)
+    print("ケインズ", label, "物価:", round(price, 4), "所得:", round(income, 4))
+```
+
+```text
+総需要 P=1: 1250.0
+総需要 P=1.1: 1196.9697
+古典派 標準 物価: 1.0 所得: 1250.0
+古典派 G+20 物価: 1.0825 所得: 1250.0
+ケインズ 標準 物価: 0.955 所得: 1277.4943
+ケインズ G+20 物価: 0.9949 所得: 1297.443
+```
+
+- 1 つ目の問い: 総需要は減ります。物価が 1 のとき 1250.0 だった総需要は、物価が 1.1 になると 1196.9697 になります（右下がりの総需要曲線）
+- 2 つ目の問い: 古典派では、政府支出を 20 増やしても、所得は 1250.0 のままで、物価だけが 1.0 から 1.0825 に上がります
+- 3 つ目の問い: ケインズの右上がりの部分（完全雇用所得 1300 の総供給）では、政府支出を 20 増やすと、所得は 1277.4943 から 1297.443 に、物価は 0.955 から 0.9949 に上がります。所得も物価も上がります
 
 ### 実行結果
 

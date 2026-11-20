@@ -49,8 +49,6 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 - 傾き b と切片 c は、いくつになりますか（傾きは、共分散 ÷ 分散で求められます）
 - この直線は、データの変動のうち、どれくらい（決定係数）を説明しますか。1 に近いですか
 
-答えは、傾きが 1.5、切片が 2/3 です（x の平均は 2、y の平均は 11/3 で、傾きは 3 ÷ 2 = 1.5）。残差の二乗和は 1/6、y の変動の二乗和は 14/3 なので、決定係数は 1 − (1/6) ÷ (14/3) = 27/28 ≈ 0.964 で、1 に近いです。
-
 ## 3.3 回帰分析の考え方
 
 ### 最小二乗法を行列で書く
@@ -287,6 +285,32 @@ def development_accounting_regression(df: pd.DataFrame) -> OlsResult:
     x = pd.DataFrame({"ln_k": np.log(df["k"]), "ln_h": np.log(df["h"])})
     return fit_ols(y, x)
 ```
+
+### 予想の答え合わせ
+
+予想した答えを、プログラムで確かめます。3 つの点に、`fit_ols` で直線を当てはめます。
+
+```python
+import pandas as pd
+
+from lib.chapter03.regression import fit_ols
+
+x = pd.DataFrame({"x": [1.0, 2.0, 3.0]})
+y = pd.Series([2.0, 4.0, 5.0])
+result = fit_ols(y, x)
+print("傾き:", round(result.coefficients["x"], 4))
+print("切片:", round(result.coefficients["const"], 4))
+print("決定係数:", round(result.r_squared, 4))
+```
+
+```text
+傾き: 1.5
+切片: 0.6667
+決定係数: 0.9643
+```
+
+- 1 つ目の問い（傾きと切片）: 傾きが 1.5、切片が 0.6667（= 2/3）です（x の平均は 2、y の平均は 11/3 で、傾きは 3 ÷ 2 = 1.5）
+- 2 つ目の問い（決定係数）: 0.9643 で、1 に近いです。残差の二乗和は 1/6、y の変動の二乗和は 14/3 なので、1 − (1/6) ÷ (14/3) = 27/28 ≈ 0.964 です
 
 ### 結果
 

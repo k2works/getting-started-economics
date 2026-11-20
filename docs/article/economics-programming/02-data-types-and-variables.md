@@ -38,8 +38,6 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 - 需要量 80 → 76 の変化率は何 % ですか
 - 価格弾力性は、いくつになりますか。値が 1 より大きいか小さいかも答えてください
 
-答えは、価格が +20%、需要量が −5% で、価格弾力性は 0.25 です。1 より小さいので「非弾力的」、つまり価格が上がっても需要量があまり減らない財です。
-
 ## 2.3 データ型と変数
 
 ### 数値: int と float
@@ -229,6 +227,29 @@ def is_price_elastic(elasticity: float) -> bool:
     """価格弾力性が 1 より大きければ弾力的。"""
     return elasticity > 1
 ```
+
+### 予想の答え合わせ
+
+予想した答えを、プログラムで確かめます。
+
+```python
+from lib.chapter02.elasticity import is_price_elastic, price_elasticity
+
+print((12 - 10) / 10 * 100)
+print(round((76 - 80) / 80 * 100, 4))
+e = price_elasticity(10, 12, 80, 76)
+print(round(e, 4), is_price_elastic(e))
+```
+
+```text
+20.0
+-5.0
+0.25 False
+```
+
+- 1 つ目の問い: 価格の変化率は +20%（20.0）です。
+- 2 つ目の問い: 需要量の変化率は −5%（−5.0）です。
+- 3 つ目の問い: 価格弾力性は 0.25 で、`is_price_elastic` は `False` です。1 より小さいので「非弾力的」、つまり価格が上がっても需要量があまり減らない財です。
 
 ### 実行結果
 

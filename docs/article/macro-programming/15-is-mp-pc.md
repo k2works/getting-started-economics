@@ -44,8 +44,6 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 - 次の期のインフレ率の乖離（π − 2）は、ショックの期の何倍になりますか
 - 中央銀行が、産出量を重視する（c = 0.5、d = 1.5）と、インフレ率の動きは、どう変わりますか
 
-答えは、インフレ率 **2.8**（+0.8）、産出量 **99.2**（−0.8）です。次の期の乖離は、毎期 **0.8 倍**（φ = 0.8）になります。産出量を重視すると、産出量の落ち込みは**小さく**（−0.19）なりますが、インフレ率の上昇は**大きく**（+0.95）、**長く続きます**（φ = 0.952）。
-
 ## 15.3 モデルの考え方
 
 ### 5 本の式
@@ -535,6 +533,44 @@ def plot_stance_comparison(case1: pd.DataFrame, case2: pd.DataFrame) -> Figure:
 ```
 
 **産出量とインフレ率の間には、トレードオフがあります**。産出量を重視する政策は、名目利子率を低く抑え、実質利子率の上昇を小さくするので、産出量の落ち込みは小さくなります。その代わり、インフレ率の上昇を許し、目標に戻るまでの時間が長くなります。
+
+### 予想の答え合わせ
+
+予想した答えを、プログラムで確かめます。
+
+```python
+from lib.chapter15.ismppc import IsMpPcParameters, impulse_response
+
+default = IsMpPcParameters()
+output_focus = IsMpPcParameters(c=0.5, d=1.5)
+
+for name, params in [("default", default), ("output focus", output_focus)]:
+    df = impulse_response(params, shock_pc=1.0)
+    shock = df.iloc[3]
+    after = df.iloc[4]
+    print(name)
+    print("  shock period: pi =", round(shock["pi"], 4), ", y =", round(shock["y"], 4))
+    print("  next period pi gap:", round(after["pi"] - 2, 4))
+    print("  ratio of pi gaps:", round((after["pi"] - 2) / (shock["pi"] - 2), 4))
+    print("  phi:", round(params.phi, 4))
+```
+
+```text
+default
+  shock period: pi = 2.8 , y = 99.2
+  next period pi gap: 0.64
+  ratio of pi gaps: 0.8
+  phi: 0.8
+output focus
+  shock period: pi = 2.9524 , y = 99.8095
+  next period pi gap: 0.907
+  ratio of pi gaps: 0.9524
+  phi: 0.9524
+```
+
+- 1 つ目の問い: ショックの期に、インフレ率は **2.8**（+0.8）、産出量は **99.2**（−0.8）になります。インフレ率は上がり、産出量は下がります。
+- 2 つ目の問い: 次の期のインフレ率の乖離は、ショックの期の **0.8 倍**（0.64 ÷ 0.8）です。これは、φ = 0.8 と一致します。乖離は、毎期、φ 倍になります。
+- 3 つ目の問い: 産出量を重視すると（c = 0.5、d = 1.5）、産出量の落ち込みは **−0.19**（99.8095）と**小さく**なります。その代わり、インフレ率の上昇は **+0.95**（2.9524）と**大きく**、次の期の乖離も 0.907（基本は 0.64）と、**長く続きます**。φ が 0.9524 と、1 に近くなるためです。
 
 ### 実行結果
 

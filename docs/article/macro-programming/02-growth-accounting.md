@@ -39,8 +39,6 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 - 所得は、1 年当たり何 % 伸びましたか
 - 所得の成長率のうち、資本・人的資本・TFP は、それぞれ何 % 分ですか
 
-答えは、資本が (1/3) × 6 = 2%、人的資本が (2/3) × 3 = 2%、TFP が 1% で、合計 5% です。TFP の寄与は、5 分の 1（20%）です。
-
 ## 2.3 成長会計の考え方
 
 ### 成長率を足し算にする
@@ -256,6 +254,44 @@ def contribution_shares(table: pd.DataFrame) -> pd.DataFrame:
         raise ValueError("成長率が 0 の国があるので、割合は求められない")
     return table[["capital", "human_capital", "tfp"]].div(table["output"], axis=0)
 ```
+
+### 予想の答え合わせ
+
+予想した答えを、プログラムで確かめます。最後の行では、10 年後の資本・人的資本・TFP から所得を作り、成長率を `log_growth_rate` で逆算します。
+
+```python
+import math
+
+from lib.chapter02.growth import log_growth_rate
+
+alpha = 1 / 3
+capital = alpha * 6
+human_capital = (1 - alpha) * 3
+tfp_growth = 1
+income = capital + human_capital + tfp_growth
+print("資本の寄与（%）:", round(capital, 4))
+print("人的資本の寄与（%）:", round(human_capital, 4))
+print("TFP の寄与（%）:", round(tfp_growth, 4))
+print("所得の成長率（%）:", round(income, 4))
+print("TFP の割合:", round(tfp_growth / income, 4))
+
+# 確認: 10 年後の k・h・A から所得を求め、成長率を逆算する
+k, h, a = (math.exp(0.01 * r * 10) for r in (6, 3, 1))
+y_end = a * k**alpha * h ** (1 - alpha)
+print("確認（所得の成長率、%）:", round(log_growth_rate(1.0, y_end, 10), 4))
+```
+
+```text
+資本の寄与（%）: 2.0
+人的資本の寄与（%）: 2.0
+TFP の寄与（%）: 1
+所得の成長率（%）: 5.0
+TFP の割合: 0.2
+確認（所得の成長率、%）: 5.0
+```
+
+- 1 つ目の問い（所得の成長率）: 5.0%（1 年当たり）です。逆算した値も、5.0% で一致します
+- 2 つ目の問い（寄与）: 資本が (1/3) × 6 = 2%、人的資本が (2/3) × 3 = 2%、TFP が 1% で、合計 5% です。TFP の寄与は、5 分の 1（0.2、つまり 20%）です
 
 ### 結果
 

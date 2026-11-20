@@ -45,8 +45,6 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 - ショックの期に、産出量・消費・投資は、それぞれ何 % 動きますか。**どれが最も大きく**、**どれが最も小さく**動くでしょうか
 - 労働供給を内生的にすると、産出量の反応は、大きくなりますか、小さくなりますか
 
-答えは、R = 1 ÷ 0.99 − 1 = **0.0101**（四半期 1%）、K ÷ Y = 0.36 ÷ (0.0101 + 0.025) = **10.3** です（α = 1/3 なら 9.5。練習問題）。産出量 +1.00%、消費 +0.09%、投資 +3.65% です。**消費は、ほとんど動かず**（消費の平滑化）、**投資が、大きく動きます**。労働を内生的にすると、産出量は **+1.65%** に増幅されます。
-
 ## 18.3 モデルの考え方
 
 ### 消費者の最適化と、オイラー条件
@@ -705,6 +703,38 @@ def test_危険回避度が大きいほど消費の最初の反応は小さい()
 | 労働の相対的な変動 | （一定） | 0.586 |
 | 消費と産出量の相関 | 0.561 | 0.512 |
 | 投資と産出量の相関 | 0.961 | 0.972 |
+
+### 予想の答え合わせ
+
+予想した答えを、プログラムで確かめます。
+
+```python
+from lib.chapter18.rbc import RbcParameters, impulse_response, solve_rbc, steady_state
+
+params = RbcParameters()
+ss = steady_state(params)
+print("R:", round(ss["r"], 4))
+print("K / Y:", round(ss["k"] / ss["y"], 2))
+print("K / Y (alpha = 1/3):", round(steady_state(RbcParameters(alpha=1 / 3))["k"] / steady_state(RbcParameters(alpha=1 / 3))["y"], 2))
+
+basic = impulse_response(solve_rbc(params), shock=0.01).iloc[3]
+extended = impulse_response(solve_rbc(params, True), shock=0.01).iloc[3]
+for name, label in [("y", "output"), ("c", "consumption"), ("i", "investment")]:
+    print(f"{label}: basic {round(basic[name], 2)} %, endogenous labour {round(extended[name], 2)} %")
+```
+
+```text
+R: 0.0101
+K / Y: 10.26
+K / Y (alpha = 1/3): 9.5
+output: basic 1.0 %, endogenous labour 1.65 %
+consumption: basic 0.09 %, endogenous labour 0.13 %
+investment: basic 3.65 %, endogenous labour 6.05 %
+```
+
+- 1 つ目の問い: R = 1 ÷ 0.99 − 1 = **0.0101**（四半期 1%）です。K ÷ Y は、0.36 ÷ (0.0101 + 0.025) で、約 **10.3**（10.26）です。α = 1/3 なら、**9.5** になります。
+- 2 つ目の問い: ショックの期に、産出量は **+1.00%**、消費は **+0.09%**、投資は **+3.65%** 動きます。**投資が最も大きく**、**消費が最も小さく**動きます。消費は、ほとんど動かず（消費の平滑化）、投資が、大きく動きます。
+- 3 つ目の問い: 労働を内生的にすると、産出量は **+1.65%** と、**大きく**なります（基本モデルは +1.00%）。消費は +0.13%、投資は +6.05% です。
 
 ### 実行結果
 

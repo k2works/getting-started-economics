@@ -38,8 +38,6 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 - 手計算できる 3 点 (0, 1)、(1, 3)、(2, 2) の回帰直線の、傾きと切片は、いくつでしょうか。ヒント: x の平均は 1、y の平均は 2 です
 - 第 8 章の需要曲線 Q = 100 − 2P で、観測値のばらつき（標準偏差）を 5、10、30 と大きくしていくと、推定した傾きは、−2 からどのくらいずれるでしょうか。決定係数は、大きくなるでしょうか、小さくなるでしょうか
 
-答えは、傾きが 0.5、切片が 1.5（x̄ = 1、ȳ = 2 を通り、傾き = (−1 × −1 + 0 × 1 + 1 × 0) ÷ 2 = 0.5）。決定係数は、ばらつきが大きいほど小さくなります。
-
 ## A.3 プログラミング
 
 ### 回帰直線
@@ -155,6 +153,41 @@ def test_ばらつきが大きいほど決定係数は小さい() -> None:
 
     assert fit_r2(5) > fit_r2(10) > fit_r2(30)
 ```
+
+### 予想の答え合わせ
+
+予想した答えを、プログラムで確かめます。
+
+```python
+import random
+
+from lib.appendix_a.regression import fit_line, r_squared
+from lib.chapter08.simulation import simulate_demand
+
+intercept, slope = fit_line([0, 1, 2], [1, 3, 2])
+print("3 点の切片:", round(intercept, 4), "傾き:", round(slope, 4))
+
+for sigma in (5, 10, 30):
+    rng = random.Random(0)
+    prices: list[float] = []
+    quantities: list[float] = []
+    for price in range(5, 21):
+        observations = simulate_demand(price, 100, 2, sigma, 50, rng)
+        prices.extend([float(price)] * len(observations))
+        quantities.extend(observations)
+    b0, b1 = fit_line(prices, quantities)
+    print("標準偏差", sigma, "傾き:", round(b1, 4), "R²:", round(r_squared(prices, quantities), 4))
+```
+
+```text
+3 点の切片: 1.5 傾き: 0.5
+標準偏差 5 傾き: -1.9732 R²: 0.7751
+標準偏差 10 傾き: -1.9465 R²: 0.4561
+標準偏差 30 傾き: -1.8395 R²: 0.0768
+```
+
+- 1 つ目の問い: 3 点 (0, 1)、(1, 3)、(2, 2) の回帰直線は、切片が 1.5、傾きが 0.5 です。x̄ = 1、ȳ = 2 を通り、傾き = (−1 × −1 + 0 × 1 + 1 × 0) ÷ 2 = 0.5 です。決定係数は 0.25 で、直線は y のばらつきの 4 分の 1 しか説明しません
+- 2 つ目の問い: 観測値のばらつき（標準偏差）を 5、10、30 と大きくすると、推定した傾きは −1.9732、−1.9465、−1.8395 となり、真の値 −2 から、少しずつずれます。決定係数は 0.7751、0.4561、0.0768 と、小さくなります
 
 ## A.4 実際のデータで推定するときの注意
 

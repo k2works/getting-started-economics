@@ -38,8 +38,6 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 - 各価格の需要量と供給量は、いくつですか
 - 超過需要が 0 になるのは、価格がいくつのときですか
 
-答えは、需要量が 100・80・60・40、供給量が 0・30・60・90 で、価格 20 で超過需要が 0 です。式で 100 − 2P = 3P を解いても、P = 20 になります。
-
 ## 3.3 コンテナ
 
 ### リスト
@@ -207,6 +205,37 @@ def market_clearing_prices(
     """超過需要が 0 になる価格（市場均衡の価格）を返す。"""
     return [p for p, gap in excess_demand(demand, supply).items() if gap == 0]
 ```
+
+### 予想の答え合わせ
+
+予想した答えを、プログラムで確かめます。
+
+```python
+from lib.chapter03.schedule import (
+    demand_schedule,
+    excess_demand,
+    market_clearing_prices,
+    supply_schedule,
+)
+
+prices = [0, 10, 20, 30]
+demand = demand_schedule(prices, 100, 2)
+supply = supply_schedule(prices, 0, 3)
+print(demand)
+print(supply)
+print(excess_demand(demand, supply))
+print(market_clearing_prices(demand, supply))
+```
+
+```text
+{0: 100, 10: 80, 20: 60, 30: 40}
+{0: 0, 10: 30, 20: 60, 30: 90}
+{0: 100, 10: 50, 20: 0, 30: -50}
+[20]
+```
+
+- 1 つ目の問い: 需要量は価格 0・10・20・30 の順に 100・80・60・40、供給量は 0・30・60・90 です。
+- 2 つ目の問い: 超過需要は 100・50・0・−50 で、0 になるのは価格 20 のときです。`market_clearing_prices` も `[20]` を返します。式で 100 − 2P = 3P を解いても、P = 20 になります。
 
 ### 実行結果
 

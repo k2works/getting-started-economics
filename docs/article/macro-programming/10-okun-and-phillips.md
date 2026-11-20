@@ -47,8 +47,6 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 - 失業率が、トレンドより 1%ポイント低いとき、物価上昇率は、平均より、どれだけ高いでしょうか
 - 2000 年代以降、物価上昇率は、失業率の変化に、あまり反応しなくなった、と言われます。これは、フィリップス曲線の傾きが、どうなったことですか
 
-この章のデータの値を、回帰で確かめます。3 つ目の問いの答えは、傾きが、**0 に近づく（平らになる）**ことです。
-
 ## 10.3 オークンの法則とフィリップス曲線の考え方
 
 ### オークンの法則
@@ -309,6 +307,49 @@ def rolling_slope(x: pd.Series, y: pd.Series, window: int) -> pd.Series:
 - 1999 年を境に、傾きが小さくなったことが、**滑らかな推移**として見えます（このデータは、1999 年（80 四半期目）で、傾きが 0.5 から 0.2 に変わるように作りました）
 
 > **これは、架空のデータの結果です。** 実際のデータで、フィリップス曲線が平らになったかは、実際の統計で確かめる必要があります。
+
+### 予想の答え合わせ
+
+予想した答えを、プログラムで確かめます。第 9 章のデータで、オークンの法則とフィリップス曲線を回帰します。
+
+```python
+from lib.chapter09.cycles import load_quarterly
+from lib.chapter10.okun_phillips import (
+    okun_regression_from_data,
+    phillips_by_period,
+    phillips_regression_from_data,
+)
+
+df = load_quarterly()
+okun = okun_regression_from_data(df)
+print("オークンの法則の傾き:", round(float(okun.coefficients["output_cycle"]), 3))
+print(
+    "GDP が 1% 好調なときの失業率（%ポイント）:",
+    round(float(okun.coefficients["output_cycle"]) * 1, 3),
+)
+
+phillips = phillips_regression_from_data(df)
+slope = float(phillips.coefficients["unemployment_gap"])
+print("フィリップス曲線の傾き（全期間）:", round(slope, 3))
+print("失業率が 1%ポイント低いときの物価上昇率の上昇（%ポイント）:", round(-slope, 3))
+
+parts = phillips_by_period(df, split_year=2000)
+for name, label in (("before", "2000 年より前"), ("after", "2000 年以降")):
+    print(f"{label}の傾き:", round(float(parts[name].coefficients["unemployment_gap"]), 3))
+```
+
+```text
+オークンの法則の傾き: -0.496
+GDP が 1% 好調なときの失業率（%ポイント）: -0.496
+フィリップス曲線の傾き（全期間）: -0.337
+失業率が 1%ポイント低いときの物価上昇率の上昇（%ポイント）: 0.337
+2000 年より前の傾き: -0.571
+2000 年以降の傾き: -0.161
+```
+
+- 1 つ目の問い: オークンの法則の傾きは **−0.496** です。GDP がトレンドより 1% 高いとき、失業率は、トレンドより約 **0.5%ポイント低い**です
+- 2 つ目の問い: フィリップス曲線の傾き（全期間）は −0.337 なので、失業率が 1%ポイント低いとき、物価上昇率は、平均より約 **0.34%ポイント高い**です
+- 3 つ目の問い: 2000 年より前の傾きは −0.571、2000 年以降は −0.161 です。傾きの大きさが小さくなり、**0 に近づきました（平らになりました）**
 
 ### 実行結果
 

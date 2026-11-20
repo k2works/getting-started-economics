@@ -44,8 +44,6 @@ a = 0.8、c = 0.3、σu = 1.5、σv = 1.2 のモデルです。経済が長期�
 - 物価の乖離が半分になるのに、何四半期かかりますか
 - 需要ショックを受けた産出量の反応を、全期間で足し合わせると、いくつになりますか
 
-答えは、ショックの期は、物価も産出量も**上がります**（物価 +0.65、産出量 +0.81）。次の期は、物価がまだ高いので、AS 曲線が上にあり、産出量は**マイナス**（−0.16）になります。半減期は、ln 0.5 ÷ ln 0.806 = **3.2 四半期**です。足し合わせると、**ちょうど 0** です（14.8 節の練習問題で確かめます）。
-
 ## 14.3 考え方
 
 ### 安定性と半減期
@@ -389,6 +387,37 @@ a = 0.8、c = 0.3、σu = 1.5、σv = 1.2 のモデルでは、次のように�
 | 供給ショックに起因 | 50.0% | 13.0% |
 
 > 物価が、ちょうど 50 : 50 になるのは、a²σu² = 0.64 × 2.25 = 1.44 = σv²（= 1.2²）だからです。偶然の一致ですが、公式 a²σu² ÷ (a²σu² + σv²) の意味（AS 曲線の傾きと需要ショックの大きさが、効きを決める）が分かります。
+
+### 予想の答え合わせ
+
+予想した答えを、プログラムで確かめます。
+
+```python
+from lib.chapter13.adas import AdasParameters
+from lib.chapter14.simulation import impulse_response, price_half_life
+
+params = AdasParameters(a=0.8, c=0.3, sigma_u=1.5, sigma_v=1.2)
+df = impulse_response(params, u=1.0, periods_after=200)
+shock = df.iloc[3]
+after = df.iloc[4]
+
+print("shock period: p =", round(shock["p"], 4), ", y =", round(shock["y"], 4))
+print("next period: y =", round(after["y"], 4))
+print("half life (quarters):", round(price_half_life(params), 2))
+print("sum of y responses is zero:", bool(abs(df["y"].sum()) < 1e-9))
+```
+
+```text
+shock period: p = 0.6452 , y = 0.8065
+next period: y = -0.1561
+half life (quarters): 3.22
+sum of y responses is zero: True
+```
+
+- 1 つ目の問い: ショックの期は、物価も産出量も**上がります**（物価 +0.6452、産出量 +0.8065）。
+- 2 つ目の問い: 次の期は、物価がまだ高く、AS 曲線が上にあるので、産出量は**マイナス**（−0.1561）になります。
+- 3 つ目の問い: 半減期は、ln 0.5 ÷ ln h = ln 0.5 ÷ ln 0.8065 = **3.22 四半期**です。
+- 4 つ目の問い: 産出量の反応を、足し合わせると、**0**（誤差の範囲）です。ショックの期のプラスと、その後のマイナスが、打ち消し合います。
 
 ### 実行結果
 

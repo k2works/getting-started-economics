@@ -73,8 +73,6 @@ uv run pytest test/chapter01
 - 国 B の TFP は、いくつですか
 - 国 B の所得は、国 A の 4 分の 1 です。この差の、何割が資本の差で、何割が TFP の差ですか
 
-答えは、国 A が 1、国 B が 0.5 です。所得の差は、対数で ln(1 ÷ 4) です。資本の差の寄与は (1/3)·ln(1 ÷ 8) = ln(1 ÷ 2)、TFP の差の寄与は ln(0.5) で、**半分ずつ**です（ln(1 ÷ 2) の 2 倍が ln(1 ÷ 4) です）。
-
 ## 1.4 発展会計の考え方
 
 ### 生産関数と TFP
@@ -336,6 +334,40 @@ def variance_shares(df: pd.DataFrame, alpha: float) -> pd.Series:
         {name: log_output.cov(part) / variance for name, part in parts.items()}
     )
 ```
+
+### 予想の答え合わせ
+
+予想した答えを、プログラムで確かめます。資本の寄与は、資本の差の対数に α を掛けたものです。
+
+```python
+import math
+
+from lib.chapter01.accounting import tfp
+
+alpha = 1 / 3
+a = tfp(output=2, capital=8, human_capital=1, alpha=alpha)
+b = tfp(output=0.5, capital=1, human_capital=1, alpha=alpha)
+gap = math.log(0.5 / 2)
+capital_part = alpha * math.log(1 / 8)
+tfp_part = math.log(b / a)
+print("国 A の TFP:", round(a, 4))
+print("国 B の TFP:", round(b, 4))
+print("所得の差（対数）:", round(gap, 4))
+print("資本の差の寄与の割合:", round(capital_part / gap, 4))
+print("TFP の差の寄与の割合:", round(tfp_part / gap, 4))
+```
+
+```text
+国 A の TFP: 1.0
+国 B の TFP: 0.5
+所得の差（対数）: -1.3863
+資本の差の寄与の割合: 0.5
+TFP の差の寄与の割合: 0.5
+```
+
+- 1 つ目の問い（国 A の TFP）: 1.0 です
+- 2 つ目の問い（国 B の TFP）: 0.5 です
+- 3 つ目の問い（差の内訳）: 所得の差は、対数で −1.3863（= ln(1 ÷ 4)）です。資本の差の寄与は (1/3)·ln(1 ÷ 8) = ln(1 ÷ 2)、TFP の差の寄与は ln(0.5) で、どちらも 0.5 の割合です。**半分ずつ**です（ln(1 ÷ 2) の 2 倍が ln(1 ÷ 4) です）
 
 ### 結果
 

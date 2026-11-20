@@ -43,8 +43,6 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 - 限界費用 MC(2)
 - 平均費用 AC(2) と、平均可変費用 AVC(2)
 
-答えは、C(2) = 8 − 24 + 30 + 10 = 24、MC(2) = 12 − 24 + 15 = 3、AC(2) = 24 ÷ 2 = 12、AVC(2) = 4 − 12 + 15 = 7 です。MC が AC より小さいときは AC が下がっている、というマインドマップの関係も、ここで確かめられます。
-
 ## 4.3 関数とメソッド
 
 ### 関数の部品
@@ -224,6 +222,37 @@ def marginal_rate_of_substitution(x: float, y: float, alpha: float = 0.5) -> flo
 ```
 
 財 y を多く持つほど（y が大きいほど）、財 x を 1 単位得るために手放してよい財 y の量が増えます。一方、財 x が増える（x が大きくなる）と MRS は小さくなり、これがマインドマップの「限界代替率逓減（無差別曲線が原点に凸）」です。
+
+### 予想の答え合わせ
+
+予想した答えを、プログラムで確かめます。
+
+```python
+from lib.chapter04.cost import (
+    average_cost,
+    average_variable_cost,
+    marginal_cost,
+    total_cost,
+)
+
+print(total_cost(2))
+print(marginal_cost(2))
+print(average_cost(2))
+print(average_variable_cost(2))
+```
+
+```text
+24
+3
+12.0
+7
+```
+
+- 総費用: C(2) = 8 − 24 + 30 + 10 = 24 です。
+- 限界費用: MC(2) = 12 − 24 + 15 = 3 です。
+- 平均費用と平均可変費用: AC(2) = 24 ÷ 2 = 12、AVC(2) = 4 − 12 + 15 = 7 です。
+
+MC(2) = 3 は AC(2) = 12 より小さく、MC が AC より小さいときは AC が下がっている、というマインドマップの関係も、ここで確かめられます。
 
 ### 実行結果
 

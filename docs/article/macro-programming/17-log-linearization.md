@@ -44,8 +44,6 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 - 資本が、定常状態より 1% 高い状態と、50% 高い状態で、線形近似の精度は、どちらが良いでしょうか
 - 近似の誤差は、乖離の大きさに、どう依存しますか
 
-答えは、毎期 1 − λ = 1 − 0.5 × 0.05 = **0.975 倍**です。誤差は、1% の乖離のほうが**ずっと小さく**、乖離の**大きさにほぼ比例して**（誤差の割合が）増えます。
-
 ## 17.3 考え方
 
 ### 乖離率と対数線形近似
@@ -447,6 +445,51 @@ def plot_exact_vs_linear(df: pd.DataFrame) -> Figure:
     plt.close(fig)
     return fig
 ```
+
+### 予想の答え合わせ
+
+予想した答えを、プログラムで確かめます。
+
+```python
+import numpy as np
+
+from lib.chapter16.solow_stochastic import SolowParameters
+from lib.chapter17.loglinear import (
+    capital_paths,
+    linear_transition,
+    log_linearize,
+    solow_equations,
+    steady_state_capital,
+)
+
+params = SolowParameters(alpha=0.5, saving=0.2, depreciation=0.05, hours=1.0)
+k_star = steady_state_capital(params)
+transition = linear_transition(
+    *log_linearize(solow_equations(params), np.array([1.0, k_star]))
+)
+print("transition coefficient:", round(float(transition[1, 1]), 4))
+print("1 - (1 - alpha) * delta:", round(1 - (1 - 0.5) * 0.05, 4))
+
+for size in (0.01, 0.1, 0.5):
+    df = capital_paths(params, initial_deviation=size, periods=20)
+    max_error = float((df["exact"] - df["linear"]).abs().max())
+    print(
+        f"initial {size:.0%}: max error {round(max_error, 4)} %,",
+        f"ratio {round(max_error / (100 * size), 5)}",
+    )
+```
+
+```text
+transition coefficient: 0.975
+1 - (1 - alpha) * delta: 0.975
+initial 1%: max error 0.0006 %, ratio 0.00058
+initial 10%: max error 0.0581 %, ratio 0.00581
+initial 50%: max error 1.4332 %, ratio 0.02866
+```
+
+- 1 つ目の問い: 遷移係数は、1 − λ = 1 − (1 − 0.5) × 0.05 = **0.975**。毎期、乖離率が **0.975 倍**になります。
+- 2 つ目の問い: 1% の乖離のほうが、誤差が**ずっと小さく**、線形近似の精度は**良い**です（最大の誤差は 0.0006%。50% の乖離では 1.4332%）。
+- 3 つ目の問い: 誤差の**割合**は、1% で 0.00058、10% で 0.00581、50% で 0.02866 です。乖離の**大きさにほぼ比例して**増えます（1% から 10% で、約 10 倍）。
 
 ### 実行結果
 

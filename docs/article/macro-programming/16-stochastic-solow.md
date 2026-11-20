@@ -39,10 +39,8 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-19T00:00:00Z }
 ## 16.2 予想する
 
 - GDP = 4、資本 = 4、総労働時間 = 1、α = 0.5 のとき、TFP はいくつですか
-- GDP の変動の何割が、TFP の変動で説明されるでしょうか（TFP が主役だ、という RBC 理論の立場から、予想します）
+- この章の架空のデータ（TFP の変動を主役にして作ったもの）では、GDP の変動の何割が、TFP の変動で説明されるでしょうか（資本と労働の寄与も、予想します）
 - 貯蓄率が一定（s = 0.2）のソロー・モデルで、消費と投資の変動は、GDP の変動に比べて、大きいですか、小さいですか
-
-答えは、TFP = 4 ÷ (4^0.5 × 1^0.5) = **2** です。（以下の割合は、TFP の変動を主役にして作った**架空のデータ**の結果です。RBC 理論が実証された、という意味ではなく、関数が分解できることの確認です。）この章の架空のデータでは、TFP の寄与は約 **58%**、労働の寄与が約 **42%**、資本の寄与は、ほぼ **0** です。消費も投資も、貯蓄率が一定なら、GDP と**まったく同じ割合**で動きます（相対的な変動 = 1.0）。
 
 ## 16.3 モデルの考え方
 
@@ -545,6 +543,52 @@ def plot_solow_simulation(dev: pd.DataFrame) -> Figure:
 - 産出量は、TFP と**ほぼ同じ**動きです（相関 0.999）。資本は、同じ期には動かず（ショックの翌期から）、変動は小さく（産出量の 14%）、**持続性は非常に高い**（自己相関 0.98）です。「カモシカ（産出量）と象（資本）」です
 - 資本の変動が小さいので、**このモデルでは、GDP の変動は、ほぼ、TFP の変動そのもの**です（相関 0.999）。労働は一定と仮定しているため、TFP の効果を、増幅する仕組みがありません
 - 消費・投資・産出量の変動は、**同じ**です。貯蓄率が一定のため
+
+### 予想の答え合わせ
+
+予想した答えを、プログラムで確かめます。
+
+```python
+import numpy as np
+import pandas as pd
+
+from lib.chapter16.solow_stochastic import (
+    SolowParameters,
+    business_cycle_components,
+    decompose_business_cycle,
+    load_solow_quarterly,
+    log_deviations,
+    stochastic_solow,
+    total_factor_productivity,
+)
+
+tfp = total_factor_productivity(
+    pd.Series([4.0]), pd.Series([4.0]), pd.Series([1.0]), alpha=0.5
+)
+print("TFP:", round(float(tfp.iloc[0]), 4))
+
+cycles = business_cycle_components(load_solow_quarterly(), alpha=0.36)
+shares = decompose_business_cycle(cycles, alpha=0.36)
+print("shares of GDP variance:", shares.round(3).to_dict())
+
+params = SolowParameters(
+    alpha=0.36, saving=0.2, depreciation=0.025, rho=0.6, sigma=0.008, hours=1.0
+)
+dev = log_deviations(stochastic_solow(params, 200, np.random.default_rng(123)), params)
+print("std of c / std of y:", round(dev["c"].std() / dev["y"].std(), 4))
+print("std of i / std of y:", round(dev["i"].std() / dev["y"].std(), 4))
+```
+
+```text
+TFP: 2.0
+shares of GDP variance: {'tfp': 0.583, 'capital': -0.003, 'labour': 0.42}
+std of c / std of y: 1.0
+std of i / std of y: 1.0
+```
+
+- 1 つ目の問い: TFP = 4 ÷ (4^0.5 × 1^0.5) = 4 ÷ 2 = **2.0** です。
+- 2 つ目の問い: この章の架空のデータでは、TFP の寄与は約 **58%**（0.583）、労働の寄与は約 **42%**（0.42）、資本の寄与は、ほぼ **0**（−0.003）です。これは、TFP の変動を主役にして作った**架空のデータ**の結果です。RBC 理論が実証された、という意味ではなく、関数が分解できることの確認です。
+- 3 つ目の問い: 貯蓄率が一定なら、消費も投資も、GDP と**まったく同じ割合**で動きます。標準偏差の比は、どちらも **1.0** です。
 
 ### 実行結果
 
