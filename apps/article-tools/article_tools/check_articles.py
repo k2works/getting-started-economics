@@ -202,9 +202,12 @@ def _answer_module(chapter: int, markdown: str) -> str | None:
         if f.stem != "__init__"
         and int(f.parent.name.removeprefix("chapter")) <= chapter
     )
+    # numpy・pandas は、使わない連載（依存に入れていない）でも動くように、任意にする
     header = (
         "import math, random, statistics, dataclasses\n"
-        "import numpy as np\nimport pandas as pd\nimport pytest\n"
+        "try:\n    import numpy as np\nexcept ImportError:\n    pass\n"
+        "try:\n    import pandas as pd\nexcept ImportError:\n    pass\n"
+        "import pytest\n"
         "import matplotlib\nmatplotlib.use('Agg')\n"
         "import matplotlib.pyplot as plt\n"
         "from matplotlib.figure import Figure\n"
