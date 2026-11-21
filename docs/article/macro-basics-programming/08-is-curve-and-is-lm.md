@@ -140,20 +140,10 @@ from lib.chapter08.is_lm import (
 
 ```python
 MPC = 0.6
-
-
 B = 20
-
-
 A = 450
-
-
 K = 0.5
-
-
 H = 100
-
-
 M = 250
 
 
@@ -211,6 +201,41 @@ def is_interest(income: float, intercept: float, mpc: float, b: float) -> float:
     _check_b_positive(b)
     return (intercept - (1 - mpc) * income) / b
 ```
+
+??? note "import と補助関数（写すときに足す）"
+
+    記事の抜粋には、import と、先頭が `_` の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。
+
+    **lib/chapter08/is_lm.py**
+
+    ```python
+    import math
+    ```
+
+    ```python
+    import numpy as np
+    ```
+
+    ```python
+    from lib.chapter04.multiplier import validate_mpc
+    from lib.chapter07.money_market import money_demand, validate_h, validate_k
+    ```
+
+    ```python
+    def _check_b_positive(b: float) -> None:
+        if b <= 0:
+            raise ValueError(
+                "投資の利子感応度 b が 0 の IS 曲線は垂直で、利子率が決まらない"
+            )
+    ```
+
+    ```python
+    def _check_lm_finite(k: float, h: float) -> None:
+        validate_k(k)
+        validate_h(h)
+        if not math.isfinite(h):
+            raise ValueError("連立方程式のソルバーは、有限の h だけ扱える")
+    ```
 
 ```python
 from lib.chapter08.is_lm import is_income, is_interest, is_intercept
@@ -532,7 +557,7 @@ uv run pytest test/chapter08
 | 想起 | 本文を閉じて、`is_income` の最初のテスト（利子率 2.5、切片 450、c = 0.6、b = 20 で、所得 1000）を書いてください |
 | 生成 | 解説を見る前に、IS 曲線上で、利子率が 1 下がったとき、所得がいくつ増えるかを返す `income_gain_per_interest_cut(mpc, b)` を、テストから書いてください。c = 0.6、b = 20 では、いくつですか |
 | 多様 | b を 20 から 40 に変えると、均衡の所得は、増えますか、減りますか（A = 450、LM は、これまでと同じ）。先に予想してから、確かめてください |
-| 交互 | [第 1 シリーズ](../economics-programming/index.md)の第 3・4 章のリスト内包表記で、b が 10、20、30、40、50 のときの、均衡の所得を、一度に計算してください。b が大きいほど、所得は、減っていますか |
+| 交互 | [第 1 シリーズ](../economics-programming/index.md)の第 3 章のリスト内包表記で、b が 10、20、30、40、50 のときの、均衡の所得を、一度に計算してください。b が大きいほど、所得は、減っていますか |
 
 ??? note "解答（先に自分で取り組んでから、開いてください）"
 

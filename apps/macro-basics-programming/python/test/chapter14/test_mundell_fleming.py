@@ -64,6 +64,8 @@ def test_変動相場では貨幣供給を変えると所得と為替レート�
 
 
 def test_均衡はISとLMとBPをすべて満たす() -> None:
+    # 固定相場の LM と変動相場の IS の残差は、M/P と e を、その式から逆算するので、作り方から 0 になる。
+    # 意味のある照合は、固定相場の IS（Y を決めた式の確認）と、変動相場の LM（Y の式の確認）
     economy = make_economy(exchange_rate=1.1, real_money=240, world_rate=3)
     for eq in (fixed_rate_equilibrium(economy), floating_rate_equilibrium(economy)):
         assert open_economy_residuals(economy, eq) == pytest.approx((0, 0, 0))

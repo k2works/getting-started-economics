@@ -169,14 +169,8 @@ from lib.chapter03.price_index import laspeyres, paasche
 
 ```python
 BASE_PRICES = [100, 200]
-
-
 BASE_QUANTITIES = [10, 5]
-
-
 PRICES = [110, 180]
-
-
 QUANTITIES = [12, 4]
 
 
@@ -233,6 +227,45 @@ def paasche(
         _spending(base_prices, current_quantities),
     )
 ```
+
+??? note "import と補助関数（写すときに足す）"
+
+    記事の抜粋には、import と、先頭が `_` の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。
+
+    **lib/chapter03/indicators.py**
+
+    ```python
+    from pathlib import Path
+    ```
+
+    ```python
+    import pandas as pd
+    ```
+
+    **lib/chapter03/price_index.py**
+
+    ```python
+    from collections.abc import Sequence
+    ```
+
+    ```python
+    import pandas as pd
+    ```
+
+    ```python
+    def _spending(prices: Sequence[float], quantities: Sequence[float]) -> float:
+        """支出額 = 価格 × 数量 の合計。品目の数が違えばエラー。"""
+        if len(prices) != len(quantities):
+            raise ValueError("価格と数量は、同じ長さ（品目の数）にする")
+        return sum(p * q for p, q in zip(prices, quantities, strict=True))
+    ```
+
+    ```python
+    def _ratio(numerator: float, denominator: float) -> float:
+        if denominator == 0:
+            raise ValueError("基準時の支出が 0 で、指数を計算できない")
+        return numerator / denominator
+    ```
 
 ラスパイレスは、**数量を、基準時のものだけ**受け取ります。比較時の数量は、引数にありません。比較時の数量が、どう変わっても、ラスパイレスは、変わりません。品目の数が違うとき（`_spending`）と、基準時の支出が 0 のとき（`_ratio`）は、エラーです（どちらもテストがあります）。
 

@@ -198,6 +198,31 @@ def monetary_base(currency: float, reserves: float) -> float:
     return currency + reserves
 ```
 
+??? note "import と補助関数（写すときに足す）"
+
+    記事の抜粋には、import と、先頭が `_` の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。
+
+    **lib/chapter06/money_supply.py**
+
+    ```python
+    _BUY = "買いオペ"
+    _SELL = "売りオペ"
+    ```
+
+    ```python
+    def _check_amount(value: float, name: str) -> None:
+        if value < 0:
+            raise ValueError(f"{name}は、0 以上にする")
+    ```
+
+    ```python
+    def _check_ratios(cash_ratio: float, reserve_ratio: float) -> None:
+        if cash_ratio < 0:
+            raise ValueError("現金預金比率 C/D は、0 以上にする")
+        if not 0 < reserve_ratio <= 1:
+            raise ValueError("準備預金比率 R/D は、0 より大きく 1 以下にする")
+    ```
+
 ストックは、負になりません。負の値は、**どの量が負なのか**が分かるエラーにします（テストは、`test_ストックの要素が負ならエラー`）。
 
 ### 貨幣乗数
@@ -206,11 +231,7 @@ C/D = 0.1、R/D = 0.01 で、乗数は 10 です。C/D が上がる、R/D が上
 
 ```python
 CASH_RATIO = 0.1  # 現金預金比率 C/D
-
-
 RESERVE_RATIO = 0.01  # 準備預金比率 R/D
-
-
 BASE = 110.0  # ハイパワードマネー（現金 100 + 準備預金 10）
 
 
@@ -530,7 +551,7 @@ uv run pytest test/chapter06
 | 想起 | 本文を閉じて、`money_multiplier` の最初のテスト（C/D = 0.1、R/D = 0.01 で、乗数 10）を書いてください |
 | 生成 | 解説を見る前に、ハイパワードマネーを 1 だけ増やしたときの、マネーストックの増加を返す `money_per_base(cash_ratio, reserve_ratio)` を、テストから書いてください。C/D = 0.1、R/D = 0.01 では、いくつになりますか |
 | 多様 | 準備率を 0.01 から 0.1 に上げると、乗数は、いくつになりますか。先に予想してから、確かめてください。現金預金比率が 0 のとき、乗数は、準備率の逆数になりますか |
-| 交互 | [第 1 シリーズ](../economics-programming/index.md)の第 3・4 章のリスト内包表記で、現金預金比率が 0、0.1、0.2、0.3、0.4 のときの乗数（R/D = 0.01）を、一度に計算してください。比率が上がるほど、乗数は、小さくなっていますか |
+| 交互 | [第 1 シリーズ](../economics-programming/index.md)の第 3 章のリスト内包表記で、現金預金比率が 0、0.1、0.2、0.3、0.4 のときの乗数（R/D = 0.01）を、一度に計算してください。比率が上がるほど、乗数は、小さくなっていますか |
 
 ??? note "解答（先に自分で取り組んでから、開いてください）"
 

@@ -54,7 +54,7 @@ uv run pytest test/chapter02
 ```
 
 ```text
-39 passed
+40 passed
 ```
 
 自分でコードを書くときは、`practice/chapter02/` を作って、完成形と同じ名前（`three_way.py`・`test_three_way.py` など）のファイルに書きます。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。
@@ -145,6 +145,10 @@ x について解くために、整理します。I は単位行列です。
 - `A @ x`: 行列の積。行列とベクトルの積も、同じ記号
 - `np.linalg.solve(M, f)`: 連立方程式 M x = f を解く。`np.linalg.inv(M)` は、逆行列
 - `np.allclose(a, b)`: 配列が、誤差の範囲で、等しいか
+- `z / x`: 配列どうしの割り算は、要素ごとです。行列 z をベクトル x で割ると、**各列を、x の対応する要素で割ります**（ブロードキャスト）。たとえば z = [[10, 30], [40, 20]]、x = [100, 200] なら、z / x は [[0.1, 0.15], [0.4, 0.1]] です（1 列目を 100 で、2 列目を 200 で割る）。投入係数は、この計算です
+- `z.sum(axis=0)` は列ごとの合計（縦計）、`z.sum(axis=1)` は行ごとの合計（横計）
+- `(a < 0).any()`: 1 つでも真の要素があるか。`np.linalg.det(m)` は行列式、`np.linalg.cond(m)` は条件数（大きいほど、解が不安定で、特異に近い）
+- 型ヒントの `ArrayLike`（配列にできる値）と `NDArray[np.float64]`（実数の配列）は、読むための印で、動作には影響しません
 
 実際に、動かします。
 
@@ -184,8 +188,6 @@ False True
 
 ```python
 OUTPUT = [300, 500, 700]
-
-
 INTERMEDIATE = [200, 300, 500]
 
 
@@ -240,6 +242,63 @@ def gdp_expenditure(
     return consumption + government + fixed_capital_formation + inventory + net_exports
 ```
 
+??? note "import と補助関数（写すときに足す）"
+
+    記事の抜粋には、import と、先頭が `_` の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。
+
+    **lib/chapter02/input_output.py**
+
+    ```python
+    import numpy as np
+    from numpy.typing import ArrayLike, NDArray
+    ```
+
+    ```python
+    # (I − A) の条件数が、これを超えるなら、特異（逆行列がない）と見なす。
+    # 行列式は、部門の数が多いと、健全な経済でも小さくなる（0.5 の 50 乗は 9e-16）ので、
+    # 絶対値では、判定しない。
+    # 生産が成り立つ（付加価値が、すべて正の）経済では、行列式は、正になる
+    _MAX_CONDITION = 1e12
+    ```
+
+    ```python
+    def _square(matrix: ArrayLike) -> NDArray[np.float64]:
+        """正方行列として読む。違えばエラー。"""
+        array = np.asarray(matrix, dtype=float)
+        if array.ndim != 2 or array.shape[0] != array.shape[1]:
+            raise ValueError("正方行列（部門 × 部門）にする")
+        return array
+    ```
+
+    ```python
+    def _vector(values: ArrayLike, size: int) -> NDArray[np.float64]:
+        """部門の数 size の、ベクトルとして読む。違えばエラー。"""
+        array = np.asarray(values, dtype=float)
+        if array.shape != (size,):
+            raise ValueError(f"長さは、部門の数（{size}）にする")
+        return array
+    ```
+
+    ```python
+    def _leontief_matrix(coefficients: ArrayLike) -> NDArray[np.float64]:
+        """I − A を返す。A が不正、または I − A が特異なら、エラー。"""
+        a = _square(coefficients)
+        if (a < 0).any():
+            raise ValueError("投入係数は、負にならない")
+        m = np.eye(len(a)) - a
+        if np.linalg.det(m) <= 0 or np.linalg.cond(m) > _MAX_CONDITION:
+            raise ValueError(
+                "単位行列から投入係数を引いた行列が特異（行列式が 0 以下）で、解けない"
+            )
+        return m
+    ```
+
+    **lib/chapter02/three_way.py**
+
+    ```python
+    from collections.abc import Sequence
+    ```
+
 ### 在庫品増加で、事後的に一致する
 
 3 つの面は、別々に計算した値です。**一致する理由**は、在庫品増加が、「生産 − 販売」で決まるからです。販売がどう変わっても、支出面の合計は、生産に一致する、という性質を、テストにします（`inventory_change` 自身の、生産 500・販売 490 で +10、販売が生産を超えると負、というテストは、`test/chapter02/test_three_way.py` にあります）。
@@ -282,8 +341,6 @@ def is_three_way_equal(
 
 ```python
 A = [[0.2, 0.3], [0.4, 0.1]]
-
-
 FINAL_DEMAND = [100, 200]
 
 
@@ -363,8 +420,6 @@ def test_単位行列から投入係数を引いた行列が特異ならエラ�
 
 ```python
 TABLE_FINAL_DEMAND = [120, 230]
-
-
 TABLE_VALUE_ADDED = [150, 200]
 
 
@@ -493,7 +548,7 @@ uv run pytest test/chapter02
 ```
 
 ```text
-39 passed
+40 passed
 ```
 
 ## 2.6 規則で言うと

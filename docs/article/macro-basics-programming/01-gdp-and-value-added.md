@@ -145,8 +145,6 @@ from lib.chapter01.gdp import (
 
 ```python
 OUTPUT = [300, 700, 1000]
-
-
 INTERMEDIATE = [0, 300, 700]
 
 
@@ -177,6 +175,23 @@ def gdp_from_stages(output: Sequence[float], intermediate: Sequence[float]) -> f
     """付加価値の合計。最終財の価値に等しい。"""
     return sum(value_added(output, intermediate))
 ```
+
+??? note "import と補助関数（写すときに足す）"
+
+    記事の抜粋には、import と、先頭が `_` の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。
+
+    **lib/chapter01/gdp.py**
+
+    ```python
+    from collections.abc import Sequence
+    from dataclasses import dataclass
+    ```
+
+    ```python
+    # GDP に含めるもの（帰属計算を含む）と、含めないもの
+    _INCLUDED = {"政府サービス", "持ち家の家賃", "農家の自家消費"}
+    _EXCLUDED = {"キャピタルゲイン", "中古品の売買", "家事労働"}
+    ```
 
 ```python
 from lib.chapter01.gdp import gdp_from_stages, value_added
@@ -531,7 +546,7 @@ uv run pytest test/chapter01
 | 想起 | 本文を閉じて、`value_added` の最初のテスト（生産額 [300, 700, 1000]、中間投入 [0, 300, 700] で、付加価値 [300, 400, 300]）を書いてください |
 | 生成 | 解説を見る前に、各段階の付加価値が、GDP に占める割合を返す `value_added_share(output, intermediate)` を、テストから書いてください。3 段階の例では、いくつになりますか |
 | 多様 | 労働分配率を 0.4 から 0.3（資本分配率 0.7）に変えると、技術進歩率は、0.8 より大きくなりますか、小さくなりますか。先に予想してから、確かめてください |
-| 交互 | [第 1 シリーズ](../economics-programming/index.md)の第 3・4 章のリスト内包表記で、3 か国（成長率・労働増加率・資本増加率が、A は 6・7・4、B は 3・2・3、C は 5・0・6）の成長会計を、一度に計算してください。どの国も、3 つの寄与の和が成長率になりますか |
+| 交互 | [第 1 シリーズ](../economics-programming/index.md)の第 3 章のリスト内包表記で、3 か国（成長率・労働増加率・資本増加率が、A は 6・7・4、B は 3・2・3、C は 5・0・6）の成長会計を、一度に計算してください。どの国も、3 つの寄与の和が成長率になりますか |
 
 ??? note "解答（先に自分で取り組んでから、開いてください）"
 

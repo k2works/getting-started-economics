@@ -47,6 +47,8 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-21T00:00:00Z }
 
 ## 10.2 準備
 
+> **進め方の目安**: この章は、新しい道具が多いので、**2 回に分けて**進めることをすすめます。1 回目は、労働市場と効率賃金（10.5 の前半）、2 回目は、AD-AS（総需要・総供給・二分法・政策の効果）です。
+
 サンプルコードは、リポジトリの `apps/macro-basics-programming/python/` にあります。環境の作り方は、[第 1 章](01-gdp-and-value-added.md) の 1.2 節と同じです。
 
 ```bash
@@ -153,6 +155,53 @@ def labor_equilibrium(curves: LaborCurves) -> tuple[float, float]:
     return wage, labor_demand(curves, wage)
 ```
 
+??? note "import と補助関数（写すときに足す）"
+
+    記事の抜粋には、import と、先頭が `_` の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。
+
+    **lib/chapter10/ad_as.py**
+
+    ```python
+    from collections.abc import Callable
+    from dataclasses import dataclass, replace
+    ```
+
+    ```python
+    from lib.chapter08.is_lm import solve_is_lm
+    ```
+
+    ```python
+    _BISECTION_STEPS = 200
+    ```
+
+    ```python
+    def _check_price(price: float) -> None:
+        if price <= 0:
+            raise ValueError("物価は、正にする")
+    ```
+
+    **lib/chapter10/labor.py**
+
+    ```python
+    import math
+    from collections.abc import Sequence
+    from dataclasses import dataclass
+    ```
+
+    ```python
+    def _check_curves(curves: LaborCurves) -> None:
+        if curves.demand_slope <= 0:
+            raise ValueError("労働需要の傾きは、正にする（需要は賃金の減少関数）")
+        if curves.supply_slope <= 0:
+            raise ValueError("労働供給の傾きは、正にする（供給は賃金の増加関数）")
+    ```
+
+    ```python
+    def _check_wage(wage: float) -> None:
+        if wage < 0:
+            raise ValueError("実質賃金は、0 以上にする")
+    ```
+
 需要の傾きと供給の傾きが、0 以下のときや、均衡の賃金が負になる設定は、エラーにします（`_check_curves`。`labor_demand`・`labor_supply` は、`a − b·w`・`c + d·w` を返すだけです）。
 
 ### 非自発的失業と名目賃金の硬直性
@@ -213,14 +262,8 @@ def best_efficiency_wage(wages: Sequence[float], subsistence: float) -> float:
 
 ```python
 ECONOMY = AdEconomy(mpc=0.6, b=20, intercept=450, k=0.5, h=100, nominal_money=250)
-
-
 FULL = 1000
-
-
 BASE = 480
-
-
 SLOPE = 400
 
 
@@ -282,7 +325,11 @@ def keynesian_supply(
 
 AD と AS の交点は、AD − AS = 0 となる物価です。AD は物価とともに減り、AS は減らないので、AD − AS は、物価とともに減ります。そこで、**二分法**（範囲の真ん中で、符号を見て、範囲を半分に狭める）で、物価を探します。AS は、関数として、引数に渡します（古典派でもケインズでも、同じ `solve_ad_as` が使えます）。
 
-手計算の値を、先にテストにします。古典派は、900 + 100 ÷ P = 1000 から、P = 1 です。ケインズは、480 + 400P = 900 + 100 ÷ P から、4P² − 4.2P − 1 = 0 で、P = 1.25、Y = 980 です。
+手計算の値を、先にテストにします。なお、この章では、`dataclass.replace`（一部の値だけを変えた複製を作る）、`Callable`（関数を引数に渡す型）、`functools.partial`（関数の引数の一部を、先に決めた、新しい関数を作る。たとえば `partial(keynesian_supply, slope=400)` は、傾きを 400 に決めた、残りの引数だけをとる関数）が出てきます。古典派は、900 + 100 ÷ P = 1000 から、P = 1 です。ケインズは、480 + 400P = 900 + 100 ÷ P から、4P² − 4.2P − 1 = 0 で、P = 1.25、Y = 980 です。
+
+**二分法の手計算（古典派。説明のため、範囲を [0.5, 2] にします。コードの既定は [0.01, 100] です）**: 真ん中の P = 1.25 では、AD = 980 で、AS = 1000 より小さい（AD − AS < 0）ので、解は、左半分 [0.5, 1.25] にあります。次の真ん中 P = 0.875 では、AD = 1014.3 で、AS より大きい（> 0）ので、右の [0.875, 1.25] へ。これを繰り返すと、範囲が半分ずつ狭まり、P = 1 に近づきます（コードは、これを 200 回繰り返します）。
+
+**ケインズで ΔG = 10 のときの物価**: AD は Y = 920 + 100 ÷ P になります（IS の切片が 460 になり、第 9 章の閉じた式の分母 (1 − c) + b·k ÷ h = 0.5 で割るため。定数部分は 460 ÷ 0.5 = 920）。480 + 400P = 920 + 100 ÷ P から、4P² − 4.4P − 1 = 0。解の公式で、P = (4.4 + √35.36) ÷ 8 です（テストの値と同じ）。
 
 ```python
 def classical(price: float) -> float:

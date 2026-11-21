@@ -135,8 +135,6 @@ from lib.chapter07.money_market import (
 
 ```python
 K = 0.5  # 所得に対する貨幣需要の感応度
-
-
 H = 100.0  # 利子率に対する貨幣需要の感応度
 
 
@@ -169,6 +167,31 @@ def money_demand(income: float, interest: float, k: float, h: float) -> float:
     validate_h(h)
     return k * income - h * interest
 ```
+
+??? note "import と補助関数（写すときに足す）"
+
+    記事の抜粋には、import と、先頭が `_` の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。
+
+    **lib/chapter07/liquidity.py**
+
+    ```python
+    import math
+    ```
+
+    ```python
+    from lib.chapter07.money_market import (
+        lm_income,
+        lm_interest,
+        money_demand,
+        validate_h,
+        validate_k,
+    )
+    ```
+
+    ```python
+    # 浮動小数点の誤差（下限が 0 のとき、0.1 + 0.2 − 0.3 は 5.6e-17 になる）を許す
+    _TOLERANCE = 1e-9
+    ```
 
 感応度 k・h が正でないとき（0 では、傾き k ÷ h や、利子率の式が、定義できません）は、どちらの値が悪いのか分かるエラーにします。
 
@@ -522,7 +545,7 @@ uv run pytest test/chapter07
 | 想起 | 本文を閉じて、`lm_interest` の最初のテスト（k = 0.5、h = 100、M/P = 250、Y = 1000 で、利子率 2.5）を書いてください |
 | 生成 | 解説を見る前に、同じ利子率で、所得が `income` のときに、貨幣市場が**需要超過か供給超過か**を、真偽値で返す `is_demand_excess(income, interest, real_money, k, h)` を、テストから書いてください。点（Y = 1000、r = 1.5）では、どうなりますか |
 | 多様 | h を 100 から 200 に変えると、同じ所得 1200 での、LM 曲線上の利子率は、いくつになりますか。先に予想してから、確かめてください（M/P = 250） |
-| 交互 | [第 1 シリーズ](../economics-programming/index.md)の第 3・4 章のリスト内包表記で、所得が 600、800、1000、1200、1400 のときの、わなのある LM 曲線（下限 2.0）の利子率を、一度に計算してください。わなの端の所得は、いくつですか |
+| 交互 | [第 1 シリーズ](../economics-programming/index.md)の第 3 章のリスト内包表記で、所得が 600、800、1000、1200、1400 のときの、わなのある LM 曲線（下限 2.0）の利子率を、一度に計算してください。わなの端の所得は、いくつですか |
 
 ??? note "解答（先に自分で取り組んでから、開いてください）"
 

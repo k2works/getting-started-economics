@@ -127,8 +127,6 @@ from lib.chapter05.stabilization import (
 
 ```python
 FULL = 300
-
-
 EQUILIBRIUM = 250
 
 
@@ -163,6 +161,24 @@ def classify_gap(gap: float) -> str:
         return "ギャップなし"
     return "デフレギャップ" if gap > 0 else "インフレギャップ"
 ```
+
+??? note "import と補助関数（写すときに足す）"
+
+    記事の抜粋には、import と、先頭が `_` の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。
+
+    **lib/chapter05/stabilization.py**
+
+    ```python
+    import math
+    ```
+
+    ```python
+    from lib.chapter04.multiplier import (
+        spending_multiplier,
+        tax_multiplier,
+        validate_mpc,
+    )
+    ```
 
 `classify_gap` は、`0` との比較に、`math.isclose` を使います。小数の計算では、0 になるはずの値が、ごくわずかにずれるからです。**ごく小さい値だけを、ギャップなしと見なし**、0.5 のような小さなギャップは、ギャップとして扱います。
 
@@ -514,7 +530,7 @@ uv run pytest test/chapter05
 | 想起 | 本文を閉じて、`output_gap` の最初のテスト（完全雇用所得 300、均衡所得 250 で、ギャップ 50。デフレギャップ）を書いてください |
 | 生成 | 解説を見る前に、同じギャップを埋めるのに、必要な減税が、必要な政府支出増の**何倍か**を返す `tax_to_spending_ratio(gap, mpc)` を、テストから書いてください。c = 0.6 では、いくつになりますか |
 | 多様 | 税率を 0.2 から 0.4 に上げると、乗数と、振れ幅の縮小の割合は、いくつになりますか。先に予想してから、確かめてください |
-| 交互 | [第 1 シリーズ](../economics-programming/index.md)の第 3・4 章のリスト内包表記で、税率が 0、0.1、0.2、0.3、0.4、0.5 のときの乗数を、一度に計算してください。税率が上がるほど、乗数は、小さくなっていますか |
+| 交互 | [第 1 シリーズ](../economics-programming/index.md)の第 3 章のリスト内包表記で、税率が 0、0.1、0.2、0.3、0.4、0.5 のときの乗数を、一度に計算してください。税率が上がるほど、乗数は、小さくなっていますか |
 
 ??? note "解答（先に自分で取り組んでから、開いてください）"
 

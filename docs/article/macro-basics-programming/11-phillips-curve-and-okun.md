@@ -52,7 +52,7 @@ uv run pytest test/chapter11
 ```
 
 ```text
-58 passed
+59 passed
 ```
 
 自分でコードを書くときは、`practice/chapter11/` を作って、完成形と同じ名前のファイルに書きます。テストは、`uv run pytest practice/chapter11` で動かします。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。
@@ -126,6 +126,45 @@ def real_interest_rate(nominal: float, inflation: float) -> float:
     """
     return nominal - inflation
 ```
+
+??? note "import と補助関数（写すときに足す）"
+
+    記事の抜粋には、import と、先頭が `_` の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。
+
+    **lib/chapter11/okun.py**
+
+    ```python
+    from collections.abc import Sequence
+    from dataclasses import dataclass
+    ```
+
+    ```python
+    import numpy as np
+    ```
+
+    **lib/chapter11/phillips.py**
+
+    ```python
+    def _check_beta(beta: float) -> None:
+        if beta <= 0:
+            raise ValueError("失業率への感応度 β は、正にする")
+    ```
+
+    **lib/chapter11/price_shocks.py**
+
+    ```python
+    from functools import partial
+    ```
+
+    ```python
+    from lib.chapter10.ad_as import (
+        AdEconomy,
+        expand_demand,
+        keynesian_supply,
+        shift_supply,
+        solve_ad_as,
+    )
+    ```
 
 借金の負担は、物価が (1 + π)^年数 倍になると、その分の 1 になります。デフレ（π = −0.1）なら、1000 ÷ 0.9 = 1111.11 で、**負担が増えます**。
 
@@ -220,11 +259,7 @@ def cost_push_effect(
 
 ```python
 NATURAL = 5
-
-
 EXPECTED = 2
-
-
 BETA = 0.5
 
 
@@ -509,7 +544,7 @@ uv run pytest test/chapter11
 ```
 
 ```text
-58 passed
+59 passed
 ```
 
 ## 11.6 規則で言うと
