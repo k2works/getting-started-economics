@@ -194,3 +194,10 @@ def test_交差価格効果の許容誤差は1e_9() -> None:
     assert cross_price_relation(-8e-10) == "独立財"
     assert cross_price_relation(1.2e-9) == "代替財"
     assert cross_price_relation(-1.2e-9) == "補完財"
+
+
+def test_補償された消費点は財yの価格でも変わる() -> None:
+    x, y = compensated_bundle(800, 1, 2)
+    assert cobb_douglas_utility(x, y) == pytest.approx(800)
+    assert y / x == pytest.approx(1 / 2)
+    assert x == pytest.approx(40)

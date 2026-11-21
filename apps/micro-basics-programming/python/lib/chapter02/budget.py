@@ -80,7 +80,7 @@ def optimal_bundle_by_grid(
     xs = [x_max * i / steps for i in range(steps + 1)]
     points = [(x, max(0.0, (income - px * x) / py)) for x in xs]
     # 効用が同じ点が複数あれば、先に見つけた点（x の小さいほう）を返す
-    return max(points, key=lambda point: cobb_douglas_utility(*point, a, b))
+    return max(points, key=lambda p: cobb_douglas_utility(p[0], p[1], a, b))
 
 
 def tangency_gap(
