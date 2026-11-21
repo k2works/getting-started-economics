@@ -166,3 +166,18 @@ def test_税の負担の和は税額() -> None:
     for market in (MARKET, STEEP_DEMAND, STEEP_SUPPLY):
         buyer, seller = tax_incidence(market, 9)
         assert buyer + seller == pytest.approx(9)
+
+
+# --- 独立した変異確認で見つかった穴を埋めるテスト ---
+
+
+def test_数量が需要の切片に等しくても総余剰を求められる() -> None:
+    assert total_surplus_at_quantity(MARKET, 100) == pytest.approx(90 * 100 - 100**2)
+
+
+def test_取引がほとんどなくなる大きな税でも数量が正なら求められる() -> None:
+    result = tax_equilibrium(MARKET, 89)
+    assert result.quantity == pytest.approx(0.5)
+    assert result.buyer_price == pytest.approx(99.5)
+    with pytest.raises(ValueError, match="取引"):
+        tax_equilibrium(MARKET, 90)

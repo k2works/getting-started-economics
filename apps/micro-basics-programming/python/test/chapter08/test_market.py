@@ -191,3 +191,35 @@ def test_シフトで傾きは変わらない() -> None:
     assert shifted.supply_slope == 1
     assert shifted.demand_intercept == 120
     assert shifted.supply_intercept == 10
+
+
+# --- 独立した変異確認で見つかった穴を埋めるテスト ---
+
+
+def test_均衡の判定の許容誤差は超過需要で1e_9() -> None:
+    # 価格が 6e-10 ずれると、超過需要は 1.2e-9（許容誤差 1e-9 の外）
+    assert price_state(MARKET, 55 + 6e-10) == "供給超過（価格が下がる）"
+    assert price_state(MARKET, 55 + 4e-10) == "均衡"
+
+
+def test_価格が0になる均衡はエラー() -> None:
+    with pytest.raises(ValueError, match="均衡"):
+        equilibrium(LinearMarket(10, -1, 10, 1))
+
+
+def test_数量が0になる均衡はエラー() -> None:
+    with pytest.raises(ValueError, match="均衡"):
+        equilibrium(LinearMarket(10, -1, -10, 1))
+
+
+def test_価格も数量も1未満の均衡は有効() -> None:
+    price, quantity = equilibrium(LinearMarket(1, -1, -0.5, 1))
+    assert (price, quantity) == pytest.approx((0.75, 0.25))
+
+
+def test_マーシャル的調整は傾きが1でない市場でも需要価格と供給価格の差で動く() -> None:
+    # 需要価格 = 50 − q/2、供給価格 = 5 + q/4。差は 45 − 0.75q
+    market = LinearMarket(100, -2, -20, 4)
+    quantities = marshall_adjustment(market, 0, 0.25, 2)
+    assert quantities == pytest.approx([0, 11.25, 11.25 + 0.25 * (45 - 0.75 * 11.25)])
+    assert marshall_adjustment(market, 0, 0.25, 200)[-1] == pytest.approx(60, abs=1e-9)
