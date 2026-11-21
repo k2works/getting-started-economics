@@ -159,3 +159,14 @@ def test_課税の図の軸と凡例() -> None:
     assert ax.get_xlim() == (3, 6)
     assert ax.get_ylim()[0] == 0
     assert ax.get_legend() is not None
+
+
+# --- 独立した変異確認で見つかった穴を埋めるテスト ---
+
+
+def test_供給曲線は操業停止点の生産量から始まり太く描く() -> None:
+    ax = supply()
+    item = line(ax, "Supply curve (MC above shutdown)")
+    # 曲線の点は 0.08 刻み。操業停止点の q = 3 の、次の点（3.04）から始まる
+    assert 3 <= xs(item)[0] <= 3 + 8 / 100
+    assert item.get_linewidth() > line(ax, "MC").get_linewidth()
