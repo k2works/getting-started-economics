@@ -48,7 +48,7 @@ def price_stays(demand: KinkedDemand, marginal_cost: float) -> bool:
     )
 
 
-def price_when_demand_shifts(demand: KinkedDemand, marginal_cost: float) -> float:
+def price_when_cost_shifts(demand: KinkedDemand, marginal_cost: float) -> float:
     """限界費用が変わったときの価格。途切れの中なら、屈折点の価格のまま。"""
     if not price_stays(demand, marginal_cost):
         raise ValueError("限界費用が、途切れの範囲を出ると、屈折点では決まらない")

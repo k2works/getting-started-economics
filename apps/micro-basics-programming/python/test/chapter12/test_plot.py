@@ -46,7 +46,7 @@ def test_屈折需要曲線の図の線() -> None:
 
 def test_需要曲線は屈折点で傾きが変わる() -> None:
     demand = line(kinked(), "Demand")
-    assert xs(demand)[1:3] == [40, 40] or xs(demand)[1] == 40
+    assert xs(demand)[1] == 40
     assert ys(demand)[1] == 50
     assert xs(demand)[0] == 0
     assert ys(demand)[0] == pytest.approx(50 + 0.5 * 40)

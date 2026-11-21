@@ -8,7 +8,7 @@ from lib.chapter12.kinked import (
     marginal_revenue_below,
     marginal_revenue_gap,
     price_stays,
-    price_when_demand_shifts,
+    price_when_cost_shifts,
 )
 
 # 屈折点 (数量 40、価格 50)。上は緩やか（傾き 0.5）、下は急（傾き 2）
@@ -36,13 +36,13 @@ def test_限界費用が途切れの中なら価格は変わらない() -> None:
 
 
 def test_限界費用が変わっても価格は同じ() -> None:
-    assert price_when_demand_shifts(KINKED, 10) == 50
-    assert price_when_demand_shifts(KINKED, 30) == 50
+    assert price_when_cost_shifts(KINKED, 10) == 50
+    assert price_when_cost_shifts(KINKED, 30) == 50
 
 
 def test_途切れを出る費用の上昇は価格を動かす() -> None:
     with pytest.raises(ValueError, match="屈折"):
-        price_when_demand_shifts(KINKED, 40)
+        price_when_cost_shifts(KINKED, 40)
 
 
 def test_屈折には上の傾きが下より小さいことが必要() -> None:

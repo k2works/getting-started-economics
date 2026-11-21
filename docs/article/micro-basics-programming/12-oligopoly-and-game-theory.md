@@ -15,7 +15,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-22T00:00:00Z }
 
 - **利得表**から、相手の戦略に対する**最適反応**、どんな相手にも最善の**支配戦略**、2 人とも最適反応になっている**ナッシュ均衡**を求める
 - **囚人のジレンマ**: 均衡（裏切り、裏切り）が、協調（協調、協調）より、**2 人とも悪い**
-- **繰り返しゲーム**: しっぺ返し・トリガー戦略で、**割引因子が閾値以上**なら、協調が続く
+- **繰り返しゲーム**: トリガー戦略で、**割引因子が閾値以上**なら、協調が続く（しっぺ返しの条件は、別。12.4 を参照）
 - **屈折需要曲線**: 値上げに他社がついてこず、値下げにはついてくる。限界収入が途切れて、価格が**硬直的**になる
 
 ![協調が続く条件。割引因子が閾値 0.5 を超えると、協調を続ける価値（青）が、一度裏切る価値（橙）を上回る](images/ch12-trigger.png)
@@ -25,7 +25,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-22T00:00:00Z }
 | 経済学の題材 | 利得表、最適反応、支配戦略、ナッシュ均衡、囚人のジレンマ、繰り返しゲーム（しっぺ返し・トリガー戦略）、屈折需要曲線 |
 | 使う Python の機能 | `dataclass`、タプルの入れ子、関数を値として渡す（戦略）、内包表記、テスト（`pytest`） |
 | 新しく導入するライブラリ | なし |
-| 完成形 | `Game`、`prisoners_dilemma`、`best_responses_for_row`、`best_responses_for_column`、`dominant_strategy_for_row`、`dominant_strategy_for_column`、`pure_nash_equilibria`、`is_pareto_dominated`、`is_prisoners_dilemma`、`discounted_sum`、`cooperation_value`、`deviation_value`、`cooperation_threshold`、`trigger_sustains_cooperation`、戦略（`tit_for_tat` など）、`play`、`total_payoffs`、`KinkedDemand`、`marginal_revenue_gap`、`price_stays` |
+| 完成形 | `Game`、`prisoners_dilemma`、`best_responses_for_row`、`best_responses_for_column`、`dominant_strategy_for_row`、`dominant_strategy_for_column`、`pure_nash_equilibria`、`is_pareto_dominated`、`is_prisoners_dilemma`、`discounted_sum`、`cooperation_value`、`deviation_value`、`cooperation_threshold`、`trigger_sustains_cooperation`、戦略（`tit_for_tat` など）、`play`、`total_payoffs`、`KinkedDemand`、`marginal_revenue_gap`、`price_stays`、`price_when_cost_shifts` |
 | ファイル | 実装: `lib/chapter12/game.py`、`lib/chapter12/repeated.py`、`lib/chapter12/kinked.py`、`lib/chapter12/plot.py`（図）／テスト: `test/chapter12/` の同名のファイル（自分で書くときは、`practice/chapter12/` に、同じ名前で作ります） |
 | データ | なし（手計算できる小さな例だけ） |
 
@@ -107,6 +107,8 @@ uv run pytest test/chapter12
 
 将来を重く見る（δ が大きい）ほど、協調が続きます。これが**フォーク定理**の核心で、δ が十分大きければ、罰より良い利得の組は、均衡で実現できる、というものです。無限回の繰り返しは、閉じた式（等比級数の和）で扱います。
 
+**しっぺ返しの条件は、別です。** 相手が、交互に裏切るなど、しっぺ返しを利用するとき、協調が続くには、δ ≥ (T − R) ÷ (R − S)（この例では 2/3）が必要です。この章の閾値 0.5 は、**トリガー戦略だけ**のものです。
+
 ### 屈折需要曲線
 
 寡占企業が、値上げをしても、他社はついてこない（需要は**弾力的**で、曲線は緩やか）。値下げをすると、他社もついてくる（需要は**非弾力的**で、曲線は急）。需要曲線が、現在の価格で**折れ**ます。そのため、限界収入が、屈折点で**途切れ**、限界費用が、その途切れの中で動いても、**価格は変わりません**（価格の硬直性）。
@@ -183,6 +185,9 @@ def test_利得表の形のチェック() -> None:
 利得表は、`payoffs[i][j] = (行の利得, 列の利得)` の入れ子のタプルです。形が長方形で、空でないことは、`__post_init__` で、作るときに検査します。
 
 ```python
+Payoffs = tuple[tuple[tuple[float, float], ...], ...]
+
+
 @dataclass(frozen=True)
 class Game:
     """2 人ゲーム。payoffs[i][j] = (行の利得, 列の利得)。"""
@@ -491,6 +496,27 @@ def is_prisoners_dilemma(game: Game) -> bool:
 
 ### 繰り返しゲーム
 
+ここまでが、1 回限りのゲーム（`game.py`）です。ここで一度、休んでかまいません。
+
+```python
+import pytest
+
+from lib.chapter12.game import prisoners_dilemma
+from lib.chapter12.repeated import (
+    always_cooperate,
+    always_defect,
+    cooperation_threshold,
+    cooperation_value,
+    deviation_value,
+    discounted_sum,
+    grim_trigger,
+    play,
+    tit_for_tat,
+    total_payoffs,
+    trigger_sustains_cooperation,
+)
+```
+
 ```python
 GAME = prisoners_dilemma(temptation=5, reward=3, punishment=1, sucker=0)
 
@@ -546,6 +572,15 @@ def test_閾値の上下で協調と裏切りの価値が入れ替わる() -> No
 ```
 
 ```python
+Strategy = Callable[[Sequence[int], Sequence[int]], int]
+
+
+COOPERATE = 0
+
+
+DEFECT = 1
+
+
 def _check_delta(delta: float) -> None:
     if not 0 <= delta < 1:
         raise ValueError("割引因子は、0 以上 1 未満にする")
@@ -695,6 +730,21 @@ def total_payoffs(
 
 ### 屈折需要曲線
 
+次の `kinked.py` は、独立した話題です。
+
+```python
+import pytest
+
+from lib.chapter12.kinked import (
+    KinkedDemand,
+    marginal_revenue_above,
+    marginal_revenue_below,
+    marginal_revenue_gap,
+    price_stays,
+    price_when_cost_shifts,
+)
+```
+
 ```python
 KINKED = KinkedDemand(kink_quantity=40, kink_price=50, upper_slope=0.5, lower_slope=2)
 
@@ -720,13 +770,13 @@ def test_限界費用が途切れの中なら価格は変わらない() -> None:
 
 
 def test_限界費用が変わっても価格は同じ() -> None:
-    assert price_when_demand_shifts(KINKED, 10) == 50
-    assert price_when_demand_shifts(KINKED, 30) == 50
+    assert price_when_cost_shifts(KINKED, 10) == 50
+    assert price_when_cost_shifts(KINKED, 30) == 50
 
 
 def test_途切れを出る費用の上昇は価格を動かす() -> None:
     with pytest.raises(ValueError, match="屈折"):
-        price_when_demand_shifts(KINKED, 40)
+        price_when_cost_shifts(KINKED, 40)
 
 
 def test_屈折には上の傾きが下より小さいことが必要() -> None:
@@ -787,7 +837,7 @@ def price_stays(demand: KinkedDemand, marginal_cost: float) -> bool:
     )
 
 
-def price_when_demand_shifts(demand: KinkedDemand, marginal_cost: float) -> float:
+def price_when_cost_shifts(demand: KinkedDemand, marginal_cost: float) -> float:
     """限界費用が変わったときの価格。途切れの中なら、屈折点の価格のまま。"""
     if not price_stays(demand, marginal_cost):
         raise ValueError("限界費用が、途切れの範囲を出ると、屈折点では決まらない")
@@ -917,7 +967,7 @@ print("限界費用 10・30・40 で価格は動かないか:", [price_stays(kin
 
     def test_需要曲線は屈折点で傾きが変わる() -> None:
         demand = line(kinked(), "Demand")
-        assert xs(demand)[1:3] == [40, 40] or xs(demand)[1] == 40
+        assert xs(demand)[1] == 40
         assert ys(demand)[1] == 50
         assert xs(demand)[0] == 0
         assert ys(demand)[0] == pytest.approx(50 + 0.5 * 40)
@@ -1091,7 +1141,7 @@ uv run pytest test/chapter12
 
 1. **相手の戦略を所与として、最適反応を選ぶ。** 2 人とも最適反応の組が、ナッシュ均衡
 2. **囚人のジレンマでは、支配戦略の均衡が、パレート劣位になる。** 個人の合理性が、全体の非効率を生む
-3. **繰り返しゲームでは、δ ≥ (T − R) ÷ (T − P) なら、協調が続く。** 将来を重く見るほど、協調が続く
+3. **トリガー戦略の繰り返しゲームでは、δ ≥ (T − R) ÷ (T − P) なら、協調が続く。** 将来を重く見るほど、協調が続く
 
 混同しやすい点を、表にまとめます。
 
@@ -1099,6 +1149,7 @@ uv run pytest test/chapter12
 | :--- | :--- |
 | 支配戦略とナッシュ均衡 | 支配戦略は、相手が**何をしても**最善。ナッシュ均衡は、相手の**その戦略**に対して最善。支配戦略の組は、必ず均衡だが、逆は成り立たない |
 | ナッシュ均衡と効率 | 均衡は、一人で変えたくない組であって、**全体で最善**とは限らない（囚人のジレンマ） |
+| トリガー戦略としっぺ返し | 閾値 (T − R) ÷ (T − P) は、トリガー戦略のもの。しっぺ返しは、利用されることがあり、必要な δ が違う（δ ≥ (T − R) ÷ (R − S)） |
 | 割引因子の大小 | δ が大きいほど、将来を重く見る（辛抱強い）。協調が続きやすい |
 | 屈折需要の価格 | 価格が硬直的なのは、限界費用が**途切れの範囲内**で動くとき。範囲を出れば、価格は動く。また、**屈折点の価格が、なぜ決まったか**は、説明しない |
 

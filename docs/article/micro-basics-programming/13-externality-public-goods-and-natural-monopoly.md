@@ -24,7 +24,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-22T00:00:00Z }
 | 経済学の題材 | 外部不経済・外部経済、ピグー税・補助金、コースの定理、排出権取引、公共財とフリーライダー、財の 4 分類、自然独占の価格規制 |
 | 使う Python の機能 | `dataclass`（`frozen=True`、`replace`）、タプルの範囲、内包表記、`math.sqrt`、テスト（`pytest`） |
 | 新しく導入するライブラリ | なし |
-| 完成形 | `ExternalityMarket`、`market_quantity`、`socially_optimal_quantity`、`pigou_tax`、`quantity_with_tax`、`externality_deadweight_loss`、`coase_outcome`、`emissions_trading`、`uniform_reduction`、`abatement_cost`、`PublicGood`、`public_good_optimal_quantity`、`voluntary_quantity`、`under_provision`、`classify_good`、`marginal_cost_pricing`、`average_cost_pricing`、`unregulated_outcome`、`required_subsidy` |
+| 完成形 | `ExternalityMarket`、`market_quantity`、`socially_optimal_quantity`、`pigou_tax`、`quantity_with_tax`、`externality_deadweight_loss`、`coase_outcome`、`emissions_trading`、`uniform_reduction`、`abatement_cost`、`PublicGood`、`public_good_optimal_quantity`、`individual_quantity`、`voluntary_quantity`、`under_provision`、`classify_good`、`natural_average_cost`、`marginal_cost_pricing`、`average_cost_pricing`、`unregulated_outcome`、`required_subsidy` |
 | ファイル | 実装: `lib/chapter13/externality.py`、`public.py`、`natural.py`、`plot.py`（図）／テスト: `test/chapter13/` の同名のファイル（自分で書くときは、`practice/chapter13/` に、同じ名前で作ります） |
 | データ | なし（手計算できる小さな例だけ） |
 
@@ -58,7 +58,7 @@ uv run pytest test/chapter13
 ```
 
 ```text
-52 passed
+56 passed
 ```
 
 自分でコードを書くときは、`practice/chapter13/` に、`externality.py`・`public.py`・`natural.py` と、それぞれのテストを作ります。
@@ -93,7 +93,7 @@ uv run pytest test/chapter13
 | **競合する** | 私的財（パン） | 共有資源（漁場） |
 | **競合しない** | クラブ財（有料の道路） | 公共財（国防・灯台） |
 
-公共財は、全員が同時に消費できるので、社会全体の限界便益は、各人の限界便益を**縦に足す**（Σ MB_i）。最適な供給量は、Σ MB_i = MC の点です。しかし、払わなくても使える（**フリーライダー**）ので、自発的には、最も欲しい 1 人が供給する量しか出ず、**過少供給**になります。
+公共財は、全員が同時に消費できるので、社会全体の限界便益は、各人の限界便益を**縦に足す**（Σ MB_i）。最適な供給量は、Σ MB_i = MC の点です（限界便益が 0 になる数量を超えた人は、足しません。負の便益を足さないため）。しかし、払わなくても使える（**フリーライダー**）ので、自発的には、最も欲しい 1 人が供給する量しか出ず、**過少供給**になります。
 
 ### 費用逓減産業（自然独占）
 
@@ -388,7 +388,7 @@ def externality_deadweight_loss(market: ExternalityMarket) -> float:
     return 0.5 * abs(market.external_cost) * gap
 ```
 
-外部費用 20 のピグー税をかけると、数量が 35（最適）になります。死荷重は ½ × 20 × (45 − 35) = 100 で、**外部費用の 2 乗に比例**します（数量の差が e ÷ 2 のため）。外部費用が**負**なら、補助金で、数量が 45 から 50 に増えます。
+外部費用 20 のピグー税をかけると、数量が 35（最適）になります。死荷重は ½ × 20 × (45 − 35) = 100 で、**外部費用の 2 乗に比例**します（この例では b + d = 2 なので、数量の差が e ÷ 2。一般には e ÷ (b + d)）。外部費用が**負**なら、補助金で、数量が 45 から 50 に増えます。
 
 ### コースの定理
 
@@ -512,6 +512,21 @@ def abatement_cost(slopes: Sequence[float], reductions: Sequence[float]) -> floa
 
 ### 公共財
 
+ここまでが、外部効果（`externality.py`）です。ここで一度、休んでかまいません。
+
+```python
+import pytest
+
+from lib.chapter13.public import (
+    PublicGood,
+    classify_good,
+    individual_quantity,
+    public_good_optimal_quantity,
+    under_provision,
+    voluntary_quantity,
+)
+```
+
 ```python
 GOOD = PublicGood(benefit_intercepts=(40, 20), benefit_slopes=(2, 1), marginal_cost=30)
 
@@ -573,6 +588,33 @@ def test_財の4分類() -> None:
     assert classify_good(rival=False, excludable=True) == "club"
     assert classify_good(rival=True, excludable=False) == "common"
     assert classify_good(rival=False, excludable=False) == "public"
+
+
+def test_限界便益が負になる人は縦の和に入れない() -> None:
+    lopsided = PublicGood((100, 10), (1, 1), 20)
+    assert public_good_optimal_quantity(lopsided) == pytest.approx(80)
+    assert voluntary_quantity(lopsided) == pytest.approx(80)
+    assert under_provision(lopsided) == pytest.approx(0)
+
+
+def test_最適な量では正の限界便益の和が限界費用に等しい() -> None:
+    good = PublicGood((100, 30, 10), (1, 2, 1), 20)
+    q = public_good_optimal_quantity(good)
+    total = sum(
+        max(a - b * q, 0)
+        for a, b in zip(good.benefit_intercepts, good.benefit_slopes, strict=True)
+    )
+    assert total == pytest.approx(good.marginal_cost)
+    assert under_provision(good) >= 0
+
+
+def test_全員の便益が正の範囲なら従来どおり() -> None:
+    both = PublicGood((40, 30), (1, 1), 20)
+    assert public_good_optimal_quantity(both) == pytest.approx(25)
+
+
+def test_限界費用が0なら限界便益が0になる数量まで供給する() -> None:
+    assert public_good_optimal_quantity(PublicGood((10,), (1,), 0)) == pytest.approx(10)
 ```
 
 ```python
@@ -595,11 +637,24 @@ class PublicGood:
 
 
 def public_good_optimal_quantity(good: PublicGood) -> float:
-    """最適な供給量。縦の和 Σ(a_i − b_i·q) = MC から q = (Σa − MC) ÷ Σb。負なら 0。"""
-    quantity = (sum(good.benefit_intercepts) - good.marginal_cost) / sum(
-        good.benefit_slopes
-    )
-    return max(quantity, 0.0)
+    """最適な供給量。正の限界便益だけを縦に足した Σ max(a_i − b_i·q, 0) = MC の点。
+
+    限界便益が 0 になる数量（a_i ÷ b_i）を超えた人は、足さない。足す人を絞りながら、
+    q = (Σa − MC) ÷ Σb を、足す人が変わらなくなるまで、求め直す。
+    """
+    active = list(range(len(good.benefit_intercepts)))
+    while True:
+        quantity = (
+            sum(good.benefit_intercepts[i] for i in active) - good.marginal_cost
+        ) / sum(good.benefit_slopes[i] for i in active)
+        still = [
+            i
+            for i in active
+            if good.benefit_intercepts[i] / good.benefit_slopes[i] >= quantity
+        ]
+        if still == active:
+            return max(quantity, 0.0)
+        active = still
 
 
 def individual_quantity(good: PublicGood, person: int) -> float:
@@ -633,6 +688,21 @@ def classify_good(rival: bool, excludable: bool) -> str:
 ```
 
 ### 自然独占
+
+次の `natural.py` は、第 11 章の `Monopoly` を使います。
+
+```python
+import pytest
+
+from lib.chapter11.monopoly import Monopoly
+from lib.chapter13.natural import (
+    average_cost_pricing,
+    marginal_cost_pricing,
+    natural_average_cost,
+    required_subsidy,
+    unregulated_outcome,
+)
+```
 
 ```python
 DEMAND = Monopoly(demand_intercept=100, demand_slope=1, marginal_cost=10)
@@ -1044,7 +1114,7 @@ uv run pytest test/chapter13
 ```
 
 ```text
-52 passed
+56 passed
 ```
 
 ## 13.6 規則で言うと

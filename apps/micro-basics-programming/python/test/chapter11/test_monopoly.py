@@ -174,10 +174,10 @@ def test_長期に利潤が0になる需要では短期の利潤も0() -> None:
     assert monopolistic_competition_profit(after, 2025) == pytest.approx(0, abs=1e-9)
 
 
-def test_独占的競争では平均費用がまだ下がる数量で作る() -> None:
+def test_独占的競争の長期の価格は限界費用より高い() -> None:
     long_run = long_run_monopolistic_competition(10, 1, 1000)
-    q = long_run.quantity
-    assert 10 + 1000 / q > 10 + 1000 / (2 * q)
+    assert long_run.price > 10
+    assert long_run.price - 10 == pytest.approx(math.sqrt(1000))
 
 
 def test_独占的競争の仮定のチェック() -> None:

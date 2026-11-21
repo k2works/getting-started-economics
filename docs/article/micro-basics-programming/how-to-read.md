@@ -97,6 +97,8 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-21T00:00:00Z }
 
 `uv sync` は、兄弟のディレクトリ `apps/article-tools/`（記事の検査ツール）に依存します。**アプリのフォルダだけを取り出さず、リポジトリごと**使ってください。
 
+Windows の Git Bash などで、日本語の出力が文字化けするときは、`PYTHONUTF8=1` を付けて実行してください（例: `PYTHONUTF8=1 uv run python -m practice.chapter01.check`）。
+
 ## 完成形の使い方
 
 サンプルコードには、各章の完成形が入っています（`lib/` と `test/`）。**答え合わせ用**です。自分のコードを、`practice/` に書いてから、見比べてください。

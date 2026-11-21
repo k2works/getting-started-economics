@@ -72,3 +72,30 @@ def test_財の4分類() -> None:
     assert classify_good(rival=False, excludable=True) == "club"
     assert classify_good(rival=True, excludable=False) == "common"
     assert classify_good(rival=False, excludable=False) == "public"
+
+
+def test_限界便益が負になる人は縦の和に入れない() -> None:
+    lopsided = PublicGood((100, 10), (1, 1), 20)
+    assert public_good_optimal_quantity(lopsided) == pytest.approx(80)
+    assert voluntary_quantity(lopsided) == pytest.approx(80)
+    assert under_provision(lopsided) == pytest.approx(0)
+
+
+def test_最適な量では正の限界便益の和が限界費用に等しい() -> None:
+    good = PublicGood((100, 30, 10), (1, 2, 1), 20)
+    q = public_good_optimal_quantity(good)
+    total = sum(
+        max(a - b * q, 0)
+        for a, b in zip(good.benefit_intercepts, good.benefit_slopes, strict=True)
+    )
+    assert total == pytest.approx(good.marginal_cost)
+    assert under_provision(good) >= 0
+
+
+def test_全員の便益が正の範囲なら従来どおり() -> None:
+    both = PublicGood((40, 30), (1, 1), 20)
+    assert public_good_optimal_quantity(both) == pytest.approx(25)
+
+
+def test_限界費用が0なら限界便益が0になる数量まで供給する() -> None:
+    assert public_good_optimal_quantity(PublicGood((10,), (1,), 0)) == pytest.approx(10)

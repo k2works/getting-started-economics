@@ -29,11 +29,24 @@ class PublicGood:
 
 
 def public_good_optimal_quantity(good: PublicGood) -> float:
-    """最適な供給量。縦の和 Σ(a_i − b_i·q) = MC から q = (Σa − MC) ÷ Σb。負なら 0。"""
-    quantity = (sum(good.benefit_intercepts) - good.marginal_cost) / sum(
-        good.benefit_slopes
-    )
-    return max(quantity, 0.0)
+    """最適な供給量。正の限界便益だけを縦に足した Σ max(a_i − b_i·q, 0) = MC の点。
+
+    限界便益が 0 になる数量（a_i ÷ b_i）を超えた人は、足さない。足す人を絞りながら、
+    q = (Σa − MC) ÷ Σb を、足す人が変わらなくなるまで、求め直す。
+    """
+    active = list(range(len(good.benefit_intercepts)))
+    while True:
+        quantity = (
+            sum(good.benefit_intercepts[i] for i in active) - good.marginal_cost
+        ) / sum(good.benefit_slopes[i] for i in active)
+        still = [
+            i
+            for i in active
+            if good.benefit_intercepts[i] / good.benefit_slopes[i] >= quantity
+        ]
+        if still == active:
+            return max(quantity, 0.0)
+        active = still
 
 
 def individual_quantity(good: PublicGood, person: int) -> float:
