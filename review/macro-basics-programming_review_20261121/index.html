@@ -6649,88 +6649,118 @@
 </tr>
 </tbody>
 </table>
-<h3 id="_5">中・低（未対応を含む）<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<h3 id="_5">中・低（すべて対応または判断を記録）<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
 <th style="text-align: left;">#</th>
 <th style="text-align: left;">指摘</th>
 <th style="text-align: left;">指摘元</th>
-<th style="text-align: left;">状態</th>
+<th style="text-align: left;">対応</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align: left;">11</td>
-<td style="text-align: left;">「正にする」検査で 0 &lt; x &lt; 1 の有効値を試していない（約 17 件の変異が生存）</td>
+<td style="text-align: left;">「正にする」検査で 0 &lt; x &lt; 1 の有効値を試していない</td>
 <td style="text-align: left;">テスター</td>
-<td style="text-align: left;">対応済み（ch7・8・10〜14。<code>&lt;= 1</code> への変異 14 件の検出を、独立に確認）</td>
+<td style="text-align: left;">対応済み（ch7・8・10〜14。<code>&lt;= 1</code> への変異 14 件の検出を確認）</td>
 </tr>
 <tr>
 <td style="text-align: left;">12</td>
 <td style="text-align: left;"><code>isclose</code> の許容誤差がテストで固定されていない</td>
 <td style="text-align: left;">テスター</td>
-<td style="text-align: left;">ch7・8 は対応済み</td>
+<td style="text-align: left;">対応済み（ch7・8）</td>
 </tr>
 <tr>
 <td style="text-align: left;">13</td>
-<td style="text-align: left;">図の線種・凡例のテストがない（14 ファイル中 3 ファイルのみ）</td>
+<td style="text-align: left;">図の線種・凡例のテストがない</td>
 <td style="text-align: left;">テスター</td>
-<td style="text-align: left;">未対応</td>
+<td style="text-align: left;">対応済み（<code>test/tools/test_figure_style.py</code>。全 28 図に、凡例と、動かした曲線の線種の規則を課した。変異の検出を確認）</td>
 </tr>
 <tr>
 <td style="text-align: left;">14</td>
 <td style="text-align: left;">ch10 実質賃金 0 の境界、ch2 plot の棒の位置</td>
 <td style="text-align: left;">テスター</td>
-<td style="text-align: left;">未対応</td>
+<td style="text-align: left;">対応済み（棒の位置の変異 3 件を検出）</td>
 </tr>
 <tr>
 <td style="text-align: left;">15</td>
-<td style="text-align: left;">記号表が古い（k・b・h・A・β・π^e・s）。労働市場の b・c が AD の b・c と衝突</td>
+<td style="text-align: left;">記号表が古い。労働市場の b・c が AD の b・c と衝突</td>
 <td style="text-align: left;">ユーザー代表・テクニカルライター</td>
-<td style="text-align: left;">対応済み（記号表と、第 10 章の表への注記。文字の変更はしない）</td>
+<td style="text-align: left;">対応済み（記号表と、第 10 章の表への注記。文字は変えない：変えると、第 10 章のテスト・実装・図の全面改修になり、衝突の注記で足りるため）</td>
 </tr>
 <tr>
 <td style="text-align: left;">16</td>
-<td style="text-align: left;">第 2 章の NumPy（ブロードキャスト等）、第 10 章の構文集中</td>
+<td style="text-align: left;">第 2 章の NumPy、第 10 章の構文の集中</td>
 <td style="text-align: left;">ユーザー代表</td>
-<td style="text-align: left;">未対応</td>
+<td style="text-align: left;">対応済み（第 2 章にブロードキャスト等の補足。第 10 章に <code>replace</code>・<code>Callable</code>・<code>partial</code> の説明、二分法の手計算、ΔG = 10 の導出、2 回に分ける目安）。章の分割は、しない（既存の章番号・リンク・テストの構成を壊すため）</td>
 </tr>
 <tr>
 <td style="text-align: left;">17</td>
-<td style="text-align: left;">第 10 章 101・103 行の食い違い（「導く」と「仮定」、セイの法則の括弧）</td>
+<td style="text-align: left;">第 10 章 101・103 行の食い違い</td>
 <td style="text-align: left;">テクニカルライター</td>
 <td style="text-align: left;">対応済み</td>
 </tr>
 <tr>
 <td style="text-align: left;">18</td>
-<td style="text-align: left;">第 13 章の購買力平価の参照先、第 14 章の需給ギャップの式</td>
+<td style="text-align: left;">第 13 章の参照先、第 14 章の式、マネタリズムの区別、第 12 章の表記と相対所得仮説の範囲、第 9 章のクラウディングアウトの数式、練習問題「交互」の参照</td>
 <td style="text-align: left;">テクニカルライター</td>
 <td style="text-align: left;">対応済み</td>
 </tr>
 <tr>
 <td style="text-align: left;">19</td>
-<td style="text-align: left;">第 14 章の最終章に次の連載の案内がない／outline.md が読者の目に入りうる</td>
+<td style="text-align: left;">第 14 章末に次の連載の案内がない／outline が読者の目に入りうる</td>
 <td style="text-align: left;">ユーザー代表</td>
-<td style="text-align: left;">第 14 章末の案内は対応済み。outline は <code>exclude_docs</code> 済み</td>
+<td style="text-align: left;">対応済み（案内を追加。outline は <code>exclude_docs</code> で非公開）</td>
 </tr>
 <tr>
 <td style="text-align: left;">20</td>
-<td style="text-align: left;">ch14 が ch7/ch8 の IS/LM 関数を再利用していない（意図的な再導出）</td>
+<td style="text-align: left;">ch14 が ch7/ch8 の IS/LM 関数を再利用していない</td>
 <td style="text-align: left;">アーキテクト</td>
-<td style="text-align: left;">outline の「次のステップ」に意図を記録済み</td>
+<td style="text-align: left;">対応済み（残差は <code>is_lm_residuals</code> を再利用。均衡の閉じた式は、制度の違いを式で見せるため、意図して再導出のまま）</td>
 </tr>
 <tr>
 <td style="text-align: left;">21</td>
-<td style="text-align: left;">第 7 章（下限 2.0）と第 9 章（h → ∞）の流動性のわなの表現の違い、第 10 章の AD の導出元</td>
+<td style="text-align: left;">第 7 章と第 9 章の流動性のわなの表現の違い、第 10 章の AD の導出元</td>
 <td style="text-align: left;">テクニカルライター・アーキテクト</td>
-<td style="text-align: left;">未対応</td>
+<td style="text-align: left;">対応済み（第 9 章に別の切り取り方であることを明記。第 10 章の AD は第 8 章の <code>solve_ad_as</code> から導くと説明済み）</td>
 </tr>
 <tr>
 <td style="text-align: left;">22</td>
-<td style="text-align: left;">ch1・ch11 が 600 行をわずかに超える、<code>figure_registry</code> の集約など</td>
+<td style="text-align: left;">各章の import・補助関数が記事に出ない</td>
+<td style="text-align: left;">ユーザー代表・テクニカルライター</td>
+<td style="text-align: left;">対応済み（全章に、ソースから機械的に抜き出した折りたたみを追加。転記コードの検査も通る）</td>
+</tr>
+<tr>
+<td style="text-align: left;">23</td>
+<td style="text-align: left;">到達チェックに、先に答えが並ぶ（第 9・14 章）</td>
+<td style="text-align: left;">ユーザー代表</td>
+<td style="text-align: left;">対応済み（「何も見ずに書く課題」を先に置いた）</td>
+</tr>
+<tr>
+<td style="text-align: left;">24</td>
+<td style="text-align: left;">検証の重複（ch10〜13）</td>
 <td style="text-align: left;">アーキテクト</td>
-<td style="text-align: left;">低。未対応</td>
+<td style="text-align: left;">判断して、そのまま（ch10〜13 の検証は、章固有のメッセージと条件で、共通化の利益が小さい。共通の <code>validate_k/h/b</code> は ch7〜9・14 で共有した）</td>
+</tr>
+<tr>
+<td style="text-align: left;">25</td>
+<td style="text-align: left;"><code>figure_registry</code> の集約、<code>test/tools</code> がリポジトリ外で動かない</td>
+<td style="text-align: left;">アーキテクト・テスター</td>
+<td style="text-align: left;">判断して、そのまま（図の登録は、孤立した画像を検査で検出する契約。リポジトリ外では使わないことを how-to-read に明記）</td>
+</tr>
+<tr>
+<td style="text-align: left;">26</td>
+<td style="text-align: left;">ch1・ch11 が 600 行をわずかに超える、各章の図の小節の分量</td>
+<td style="text-align: left;">アーキテクト・ユーザー代表</td>
+<td style="text-align: left;">判断して、そのまま（600 行は目安。分量と進め方の目安を how-to-read に追記し、図の小節は後回し可と明記）</td>
+</tr>
+<tr>
+<td style="text-align: left;">27</td>
+<td style="text-align: left;">残差テストの一部が作り方から 0 になる、<code>PolicyRow</code> の厳密比較、雑音の符号</td>
+<td style="text-align: left;">テスター</td>
+<td style="text-align: left;">対応済み（コメントで明示、<code>approx</code>、種を固定した値のテスト）</td>
 </tr>
 </tbody>
 </table>

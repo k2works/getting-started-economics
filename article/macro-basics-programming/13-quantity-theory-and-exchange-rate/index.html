@@ -6925,7 +6925,7 @@
 
 <h1 id="13">第 13 章: 貨幣数量説と為替・国際収支<a class="headerlink" href="#13" title="Permanent link">&para;</a></h1>
 <h2 id="131">13.1 この章の地図<a class="headerlink" href="#131" title="Permanent link">&para;</a></h2>
-<p>第 7 章では、貨幣需要が、所得と利子率で決まると考えました。<strong>貨幣数量説（マネタリズム）</strong>は、もっと単純に、貨幣量と物価を結びます。<strong>貨幣量が 2 倍になれば、物価も 2 倍になる</strong>という考え方です。この章の後半では、国を<strong>外</strong>へ広げます。為替レートが動くと純輸出がどう変わるか、為替レートは、物価の違いでどう決まるか（購買力平価）、貯蓄と投資と財政の差が、純輸出に等しくなること（IS バランス）を、関数にします。</p>
+<p>第 7 章では、貨幣需要が、所得と利子率で決まると考えました。<strong>貨幣数量説</strong>（古典派の考え方。フリードマンのマネタリズムは、これを受け継いだ主張ですが、同じものではありません）は、もっと単純に、貨幣量と物価を結びます。<strong>貨幣量が 2 倍になれば、物価も 2 倍になる</strong>という考え方です。この章の後半では、国を<strong>外</strong>へ広げます。為替レートが動くと純輸出がどう変わるか、為替レートは、物価の違いでどう決まるか（購買力平価）、貯蓄と投資と財政の差が、純輸出に等しくなること（IS バランス）を、関数にします。</p>
 <p><img alt="貨幣量 M と物価水準 P。V = 4 のとき、Y = 200 なら傾きは 0.02、Y = 400 なら 0.01。M が 2 倍になると、P も 2 倍になる" src="../images/ch13-money-and-prices.png" /></p>
 <table>
 <thead>
@@ -7118,6 +7118,13 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"生産量が 0 のとき、物価水準は計算できない"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">money</span> <span class="o">*</span> <span class="n">velocity</span> <span class="o">/</span> <span class="n">output</span>
 </code></pre></div>
+<details class="note">
+<summary>import と補助関数（写すときに足す）</summary>
+<p>記事の抜粋には、import と、先頭が <code>_</code> の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。</p>
+<p><strong>lib/chapter13/open_economy.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+</code></pre></div>
+</details>
 <p>生産量が 0 だと、割り算ができません。エラーにします。</p>
 <h3 id="k">マーシャルの k とインフレ率の近似<a class="headerlink" href="#k" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_マーシャルのkは流通速度の逆数</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -7436,7 +7443,7 @@ X = 30 で整合: False
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
-<td style="text-align: left;"><a href="../../economics-programming/">第 1 シリーズ</a>の第 3・4 章のリスト内包表記で、貨幣量が 100、200、300 のときの物価水準（V = 4、Y = 200）を、一度に求めてください。貨幣量と物価水準の比は、いつも同じですか</td>
+<td style="text-align: left;"><a href="../../economics-programming/">第 1 シリーズ</a>の第 3 章のリスト内包表記で、貨幣量が 100、200、300 のときの物価水準（V = 4、Y = 200）を、一度に求めてください。貨幣量と物価水準の比は、いつも同じですか</td>
 </tr>
 </tbody>
 </table>

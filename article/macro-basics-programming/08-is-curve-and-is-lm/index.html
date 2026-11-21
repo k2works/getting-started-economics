@@ -7119,20 +7119,10 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="n">MPC</span> <span class="o">=</span> <span class="mf">0.6</span>
-
-
 <span class="n">B</span> <span class="o">=</span> <span class="mi">20</span>
-
-
 <span class="n">A</span> <span class="o">=</span> <span class="mi">450</span>
-
-
 <span class="n">K</span> <span class="o">=</span> <span class="mf">0.5</span>
-
-
 <span class="n">H</span> <span class="o">=</span> <span class="mi">100</span>
-
-
 <span class="n">M</span> <span class="o">=</span> <span class="mi">250</span>
 
 
@@ -7187,6 +7177,30 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">_check_b_positive</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">intercept</span> <span class="o">-</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mpc</span><span class="p">)</span> <span class="o">*</span> <span class="n">income</span><span class="p">)</span> <span class="o">/</span> <span class="n">b</span>
 </code></pre></div>
+<details class="note">
+<summary>import と補助関数（写すときに足す）</summary>
+<p>記事の抜粋には、import と、先頭が <code>_</code> の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。</p>
+<p><strong>lib/chapter08/is_lm.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter04.multiplier</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_mpc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter07.money_market</span><span class="w"> </span><span class="kn">import</span> <span class="n">money_demand</span><span class="p">,</span> <span class="n">validate_h</span><span class="p">,</span> <span class="n">validate_k</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_check_b_positive</span><span class="p">(</span><span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">b</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"投資の利子感応度 b が 0 の IS 曲線は垂直で、利子率が決まらない"</span>
+        <span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_check_lm_finite</span><span class="p">(</span><span class="n">k</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">validate_k</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">validate_h</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">h</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"連立方程式のソルバーは、有限の h だけ扱える"</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.is_lm</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_income</span><span class="p">,</span> <span class="n">is_interest</span><span class="p">,</span> <span class="n">is_intercept</span>
 
 <span class="n">a</span> <span class="o">=</span> <span class="n">is_intercept</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
@@ -7476,7 +7490,7 @@ b = 40 の傾き: -0.01 （b = 20 は -0.02 ）
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
-<td style="text-align: left;"><a href="../../economics-programming/">第 1 シリーズ</a>の第 3・4 章のリスト内包表記で、b が 10、20、30、40、50 のときの、均衡の所得を、一度に計算してください。b が大きいほど、所得は、減っていますか</td>
+<td style="text-align: left;"><a href="../../economics-programming/">第 1 シリーズ</a>の第 3 章のリスト内包表記で、b が 10、20、30、40、50 のときの、均衡の所得を、一度に計算してください。b が大きいほど、所得は、減っていますか</td>
 </tr>
 </tbody>
 </table>

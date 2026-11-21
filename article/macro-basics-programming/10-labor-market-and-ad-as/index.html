@@ -7049,6 +7049,9 @@
 <p>この章の前提は、IS-LM の均衡を <code>solve_is_lm</code> で求める<a href="../08-is-curve-and-is-lm/">第 8 章</a>と、政策で IS や LM を動かす<a href="../09-fiscal-and-monetary-policy/">第 9 章</a>です。</p>
 <p>第 1 シリーズの<a href="../../economics-programming/14-ad-as-and-major-theories/">第 14 章（AD-AS と主要理論）</a>と題材が重なりますが、この記事は、<strong>独立して読めます</strong>。</p>
 <h2 id="102">10.2 準備<a class="headerlink" href="#102" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>進め方の目安</strong>: この章は、新しい道具が多いので、<strong>2 回に分けて</strong>進めることをすすめます。1 回目は、労働市場と効率賃金（10.5 の前半）、2 回目は、AD-AS（総需要・総供給・二分法・政策の効果）です。</p>
+</blockquote>
 <p>サンプルコードは、リポジトリの <code>apps/macro-basics-programming/python/</code> にあります。環境の作り方は、<a href="../01-gdp-and-value-added/">第 1 章</a> の 1.2 節と同じです。</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-basics-programming/python
 uv<span class="w"> </span>sync
@@ -7131,6 +7134,37 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"均衡の実質賃金が負になる。需要と供給の切片を見直す"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">wage</span><span class="p">,</span> <span class="n">labor_demand</span><span class="p">(</span><span class="n">curves</span><span class="p">,</span> <span class="n">wage</span><span class="p">)</span>
 </code></pre></div>
+<details class="note">
+<summary>import と補助関数（写すときに足す）</summary>
+<p>記事の抜粋には、import と、先頭が <code>_</code> の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。</p>
+<p><strong>lib/chapter10/ad_as.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">replace</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.is_lm</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_is_lm</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">_BISECTION_STEPS</span> <span class="o">=</span> <span class="mi">200</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_check_price</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">price</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"物価は、正にする"</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>lib/chapter10/labor.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_check_curves</span><span class="p">(</span><span class="n">curves</span><span class="p">:</span> <span class="n">LaborCurves</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">curves</span><span class="o">.</span><span class="n">demand_slope</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"労働需要の傾きは、正にする（需要は賃金の減少関数）"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">curves</span><span class="o">.</span><span class="n">supply_slope</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"労働供給の傾きは、正にする（供給は賃金の増加関数）"</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_check_wage</span><span class="p">(</span><span class="n">wage</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">wage</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"実質賃金は、0 以上にする"</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <p>需要の傾きと供給の傾きが、0 以下のときや、均衡の賃金が負になる設定は、エラーにします（<code>_check_curves</code>。<code>labor_demand</code>・<code>labor_supply</code> は、<code>a − b·w</code>・<code>c + d·w</code> を返すだけです）。</p>
 <h3 id="_6">非自発的失業と名目賃金の硬直性<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <p>実質賃金が均衡より高いと、供給が需要を上回ります。この差が、非自発的失業です。均衡より低いときは、需要が供給を上回る（人手不足）ので、失業は 0 です。名目賃金が硬直的なら、<strong>物価が下がると、実質賃金 W ÷ P が上がる</strong>ので、失業が生まれます。</p>
@@ -7175,14 +7209,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h3 id="is-lm">総需要を IS-LM から導く<a class="headerlink" href="#is-lm" title="Permanent link">&para;</a></h3>
 <p>物価 P のときの、実質貨幣供給 M ÷ P を、第 8 章の <code>solve_is_lm</code> に渡すと、AD 上の所得が求まります。IS-LM を作る 6 つの定数は、<code>AdEconomy</code> にまとめます。この例では、AD は Y = 900 + 100 ÷ P と書けます（第 9 章の閉じた式で、M ÷ P を 250 ÷ P にしたもの）。</p>
 <div class="highlight"><pre><span></span><code><span class="n">ECONOMY</span> <span class="o">=</span> <span class="n">AdEconomy</span><span class="p">(</span><span class="n">mpc</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">intercept</span><span class="o">=</span><span class="mi">450</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">nominal_money</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
-
-
 <span class="n">FULL</span> <span class="o">=</span> <span class="mi">1000</span>
-
-
 <span class="n">BASE</span> <span class="o">=</span> <span class="mi">480</span>
-
-
 <span class="n">SLOPE</span> <span class="o">=</span> <span class="mi">400</span>
 
 
@@ -7235,7 +7263,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <h3 id="ad-as">AD と AS の交点を求める<a class="headerlink" href="#ad-as" title="Permanent link">&para;</a></h3>
 <p>AD と AS の交点は、AD − AS = 0 となる物価です。AD は物価とともに減り、AS は減らないので、AD − AS は、物価とともに減ります。そこで、<strong>二分法</strong>（範囲の真ん中で、符号を見て、範囲を半分に狭める）で、物価を探します。AS は、関数として、引数に渡します（古典派でもケインズでも、同じ <code>solve_ad_as</code> が使えます）。</p>
-<p>手計算の値を、先にテストにします。古典派は、900 + 100 ÷ P = 1000 から、P = 1 です。ケインズは、480 + 400P = 900 + 100 ÷ P から、4P² − 4.2P − 1 = 0 で、P = 1.25、Y = 980 です。</p>
+<p>手計算の値を、先にテストにします。なお、この章では、<code>dataclass.replace</code>（一部の値だけを変えた複製を作る）、<code>Callable</code>（関数を引数に渡す型）、<code>functools.partial</code>（関数の引数の一部を、先に決めた、新しい関数を作る。たとえば <code>partial(keynesian_supply, slope=400)</code> は、傾きを 400 に決めた、残りの引数だけをとる関数）が出てきます。古典派は、900 + 100 ÷ P = 1000 から、P = 1 です。ケインズは、480 + 400P = 900 + 100 ÷ P から、4P² − 4.2P − 1 = 0 で、P = 1.25、Y = 980 です。</p>
+<p><strong>二分法の手計算（古典派。説明のため、範囲を [0.5, 2] にします。コードの既定は [0.01, 100] です）</strong>: 真ん中の P = 1.25 では、AD = 980 で、AS = 1000 より小さい（AD − AS &lt; 0）ので、解は、左半分 [0.5, 1.25] にあります。次の真ん中 P = 0.875 では、AD = 1014.3 で、AS より大きい（&gt; 0）ので、右の [0.875, 1.25] へ。これを繰り返すと、範囲が半分ずつ狭まり、P = 1 に近づきます（コードは、これを 200 回繰り返します）。</p>
+<p><strong>ケインズで ΔG = 10 のときの物価</strong>: AD は Y = 920 + 100 ÷ P になります（IS の切片が 460 になり、第 9 章の閉じた式の分母 (1 − c) + b·k ÷ h = 0.5 で割るため。定数部分は 460 ÷ 0.5 = 920）。480 + 400P = 920 + 100 ÷ P から、4P² − 4.4P − 1 = 0。解の公式で、P = (4.4 + √35.36) ÷ 8 です（テストの値と同じ）。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">classical</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">classical_supply</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="n">FULL</span><span class="p">)</span>
 

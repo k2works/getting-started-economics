@@ -7188,14 +7188,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter03.price_index</span><span class="w"> </span><span class="kn">import</span> <span class="n">laspeyres</span><span class="p">,</span> <span class="n">paasche</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="n">BASE_PRICES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span>
-
-
 <span class="n">BASE_QUANTITIES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
-
-
 <span class="n">PRICES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">110</span><span class="p">,</span> <span class="mi">180</span><span class="p">]</span>
-
-
 <span class="n">QUANTITIES</span> <span class="o">=</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
 
 
@@ -7247,6 +7241,31 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
         <span class="n">_spending</span><span class="p">(</span><span class="n">base_prices</span><span class="p">,</span> <span class="n">current_quantities</span><span class="p">),</span>
     <span class="p">)</span>
 </code></pre></div>
+<details class="note">
+<summary>import と補助関数（写すときに足す）</summary>
+<p>記事の抜粋には、import と、先頭が <code>_</code> の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。</p>
+<p><strong>lib/chapter03/indicators.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</code></pre></div>
+<p><strong>lib/chapter03/price_index.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_spending</span><span class="p">(</span><span class="n">prices</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">quantities</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""支出額 = 価格 × 数量 の合計。品目の数が違えばエラー。"""</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">quantities</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"価格と数量は、同じ長さ（品目の数）にする"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">q</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">prices</span><span class="p">,</span> <span class="n">quantities</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_ratio</span><span class="p">(</span><span class="n">numerator</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">denominator</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">denominator</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"基準時の支出が 0 で、指数を計算できない"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">numerator</span> <span class="o">/</span> <span class="n">denominator</span>
+</code></pre></div>
+</details>
 <p>ラスパイレスは、<strong>数量を、基準時のものだけ</strong>受け取ります。比較時の数量は、引数にありません。比較時の数量が、どう変わっても、ラスパイレスは、変わりません。品目の数が違うとき（<code>_spending</code>）と、基準時の支出が 0 のとき（<code>_ratio</code>）は、エラーです（どちらもテストがあります）。</p>
 <p>数量が、基準時から変わらなければ、2 つの指数は、一致します（<code>test_数量が変わらなければラスパイレスとパーシェは一致する</code>）。</p>
 <h3 id="gdp-gdpgdp">名目 GDP・実質 GDP・GDP デフレータ<a class="headerlink" href="#gdp-gdpgdp" title="Permanent link">&para;</a></h3>

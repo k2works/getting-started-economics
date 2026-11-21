@@ -2921,7 +2921,7 @@
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
-        値の確かめ
+        時間を決めて書く課題
       
     </span>
   </a>
@@ -2932,7 +2932,7 @@
   <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
-        できること
+        値の確かめ
       
     </span>
   </a>
@@ -2943,7 +2943,7 @@
   <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
-        時間を決めて書く課題
+        できること
       
     </span>
   </a>
@@ -7247,6 +7247,32 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="w">    </span><span class="sd">"""固定相場の金融政策。資本流出で貨幣供給が元に戻るので、ΔY = 0。"""</span>
     <span class="k">return</span> <span class="mf">0.0</span>
 </code></pre></div>
+<details class="note">
+<summary>import と補助関数（写すときに足す）</summary>
+<p>記事の抜粋には、import と、先頭が <code>_</code> の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。</p>
+<p><strong>lib/chapter14/mundell_fleming.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">replace</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter04.multiplier</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_mpc</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter07.money_market</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_h</span><span class="p">,</span> <span class="n">validate_k</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.is_lm</span><span class="w"> </span><span class="kn">import</span> <span class="n">is_lm_residuals</span><span class="p">,</span> <span class="n">validate_b</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_effect</span><span class="p">(</span>
+    <span class="n">regime</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">policy</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">before</span><span class="p">:</span> <span class="n">OpenEquilibrium</span><span class="p">,</span>
+    <span class="n">after</span><span class="p">:</span> <span class="n">OpenEquilibrium</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">PolicyEffect</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">PolicyEffect</span><span class="p">(</span>
+        <span class="n">regime</span><span class="p">,</span>
+        <span class="n">policy</span><span class="p">,</span>
+        <span class="n">after</span><span class="o">.</span><span class="n">income</span> <span class="o">-</span> <span class="n">before</span><span class="o">.</span><span class="n">income</span><span class="p">,</span>
+        <span class="n">after</span><span class="o">.</span><span class="n">exchange_rate</span> <span class="o">-</span> <span class="n">before</span><span class="o">.</span><span class="n">exchange_rate</span><span class="p">,</span>
+        <span class="n">after</span><span class="o">.</span><span class="n">real_money</span> <span class="o">-</span> <span class="n">before</span><span class="o">.</span><span class="n">real_money</span><span class="p">,</span>
+    <span class="p">)</span>
+</code></pre></div>
+</details>
 <p><code>fixed_rate_equilibrium</code> は、r = r* を IS に入れて所得を決め、LM から、それに見合う貨幣供給を<strong>逆算</strong>します。貨幣供給の入力（<code>real_money</code>）は、<strong>使いません</strong>。固定相場では、貨幣供給は、内生だからです。</p>
 <h3 id="_4">変動相場の均衡<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
 <p>変動相場では、順序が逆です。LM と r = r* から所得を決め、IS から、それに見合う為替レートを<strong>逆算</strong>します。</p>
@@ -7406,8 +7432,32 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <li><strong>為替レートの期待は考えていません。</strong> 固定相場が維持できないと、投機が起きます</li>
 </ul>
 <h2 id="147-3">14.7 第 3 部の到達チェック<a class="headerlink" href="#147-3" title="Permanent link">&para;</a></h2>
-<p>第 3 部（第 10〜14 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。</p>
-<h3 id="_11">値の確かめ<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>第 3 部（第 10〜14 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。<strong>先に、次の「時間を決めて書く課題」を、何も見ずに試してください。</strong> そのあとで、「値の確かめ」と「できること」で、答えを見ます。</p>
+<h3 id="_11">時間を決めて書く課題<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>何も見ずに、時間を計って、関数とテストを書きます。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">課題</th>
+<th style="text-align: left;">目安の時間</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">労働市場の均衡と非自発的失業の関数と、「w* = 4、L* = 60、w = 6 で失業 40」のテスト</td>
+<td style="text-align: left;">15 分</td>
+</tr>
+<tr>
+<td style="text-align: left;">フィリップス曲線・購買力平価・IS バランスの関数と、「u = 5 で π = 2.0」「125 円 → 137.5 円」「純輸出 20」のテスト</td>
+<td style="text-align: left;">20 分</td>
+</tr>
+<tr>
+<td style="text-align: left;">小国開放経済の固定相場・変動相場の均衡を解く関数と、「均衡が IS・LM・BP を満たす」「4 通りの効果が 25・0・0・20」のテスト</td>
+<td style="text-align: left;">30 分</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_12">値の確かめ<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p>到達チェックの値を、プログラムで確かめます。各章の関数を、そのまま呼びます。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 
@@ -7482,7 +7532,7 @@ IS バランスの純輸出: 20
 変動相場の財政政策: ΔY = 0.00
 変動相場の金融政策: ΔY = 20.00
 </code></pre></div>
-<h3 id="_12">できること<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">できること<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -7526,30 +7576,6 @@ IS バランスの純輸出: 20
 <td style="text-align: left;">小国開放経済の 4 通りの効果を言う</td>
 <td style="text-align: left;">固定・財政 25、固定・金融 0、変動・財政 0、変動・金融 20</td>
 <td style="text-align: left;">第 14 章</td>
-</tr>
-</tbody>
-</table>
-<h3 id="_13">時間を決めて書く課題<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
-<p>何も見ずに、時間を計って、関数とテストを書きます。</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">課題</th>
-<th style="text-align: left;">目安の時間</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;">労働市場の均衡と非自発的失業の関数と、「w* = 4、L* = 60、w = 6 で失業 40」のテスト</td>
-<td style="text-align: left;">15 分</td>
-</tr>
-<tr>
-<td style="text-align: left;">フィリップス曲線・購買力平価・IS バランスの関数と、「u = 5 で π = 2.0」「125 円 → 137.5 円」「純輸出 20」のテスト</td>
-<td style="text-align: left;">20 分</td>
-</tr>
-<tr>
-<td style="text-align: left;">小国開放経済の固定相場・変動相場の均衡を解く関数と、「均衡が IS・LM・BP を満たす」「4 通りの効果が 25・0・0・20」のテスト</td>
-<td style="text-align: left;">30 分</td>
 </tr>
 </tbody>
 </table>
@@ -7609,7 +7635,7 @@ IS バランスの純輸出: 20
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
-<td style="text-align: left;"><a href="../../economics-programming/">第 1 シリーズ</a>の第 3・4 章のリスト内包表記で、限界消費性向 c が 0.3、0.6、0.9 のときの、固定相場の財政政策（ΔG = 10）の効果を、一度に計算してください。c が大きいほど、効果は大きくなっていますか</td>
+<td style="text-align: left;"><a href="../../economics-programming/">第 1 シリーズ</a>の第 3 章のリスト内包表記で、限界消費性向 c が 0.3、0.6、0.9 のときの、固定相場の財政政策（ΔG = 10）の効果を、一度に計算してください。c が大きいほど、効果は大きくなっていますか</td>
 </tr>
 </tbody>
 </table>

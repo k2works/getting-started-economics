@@ -7033,7 +7033,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter02
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>39 passed
+<div class="highlight"><pre><span></span><code>40 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter02/</code> を作って、完成形と同じ名前（<code>three_way.py</code>・<code>test_three_way.py</code> など）のファイルに書きます。<strong>完成形（<code>lib/</code> と <code>test/</code>）は、答え合わせ用です。</strong> 自分で書き終えてから、開いてください。</p>
 <h2 id="23">2.3 予想する<a class="headerlink" href="#23" title="Permanent link">&para;</a></h2>
@@ -7162,6 +7162,10 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <li><code>A @ x</code>: 行列の積。行列とベクトルの積も、同じ記号</li>
 <li><code>np.linalg.solve(M, f)</code>: 連立方程式 M x = f を解く。<code>np.linalg.inv(M)</code> は、逆行列</li>
 <li><code>np.allclose(a, b)</code>: 配列が、誤差の範囲で、等しいか</li>
+<li><code>z / x</code>: 配列どうしの割り算は、要素ごとです。行列 z をベクトル x で割ると、<strong>各列を、x の対応する要素で割ります</strong>（ブロードキャスト）。たとえば z = [[10, 30], [40, 20]]、x = [100, 200] なら、z / x は [[0.1, 0.15], [0.4, 0.1]] です（1 列目を 100 で、2 列目を 200 で割る）。投入係数は、この計算です</li>
+<li><code>z.sum(axis=0)</code> は列ごとの合計（縦計）、<code>z.sum(axis=1)</code> は行ごとの合計（横計）</li>
+<li><code>(a &lt; 0).any()</code>: 1 つでも真の要素があるか。<code>np.linalg.det(m)</code> は行列式、<code>np.linalg.cond(m)</code> は条件数（大きいほど、解が不安定で、特異に近い）</li>
+<li>型ヒントの <code>ArrayLike</code>（配列にできる値）と <code>NDArray[np.float64]</code>（実数の配列）は、読むための印で、動作には影響しません</li>
 </ul>
 <p>実際に、動かします。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -7194,8 +7198,6 @@ False True
 <h3 id="red">Red: 三面等価のテスト<a class="headerlink" href="#red" title="Permanent link">&para;</a></h3>
 <p>まず、三面等価の 3 つの面を、テストから書きます。生産面は、3 つの産業の産出額と中間投入、分配面と支出面は、予想で見た値です。</p>
 <div class="highlight"><pre><span></span><code><span class="n">OUTPUT</span> <span class="o">=</span> <span class="p">[</span><span class="mi">300</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">700</span><span class="p">]</span>
-
-
 <span class="n">INTERMEDIATE</span> <span class="o">=</span> <span class="p">[</span><span class="mi">200</span><span class="p">,</span> <span class="mi">300</span><span class="p">,</span> <span class="mi">500</span><span class="p">]</span>
 
 
@@ -7244,6 +7246,49 @@ False True
 <span class="w">    </span><span class="sd">"""支出面の GDP = 民間消費 + 政府消費 + 総固定資本形成 + 在庫品増加 + 純輸出。"""</span>
     <span class="k">return</span> <span class="n">consumption</span> <span class="o">+</span> <span class="n">government</span> <span class="o">+</span> <span class="n">fixed_capital_formation</span> <span class="o">+</span> <span class="n">inventory</span> <span class="o">+</span> <span class="n">net_exports</span>
 </code></pre></div>
+<details class="note">
+<summary>import と補助関数（写すときに足す）</summary>
+<p>記事の抜粋には、import と、先頭が <code>_</code> の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。</p>
+<p><strong>lib/chapter02/input_output.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">NDArray</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># (I − A) の条件数が、これを超えるなら、特異（逆行列がない）と見なす。</span>
+<span class="c1"># 行列式は、部門の数が多いと、健全な経済でも小さくなる（0.5 の 50 乗は 9e-16）ので、</span>
+<span class="c1"># 絶対値では、判定しない。</span>
+<span class="c1"># 生産が成り立つ（付加価値が、すべて正の）経済では、行列式は、正になる</span>
+<span class="n">_MAX_CONDITION</span> <span class="o">=</span> <span class="mf">1e12</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_square</span><span class="p">(</span><span class="n">matrix</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""正方行列として読む。違えばエラー。"""</span>
+    <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">array</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"正方行列（部門 × 部門）にする"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">array</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_vector</span><span class="p">(</span><span class="n">values</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""部門の数 size の、ベクトルとして読む。違えばエラー。"""</span>
+    <span class="n">array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">array</span><span class="o">.</span><span class="n">shape</span> <span class="o">!=</span> <span class="p">(</span><span class="n">size</span><span class="p">,):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"長さは、部門の数（</span><span class="si">{</span><span class="n">size</span><span class="si">}</span><span class="s2">）にする"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">array</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_leontief_matrix</span><span class="p">(</span><span class="n">coefficients</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""I − A を返す。A が不正、または I − A が特異なら、エラー。"""</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">_square</span><span class="p">(</span><span class="n">coefficients</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"投入係数は、負にならない"</span><span class="p">)</span>
+    <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">))</span> <span class="o">-</span> <span class="n">a</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">_MAX_CONDITION</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"単位行列から投入係数を引いた行列が特異（行列式が 0 以下）で、解けない"</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">m</span>
+</code></pre></div>
+<p><strong>lib/chapter02/three_way.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+</code></pre></div>
+</details>
 <h3 id="_6">在庫品増加で、事後的に一致する<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <p>3 つの面は、別々に計算した値です。<strong>一致する理由</strong>は、在庫品増加が、「生産 − 販売」で決まるからです。販売がどう変わっても、支出面の合計は、生産に一致する、という性質を、テストにします（<code>inventory_change</code> 自身の、生産 500・販売 490 で +10、販売が生産を超えると負、というテストは、<code>test/chapter02/test_three_way.py</code> にあります）。</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">"sales"</span><span class="p">,</span> <span class="p">[</span><span class="mi">470</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">520</span><span class="p">])</span>
@@ -7273,8 +7318,6 @@ False True
 <h3 id="red_1">産業連関表: Red<a class="headerlink" href="#red_1" title="Permanent link">&para;</a></h3>
 <p>産業連関表のテストを書きます。投入係数と最終需要から、生産量を求める例は、手計算できます。(I − A) = [[0.8, −0.3], [−0.4, 0.9]] で、行列式は 0.8 × 0.9 − 0.3 × 0.4 = 0.6 です。x1 = (0.9 × 100 + 0.3 × 200) ÷ 0.6 = 250、x2 = (0.4 × 100 + 0.8 × 200) ÷ 0.6 = 1000 ÷ 3 ≈ 333.3 です。</p>
 <div class="highlight"><pre><span></span><code><span class="n">A</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">]]</span>
-
-
 <span class="n">FINAL_DEMAND</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span>
 
 
@@ -7342,8 +7385,6 @@ False True
 <h3 id="_7">レオンチェフ逆行列と縦計・横計<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>逆行列は、最終需要が、1 増えたときの影響を、知るために使います（値は、下の確認で見ます）。縦計・横計は、表が、整合しているかの検査です。最終需要か付加価値を、1 だけずらすと、整合しなくなるテストも、あります。</p>
 <div class="highlight"><pre><span></span><code><span class="n">TABLE_FINAL_DEMAND</span> <span class="o">=</span> <span class="p">[</span><span class="mi">120</span><span class="p">,</span> <span class="mi">230</span><span class="p">]</span>
-
-
 <span class="n">TABLE_VALUE_ADDED</span> <span class="o">=</span> <span class="p">[</span><span class="mi">150</span><span class="p">,</span> <span class="mi">200</span><span class="p">]</span>
 
 
@@ -7450,7 +7491,7 @@ False True
 <h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter02
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>39 passed
+<div class="highlight"><pre><span></span><code>40 passed
 </code></pre></div>
 <h2 id="26">2.6 規則で言うと<a class="headerlink" href="#26" title="Permanent link">&para;</a></h2>
 <ol>

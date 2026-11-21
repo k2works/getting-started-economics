@@ -7032,7 +7032,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter11
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>58 passed
+<div class="highlight"><pre><span></span><code>59 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter11/</code> を作って、完成形と同じ名前のファイルに書きます。テストは、<code>uv run pytest practice/chapter11</code> で動かします。<strong>完成形（<code>lib/</code> と <code>test/</code>）は、答え合わせ用です。</strong> 自分で書き終えてから、開いてください。</p>
 <h2 id="113">11.3 予想する<a class="headerlink" href="#113" title="Permanent link">&para;</a></h2>
@@ -7092,6 +7092,32 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="sd">    """</span>
     <span class="k">return</span> <span class="n">nominal</span> <span class="o">-</span> <span class="n">inflation</span>
 </code></pre></div>
+<details class="note">
+<summary>import と補助関数（写すときに足す）</summary>
+<p>記事の抜粋には、import と、先頭が <code>_</code> の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。</p>
+<p><strong>lib/chapter11/okun.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+</code></pre></div>
+<p><strong>lib/chapter11/phillips.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_check_beta</span><span class="p">(</span><span class="n">beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">beta</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"失業率への感応度 β は、正にする"</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>lib/chapter11/price_shocks.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter10.ad_as</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AdEconomy</span><span class="p">,</span>
+    <span class="n">expand_demand</span><span class="p">,</span>
+    <span class="n">keynesian_supply</span><span class="p">,</span>
+    <span class="n">shift_supply</span><span class="p">,</span>
+    <span class="n">solve_ad_as</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+</details>
 <p>借金の負担は、物価が (1 + π)^年数 倍になると、その分の 1 になります。デフレ（π = −0.1）なら、1000 ÷ 0.9 = 1111.11 で、<strong>負担が増えます</strong>。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_デフレで名目の借金の実質的な負担は増える</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">debt_burden</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1000</span> <span class="o">/</span> <span class="mf">0.9</span><span class="p">)</span>
@@ -7170,11 +7196,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h3 id="_7">フィリップス曲線<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>手計算の値で、テストを書きます。u = u_n = 5 なら、π = π^e = 2。u = 4 なら、2 − 0.5 × (4 − 5) = 2.5 です。</p>
 <div class="highlight"><pre><span></span><code><span class="n">NATURAL</span> <span class="o">=</span> <span class="mi">5</span>
-
-
 <span class="n">EXPECTED</span> <span class="o">=</span> <span class="mi">2</span>
-
-
 <span class="n">BETA</span> <span class="o">=</span> <span class="mf">0.5</span>
 
 
@@ -7416,7 +7438,7 @@ u = 6: 1.5
 <h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter11
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>58 passed
+<div class="highlight"><pre><span></span><code>59 passed
 </code></pre></div>
 <h2 id="116">11.6 規則で言うと<a class="headerlink" href="#116" title="Permanent link">&para;</a></h2>
 <ol>

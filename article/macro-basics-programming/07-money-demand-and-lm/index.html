@@ -7161,8 +7161,6 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="n">K</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># 所得に対する貨幣需要の感応度</span>
-
-
 <span class="n">H</span> <span class="o">=</span> <span class="mf">100.0</span>  <span class="c1"># 利子率に対する貨幣需要の感応度</span>
 
 
@@ -7191,6 +7189,24 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">validate_h</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">k</span> <span class="o">*</span> <span class="n">income</span> <span class="o">-</span> <span class="n">h</span> <span class="o">*</span> <span class="n">interest</span>
 </code></pre></div>
+<details class="note">
+<summary>import と補助関数（写すときに足す）</summary>
+<p>記事の抜粋には、import と、先頭が <code>_</code> の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。</p>
+<p><strong>lib/chapter07/liquidity.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter07.money_market</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">lm_income</span><span class="p">,</span>
+    <span class="n">lm_interest</span><span class="p">,</span>
+    <span class="n">money_demand</span><span class="p">,</span>
+    <span class="n">validate_h</span><span class="p">,</span>
+    <span class="n">validate_k</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># 浮動小数点の誤差（下限が 0 のとき、0.1 + 0.2 − 0.3 は 5.6e-17 になる）を許す</span>
+<span class="n">_TOLERANCE</span> <span class="o">=</span> <span class="mf">1e-9</span>
+</code></pre></div>
+</details>
 <p>感応度 k・h が正でないとき（0 では、傾き k ÷ h や、利子率の式が、定義できません）は、どちらの値が悪いのか分かるエラーにします。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_感応度が正でなければエラー</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"所得への感応度"</span><span class="p">):</span>
@@ -7511,7 +7527,7 @@ LM のシフト幅: 100.0
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
-<td style="text-align: left;"><a href="../../economics-programming/">第 1 シリーズ</a>の第 3・4 章のリスト内包表記で、所得が 600、800、1000、1200、1400 のときの、わなのある LM 曲線（下限 2.0）の利子率を、一度に計算してください。わなの端の所得は、いくつですか</td>
+<td style="text-align: left;"><a href="../../economics-programming/">第 1 シリーズ</a>の第 3 章のリスト内包表記で、所得が 600、800、1000、1200、1400 のときの、わなのある LM 曲線（下限 2.0）の利子率を、一度に計算してください。わなの端の所得は、いくつですか</td>
 </tr>
 </tbody>
 </table>
