@@ -39,7 +39,7 @@ def okun_coefficients(
     x = np.asarray(growth, dtype=float)
     y = np.asarray(unemployment_change, dtype=float)
     dx = x - x.mean()
-    if not dx.any():
+    if np.ptp(x) <= 1e-12 * max(1.0, float(np.abs(x).max())):
         raise ValueError("成長率がすべて同じで、傾きが決まらない")
     slope = float((dx * (y - y.mean())).sum() / (dx**2).sum())
     return OkunFit(slope=slope, intercept=float(y.mean() - slope * x.mean()))
@@ -60,6 +60,8 @@ def synthetic_unemployment_change(
     seed: int,
 ) -> list[float]:
     """関係 Δu = 切片 + 傾き × 成長率 に、正規分布の雑音を足した、架空のデータ。"""
+    if noise < 0:
+        raise ValueError("雑音の標準偏差は、0 以上にする")
     rng = np.random.default_rng(seed)
     x = np.asarray(growth, dtype=float)
     values = intercept + slope * x + rng.normal(0.0, noise, size=len(x))

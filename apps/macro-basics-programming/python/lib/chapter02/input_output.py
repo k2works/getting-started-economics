@@ -3,9 +3,11 @@
 import numpy as np
 from numpy.typing import ArrayLike, NDArray
 
-# (I − A) の行列式が、これ未満なら、特異（逆行列がない）か、生産が成り立たないと見なす。
+# (I − A) の条件数が、これを超えるなら、特異（逆行列がない）と見なす。
+# 行列式は、部門の数が多いと、健全な経済でも小さくなる（0.5 の 50 乗は 9e-16）ので、
+# 絶対値では、判定しない。
 # 生産が成り立つ（付加価値が、すべて正の）経済では、行列式は、正になる
-_SINGULAR = 1e-12
+_MAX_CONDITION = 1e12
 
 
 def _square(matrix: ArrayLike) -> NDArray[np.float64]:
@@ -30,7 +32,7 @@ def _leontief_matrix(coefficients: ArrayLike) -> NDArray[np.float64]:
     if (a < 0).any():
         raise ValueError("投入係数は、負にならない")
     m = np.eye(len(a)) - a
-    if np.linalg.det(m) < _SINGULAR:
+    if np.linalg.det(m) <= 0 or np.linalg.cond(m) > _MAX_CONDITION:
         raise ValueError(
             "単位行列から投入係数を引いた行列が特異（行列式が 0 以下）で、解けない"
         )

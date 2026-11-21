@@ -10,18 +10,16 @@ from collections.abc import Sequence
 from dataclasses import dataclass
 
 from lib.chapter04.multiplier import spending_multiplier, validate_mpc
-from lib.chapter08.is_lm import solve_is_lm
+from lib.chapter07.money_market import validate_h, validate_k
+from lib.chapter08.is_lm import solve_is_lm, validate_b
 
 
 def _denominator(mpc: float, b: float, k: float, h: float) -> float:
     """分母 (1 − c) + b·k ÷ h。h = math.inf なら、第 2 項は 0。"""
     validate_mpc(mpc)
-    if b < 0:
-        raise ValueError("投資の利子感応度 b は、0 以上にする")
-    if k <= 0:
-        raise ValueError("貨幣需要の所得への感応度 k は、正にする")
-    if h <= 0:
-        raise ValueError("貨幣需要の利子率への感応度 h は、正にする")
+    validate_b(b)
+    validate_k(k)
+    validate_h(h)
     return (1 - mpc) + b * k / h
 
 
@@ -81,6 +79,8 @@ def policy_interest_change(
     k: float, h: float, delta_income: float, delta_real_money: float = 0
 ) -> float:
     """政策後の利子率の変化 Δr = (k·ΔY − Δ(M/P)) ÷ h（LM 曲線上の動き）。"""
+    validate_k(k)
+    validate_h(h)
     return (k * delta_income - delta_real_money) / h
 
 

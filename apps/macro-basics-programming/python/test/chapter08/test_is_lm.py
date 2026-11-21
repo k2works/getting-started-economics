@@ -160,7 +160,7 @@ def test_ソルバーは有限の値だけ() -> None:
 
 
 def test_ソルバーはkとhが正でなければエラー() -> None:
-    with pytest.raises(ValueError, match="k と h"):
+    with pytest.raises(ValueError, match="所得への感応度"):
         solve_is_lm(MPC, B, A, 0, H, M)
-    with pytest.raises(ValueError, match="k と h"):
+    with pytest.raises(ValueError, match="利子率への感応度"):
         solve_is_lm(MPC, B, A, K, 0, M)

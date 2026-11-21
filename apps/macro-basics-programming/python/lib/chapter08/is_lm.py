@@ -9,10 +9,11 @@ import math
 import numpy as np
 
 from lib.chapter04.multiplier import validate_mpc
-from lib.chapter07.money_market import money_demand
+from lib.chapter07.money_market import money_demand, validate_h, validate_k
 
 
-def _check_b(b: float) -> None:
+def validate_b(b: float) -> None:
+    """投資の利子感応度 b が、0 以上であることを確かめる。"""
     if b < 0:
         raise ValueError("投資の利子感応度 b は、0 以上にする")
 
@@ -26,7 +27,7 @@ def _check_b_positive(b: float) -> None:
 
 def investment_demand(interest: float, autonomous_investment: float, b: float) -> float:
     """投資関数 I = I0 − b·r。利子率の減少関数。"""
-    _check_b(b)
+    validate_b(b)
     return autonomous_investment - b * interest
 
 
@@ -44,7 +45,7 @@ def is_intercept(
 def is_income(interest: float, intercept: float, mpc: float, b: float) -> float:
     """IS 曲線: 財市場を均衡させる所得 Y = (A − b·r) ÷ (1 − c)。"""
     validate_mpc(mpc)
-    _check_b(b)
+    validate_b(b)
     return (intercept - b * interest) / (1 - mpc)
 
 
@@ -73,7 +74,7 @@ def goods_market_state(
 ) -> str:
     """点 (Y, r) での財市場。IS の右上は供給超過、左下は需要超過。"""
     validate_mpc(mpc)
-    _check_b(b)
+    validate_b(b)
     excess_supply = (1 - mpc) * income + b * interest - intercept
     if math.isclose(excess_supply, 0, abs_tol=1e-9):
         return "均衡"
@@ -81,8 +82,8 @@ def goods_market_state(
 
 
 def _check_lm_finite(k: float, h: float) -> None:
-    if k <= 0 or h <= 0:
-        raise ValueError("連立方程式では、k と h は、正にする")
+    validate_k(k)
+    validate_h(h)
     if not math.isfinite(h):
         raise ValueError("連立方程式のソルバーは、有限の h だけ扱える")
 
@@ -101,7 +102,7 @@ def solve_is_lm(
     k·Y − h·r = M/P
     """
     validate_mpc(mpc)
-    _check_b(b)
+    validate_b(b)
     _check_lm_finite(k, h)
     coefficients = np.array([[1 - mpc, b], [k, -h]])
     constants = np.array([intercept, real_money])
@@ -121,7 +122,7 @@ def is_lm_residuals(
 ) -> tuple[float, float]:
     """点 (Y, r) が IS の式と LM の式を満たさない量。均衡では、どちらも 0。"""
     validate_mpc(mpc)
-    _check_b(b)
+    validate_b(b)
     is_residual = (1 - mpc) * income + b * interest - intercept
     lm_residual = money_demand(income, interest, k, h) - real_money
     return is_residual, lm_residual

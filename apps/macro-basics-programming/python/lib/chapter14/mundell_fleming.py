@@ -7,9 +7,12 @@ e は為替レート（外国通貨 1 単位あたりの自国通貨。上がる
 - 変動相場: M/P を固定する。e は、内生になる（IS で調整される）
 """
 
+import math
 from dataclasses import dataclass, replace
 
 from lib.chapter04.multiplier import validate_mpc
+from lib.chapter07.money_market import validate_h, validate_k
+from lib.chapter08.is_lm import validate_b
 
 
 @dataclass(frozen=True)
@@ -28,14 +31,13 @@ class SmallOpenEconomy:
 
     def __post_init__(self) -> None:
         validate_mpc(self.mpc)
-        if self.b < 0:
-            raise ValueError("投資の利子感応度 b は、0 以上にする")
+        validate_b(self.b)
         if self.n <= 0:
             raise ValueError("為替レートへの純輸出の感応度 n は、正にする")
-        if self.k <= 0:
-            raise ValueError("貨幣需要の所得への感応度 k は、正にする")
-        if self.h <= 0:
-            raise ValueError("貨幣需要の利子率への感応度 h は、正にする")
+        validate_k(self.k)
+        validate_h(self.h)
+        if not math.isfinite(self.h):
+            raise ValueError("貨幣需要の利子率への感応度 h は、有限にする")
         if self.world_rate < 0:
             raise ValueError("世界の利子率 r* は、0 以上にする")
         if self.exchange_rate <= 0:
@@ -53,7 +55,11 @@ class OpenEquilibrium:
 
 
 def fixed_rate_equilibrium(economy: SmallOpenEconomy) -> OpenEquilibrium:
-    """固定相場の均衡。r = r* を IS に入れて Y を決め、LM から M/P を逆算する。"""
+    """固定相場の均衡。r = r* を IS に入れて Y を決め、LM から M/P を逆算する。
+
+    入力の real_money は使わない（内生）。逆算した M/P が負になる条件は、
+    このモデルの範囲外だが、エラーにせず、そのまま返す。
+    """
     e = economy
     income = (e.intercept + e.n * e.exchange_rate - e.b * e.world_rate) / (1 - e.mpc)
     real_money = e.k * income - e.h * e.world_rate
@@ -61,7 +67,12 @@ def fixed_rate_equilibrium(economy: SmallOpenEconomy) -> OpenEquilibrium:
 
 
 def floating_rate_equilibrium(economy: SmallOpenEconomy) -> OpenEquilibrium:
-    """変動相場の均衡。LM と r = r* から Y を決め、IS から e を逆算する。"""
+    """変動相場の均衡。LM と r = r* から Y を決め、IS から e を逆算する。
+
+    入力の exchange_rate は使わない（内生）。逆算した e が 0 以下になる条件は、
+    このモデルの範囲外だが、エラーにせず、そのまま返す（n が小さいと、政策で
+    e が 0 になる）。
+    """
     e = economy
     income = (e.real_money + e.h * e.world_rate) / e.k
     exchange_rate = ((1 - e.mpc) * income + e.b * e.world_rate - e.intercept) / e.n
