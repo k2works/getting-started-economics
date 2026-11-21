@@ -160,7 +160,6 @@ def test_関係のない変数を足しても尤度比検定は棄却しない()
     restricted = fit_binary(s["y"], s[["x1", "x2"]])
     test = likelihood_ratio_test(full.log_likelihood, restricted.log_likelihood, 1)
     # 種を固定した 1 標本の例示。帰無仮説が正しくても、種を変えれば、約 5% で p < 0.05 になる
-    # 種を固定した 1 標本の例示。帰無仮説が正しくても、種を変えれば、約 5% で p < 0.05 になる
     assert test.p_value > 0.05
 
 

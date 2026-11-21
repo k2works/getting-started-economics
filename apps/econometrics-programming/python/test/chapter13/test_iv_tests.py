@@ -108,7 +108,6 @@ def test_有効な操作変数ではSarganは棄却せず無効な操作変数�
     valid = draw_overid_sample(500, 0.0, np.random.default_rng(1))
     invalid = draw_overid_sample(500, 0.5, np.random.default_rng(1))
     # 種を固定した 1 標本の例示。帰無仮説が正しくても、種を変えれば、約 5% で p < 0.05 になる
-    # 種を固定した 1 標本の例示。帰無仮説が正しくても、種を変えれば、約 5% で p < 0.05 になる
     assert sargan_test(valid["y"], valid[["x"]], valid[["z1", "z2"]]).p_value > 0.05
     assert (
         sargan_test(invalid["y"], invalid[["x"]], invalid[["z1", "z2"]]).p_value < 1e-6
