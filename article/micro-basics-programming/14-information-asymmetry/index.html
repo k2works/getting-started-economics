@@ -7701,8 +7701,8 @@
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">期待値と確率</td>
-<td style="text-align: left;">この連載の<a href="../13-externality-public-goods-and-natural-monopoly/">第 13 章</a>まで（意思決定を、利得の比較で扱う）</td>
+<td style="text-align: left;">期待値（確率で重みづけた平均）</td>
+<td style="text-align: left;">この章の最初の式で、導入します（良い品の割合で重みづける）</td>
 </tr>
 <tr>
 <td style="text-align: left;">関数・内包表記・繰り返し</td>
@@ -7970,7 +7970,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">separating_education_range</span><span class="p">(</span><span class="n">wage_high</span><span class="p">,</span> <span class="n">wage_low</span><span class="p">,</span> <span class="n">cost_high</span><span class="p">,</span> <span class="n">cost_low</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">low</span> <span class="o">&lt;=</span> <span class="n">education</span> <span class="o">&lt;=</span> <span class="n">high</span>
 </code></pre></div>
-<p>賃金の差 40 を、1 年あたりの費用で割ると、低い能力の人は 40 ÷ 20 = 2 年、高い能力の人は 40 ÷ 10 = 4 年が、境目で、<strong>2 年〜4 年</strong>が区別できる範囲です。両端の年数は、範囲に<strong>含まれます</strong>（ちょうど無差別のとき、高い能力の人は、教育を選ぶ、と約束します）。</p>
+<p>賃金の差 40 を、1 年あたりの費用で割ると、低い能力の人は 40 ÷ 20 = 2 年、高い能力の人は 40 ÷ 10 = 4 年が、境目で、<strong>2 年〜4 年</strong>が区別できる範囲です。下の端（2 年）は、<strong>低い能力の人</strong>が、教育しても、しなくても、同じになる年数。上の端（4 年）は、<strong>高い能力の人</strong>が、同じになる年数です。両端を範囲に含めるのは、無差別のとき、望ましい側（低い能力の人はまねしない、高い能力の人は選ぶ）に倒す、という約束です。</p>
 <h3 id="_8">モラルハザード<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_努力させるのに必要な最低の成果報酬</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">minimum_bonus</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="n">effort_cost</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
@@ -8276,7 +8276,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h2 id="147-4">14.7 第 4 部の到達チェック<a class="headerlink" href="#147-4" title="Permanent link">&para;</a></h2>
 <p>第 4 部（第 11〜14 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。<strong>先に、次の「時間を決めて書く課題」を、何も見ずに試してください。</strong> そのあとで、「値の確かめ」と「できること」で、答えを見ます。</p>
 <h3 id="_13">時間を決めて書く課題<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
-<p>何も見ずに、時間を計って、関数とテストを書きます。市場は、逆需要 P = 100 − Q、限界費用 10 です。</p>
+<p>何も見ずに、時間を計って、関数とテストを書きます。課題 1 の市場は、逆需要 P = 100 − Q、限界費用 10 です。課題 3 の市場は、逆需要 P = 100 − Q、<strong>私的限界費用 MC = 10 + Q</strong>（外部費用は 1 単位あたり 10）です。</p>
 <table>
 <thead>
 <tr>
@@ -8294,7 +8294,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <td style="text-align: left;">20 分</td>
 </tr>
 <tr>
-<td style="text-align: left;">外部費用 10 のピグー税と、税のもとの数量（最適な数量）を返す関数と、テスト</td>
+<td style="text-align: left;">外部費用 10 のピグー税と、税のもとの数量（最適な数量）を返す関数と、テスト（市場は、上の MC = 10 + Q）</td>
 <td style="text-align: left;">15 分</td>
 </tr>
 <tr>
@@ -8305,7 +8305,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </table>
 <h3 id="_14">値の確かめ<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <p>到達チェックの値を、プログラムで確かめます。各章の関数を、そのまま呼びます。</p>
-<p>「値の確かめ」のスクリプトは、<code>practice/chapter14/reach.py</code> に保存し、<code>uv run python -m practice.chapter14.reach</code> で実行します。</p>
+<p>「値の確かめ」のスクリプトは、<code>practice/chapter14/reach.py</code> に保存し、<code>uv run python -m practice.chapter14.reach</code> で実行します。このスクリプトは、<strong>完成形</strong>（<code>lib/</code>）を読みます。<strong>自分のコードで確かめる</strong>ときは、import を、<code>from practice.chapterNN...</code> に書き換えてください。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter11.monopoly</span><span class="w"> </span><span class="kn">import</span> <span class="n">Monopoly</span><span class="p">,</span> <span class="n">competitive_outcome</span><span class="p">,</span> <span class="n">monopoly_outcome</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.game</span><span class="w"> </span><span class="kn">import</span> <span class="n">prisoners_dilemma</span><span class="p">,</span> <span class="n">pure_nash_equilibria</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.repeated</span><span class="w"> </span><span class="kn">import</span> <span class="n">cooperation_threshold</span>
@@ -8379,6 +8379,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
+<p>自然独占（第 13 章）と成果報酬（この章）は、時間の都合で、課題に入れていません。値の確かめの出力を見て、自分で、関数とテストを書いてみてください。</p>
 <h3 id="_16">誤りの原因の分類<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <p>できなかった課題は、原因を、次の 4 つに分けて、記録します。</p>
 <table>

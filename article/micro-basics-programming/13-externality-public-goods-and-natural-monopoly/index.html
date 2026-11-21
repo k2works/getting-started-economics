@@ -7583,7 +7583,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">完成形</td>
-<td style="text-align: left;"><code>ExternalityMarket</code>、<code>market_quantity</code>、<code>socially_optimal_quantity</code>、<code>pigou_tax</code>、<code>quantity_with_tax</code>、<code>externality_deadweight_loss</code>、<code>coase_outcome</code>、<code>emissions_trading</code>、<code>uniform_reduction</code>、<code>abatement_cost</code>、<code>PublicGood</code>、<code>public_good_optimal_quantity</code>、<code>voluntary_quantity</code>、<code>under_provision</code>、<code>classify_good</code>、<code>marginal_cost_pricing</code>、<code>average_cost_pricing</code>、<code>unregulated_outcome</code>、<code>required_subsidy</code></td>
+<td style="text-align: left;"><code>ExternalityMarket</code>、<code>market_quantity</code>、<code>socially_optimal_quantity</code>、<code>pigou_tax</code>、<code>quantity_with_tax</code>、<code>externality_deadweight_loss</code>、<code>coase_outcome</code>、<code>emissions_trading</code>、<code>uniform_reduction</code>、<code>abatement_cost</code>、<code>PublicGood</code>、<code>public_good_optimal_quantity</code>、<code>individual_quantity</code>、<code>voluntary_quantity</code>、<code>under_provision</code>、<code>classify_good</code>、<code>natural_average_cost</code>、<code>marginal_cost_pricing</code>、<code>average_cost_pricing</code>、<code>unregulated_outcome</code>、<code>required_subsidy</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">ファイル</td>
@@ -7669,7 +7669,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter13
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>52 passed
+<div class="highlight"><pre><span></span><code>56 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter13/</code> に、<code>externality.py</code>・<code>public.py</code>・<code>natural.py</code> と、それぞれのテストを作ります。</p>
 <h2 id="133">13.3 予想する<a class="headerlink" href="#133" title="Permanent link">&para;</a></h2>
@@ -7713,7 +7713,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<p>公共財は、全員が同時に消費できるので、社会全体の限界便益は、各人の限界便益を<strong>縦に足す</strong>（Σ MB_i）。最適な供給量は、Σ MB_i = MC の点です。しかし、払わなくても使える（<strong>フリーライダー</strong>）ので、自発的には、最も欲しい 1 人が供給する量しか出ず、<strong>過少供給</strong>になります。</p>
+<p>公共財は、全員が同時に消費できるので、社会全体の限界便益は、各人の限界便益を<strong>縦に足す</strong>（Σ MB_i）。最適な供給量は、Σ MB_i = MC の点です（限界便益が 0 になる数量を超えた人は、足しません。負の便益を足さないため）。しかし、払わなくても使える（<strong>フリーライダー</strong>）ので、自発的には、最も欲しい 1 人が供給する量しか出ず、<strong>過少供給</strong>になります。</p>
 <h3 id="_5">費用逓減産業（自然独占）<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>固定費用 F が大きく、平均費用 AC = c + F ÷ Q が、限界費用 c より常に高く、右下がりの産業です（電力網・水道）。1 社で供給する方が、安い（<strong>自然独占</strong>）。価格の決め方が、3 通りあります。</p>
 <ul>
@@ -7954,7 +7954,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">gap</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">market_quantity</span><span class="p">(</span><span class="n">market</span><span class="p">)</span> <span class="o">-</span> <span class="n">socially_optimal_quantity</span><span class="p">(</span><span class="n">market</span><span class="p">))</span>
     <span class="k">return</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="nb">abs</span><span class="p">(</span><span class="n">market</span><span class="o">.</span><span class="n">external_cost</span><span class="p">)</span> <span class="o">*</span> <span class="n">gap</span>
 </code></pre></div>
-<p>外部費用 20 のピグー税をかけると、数量が 35（最適）になります。死荷重は ½ × 20 × (45 − 35) = 100 で、<strong>外部費用の 2 乗に比例</strong>します（数量の差が e ÷ 2 のため）。外部費用が<strong>負</strong>なら、補助金で、数量が 45 から 50 に増えます。</p>
+<p>外部費用 20 のピグー税をかけると、数量が 35（最適）になります。死荷重は ½ × 20 × (45 − 35) = 100 で、<strong>外部費用の 2 乗に比例</strong>します（この例では b + d = 2 なので、数量の差が e ÷ 2。一般には e ÷ (b + d)）。外部費用が<strong>負</strong>なら、補助金で、数量が 45 から 50 に増えます。</p>
 <h3 id="_7">コースの定理<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_コースの定理_被害者に権利があっても加害者に権利があっても効率的</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># 汚染から得る利益 100、被害 60。汚染が効率的</span>
@@ -8064,6 +8064,18 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <p>限界削減費用 m_i·x_i を全社で等しくすると、価格 = 総削減量 ÷ Σ(1 ÷ m_i)、各社の削減量 x_i = 価格 ÷ m_i です。費用の低い（傾きの小さい）企業が、多く削減します。</p>
 <h3 id="_9">公共財<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>ここまでが、外部効果（<code>externality.py</code>）です。ここで一度、休んでかまいません。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter13.public</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PublicGood</span><span class="p">,</span>
+    <span class="n">classify_good</span><span class="p">,</span>
+    <span class="n">individual_quantity</span><span class="p">,</span>
+    <span class="n">public_good_optimal_quantity</span><span class="p">,</span>
+    <span class="n">under_provision</span><span class="p">,</span>
+    <span class="n">voluntary_quantity</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="n">GOOD</span> <span class="o">=</span> <span class="n">PublicGood</span><span class="p">(</span><span class="n">benefit_intercepts</span><span class="o">=</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="n">benefit_slopes</span><span class="o">=</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">marginal_cost</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
 
 
@@ -8124,6 +8136,33 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">assert</span> <span class="n">classify_good</span><span class="p">(</span><span class="n">rival</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">excludable</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"club"</span>
     <span class="k">assert</span> <span class="n">classify_good</span><span class="p">(</span><span class="n">rival</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">excludable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"common"</span>
     <span class="k">assert</span> <span class="n">classify_good</span><span class="p">(</span><span class="n">rival</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">excludable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"public"</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_限界便益が負になる人は縦の和に入れない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">lopsided</span> <span class="o">=</span> <span class="n">PublicGood</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">public_good_optimal_quantity</span><span class="p">(</span><span class="n">lopsided</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">80</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">voluntary_quantity</span><span class="p">(</span><span class="n">lopsided</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">80</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">under_provision</span><span class="p">(</span><span class="n">lopsided</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_最適な量では正の限界便益の和が限界費用に等しい</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">good</span> <span class="o">=</span> <span class="n">PublicGood</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="n">public_good_optimal_quantity</span><span class="p">(</span><span class="n">good</span><span class="p">)</span>
+    <span class="n">total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
+        <span class="nb">max</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span> <span class="o">*</span> <span class="n">q</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">good</span><span class="o">.</span><span class="n">benefit_intercepts</span><span class="p">,</span> <span class="n">good</span><span class="o">.</span><span class="n">benefit_slopes</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">assert</span> <span class="n">total</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">good</span><span class="o">.</span><span class="n">marginal_cost</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">under_provision</span><span class="p">(</span><span class="n">good</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_全員の便益が正の範囲なら従来どおり</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">both</span> <span class="o">=</span> <span class="n">PublicGood</span><span class="p">((</span><span class="mi">40</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">public_good_optimal_quantity</span><span class="p">(</span><span class="n">both</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">25</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_限界費用が0なら限界便益が0になる数量まで供給する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">public_good_optimal_quantity</span><span class="p">(</span><span class="n">PublicGood</span><span class="p">((</span><span class="mi">10</span><span class="p">,),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,),</span> <span class="mi">0</span><span class="p">))</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">PublicGood</span><span class="p">:</span>
@@ -8144,11 +8183,24 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">public_good_optimal_quantity</span><span class="p">(</span><span class="n">good</span><span class="p">:</span> <span class="n">PublicGood</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""最適な供給量。縦の和 Σ(a_i − b_i·q) = MC から q = (Σa − MC) ÷ Σb。負なら 0。"""</span>
-    <span class="n">quantity</span> <span class="o">=</span> <span class="p">(</span><span class="nb">sum</span><span class="p">(</span><span class="n">good</span><span class="o">.</span><span class="n">benefit_intercepts</span><span class="p">)</span> <span class="o">-</span> <span class="n">good</span><span class="o">.</span><span class="n">marginal_cost</span><span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span>
-        <span class="n">good</span><span class="o">.</span><span class="n">benefit_slopes</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">quantity</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">"""最適な供給量。正の限界便益だけを縦に足した Σ max(a_i − b_i·q, 0) = MC の点。</span>
+
+<span class="sd">    限界便益が 0 になる数量（a_i ÷ b_i）を超えた人は、足さない。足す人を絞りながら、</span>
+<span class="sd">    q = (Σa − MC) ÷ Σb を、足す人が変わらなくなるまで、求め直す。</span>
+<span class="sd">    """</span>
+    <span class="n">active</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">good</span><span class="o">.</span><span class="n">benefit_intercepts</span><span class="p">)))</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">quantity</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="nb">sum</span><span class="p">(</span><span class="n">good</span><span class="o">.</span><span class="n">benefit_intercepts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">active</span><span class="p">)</span> <span class="o">-</span> <span class="n">good</span><span class="o">.</span><span class="n">marginal_cost</span>
+        <span class="p">)</span> <span class="o">/</span> <span class="nb">sum</span><span class="p">(</span><span class="n">good</span><span class="o">.</span><span class="n">benefit_slopes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">active</span><span class="p">)</span>
+        <span class="n">still</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">i</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">active</span>
+            <span class="k">if</span> <span class="n">good</span><span class="o">.</span><span class="n">benefit_intercepts</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">/</span> <span class="n">good</span><span class="o">.</span><span class="n">benefit_slopes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">quantity</span>
+        <span class="p">]</span>
+        <span class="k">if</span> <span class="n">still</span> <span class="o">==</span> <span class="n">active</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">quantity</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">active</span> <span class="o">=</span> <span class="n">still</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">individual_quantity</span><span class="p">(</span><span class="n">good</span><span class="p">:</span> <span class="n">PublicGood</span><span class="p">,</span> <span class="n">person</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -8181,6 +8233,18 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="s2">"club"</span> <span class="k">if</span> <span class="n">excludable</span> <span class="k">else</span> <span class="s2">"public"</span>
 </code></pre></div>
 <h3 id="_10">自然独占<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>次の <code>natural.py</code> は、第 11 章の <code>Monopoly</code> を使います。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter11.monopoly</span><span class="w"> </span><span class="kn">import</span> <span class="n">Monopoly</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter13.natural</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">average_cost_pricing</span><span class="p">,</span>
+    <span class="n">marginal_cost_pricing</span><span class="p">,</span>
+    <span class="n">natural_average_cost</span><span class="p">,</span>
+    <span class="n">required_subsidy</span><span class="p">,</span>
+    <span class="n">unregulated_outcome</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="n">DEMAND</span> <span class="o">=</span> <span class="n">Monopoly</span><span class="p">(</span><span class="n">demand_intercept</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">demand_slope</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">marginal_cost</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
 
 
@@ -8568,7 +8632,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h3 id="_13">実行結果<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter13
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>52 passed
+<div class="highlight"><pre><span></span><code>56 passed
 </code></pre></div>
 <h2 id="136">13.6 規則で言うと<a class="headerlink" href="#136" title="Permanent link">&para;</a></h2>
 <ol>

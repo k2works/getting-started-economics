@@ -7706,9 +7706,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h3 id="_5">死荷重<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>独占の数量は、完全競争より少ないので、<strong>買い手の価値が費用を上回るのに、作られない取引</strong>が出ます。それが死荷重（三角形）です。</p>
 <h3 id="_6">弾力性とラーナー指数<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
-<p>MR = MC を、P と弾力性 e で書くと、<strong>(P − MC) ÷ P = 1 ÷ e</strong> になります。これが<strong>ラーナー指数</strong>で、独占力（価格の上乗せの割合）を表します。<strong>弾力性が小さいほど、上乗せは大きい</strong>。独占企業は、需要が<strong>弾力的な（e &gt; 1）範囲</strong>でしか、作りません（MR が負にならないため）。</p>
+<p>MR = MC を、P と弾力性 e で書くと、<strong>(P − MC) ÷ P = 1 ÷ e</strong> になります。これが<strong>ラーナー指数</strong>で、独占力（価格の上乗せの割合）を表します。<strong>弾力性が小さいほど、上乗せは大きい</strong>。独占企業は、需要が<strong>弾力的な（e ≥ 1）範囲</strong>でしか、作りません（MR が負にならないため）。</p>
 <h3 id="_7">独占的競争<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
-<p>製品が少しずつ違う企業が多数いて、<strong>参入が自由</strong>な市場です。各企業は、自分の製品の需要に対して、独占企業のように行動します。短期に<strong>利潤が出れば</strong>新規参入が起き、各企業の需要が<strong>左へ動いて</strong>、長期には<strong>利潤が 0</strong>になります。そのとき、価格は<strong>平均費用に等しく</strong>、数量は、平均費用が<strong>まだ下がっている</strong>（最小点に届かない）水準です。</p>
+<p>製品が少しずつ違う企業が多数いて、<strong>参入が自由</strong>な市場です。各企業は、自分の製品の需要に対して、独占企業のように行動します。短期に<strong>利潤が出れば</strong>新規参入が起き、各企業の需要が<strong>左へ動いて</strong>、長期には<strong>利潤が 0</strong>になります。そのとき、価格は<strong>平均費用に等しく</strong>、かつ<strong>限界費用より高い</strong>（P &gt; MC）ので、完全競争より、数量が少なくなります。</p>
 <h2 id="115">11.5 プログラミング<a class="headerlink" href="#115" title="Permanent link">&para;</a></h2>
 <h3 id="red">Red: 逆需要と限界収入のテスト<a class="headerlink" href="#red" title="Permanent link">&para;</a></h3>
 <p>最初のテストを書きます。逆需要 P = 100 − Q は、Q = 0 で 100、Q = 45 で 55 です。限界収入は、Q = 0 で 100、Q = 45 で 10 で、<strong>傾きが 2 倍</strong>です。</p>
@@ -8035,10 +8035,10 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">assert</span> <span class="n">monopolistic_competition_profit</span><span class="p">(</span><span class="n">after</span><span class="p">,</span> <span class="mi">2025</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">test_独占的競争では平均費用がまだ下がる数量で作る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_独占的競争の長期の価格は限界費用より高い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">long_run</span> <span class="o">=</span> <span class="n">long_run_monopolistic_competition</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
-    <span class="n">q</span> <span class="o">=</span> <span class="n">long_run</span><span class="o">.</span><span class="n">quantity</span>
-    <span class="k">assert</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">1000</span> <span class="o">/</span> <span class="n">q</span> <span class="o">&gt;</span> <span class="mi">10</span> <span class="o">+</span> <span class="mi">1000</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">q</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">long_run</span><span class="o">.</span><span class="n">price</span> <span class="o">&gt;</span> <span class="mi">10</span>
+    <span class="k">assert</span> <span class="n">long_run</span><span class="o">.</span><span class="n">price</span> <span class="o">-</span> <span class="mi">10</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1000</span><span class="p">))</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_独占的競争の仮定のチェック</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -8309,7 +8309,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <ol>
 <li><strong>限界収入は、価格より低い。</strong> 線形の需要なら、傾きは 2 倍</li>
 <li><strong>独占は MR = MC で数量を決める。</strong> 完全競争より、価格が高く、数量が少なく、死荷重が出る</li>
-<li><strong>独占的競争は、参入で利潤が 0 になる。</strong> 価格は平均費用に等しいが、平均費用の最小点には届かない</li>
+<li><strong>独占的競争は、参入で利潤が 0 になる。</strong> 価格は平均費用に等しいが、限界費用より高い</li>
 </ol>
 <p>混同しやすい点を、表にまとめます。</p>
 <table>
@@ -8334,7 +8334,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 <tr>
 <td style="text-align: left;">独占的競争と完全競争</td>
-<td style="text-align: left;">どちらも長期の利潤は 0。ただし、独占的競争は P &gt; MC で、数量が少なく、平均費用の最小点に届かない</td>
+<td style="text-align: left;">どちらも長期の利潤は 0。ただし、独占的競争は P &gt; MC で、数量が少ない（完全競争は P = MC）</td>
 </tr>
 </tbody>
 </table>

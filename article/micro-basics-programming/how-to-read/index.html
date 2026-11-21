@@ -7615,6 +7615,7 @@
 <p>1 章は、読むだけなら 1〜2 時間ですが、手を動かすと、章によっては 1 回では終わりません。各章の「図」の小節（描画のテストと実装）は、折りたたんであり、後回しにしても、学習は成り立ちます。</p>
 <h2 id="_10">環境について<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h2>
 <p><code>uv sync</code> は、兄弟のディレクトリ <code>apps/article-tools/</code>（記事の検査ツール）に依存します。<strong>アプリのフォルダだけを取り出さず、リポジトリごと</strong>使ってください。</p>
+<p>Windows の Git Bash などで、日本語の出力が文字化けするときは、<code>PYTHONUTF8=1</code> を付けて実行してください（例: <code>PYTHONUTF8=1 uv run python -m practice.chapter01.check</code>）。</p>
 <h2 id="_11">完成形の使い方<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h2>
 <p>サンプルコードには、各章の完成形が入っています（<code>lib/</code> と <code>test/</code>）。<strong>答え合わせ用</strong>です。自分のコードを、<code>practice/</code> に書いてから、見比べてください。</p>
 <h3 id="import">写経の手順（import と実行）<a class="headerlink" href="#import" title="Permanent link">&para;</a></h3>
