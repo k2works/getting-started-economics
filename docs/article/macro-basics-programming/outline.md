@@ -9,7 +9,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-21T00:00:00Z }
 
 # 執筆計画アウトライン（マクロ経済学のためのプログラミング（初級））
 
-> **執筆者向けの内部文書です。** 読者向けのサイトには含めません（`mkdocs.yml` の `exclude_docs`）。承認事項 9 件は、計画の承認時に、推奨案で承認されました（2026-11-21）。実装はまだ始めていません（「次のステップ」を参照）。
+> **執筆者向けの内部文書です。** 読者向けのサイトには含めません（`mkdocs.yml` の `exclude_docs`）。承認事項 9 件は、計画の承認時に、推奨案で承認されました（2026-11-21）。Bolt 0 は完了しています（「次のステップ」を参照）。
 
 ## 概要
 
@@ -388,9 +388,11 @@ NumPy と pandas は、第 1 シリーズの第 9 章以降で学びますが、
 ## 次のステップ
 
 1. 計画の承認 — **完了**（2026-11-21。この文書を作成）
-2. Bolt 0（U1 と第 1 章）— **未着手**。着手前に、承認ゲートを通す:
-    - `apps/macro-basics-programming/python/` の雛形（`apps/macro-programming/python/` を雛形に。`pyproject.toml`・`tox.ini`・`tools/`・`data/`・`practice/`・`lib/chapter01`・`test/chapter01`）
-    - CI（`python-ci.yml` の matrix と paths）、サイトのナビゲーション（`mkdocs.yml` の nav）、記事トップ（`index.md`）・読み方（`how-to-read.md`。記号の表を含む）
-    - 第 1 章（GDP と付加価値）
+2. Bolt 0（U1 と第 1 章）— **完了**（2026-11-21。ユーザーが承認ゲートを承認）:
+    - `apps/macro-basics-programming/python/` の雛形（`macro-programming` を雛形に。依存は matplotlib・numpy・pandas。statsmodels なし）。`tox.ini` の `articles` に、`check_predictions` を含む
+    - CI（`python-ci.yml` の matrix と paths に、`macro-basics-programming` を追加）、サイトのナビゲーション（`mkdocs.yml` の nav。中級＋の前）、記事トップ（`index.md`）、読み方（`how-to-read.md`）
+    - 第 1 章（GDP と付加価値）: `lib/chapter01/gdp.py`（`value_added`・`gdp_from_stages`・`gni`・`ndp`・`is_in_gdp`・`stock_path`・`growth_accounting`）、`plot.py`（図 2 点）。テスト 21 件（第 1 章 20 件 + 図の登録 1 件）、カバレッジ 100%。記事 603 行（目安 600 行）。「予想する」に答えを書かず、「予想の答え合わせ」のスクリプトで確かめる形式（`check_predictions` で検証）
+    - **変異テスト 24 件のうち、最初は 2 件が生き残った**: (a) 中間投入が生産額に等しい境界（付加価値 0 は有効）、(b) 積み上げ棒の位置（`bottom`）。テストを足して、24 件すべてを検出した
+    - 記事の数値は、すべて実装を動かした値（浮動小数点の誤差 `0.7999999999999998` も、`pytest.approx` を使う理由として、本文に載せた）
 3. Bolt 1〜7 — 各章を、「実装 → 執筆」の順に進め、各 Bolt の終わりに、変異テストと、結果の記録を行う
 4. Bolt 8 — 全体レビュー（5 エージェント）と、対応
