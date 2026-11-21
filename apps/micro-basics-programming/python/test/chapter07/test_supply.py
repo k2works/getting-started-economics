@@ -240,3 +240,36 @@ def test_課税後の価格が手取りの操業停止点以下なら供給は0(
     assert supply_after_unit_tax(CURVE, 10, 6) == 0
     assert supply_after_unit_tax(CURVE, 3, 6) == 0
     assert supply_after_ad_valorem_tax(CURVE, 6, 0.2) == 0
+
+
+# --- 独立した変異確認で見つかった穴を埋めるテスト ---
+
+RISING = CostCurve(
+    1, 6, 15, 32
+)  # AVC = q² + 6q + 15 は、右上がり（最低値は q → 0 の 15）
+
+
+def test_平均可変費用が右上がりなら操業停止点は限界費用の切片() -> None:
+    assert shutdown_price(RISING) == 15
+
+
+def test_平均可変費用が右上がりの費用関数の利潤最大化() -> None:
+    q = profit_maximizing_output(RISING, 20)
+    assert marginal_cost(RISING, q) == pytest.approx(20)
+    assert q == pytest.approx((-6 + 51**0.5) / 3)
+    assert profit_maximizing_output(RISING, 14.9) == 0
+
+
+def test_既定の格子は損益分岐点と利潤最大の点を正確に通る() -> None:
+    assert break_even_price(CURVE) == pytest.approx(15, rel=1e-12)
+    assert profit_maximizing_output_by_grid(CURVE, 30) == pytest.approx(5, abs=1e-12)
+
+
+def test_点の数が3でも利潤最大の点を探せる() -> None:
+    assert profit_maximizing_output_by_grid(CURVE, 30, points=3) == 5
+
+
+def test_供給の弾力性は傾きと価格を供給量で割る() -> None:
+    # 供給 Q = 2P（傾き 2）の P = 10 で、e = 2 × 10 ÷ 20 = 1
+    assert supply_elasticity(lambda p: 2 * p, 10) == pytest.approx(1)
+    assert supply_elasticity(lambda p: 5 + 2 * p, 10) == pytest.approx(2 * 10 / 25)
