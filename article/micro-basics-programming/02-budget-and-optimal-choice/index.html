@@ -7268,7 +7268,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter02
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>40 passed
+<div class="highlight"><pre><span></span><code>42 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter02/</code> に、<code>budget.py</code> と <code>test_budget.py</code> を作ります。テストの import は、<code>from practice.chapter02.budget import ...</code> に書き換えます（<a href="../how-to-read/">この記事の読み方</a>を参照）。第 1 章の関数（<code>cobb_douglas_utility</code> など）は、完成形の <code>lib/chapter01/</code> から import してかまいません。</p>
 <h2 id="23">2.3 予想する<a class="headerlink" href="#23" title="Permanent link">&para;</a></h2>
@@ -7627,7 +7627,6 @@ Px = 1 の最適消費点: (40.0, 40.0)
 <span class="w">    </span><span class="sd">"""価格が下がると、予算線の x 切片だけが右へ動く。最適点をつなぐと価格消費曲線。"""</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
     <span class="n">bundles</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">y_intercept</span> <span class="o">=</span> <span class="n">income</span> <span class="o">/</span> <span class="n">py</span>
     <span class="k">for</span> <span class="n">price</span> <span class="ow">in</span> <span class="n">prices</span><span class="p">:</span>
         <span class="n">x_intercept</span><span class="p">,</span> <span class="n">y_intercept</span> <span class="o">=</span> <span class="n">budget_intercepts</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="n">price</span><span class="p">,</span> <span class="n">py</span><span class="p">)</span>
         <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">x_intercept</span><span class="p">],</span> <span class="p">[</span><span class="n">y_intercept</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"Px = </span><span class="si">{</span><span class="n">price</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
@@ -7646,7 +7645,7 @@ Px = 1 の最適消費点: (40.0, 40.0)
 <h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter02
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>40 passed
+<div class="highlight"><pre><span></span><code>42 passed
 </code></pre></div>
 <h2 id="26">2.6 規則で言うと<a class="headerlink" href="#26" title="Permanent link">&para;</a></h2>
 <ol>
