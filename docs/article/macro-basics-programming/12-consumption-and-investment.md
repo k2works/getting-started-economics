@@ -56,7 +56,7 @@ uv run pytest test/chapter12
 ```
 
 ```text
-46 passed
+49 passed
 ```
 
 自分でコードを書くときは、`practice/chapter12/` を作って、完成形と同じ名前（`consumption.py`・`investment.py`・`test_*.py`）のファイルに書きます。テストは、`uv run pytest practice/chapter12` で動かします。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。
@@ -494,7 +494,7 @@ uv run pytest test/chapter12
 ```
 
 ```text
-46 passed
+49 passed
 ```
 
 ## 12.6 規則で言うと

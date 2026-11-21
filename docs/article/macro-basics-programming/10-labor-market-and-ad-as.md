@@ -29,7 +29,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-21T00:00:00Z }
 | 経済学 | 式 | コード |
 | :--- | :--- | :--- |
 | 実質賃金 | w = W ÷ P | `real_wage(nominal_wage, price)` |
-| 労働需要 | Ld = a − b·w | `labor_demand(curves, wage)` |
+| 労働需要 | Ld = a − b·w（この章の b・c は、労働の係数。AD の b（投資の利子感応度）・c（限界消費性向）とは別） | `labor_demand(curves, wage)` |
 | 労働供給 | Ls = c + d·w | `labor_supply(curves, wage)` |
 | 労働市場の均衡 | w* = (a − c) ÷ (b + d) | `labor_equilibrium(curves)` |
 | 非自発的失業 | Ls − Ld（w が w* より高いとき） | `involuntary_unemployment(curves, wage)` |
@@ -56,7 +56,7 @@ uv run pytest test/chapter10
 ```
 
 ```text
-54 passed
+60 passed
 ```
 
 自分でコードを書くときは、`practice/chapter10/` を作って、完成形と同じ名前（`labor.py`・`test_labor.py` など）のファイルに書きます。テストは、`uv run pytest practice/chapter10` で動かします。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。
@@ -495,7 +495,7 @@ uv run pytest test/chapter10
 ```
 
 ```text
-54 passed
+60 passed
 ```
 
 ## 10.6 規則で言うと
