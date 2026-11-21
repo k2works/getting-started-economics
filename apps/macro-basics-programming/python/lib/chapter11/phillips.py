@@ -5,10 +5,11 @@
 失業率は u_n に戻る（垂直）。
 """
 
+from lib.chapter01.validation import validate_non_negative, validate_positive
+
 
 def _check_beta(beta: float) -> None:
-    if beta <= 0:
-        raise ValueError("失業率への感応度 β は、正にする")
+    validate_positive(beta, "失業率への感応度 β は、正にする")
 
 
 def short_run_inflation(
@@ -46,8 +47,7 @@ def accelerating_inflation_path(
     u が u_n より低いと、毎期、インフレ率が上がり続ける（長期のトレードオフは無い）。
     """
     _check_beta(beta)
-    if periods < 0:
-        raise ValueError("期間は、0 以上にする")
+    validate_non_negative(periods, "期間は、0 以上にする")
     path = [initial_inflation]
     for _ in range(periods):
         path.append(

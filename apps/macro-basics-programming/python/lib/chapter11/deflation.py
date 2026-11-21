@@ -1,5 +1,7 @@
 """デフレの影響: 実質利子率と、借金の実質的な負担。"""
 
+from lib.chapter01.validation import validate_non_negative
+
 
 def real_interest_rate(nominal: float, inflation: float) -> float:
     """フィッシャー方程式 実質利子率 = 名目利子率 − インフレ率。
@@ -18,6 +20,5 @@ def debt_burden(nominal_debt: float, inflation: float, years: int = 1) -> float:
     """
     if inflation <= -1:
         raise ValueError("インフレ率は、−1 より大きくする（物価が 0 以下になる）")
-    if years < 0:
-        raise ValueError("年数は、0 以上にする")
+    validate_non_negative(years, "年数は、0 以上にする")
     return nominal_debt / (1 + inflation) ** years

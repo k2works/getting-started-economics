@@ -2,6 +2,8 @@
 
 import math
 
+from lib.chapter01.validation import validate_non_negative
+
 
 def net_exports_from_exchange_rate(
     exchange_rate: float,
@@ -14,8 +16,7 @@ def net_exports_from_exchange_rate(
     円安（e が上がる）と、輸出が増え、輸入が減るので、純輸出は増える。
     傾き s は、0 以上にする。
     """
-    if slope < 0:
-        raise ValueError("為替レートに対する純輸出の傾きは、0 以上にする")
+    validate_non_negative(slope, "為替レートに対する純輸出の傾きは、0 以上にする")
     return base_net_exports + slope * (exchange_rate - base_rate)
 
 

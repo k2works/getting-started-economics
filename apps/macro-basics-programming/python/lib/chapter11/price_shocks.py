@@ -2,6 +2,7 @@
 
 from functools import partial
 
+from lib.chapter01.validation import validate_positive
 from lib.chapter10.ad_as import (
     AdEconomy,
     expand_demand,
@@ -19,8 +20,7 @@ def demand_pull_effect(
     delta_government: float,
 ) -> tuple[float, float]:
     """ディマンドプル（AD の右シフト）による、物価と所得の変化 (ΔP, ΔY)。"""
-    if delta_government <= 0:
-        raise ValueError("需要の増加は、正にする")
+    validate_positive(delta_government, "需要の増加は、正にする")
     supply = partial(
         keynesian_supply,
         full_employment_income=full_employment_income,
@@ -42,8 +42,7 @@ def cost_push_effect(
     supply_loss: float,
 ) -> tuple[float, float]:
     """コストプッシュ（AS の左シフト）による、物価と所得の変化 (ΔP, ΔY)。"""
-    if supply_loss <= 0:
-        raise ValueError("供給の減少は、正にする")
+    validate_positive(supply_loss, "供給の減少は、正にする")
     before = partial(
         keynesian_supply,
         full_employment_income=full_employment_income,

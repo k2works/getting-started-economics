@@ -8,6 +8,7 @@ AD は、IS-LM から導く。物価 P が上がると、実質貨幣供給 M/P 
 from collections.abc import Callable
 from dataclasses import dataclass, replace
 
+from lib.chapter01.validation import validate_positive
 from lib.chapter08.is_lm import solve_is_lm
 
 _BISECTION_STEPS = 200
@@ -26,8 +27,7 @@ class AdEconomy:
 
 
 def _check_price(price: float) -> None:
-    if price <= 0:
-        raise ValueError("物価は、正にする")
+    validate_positive(price, "物価は、正にする")
 
 
 def aggregate_demand_income(economy: AdEconomy, price: float) -> float:
@@ -55,8 +55,7 @@ def keynesian_supply(
 ) -> float:
     """ケインズの AS。Y = min(完全雇用所得, 基準の所得 + 傾き × P)。"""
     _check_price(price)
-    if slope <= 0:
-        raise ValueError("総供給の傾きは、正にする")
+    validate_positive(slope, "総供給の傾きは、正にする")
     return min(full_employment_income, base_income + slope * price)
 
 

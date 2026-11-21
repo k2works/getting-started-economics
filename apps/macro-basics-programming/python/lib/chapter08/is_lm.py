@@ -8,21 +8,20 @@ import math
 
 import numpy as np
 
+from lib.chapter01.validation import validate_non_negative, validate_positive
 from lib.chapter04.multiplier import validate_mpc
 from lib.chapter07.money_market import money_demand, validate_h, validate_k
 
 
 def validate_b(b: float) -> None:
     """投資の利子感応度 b が、0 以上であることを確かめる。"""
-    if b < 0:
-        raise ValueError("投資の利子感応度 b は、0 以上にする")
+    validate_non_negative(b, "投資の利子感応度 b は、0 以上にする")
 
 
 def _check_b_positive(b: float) -> None:
-    if b <= 0:
-        raise ValueError(
-            "投資の利子感応度 b が 0 の IS 曲線は垂直で、利子率が決まらない"
-        )
+    validate_positive(
+        b, "投資の利子感応度 b が 0 の IS 曲線は垂直で、利子率が決まらない"
+    )
 
 
 def investment_demand(interest: float, autonomous_investment: float, b: float) -> float:

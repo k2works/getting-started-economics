@@ -9,6 +9,8 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from lib.chapter01.validation import validate_non_negative, validate_positive
+
 
 @dataclass(frozen=True)
 class OkunFit:
@@ -20,8 +22,7 @@ class OkunFit:
 
 def output_gap_ratio(actual_gdp: float, potential_gdp: float) -> float:
     """需給ギャップ = (実際の GDP − 潜在 GDP) ÷ 潜在 GDP。負なら、需要不足。"""
-    if potential_gdp <= 0:
-        raise ValueError("潜在 GDP は、正にする")
+    validate_positive(potential_gdp, "潜在 GDP は、正にする")
     return (actual_gdp - potential_gdp) / potential_gdp
 
 
@@ -60,8 +61,7 @@ def synthetic_unemployment_change(
     seed: int,
 ) -> list[float]:
     """関係 Δu = 切片 + 傾き × 成長率 に、正規分布の雑音を足した、架空のデータ。"""
-    if noise < 0:
-        raise ValueError("雑音の標準偏差は、0 以上にする")
+    validate_non_negative(noise, "雑音の標準偏差は、0 以上にする")
     rng = np.random.default_rng(seed)
     x = np.asarray(growth, dtype=float)
     values = intercept + slope * x + rng.normal(0.0, noise, size=len(x))

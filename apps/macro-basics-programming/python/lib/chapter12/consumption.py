@@ -2,6 +2,8 @@
 
 from collections.abc import Sequence
 
+from lib.chapter01.validation import validate_positive
+
 
 def consumption_from_absolute_income(
     income: float, mpc: float, autonomous: float = 0
@@ -18,8 +20,7 @@ def average_propensity(income: float, mpc: float, autonomous: float = 0) -> floa
 
 
 def _validate_years(working_years: float, lifetime_years: float) -> None:
-    if lifetime_years <= 0:
-        raise ValueError("生涯の年数は、正にする")
+    validate_positive(lifetime_years, "生涯の年数は、正にする")
     if working_years < 0 or working_years > lifetime_years:
         raise ValueError("働く年数は、0 以上、生涯の年数以下にする")
 

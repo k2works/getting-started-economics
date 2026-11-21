@@ -2,11 +2,12 @@
 
 from collections.abc import Sequence
 
+from lib.chapter01.validation import validate_non_negative, validate_positive
+
 
 def accelerator_investment(capital_coefficient: float, income_change: float) -> float:
     """加速度原理 I = V × ΔY。資本係数 V は一定。所得の増加が止まると、0。"""
-    if capital_coefficient < 0:
-        raise ValueError("資本係数は、0 以上にする")
+    validate_non_negative(capital_coefficient, "資本係数は、0 以上にする")
     return capital_coefficient * income_change
 
 
@@ -36,8 +37,7 @@ def stock_adjustment_investment(
 
 def tobins_q(market_value: float, replacement_cost: float) -> float:
     """トービンの q = 企業の市場価値 ÷ 資本の再取得価格。"""
-    if replacement_cost <= 0:
-        raise ValueError("再取得価格は、正にする")
+    validate_positive(replacement_cost, "再取得価格は、正にする")
     return market_value / replacement_cost
 
 

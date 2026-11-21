@@ -9,6 +9,8 @@ import math
 from collections.abc import Sequence
 from dataclasses import dataclass
 
+from lib.chapter01.validation import validate_non_negative, validate_positive
+
 
 @dataclass(frozen=True)
 class LaborCurves:
@@ -22,23 +24,22 @@ class LaborCurves:
 
 
 def _check_curves(curves: LaborCurves) -> None:
-    if curves.demand_slope <= 0:
-        raise ValueError("労働需要の傾きは、正にする（需要は賃金の減少関数）")
-    if curves.supply_slope <= 0:
-        raise ValueError("労働供給の傾きは、正にする（供給は賃金の増加関数）")
+    validate_positive(
+        curves.demand_slope, "労働需要の傾きは、正にする（需要は賃金の減少関数）"
+    )
+    validate_positive(
+        curves.supply_slope, "労働供給の傾きは、正にする（供給は賃金の増加関数）"
+    )
 
 
 def _check_wage(wage: float) -> None:
-    if wage < 0:
-        raise ValueError("実質賃金は、0 以上にする")
+    validate_non_negative(wage, "実質賃金は、0 以上にする")
 
 
 def real_wage(nominal_wage: float, price: float) -> float:
     """実質賃金 w = W ÷ P。"""
-    if nominal_wage < 0:
-        raise ValueError("名目賃金は、0 以上にする")
-    if price <= 0:
-        raise ValueError("物価は、正にする")
+    validate_non_negative(nominal_wage, "名目賃金は、0 以上にする")
+    validate_positive(price, "物価は、正にする")
     return nominal_wage / price
 
 
@@ -62,8 +63,7 @@ def labor_equilibrium(curves: LaborCurves) -> tuple[float, float]:
     wage = (curves.demand_intercept - curves.supply_intercept) / (
         curves.demand_slope + curves.supply_slope
     )
-    if wage < 0:
-        raise ValueError("均衡の実質賃金が負になる。需要と供給の切片を見直す")
+    validate_non_negative(wage, "均衡の実質賃金が負になる。需要と供給の切片を見直す")
     return wage, labor_demand(curves, wage)
 
 

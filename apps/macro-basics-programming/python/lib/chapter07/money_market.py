@@ -4,17 +4,17 @@
 貨幣市場の均衡は、実質貨幣供給 M/P = L。
 """
 
+from lib.chapter01.validation import validate_positive
+
 
 def validate_k(k: float) -> None:
     """貨幣需要の所得への感応度 k が、正であることを確かめる。"""
-    if k <= 0:
-        raise ValueError("貨幣需要の所得への感応度 k は、正にする")
+    validate_positive(k, "貨幣需要の所得への感応度 k は、正にする")
 
 
 def validate_h(h: float) -> None:
     """貨幣需要の利子率への感応度 h が、正であることを確かめる。"""
-    if h <= 0:
-        raise ValueError("貨幣需要の利子率への感応度 h は、正にする")
+    validate_positive(h, "貨幣需要の利子率への感応度 h は、正にする")
 
 
 def money_demand(income: float, interest: float, k: float, h: float) -> float:
