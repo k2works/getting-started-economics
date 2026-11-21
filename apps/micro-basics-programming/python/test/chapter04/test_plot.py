@@ -116,3 +116,20 @@ def test_交差価格効果の図の軸と凡例() -> None:
     assert ax.get_xlabel() == "Price of good y"
     assert ax.get_ylabel() == "Demand for good x"
     assert ax.get_legend() is not None
+
+
+# --- 独立した変異確認で見つかった穴を埋めるテスト ---
+
+
+def test_無差別曲線は50点で右端はx_max() -> None:
+    curve = line(slutsky(), "U0 = 800")
+    assert len(xs(curve)) == 50
+    assert xs(curve)[0] == pytest.approx(100 / 50)
+    assert xs(curve)[-1] == pytest.approx(100)
+
+
+def test_財yの価格が1でないとき() -> None:
+    ax = plot_slutsky(80, 2, 0.5, 2, 100).axes[0]
+    assert ax.get_ylim() == (0, 60)
+    original = line(ax, "Original budget")
+    assert ys(original) == [40, 0]

@@ -97,3 +97,22 @@ def test_価格変化の図の軸と凡例() -> None:
     assert ax.get_ylabel() == "Good y"
     assert ax.get_ylim() == (0, 120)
     assert ax.get_legend() is not None
+
+
+# --- 独立した変異確認で見つかった穴を埋めるテスト ---
+
+
+def test_無差別曲線は50点で右端はx_max() -> None:
+    curve = line(choice(), "U = 800")
+    assert len(xs(curve)) == 50
+    assert xs(curve)[0] == pytest.approx(45 / 50)
+    assert xs(curve)[-1] == pytest.approx(45)
+
+
+def test_財yの価格が1でないとき() -> None:
+    ax = plot_optimal_choice(80, 2, 2, [400], 45).axes[0]
+    assert ax.get_ylim() == (0, 60)
+    assert ys(line(ax, "Budget line")) == [40, 0]
+    ax2 = plot_price_change(80, [4, 2, 1], 2).axes[0]
+    assert ax2.get_ylim() == (0, 60)
+    assert [ys(line(ax2, f"Px = {p}"))[0] for p in (4, 2, 1)] == [40, 40, 40]
