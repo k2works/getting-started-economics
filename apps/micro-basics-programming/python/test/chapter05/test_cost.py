@@ -172,3 +172,27 @@ def test_探索の点の数が2未満ならエラー() -> None:
 def test_探索の上限が正でなければエラー() -> None:
     with pytest.raises(ValueError, match="上限"):
         cost_minima(CURVE, q_max=0)
+
+
+# --- 独立した変異確認で見つかった穴を埋めるテスト ---
+
+
+def test_既定の探索の格子は最低点を正確に通る() -> None:
+    minima = cost_minima(CURVE)
+    assert minima["MC"][0] == pytest.approx(2, abs=1e-12)
+    assert minima["AVC"][0] == pytest.approx(3, abs=1e-12)
+    assert minima["AC"][0] == pytest.approx(4, abs=1e-12)
+
+
+def test_点の数が3でも探索できる() -> None:
+    # 格子は q = 0・5・10 の 3 点。MC は 15・30・195 なので、最小は q = 0
+    minima = cost_minima(CURVE, q_max=10, points=3)
+    assert set(minima) == {"MC", "AVC", "AC"}
+    assert minima["MC"] == (0, 15)
+
+
+def test_平均可変費用が右上がりなら最低点は最初の正の格子点() -> None:
+    rising = CostCurve(1, 6, 15, 32)
+    q, value = cost_minima(rising)["AVC"]
+    assert q == pytest.approx(10 / 10000)
+    assert value == pytest.approx(rising.cubic * q**2 + rising.quadratic * q + 15)

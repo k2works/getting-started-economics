@@ -216,3 +216,43 @@ def test_価格が正でなければ費用最小化はエラー() -> None:
         cost_minimizing_inputs_by_grid(10, W, 0)
     with pytest.raises(ValueError, match="生産量"):
         cost_minimizing_inputs(0, W, R)
+
+
+# --- 独立した変異確認で見つかった穴を埋めるテスト ---
+
+
+def test_生産量は偶然の一致でない値() -> None:
+    assert production(9, 16) == pytest.approx(12)
+    assert production(3, 9, 2, 0.5) == pytest.approx(27)
+    assert production(2, 3, 2, 1) == pytest.approx(12)
+
+
+def test_限界生産性のべき指数の掛け方() -> None:
+    # MPL = α · q ÷ L、MPK = β · q ÷ K。q = 3² · 9^0.5 = 27
+    assert marginal_product_labor(3, 9, 2, 0.5) == pytest.approx(2 * 27 / 3)
+    assert marginal_product_capital(3, 9, 2, 0.5) == pytest.approx(0.5 * 27 / 9)
+
+
+def test_費用最小の投入の閉じた式はべき指数が違っても生産量を満たす() -> None:
+    labor, k = cost_minimizing_inputs(27, 2, 3, 2, 0.5)
+    assert production(labor, k, 2, 0.5) == pytest.approx(27)
+    assert mrts(labor, k, 2, 0.5) == pytest.approx(2 / 3)
+
+
+def test_既定の上限でも格子点の探索は閉じた式と一致する() -> None:
+    assert cost_minimizing_inputs_by_grid(10, W, R) == pytest.approx((20, 5))
+
+
+def test_分割数が2でも探索できる() -> None:
+    assert cost_minimizing_inputs_by_grid(10, W, R, steps=2, l_max=40) == pytest.approx(
+        (20, 5)
+    )
+
+
+def test_最適点が探索の上限にあるときも見つける() -> None:
+    assert cost_minimizing_inputs_by_grid(10, W, R, l_max=20) == pytest.approx((20, 5))
+
+
+def test_最適点が探索の上限より外ならその上限の点を返す() -> None:
+    # 等産出量曲線の K = 100 ÷ L は、L < 20 で、費用 L + 4K = L + 400 ÷ L が、減り続ける。端の L = 10 が最小
+    assert cost_minimizing_inputs_by_grid(10, W, R, l_max=10) == pytest.approx((10, 10))
