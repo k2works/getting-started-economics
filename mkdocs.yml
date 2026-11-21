@@ -127,6 +127,9 @@ nav:
           - 第 5 章 費用曲線: article/micro-basics-programming/05-cost-curves.md
           - 第 6 章 生産関数と費用最小化: article/micro-basics-programming/06-production-function-and-cost-minimization.md
           - 第 7 章 利潤最大化と供給曲線: article/micro-basics-programming/07-profit-maximization-and-supply.md
+          - 第 8 章 市場均衡と調整過程: article/micro-basics-programming/08-market-equilibrium-and-adjustment.md
+          - 第 9 章 余剰分析と課税: article/micro-basics-programming/09-surplus-and-tax.md
+          - 第 10 章 国際貿易と比較優位: article/micro-basics-programming/10-trade-and-comparative-advantage.md
       - マクロ経済学のためのプログラミング（初級）:
           - 概要: article/macro-basics-programming/index.md
           - この記事の読み方: article/macro-basics-programming/how-to-read.md
