@@ -12,7 +12,7 @@ from dataclasses import dataclass, replace
 
 from lib.chapter04.multiplier import validate_mpc
 from lib.chapter07.money_market import validate_h, validate_k
-from lib.chapter08.is_lm import validate_b
+from lib.chapter08.is_lm import is_lm_residuals, validate_b
 
 
 @dataclass(frozen=True)
@@ -84,13 +84,17 @@ def open_economy_residuals(
 ) -> tuple[float, float, float]:
     """点が、IS・LM・BP を満たさない量。均衡では、3 つとも 0。"""
     e = economy
-    is_residual = (
-        (1 - e.mpc) * point.income
-        + e.b * point.interest
-        - e.intercept
-        - e.n * point.exchange_rate
+    # IS・LM の式は第 8 章の関数を再利用する。為替レートに依る支出は、IS の切片に足す
+    is_residual, lm_residual = is_lm_residuals(
+        point.income,
+        point.interest,
+        e.mpc,
+        e.b,
+        e.intercept + e.n * point.exchange_rate,
+        e.k,
+        e.h,
+        point.real_money,
     )
-    lm_residual = e.k * point.income - e.h * point.interest - point.real_money
     return is_residual, lm_residual, point.interest - e.world_rate
 
 
