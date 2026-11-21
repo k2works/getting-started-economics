@@ -98,7 +98,9 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-21T00:00:00Z }
 
 - テストの import は、完成形では `from lib.chapter01.utility import ...` です。自分で書くときは、**`from practice.chapter01.utility import ...` に書き換えます**。書き換えないと、完成形を読み込んで、最初から通ってしまい、**Red** になりません
 - 前の章の関数（例: 第 2 章が使う `lib.chapter01`）は、完成形の `lib` から import してかまいません。同じ章の中だけを、自作にします。入力の検証の共通関数（`validate_positive`・`validate_non_negative`）も、`lib/chapter01/validation.py` から import します
-- 記事のコードの抜粋には、import 行と、先頭が `_` の補助関数（入力の検証など）を、省いた箇所があります。写すときは、`lib/chapterNN/` の該当ファイルの先頭を、見て、足してください
+- 記事のコードの抜粋には、import 行と、先頭が `_` の補助関数（入力の検証など）を、省いた箇所があります。各章の折りたたみ「import と補助関数」を、写してください（完成形のファイルは、見なくて、かまいません）
+- 各章の「実行結果」の件数（`N passed`）は、**完成形**の件数です。本文に載るテストは一部なので、本文のテストだけを写すと、それより少なくなります（足りないのでは、ありません）
+- `practice/` には、`conftest.py`（Matplotlib を、画面を使わない Agg に固定する）が、最初から入っています。消さないでください（消すと、図のテストが、環境によって、`TclError` で、まれに落ちます）。`uv run pytest practice` で、章をまたいで、まとめて実行できます
 - 「予想の答え合わせ」のスクリプトは、`practice/chapterNN/check.py` に保存し、`apps/micro-basics-programming/python` で `uv run python -m practice.chapterNN.check` と実行します（`from lib...` が通るのは、このディレクトリで実行したときだけです）
 
 ## 参考にした資料

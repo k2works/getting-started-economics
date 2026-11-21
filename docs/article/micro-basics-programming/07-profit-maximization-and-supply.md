@@ -135,6 +135,9 @@ from lib.chapter07.supply import (
 CURVE = CostCurve(1, -6, 15, 32)
 
 
+OTHER = CostCurve(0.5, -3, 10, 20)
+
+
 def test_価格30の利潤最大の生産量は5() -> None:
     q = profit_maximizing_output(CURVE, 30)
     assert q == pytest.approx(5)
@@ -359,6 +362,12 @@ def test_市場供給は各企業の供給を横に足したもの() -> None:
     assert market_supply([CURVE, OTHER], 30) == pytest.approx(
         5 + 2 + (4 + 40 / 3) ** 0.5
     )
+
+
+def test_市場供給曲線は各価格の合計() -> None:
+    curve = market_supply_curve([CURVE, CURVE], [6, 30])
+    assert [p for p, _ in curve] == [6, 30]
+    assert [q for _, q in curve] == pytest.approx([6, 10])
 ```
 
 ```python
@@ -526,6 +535,9 @@ P = 5 の生産量: 0.0
 ??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
 
     ```python
+    CURVE = CostCurve(1, -6, 15, 32)
+
+
     def xs(line: Line2D) -> list[float]:
         return [float(v) for v in cast(Sequence[float], line.get_xdata())]
 
@@ -634,6 +646,9 @@ P = 5 の生産量: 0.0
 ??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
 
     ```python
+    CURVE = CostCurve(1, -6, 15, 32)
+
+
     def tax() -> Axes:
         return plot_tax_supply(CURVE, 6, 0.2, 3, 6).axes[0]
 
@@ -752,7 +767,13 @@ uv run pytest test/chapter07
 到達チェックの値を、プログラムで確かめます。各章の関数を、そのまま呼びます。
 
 ```python
-from lib.chapter05.cost import CostCurve, cost_minima
+from lib.chapter05.cost import (
+    CostCurve,
+    average_cost,
+    average_variable_cost,
+    cost_minima,
+    marginal_cost,
+)
 from lib.chapter06.production import cost_minimizing_inputs, mrts
 from lib.chapter07.supply import (
     break_even_price,
@@ -762,6 +783,8 @@ from lib.chapter07.supply import (
 )
 
 curve = CostCurve(cubic=1, quadratic=-6, linear=15, fixed=32)
+for name, function in (("MC", marginal_cost), ("AC", average_cost), ("AVC", average_variable_cost)):
+    print("q = 2・3・4 の", name, ":", [round(function(curve, q), 4) for q in (2, 3, 4)])
 minima = cost_minima(curve)
 print("最低点の生産量 MC・AVC・AC:", [round(minima[n][0], 3) for n in ("MC", "AVC", "AC")])
 print("最低値 MC・AVC・AC:", [round(minima[n][1], 3) for n in ("MC", "AVC", "AC")])
@@ -774,6 +797,9 @@ for price in (30, 15, 10, 5):
 ```
 
 ```text
+q = 2・3・4 の MC : [3, 6, 15]
+q = 2・3・4 の AC : [23.0, 16.6667, 15.0]
+q = 2・3・4 の AVC : [7.0, 6.0, 7.0]
 最低点の生産量 MC・AVC・AC: [2.0, 3.0, 4.0]
 最低値 MC・AVC・AC: [3.0, 6.0, 15.0]
 費用最小の投入: (20.0, 5.0) 技術的限界代替率: 0.25
@@ -788,7 +814,7 @@ P = 5 のとき q = 0.0 利潤 -32.0
 
 | できること | 検証の方法 | 戻る章 |
 | :--- | :--- | :--- |
-| 費用曲線の 3 本の関係を言う | MC・AVC・AC の最低点の生産量は 2・3・4（この順）、最低値は 3・6・15。MC は、AVC と AC の最低点を通る | [第 5 章](05-cost-curves.md) |
+| 費用曲線の 3 本の関係を言う | q = 2・3・4 で、MC は 3・6・15、AC は 23・約 16.67・15、AVC は 7・6・7。MC・AVC・AC の最低点の生産量は 2・3・4（この順）、最低値は 3・6・15。MC は、AVC と AC の最低点を通る | [第 5 章](05-cost-curves.md) |
 | 費用最小の投入を求め、接点の条件を言う | (L, K) = (20, 5)、費用 40。MRTS = 0.25 = w ÷ r | [第 6 章](06-production-function-and-cost-minimization.md) |
 | 利潤最大の生産量と、利潤を求める | P = 30 で、q = 5、利潤 68（P = MC） | [この章](07-profit-maximization-and-supply.md) |
 | 損益分岐点と操業停止点を言う | 損益分岐点 15（q = 4、利潤 0）、操業停止点 6（q = 3） | この章 |

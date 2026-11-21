@@ -12,6 +12,7 @@ model/
 # 読者が自分のコードを書く場所（README.md だけを管理する）
 practice/*
 !practice/README.md
+!practice/conftest.py
 
 # 実際の統計（各自が取得して使う。改定されるので、リポジトリには入れない）
 data/*.dta

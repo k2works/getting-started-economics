@@ -451,6 +451,9 @@ AC の最低点: 4.0 15.0
 ??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
 
     ```python
+    CURVE = CostCurve(1, -6, 15, 32)
+
+
     def xs(line: Line2D) -> list[float]:
         return [float(v) for v in cast(Sequence[float], line.get_xdata())]
 
@@ -525,6 +528,9 @@ AC の最低点: 4.0 15.0
 ??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
 
     ```python
+    CURVE = CostCurve(1, -6, 15, 32)
+
+
     def totals() -> Axes:
         return plot_total_cost(CURVE, 8).axes[0]
 

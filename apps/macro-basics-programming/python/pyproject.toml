@@ -20,6 +20,8 @@ article-tools = { path = "../../article-tools", editable = true }
 [tool.pytest.ini_options]
 testpaths = ["test"]
 pythonpath = ["."]
+# 同じ名前のテストファイル（test_plot.py など）が、章をまたいで並んでも、衝突しない
+addopts = ["--import-mode=importlib"]
 
 [tool.coverage.run]
 source = ["lib"]
