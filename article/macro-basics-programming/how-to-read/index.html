@@ -7396,6 +7396,7 @@
 <li>テストの import は、完成形では <code>from lib.chapter01.gdp import ...</code> です。自分で書くときは、<strong><code>from practice.chapter01.gdp import ...</code> に書き換えます</strong>。書き換えないと、完成形を読み込んで、最初から通ってしまい、<strong>Red</strong> になりません</li>
 <li>前の章の関数（例: 第 8 章が使う <code>lib.chapter04</code>・<code>lib.chapter07</code>）は、完成形の <code>lib</code> から import してかまいません。同じ章の中だけを、自作にします。入力の検証の共通関数（<code>validate_positive</code>・<code>validate_non_negative</code>）も、<code>lib/chapter01/validation.py</code> から import します</li>
 <li>記事のコードの抜粋には、import 行と、先頭が <code>_</code> の補助関数（入力の検証など）を、省いた箇所があります。写すときは、<code>lib/chapterNN/</code> の該当ファイルの先頭を、見て、足してください</li>
+<li><code>practice/</code> には、<code>conftest.py</code>（Matplotlib を、画面を使わない Agg に固定する）が、最初から入っています。消さないでください（消すと、図のテストが、環境によって、<code>TclError</code> で、まれに落ちます）。<code>uv run pytest practice</code> で、章をまたいで、まとめて実行できます</li>
 <li>「予想の答え合わせ」のスクリプトは、<code>practice/chapterNN/check.py</code> に保存し、<code>apps/macro-basics-programming/python</code> で <code>uv run python -m practice.chapterNN.check</code> と実行します（<code>from lib...</code> が通るのは、このディレクトリで実行したときだけです）</li>
 </ul>
 <h2 id="_12">参考にした資料<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h2>

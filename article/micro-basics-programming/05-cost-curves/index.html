@@ -7740,7 +7740,10 @@ AC の最低点: 4.0 15.0
 <p>3 本の曲線を描く関数と、座標のテストです。曲線の値が費用関数と一致すること、最低点の印が、(2, 3)・(3, 6)・(4, 15) にあること、AC がいつも AVC の上にあることを、確かめます。</p>
 <details class="note">
 <summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">xs</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Line2D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<div class="highlight"><pre><span></span><code><span class="n">CURVE</span> <span class="o">=</span> <span class="n">CostCurve</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">xs</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Line2D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
     <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cast</span><span class="p">(</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">line</span><span class="o">.</span><span class="n">get_xdata</span><span class="p">())]</span>
 
 
@@ -7809,7 +7812,10 @@ AC の最低点: 4.0 15.0
 <p><img alt="総費用。可変費用（橙）に、固定費用（緑の水平線、32）を足したものが、総費用（青）" src="../images/ch05-total-cost.png" /></p>
 <details class="note">
 <summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">totals</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Axes</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="n">CURVE</span> <span class="o">=</span> <span class="n">CostCurve</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">totals</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Axes</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">plot_total_cost</span><span class="p">(</span><span class="n">CURVE</span><span class="p">,</span> <span class="mi">8</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
 

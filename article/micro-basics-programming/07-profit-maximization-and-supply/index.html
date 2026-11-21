@@ -7573,6 +7573,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <div class="highlight"><pre><span></span><code><span class="n">CURVE</span> <span class="o">=</span> <span class="n">CostCurve</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
 
 
+<span class="n">OTHER</span> <span class="o">=</span> <span class="n">CostCurve</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">test_価格30の利潤最大の生産量は5</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">q</span> <span class="o">=</span> <span class="n">profit_maximizing_output</span><span class="p">(</span><span class="n">CURVE</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">q</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
@@ -7751,6 +7754,12 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">assert</span> <span class="n">market_supply</span><span class="p">([</span><span class="n">CURVE</span><span class="p">,</span> <span class="n">OTHER</span><span class="p">],</span> <span class="mi">30</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
         <span class="mi">5</span> <span class="o">+</span> <span class="mi">2</span> <span class="o">+</span> <span class="p">(</span><span class="mi">4</span> <span class="o">+</span> <span class="mi">40</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
     <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_市場供給曲線は各価格の合計</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">curve</span> <span class="o">=</span> <span class="n">market_supply_curve</span><span class="p">([</span><span class="n">CURVE</span><span class="p">,</span> <span class="n">CURVE</span><span class="p">],</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">30</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">curve</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="mi">6</span><span class="p">,</span> <span class="mi">30</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="p">[</span><span class="n">q</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">curve</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">])</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">supply_curve</span><span class="p">(</span>
     <span class="n">curve</span><span class="p">:</span> <span class="n">CostCurve</span><span class="p">,</span> <span class="n">prices</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
@@ -7894,7 +7903,10 @@ P = 5 の生産量: 0.0
 <p>供給曲線の図と、座標のテストです。曲線の値が費用関数と一致すること、利潤の長方形の面積が 68 であること、3 つの点の位置を確かめます。</p>
 <details class="note">
 <summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">xs</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Line2D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<div class="highlight"><pre><span></span><code><span class="n">CURVE</span> <span class="o">=</span> <span class="n">CostCurve</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">xs</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Line2D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
     <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cast</span><span class="p">(</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">line</span><span class="o">.</span><span class="n">get_xdata</span><span class="p">())]</span>
 
 
@@ -7997,7 +8009,10 @@ P = 5 の生産量: 0.0
 <p><img alt="課税後の供給曲線。実線が課税前、点線が課税後。従量税（橙）は、税額 6 だけ平行に上へ動く。従価税（緑）は、傾きが急になり、生産量が大きいほど、上乗せが大きい" src="../images/ch07-tax-supply.png" /></p>
 <details class="note">
 <summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">tax</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Axes</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="n">CURVE</span> <span class="o">=</span> <span class="n">CostCurve</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">32</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">tax</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Axes</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">plot_tax_supply</span><span class="p">(</span><span class="n">CURVE</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
 
@@ -8138,7 +8153,13 @@ P = 5 の生産量: 0.0
 </table>
 <h3 id="_17">値の確かめ<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <p>到達チェックの値を、プログラムで確かめます。各章の関数を、そのまま呼びます。</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter05.cost</span><span class="w"> </span><span class="kn">import</span> <span class="n">CostCurve</span><span class="p">,</span> <span class="n">cost_minima</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter05.cost</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">CostCurve</span><span class="p">,</span>
+    <span class="n">average_cost</span><span class="p">,</span>
+    <span class="n">average_variable_cost</span><span class="p">,</span>
+    <span class="n">cost_minima</span><span class="p">,</span>
+    <span class="n">marginal_cost</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter06.production</span><span class="w"> </span><span class="kn">import</span> <span class="n">cost_minimizing_inputs</span><span class="p">,</span> <span class="n">mrts</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter07.supply</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">break_even_price</span><span class="p">,</span>
@@ -8148,6 +8169,8 @@ P = 5 の生産量: 0.0
 <span class="p">)</span>
 
 <span class="n">curve</span> <span class="o">=</span> <span class="n">CostCurve</span><span class="p">(</span><span class="n">cubic</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">quadratic</span><span class="o">=-</span><span class="mi">6</span><span class="p">,</span> <span class="n">linear</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">fixed</span><span class="o">=</span><span class="mi">32</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">function</span> <span class="ow">in</span> <span class="p">((</span><span class="s2">"MC"</span><span class="p">,</span> <span class="n">marginal_cost</span><span class="p">),</span> <span class="p">(</span><span class="s2">"AC"</span><span class="p">,</span> <span class="n">average_cost</span><span class="p">),</span> <span class="p">(</span><span class="s2">"AVC"</span><span class="p">,</span> <span class="n">average_variable_cost</span><span class="p">)):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"q = 2・3・4 の"</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="s2">":"</span><span class="p">,</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">function</span><span class="p">(</span><span class="n">curve</span><span class="p">,</span> <span class="n">q</span><span class="p">),</span> <span class="mi">4</span><span class="p">)</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)])</span>
 <span class="n">minima</span> <span class="o">=</span> <span class="n">cost_minima</span><span class="p">(</span><span class="n">curve</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"最低点の生産量 MC・AVC・AC:"</span><span class="p">,</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">minima</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"MC"</span><span class="p">,</span> <span class="s2">"AVC"</span><span class="p">,</span> <span class="s2">"AC"</span><span class="p">)])</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"最低値 MC・AVC・AC:"</span><span class="p">,</span> <span class="p">[</span><span class="nb">round</span><span class="p">(</span><span class="n">minima</span><span class="p">[</span><span class="n">n</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span> <span class="mi">3</span><span class="p">)</span> <span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"MC"</span><span class="p">,</span> <span class="s2">"AVC"</span><span class="p">,</span> <span class="s2">"AC"</span><span class="p">)])</span>
@@ -8158,7 +8181,10 @@ P = 5 の生産量: 0.0
     <span class="n">q</span> <span class="o">=</span> <span class="n">profit_maximizing_output</span><span class="p">(</span><span class="n">curve</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"P ="</span><span class="p">,</span> <span class="n">price</span><span class="p">,</span> <span class="s2">"のとき q ="</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">q</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"利潤"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">profit</span><span class="p">(</span><span class="n">curve</span><span class="p">,</span> <span class="n">price</span><span class="p">,</span> <span class="n">q</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>最低点の生産量 MC・AVC・AC: [2.0, 3.0, 4.0]
+<div class="highlight"><pre><span></span><code>q = 2・3・4 の MC : [3, 6, 15]
+q = 2・3・4 の AC : [23.0, 16.6667, 15.0]
+q = 2・3・4 の AVC : [7.0, 6.0, 7.0]
+最低点の生産量 MC・AVC・AC: [2.0, 3.0, 4.0]
 最低値 MC・AVC・AC: [3.0, 6.0, 15.0]
 費用最小の投入: (20.0, 5.0) 技術的限界代替率: 0.25
 損益分岐点・操業停止点: 15.0 6.0
@@ -8179,7 +8205,7 @@ P = 5 のとき q = 0.0 利潤 -32.0
 <tbody>
 <tr>
 <td style="text-align: left;">費用曲線の 3 本の関係を言う</td>
-<td style="text-align: left;">MC・AVC・AC の最低点の生産量は 2・3・4（この順）、最低値は 3・6・15。MC は、AVC と AC の最低点を通る</td>
+<td style="text-align: left;">q = 2・3・4 で、MC は 3・6・15、AC は 23・約 16.67・15、AVC は 7・6・7。MC・AVC・AC の最低点の生産量は 2・3・4（この順）、最低値は 3・6・15。MC は、AVC と AC の最低点を通る</td>
 <td style="text-align: left;"><a href="../05-cost-curves/">第 5 章</a></td>
 </tr>
 <tr>
