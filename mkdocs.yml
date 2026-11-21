@@ -117,6 +117,10 @@ nav:
           - 第 14 章 AD-AS 分析と主要理論: article/economics-programming/14-ad-as-and-major-theories.md
           - 第 15 章 不完全競争とゲーム理論: article/economics-programming/15-imperfect-competition-and-game-theory.md
           - 付録 A 回帰分析への橋渡し: article/economics-programming/appendix-a-bridge-to-regression.md
+      - ミクロ経済学のためのプログラミング（初級）:
+          - 概要: article/micro-basics-programming/index.md
+          - この記事の読み方: article/micro-basics-programming/how-to-read.md
+          - 第 1 章 効用と無差別曲線: article/micro-basics-programming/01-utility-and-indifference-curves.md
       - マクロ経済学のためのプログラミング（初級）:
           - 概要: article/macro-basics-programming/index.md
           - この記事の読み方: article/macro-basics-programming/how-to-read.md

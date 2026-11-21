@@ -1,6 +1,7 @@
 # Docs Update Log
 
 ## 2026-11-21
+* **Creation**: [ミクロ経済学のためのプログラミング（初級）](/article/micro-basics-programming/index.md) の執筆計画・雛形・第 1 章を作成（claude-code/claude-sonnet-5-5）
 * **Creation**: [マクロ経済学のためのプログラミング（初級） 全体レビュー](/review/macro-basics-programming_review_20261121.md) を作成し、高 10 件に対応（claude-code/claude-sonnet-5-5）
 * **Update**: [docs/index.md](/index.md) を、記事（4 つの連載の入口）を前面に出す構成に変更（開発・分析設計・運用・リファレンスの順。claude-code/claude-sonnet-5-5）
 
