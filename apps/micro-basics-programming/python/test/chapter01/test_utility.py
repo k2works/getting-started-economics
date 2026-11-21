@@ -230,3 +230,50 @@ def test_凸の判定は許容誤差を持つ() -> None:
 
 def test_無差別曲線の高さは無限大にならない() -> None:
     assert math.isfinite(indifference_curve_y(800, 1e-3))
+
+
+# --- 独立した変異確認（2026-11-21）で見つかった穴を埋めるテスト ---
+
+
+def test_べき指数が違う効用は偶然の一致でない値() -> None:
+    assert cobb_douglas_utility(16, 9, 0.5, 0.5) == pytest.approx(12)
+    assert cobb_douglas_utility(2, 3, 2, 1) == pytest.approx(12)
+
+
+def test_べき指数が2の無差別曲線() -> None:
+    assert indifference_curve_y(36, 3, 2, 1) == pytest.approx(4)
+    assert indifference_curve_y(36, 3, 1, 2) == pytest.approx(2 * math.sqrt(3))
+
+
+def test_完全代替財の既定の重みは1() -> None:
+    assert perfect_substitutes_utility(3, 4) == 7
+    assert perfect_substitutes_curve_y(10, 3) == 7
+
+
+def test_完全代替財の無差別曲線はyの重みで割る() -> None:
+    assert perfect_substitutes_curve_y(40, 5, 2, 2) == pytest.approx(15)
+
+
+def test_完全補完財の曲線の端が水準と等しければ折れ点だけ() -> None:
+    assert perfect_complements_curve(4, 4) == [(4, 4), (4, 4), (4, 4)]
+
+
+def test_凸の判定は同じxが並べばエラー() -> None:
+    with pytest.raises(ValueError, match="昇順"):
+        is_convex_to_origin([1, 1, 2], [3, 2, 1])
+
+
+def test_凸の判定は傾きの差で決まる() -> None:
+    assert not is_convex_to_origin([0, 1, 2], [0, 1, 0])
+    assert is_convex_to_origin([0, 1, 3], [0, 1, 4])
+
+
+def test_凸の判定は隣り合う傾きを比べる() -> None:
+    # 傾きは 0、1、0.5。最後の隣り合う組（1 → 0.5）が、凸でない
+    assert not is_convex_to_origin([0, 1, 2, 3], [0, 0, 1, 1.5])
+
+
+def test_凸の判定の許容誤差は1e_9() -> None:
+    # 傾きの差が −8e-10（許容誤差の内）なら凸、−1.2e-9（許容誤差の外）なら凸でない
+    assert is_convex_to_origin([0, 1, 2], [0, 1, 2 - 8e-10])
+    assert not is_convex_to_origin([0, 1, 2], [0, 1, 2 - 1.2e-9])
