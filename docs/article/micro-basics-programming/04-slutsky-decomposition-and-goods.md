@@ -58,7 +58,7 @@ uv run pytest test/chapter04
 ```
 
 ```text
-41 passed
+43 passed
 ```
 
 自分でコードを書くときは、`practice/chapter04/` に、`slutsky.py` と `test_slutsky.py` を作ります。第 1〜3 章の関数は、完成形の `lib/` から import してかまいません（[この記事の読み方](how-to-read.md)を参照）。
@@ -559,7 +559,7 @@ uv run pytest test/chapter04
 ```
 
 ```text
-41 passed
+43 passed
 ```
 
 ## 4.6 規則で言うと

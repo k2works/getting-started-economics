@@ -54,7 +54,7 @@ uv run pytest test/chapter02
 ```
 
 ```text
-40 passed
+42 passed
 ```
 
 自分でコードを書くときは、`practice/chapter02/` に、`budget.py` と `test_budget.py` を作ります。テストの import は、`from practice.chapter02.budget import ...` に書き換えます（[この記事の読み方](how-to-read.md)を参照）。第 1 章の関数（`cobb_douglas_utility` など）は、完成形の `lib/chapter01/` から import してかまいません。
@@ -473,7 +473,6 @@ Px = 1 の最適消費点: (40.0, 40.0)
         """価格が下がると、予算線の x 切片だけが右へ動く。最適点をつなぐと価格消費曲線。"""
         fig, ax = plt.subplots()
         bundles = []
-        y_intercept = income / py
         for price in prices:
             x_intercept, y_intercept = budget_intercepts(income, price, py)
             ax.plot([0, x_intercept], [y_intercept, 0], label=f"Px = {price}")
@@ -496,7 +495,7 @@ uv run pytest test/chapter02
 ```
 
 ```text
-40 passed
+42 passed
 ```
 
 ## 2.6 規則で言うと
