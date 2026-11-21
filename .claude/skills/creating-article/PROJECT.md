@@ -38,7 +38,7 @@ Windows のシェルでは、日本語を扱うので `PYTHONUTF8=1` を付け�
 
 ## 連載固有のデータ（`tools/`）
 
-- `figure_registry.py` — 図の登録（章の `plot.py` を import する）
+- `figure_registry.py` — 章ごとの登録（`figures/chNN.py`）を合成する。図は、章のファイルに足す
 - `answer_preludes.json` — 解答のコードの前置き
 - `article_code_excerpts.json` — 抜粋の許可
 - `figure_fingerprints.json` — 図の指紋

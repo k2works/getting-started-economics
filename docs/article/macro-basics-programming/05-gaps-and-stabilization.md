@@ -351,103 +351,111 @@ print("必要な政府支出の変化:", round(required_spending_change(gap2, 0.
 
 ギャップの図を、描く関数を、テストから書きます。45 度線・総需要・完全雇用所得の位置と、ギャップを表す線分の長さ（20）を、手計算の値と比べます。
 
-```python
-def xs(line: Line2D) -> list[float]:
-    return [float(v) for v in np.asarray(line.get_xdata())]
+??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
+
+    ```python
+    def xs(line: Line2D) -> list[float]:
+        return [float(v) for v in np.asarray(line.get_xdata())]
 
 
-def ys(line: Line2D) -> list[float]:
-    return [float(v) for v in np.asarray(line.get_ydata())]
+    def ys(line: Line2D) -> list[float]:
+        return [float(v) for v in np.asarray(line.get_ydata())]
 
 
-def deflation_gap_axes() -> Axes:
-    fig = plot_gap(mpc=0.6, autonomous=100, full_employment_income=300, income_max=400)
-    return fig.axes[0]
+    def deflation_gap_axes() -> Axes:
+        fig = plot_gap(mpc=0.6, autonomous=100, full_employment_income=300, income_max=400)
+        return fig.axes[0]
 
 
-def test_ギャップの図は45度線と総需要と完全雇用所得の線を描く() -> None:
-    ax = deflation_gap_axes()
-    labels = [line.get_label() for line in ax.lines]
-    assert labels[:3] == [
-        "45-degree line (Y)",
-        "Aggregate demand",
-        "Full-employment income",
-    ]
-    assert xs(ax.lines[2]) == pytest.approx([300, 300])
+    def test_ギャップの図は45度線と総需要と完全雇用所得の線を描く() -> None:
+        ax = deflation_gap_axes()
+        labels = [line.get_label() for line in ax.lines]
+        assert labels[:3] == [
+            "45-degree line (Y)",
+            "Aggregate demand",
+            "Full-employment income",
+        ]
+        assert xs(ax.lines[2]) == pytest.approx([300, 300])
 
 
-def test_均衡点は250で総需要の線の上にある() -> None:
-    point = deflation_gap_axes().lines[3]
-    assert xs(point) == pytest.approx([250])
-    assert ys(point) == pytest.approx([250])
+    def test_均衡点は250で総需要の線の上にある() -> None:
+        point = deflation_gap_axes().lines[3]
+        assert xs(point) == pytest.approx([250])
+        assert ys(point) == pytest.approx([250])
 
 
-def test_ギャップの線分は完全雇用所得の上で総需要から45度線までの長さ20() -> None:
-    segment = deflation_gap_axes().lines[4]
-    assert xs(segment) == pytest.approx([300, 300])
-    assert ys(segment) == pytest.approx([280, 300])
+    def test_ギャップの線分は完全雇用所得の上で総需要から45度線までの長さ20() -> None:
+        segment = deflation_gap_axes().lines[4]
+        assert xs(segment) == pytest.approx([300, 300])
+        assert ys(segment) == pytest.approx([280, 300])
 
 
-def test_インフレギャップでは線分の向きが逆になる() -> None:
-    fig = plot_gap(mpc=0.6, autonomous=100, full_employment_income=200, income_max=400)
-    segment = fig.axes[0].lines[4]
-    assert ys(segment) == pytest.approx([220, 200])
-```
+    def test_インフレギャップでは線分の向きが逆になる() -> None:
+        fig = plot_gap(mpc=0.6, autonomous=100, full_employment_income=200, income_max=400)
+        segment = fig.axes[0].lines[4]
+        assert ys(segment) == pytest.approx([220, 200])
+    ```
 
-```python
-def plot_gap(
-    mpc: float,
-    autonomous: float,
-    full_employment_income: float,
-    income_max: float,
-) -> Figure:
-    """45 度線・総需要・完全雇用所得を描く。
+??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
 
-    完全雇用所得の上の線分は、総需要と 45 度線の縦の差で、ギャップを埋めるのに
-    必要な支出の大きさ（デフレギャップでは総需要が下、インフレギャップでは上）。
-    """
-    incomes = [0, income_max]
-    demand = [autonomous + mpc * y for y in incomes]
-    y_star = autonomous / (1 - mpc)
-    y_full = full_employment_income
-    fig, ax = plt.subplots()
-    ax.plot(incomes, incomes, label="45-degree line (Y)")
-    ax.plot(incomes, demand, label="Aggregate demand")
-    ax.plot([y_full, y_full], [0, income_max], "--", label="Full-employment income")
-    ax.plot([y_star], [y_star], "o", label="Equilibrium")
-    ax.plot([y_full, y_full], [autonomous + mpc * y_full, y_full], label="Gap")
-    ax.set_xlabel("Income Y")
-    ax.set_ylabel("Demand / Supply")
-    ax.legend()
-    plt.close(fig)
-    return fig
-```
+    ```python
+    def plot_gap(
+        mpc: float,
+        autonomous: float,
+        full_employment_income: float,
+        income_max: float,
+    ) -> Figure:
+        """45 度線・総需要・完全雇用所得を描く。
+
+        完全雇用所得の上の線分は、総需要と 45 度線の縦の差で、ギャップを埋めるのに
+        必要な支出の大きさ（デフレギャップでは総需要が下、インフレギャップでは上）。
+        """
+        incomes = [0, income_max]
+        demand = [autonomous + mpc * y for y in incomes]
+        y_star = autonomous / (1 - mpc)
+        y_full = full_employment_income
+        fig, ax = plt.subplots()
+        ax.plot(incomes, incomes, label="45-degree line (Y)")
+        ax.plot(incomes, demand, label="Aggregate demand")
+        ax.plot([y_full, y_full], [0, income_max], "--", label="Full-employment income")
+        ax.plot([y_star], [y_star], "o", label="Equilibrium")
+        ax.plot([y_full, y_full], [autonomous + mpc * y_full, y_full], label="Gap")
+        ax.set_xlabel("Income Y")
+        ax.set_ylabel("Demand / Supply")
+        ax.legend()
+        plt.close(fig)
+        return fig
+    ```
 
 ビルトイン・スタビライザーの図は、独立支出が 10 変動したときの、所得の変動を、2 本の棒で比べます。
 
-```python
-def test_振れ幅の図は2本の棒で比例税のほうが低い() -> None:
-    ax = plot_income_swing(mpc=0.6, tax_rate=0.2, shock=10).axes[0]
-    bars = [p for p in ax.patches if isinstance(p, Rectangle)]
-    assert [t.get_text() for t in ax.get_xticklabels()] == [
-        "No tax",
-        "Proportional tax",
-    ]
-    assert [b.get_height() for b in bars] == pytest.approx([25, 10 / 0.52])
-```
+??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
 
-```python
-def plot_income_swing(mpc: float, tax_rate: float, shock: float) -> Figure:
-    """独立支出が shock だけ変動したときの、所得の変動を、比例税の有無で比べる。"""
-    fig, ax = plt.subplots()
-    ax.bar(
-        ["No tax", "Proportional tax"],
-        [income_swing(mpc, 0, shock), income_swing(mpc, tax_rate, shock)],
-    )
-    ax.set_ylabel("Change in income")
-    plt.close(fig)
-    return fig
-```
+    ```python
+    def test_振れ幅の図は2本の棒で比例税のほうが低い() -> None:
+        ax = plot_income_swing(mpc=0.6, tax_rate=0.2, shock=10).axes[0]
+        bars = [p for p in ax.patches if isinstance(p, Rectangle)]
+        assert [t.get_text() for t in ax.get_xticklabels()] == [
+            "No tax",
+            "Proportional tax",
+        ]
+        assert [b.get_height() for b in bars] == pytest.approx([25, 10 / 0.52])
+    ```
+
+??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
+
+    ```python
+    def plot_income_swing(mpc: float, tax_rate: float, shock: float) -> Figure:
+        """独立支出が shock だけ変動したときの、所得の変動を、比例税の有無で比べる。"""
+        fig, ax = plt.subplots()
+        ax.bar(
+            ["No tax", "Proportional tax"],
+            [income_swing(mpc, 0, shock), income_swing(mpc, tax_rate, shock)],
+        )
+        ax.set_ylabel("Change in income")
+        plt.close(fig)
+        return fig
+    ```
 
 ![独立支出が 10 変動したときの所得の変動。比例税（税率 0.2）があると、25 から約 19.2 に小さくなる](images/ch05-income-swing.png)
 

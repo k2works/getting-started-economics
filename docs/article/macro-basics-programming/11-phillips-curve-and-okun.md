@@ -131,6 +131,12 @@ def real_interest_rate(nominal: float, inflation: float) -> float:
 
     記事の抜粋には、import と、先頭が `_` の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。
 
+    **lib/chapter11/deflation.py**
+
+    ```python
+    from lib.chapter01.validation import validate_non_negative
+    ```
+
     **lib/chapter11/okun.py**
 
     ```python
@@ -142,12 +148,19 @@ def real_interest_rate(nominal: float, inflation: float) -> float:
     import numpy as np
     ```
 
+    ```python
+    from lib.chapter01.validation import validate_non_negative, validate_positive
+    ```
+
     **lib/chapter11/phillips.py**
 
     ```python
+    from lib.chapter01.validation import validate_non_negative, validate_positive
+    ```
+
+    ```python
     def _check_beta(beta: float) -> None:
-        if beta <= 0:
-            raise ValueError("失業率への感応度 β は、正にする")
+        validate_positive(beta, "失業率への感応度 β は、正にする")
     ```
 
     **lib/chapter11/price_shocks.py**
@@ -157,6 +170,7 @@ def real_interest_rate(nominal: float, inflation: float) -> float:
     ```
 
     ```python
+    from lib.chapter01.validation import validate_positive
     from lib.chapter10.ad_as import (
         AdEconomy,
         expand_demand,
@@ -193,8 +207,7 @@ def debt_burden(nominal_debt: float, inflation: float, years: int = 1) -> float:
     """
     if inflation <= -1:
         raise ValueError("インフレ率は、−1 より大きくする（物価が 0 以下になる）")
-    if years < 0:
-        raise ValueError("年数は、0 以上にする")
+    validate_non_negative(years, "年数は、0 以上にする")
     return nominal_debt / (1 + inflation) ** years
 ```
 
@@ -234,8 +247,7 @@ def cost_push_effect(
     supply_loss: float,
 ) -> tuple[float, float]:
     """コストプッシュ（AS の左シフト）による、物価と所得の変化 (ΔP, ΔY)。"""
-    if supply_loss <= 0:
-        raise ValueError("供給の減少は、正にする")
+    validate_positive(supply_loss, "供給の減少は、正にする")
     before = partial(
         keynesian_supply,
         full_employment_income=full_employment_income,
@@ -324,8 +336,7 @@ def accelerating_inflation_path(
     u が u_n より低いと、毎期、インフレ率が上がり続ける（長期のトレードオフは無い）。
     """
     _check_beta(beta)
-    if periods < 0:
-        raise ValueError("期間は、0 以上にする")
+    validate_non_negative(periods, "期間は、0 以上にする")
     path = [initial_inflation]
     for _ in range(periods):
         path.append(
@@ -344,8 +355,7 @@ def test_需給ギャップは実際のGDPが潜在GDPを下回ると負() -> No
 ```python
 def output_gap_ratio(actual_gdp: float, potential_gdp: float) -> float:
     """需給ギャップ = (実際の GDP − 潜在 GDP) ÷ 潜在 GDP。負なら、需要不足。"""
-    if potential_gdp <= 0:
-        raise ValueError("潜在 GDP は、正にする")
+    validate_positive(potential_gdp, "潜在 GDP は、正にする")
     return (actual_gdp - potential_gdp) / potential_gdp
 ```
 
@@ -438,8 +448,7 @@ def synthetic_unemployment_change(
     seed: int,
 ) -> list[float]:
     """関係 Δu = 切片 + 傾き × 成長率 に、正規分布の雑音を足した、架空のデータ。"""
-    if noise < 0:
-        raise ValueError("雑音の標準偏差は、0 以上にする")
+    validate_non_negative(noise, "雑音の標準偏差は、0 以上にする")
     rng = np.random.default_rng(seed)
     x = np.asarray(growth, dtype=float)
     values = intercept + slope * x + rng.normal(0.0, noise, size=len(x))
@@ -512,26 +521,28 @@ u = 6: 1.5
 
 図を描く関数と、座標のテストです。短期の曲線の端と、長期の垂直線の座標を、手計算の値と比べます。
 
-```python
-def phillips() -> Axes:
-    return plot_phillips(
-        natural_rate=5, expected_inflations=[2, 4], beta=0.5, u_min=3, u_max=7
-    ).axes[0]
+??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
+
+    ```python
+    def phillips() -> Axes:
+        return plot_phillips(
+            natural_rate=5, expected_inflations=[2, 4], beta=0.5, u_min=3, u_max=7
+        ).axes[0]
 
 
-def test_短期の曲線は右下がりで自然失業率では期待インフレ率() -> None:
-    ax = phillips()
-    curve = line(ax, "Short run (expected inflation 2)")
-    assert xs(curve) == [3, 7]
-    assert ys(curve) == pytest.approx([3.0, 1.0])
+    def test_短期の曲線は右下がりで自然失業率では期待インフレ率() -> None:
+        ax = phillips()
+        curve = line(ax, "Short run (expected inflation 2)")
+        assert xs(curve) == [3, 7]
+        assert ys(curve) == pytest.approx([3.0, 1.0])
 
 
-def test_長期の曲線は自然失業率で垂直() -> None:
-    ax = phillips()
-    vertical = line(ax, "Long run")
-    assert xs(vertical) == [5, 5]
-    assert ys(vertical) == pytest.approx([1.0, 5.0])
-```
+    def test_長期の曲線は自然失業率で垂直() -> None:
+        ax = phillips()
+        vertical = line(ax, "Long run")
+        assert xs(vertical) == [5, 5]
+        assert ys(vertical) == pytest.approx([1.0, 5.0])
+    ```
 
 オークンの法則の図（`plot_okun`）も、散布図の点と、回帰直線の端の座標を、同じようにテストします。
 

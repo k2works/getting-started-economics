@@ -168,9 +168,12 @@ def average_propensity(income: float, mpc: float, autonomous: float = 0) -> floa
     ```
 
     ```python
+    from lib.chapter01.validation import validate_positive
+    ```
+
+    ```python
     def _validate_years(working_years: float, lifetime_years: float) -> None:
-        if lifetime_years <= 0:
-            raise ValueError("生涯の年数は、正にする")
+        validate_positive(lifetime_years, "生涯の年数は、正にする")
         if working_years < 0 or working_years > lifetime_years:
             raise ValueError("働く年数は、0 以上、生涯の年数以下にする")
     ```
@@ -179,6 +182,10 @@ def average_propensity(income: float, mpc: float, autonomous: float = 0) -> floa
 
     ```python
     from collections.abc import Sequence
+    ```
+
+    ```python
+    from lib.chapter01.validation import validate_non_negative, validate_positive
     ```
 
 C₀ = 20 のとき、平均消費性向は、c + C₀ ÷ Y なので、所得が大きいほど、c（0.8）に近づきます。C₀ = 0（長期）なら、いつも 0.8 です。第 4 章の `consumption` は、課税を含む関数で、名前が違います。この章では、仮説の違いを見るため、課税を省いた、別の関数にしました。
@@ -323,8 +330,7 @@ def test_所得の増加率が下がると投資は所得より先に減る() ->
 ```python
 def accelerator_investment(capital_coefficient: float, income_change: float) -> float:
     """加速度原理 I = V × ΔY。資本係数 V は一定。所得の増加が止まると、0。"""
-    if capital_coefficient < 0:
-        raise ValueError("資本係数は、0 以上にする")
+    validate_non_negative(capital_coefficient, "資本係数は、0 以上にする")
     return capital_coefficient * income_change
 
 
@@ -389,8 +395,7 @@ def test_qがちょうど1なら投資しない() -> None:
 ```python
 def tobins_q(market_value: float, replacement_cost: float) -> float:
     """トービンの q = 企業の市場価値 ÷ 資本の再取得価格。"""
-    if replacement_cost <= 0:
-        raise ValueError("再取得価格は、正にする")
+    validate_positive(replacement_cost, "再取得価格は、正にする")
     return market_value / replacement_cost
 
 
@@ -474,42 +479,44 @@ for value in (120, 80):
 
 図の線の高さと棒の高さは、`test/chapter12/test_plot.py` で、手計算の値と比べています。描画の関数は、次のとおりです。
 
-```python
-def plot_consumption_theories(
-    incomes: Sequence[float], mpc: float, adjust: float
-) -> Figure:
-    """所得が一時的に増えたときの、3 つの仮説の消費の反応を、重ねて描く。"""
-    periods = list(range(len(incomes)))
-    absolute = [consumption_from_absolute_income(y, mpc) for y in incomes]
-    fig, ax = plt.subplots()
-    ax.plot(periods, incomes, linestyle="--", label="Income")
-    ax.plot(periods, absolute, label="Absolute income")
-    ax.plot(
-        periods, permanent_consumption(incomes, mpc, adjust), label="Permanent income"
-    )
-    ax.plot(periods, ratchet_consumption(incomes, mpc), label="Ratchet")
-    ax.set_xlabel("Period")
-    ax.set_ylabel("Consumption")
-    ax.legend()
-    plt.close(fig)
-    return fig
+??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
+
+    ```python
+    def plot_consumption_theories(
+        incomes: Sequence[float], mpc: float, adjust: float
+    ) -> Figure:
+        """所得が一時的に増えたときの、3 つの仮説の消費の反応を、重ねて描く。"""
+        periods = list(range(len(incomes)))
+        absolute = [consumption_from_absolute_income(y, mpc) for y in incomes]
+        fig, ax = plt.subplots()
+        ax.plot(periods, incomes, linestyle="--", label="Income")
+        ax.plot(periods, absolute, label="Absolute income")
+        ax.plot(
+            periods, permanent_consumption(incomes, mpc, adjust), label="Permanent income"
+        )
+        ax.plot(periods, ratchet_consumption(incomes, mpc), label="Ratchet")
+        ax.set_xlabel("Period")
+        ax.set_ylabel("Consumption")
+        ax.legend()
+        plt.close(fig)
+        return fig
 
 
-def plot_accelerator(capital_coefficient: float, incomes: Sequence[float]) -> Figure:
-    """上に所得の線、下に、加速度原理による投資の棒を描く。
+    def plot_accelerator(capital_coefficient: float, incomes: Sequence[float]) -> Figure:
+        """上に所得の線、下に、加速度原理による投資の棒を描く。
 
-    所得の増加が小さくなると、所得はまだ増えているのに、投資は減る。
-    """
-    investment = accelerator_path(capital_coefficient, incomes)
-    fig, (top, bottom) = plt.subplots(2, 1, sharex=True)
-    top.plot(range(len(incomes)), incomes)
-    top.set_ylabel("Income")
-    bottom.bar(range(1, len(incomes)), investment)
-    bottom.set_xlabel("Period")
-    bottom.set_ylabel("Investment")
-    plt.close(fig)
-    return fig
-```
+        所得の増加が小さくなると、所得はまだ増えているのに、投資は減る。
+        """
+        investment = accelerator_path(capital_coefficient, incomes)
+        fig, (top, bottom) = plt.subplots(2, 1, sharex=True)
+        top.plot(range(len(incomes)), incomes)
+        top.set_ylabel("Income")
+        bottom.bar(range(1, len(incomes)), investment)
+        bottom.set_xlabel("Period")
+        bottom.set_ylabel("Investment")
+        plt.close(fig)
+        return fig
+    ```
 
 ![加速度原理。上は所得、下は投資。所得の増え方が小さくなると、投資は減り、増加が止まると 0 になる](images/ch12-accelerator.png)
 

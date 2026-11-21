@@ -161,6 +161,16 @@ def price_level_from_quantity(money: float, velocity: float, output: float) -> f
     import math
     ```
 
+    ```python
+    from lib.chapter01.validation import validate_non_negative
+    ```
+
+    **lib/chapter13/quantity.py**
+
+    ```python
+    from lib.chapter01.validation import validate_positive
+    ```
+
 生産量が 0 だと、割り算ができません。エラーにします。
 
 ### マーシャルの k とインフレ率の近似
@@ -194,8 +204,7 @@ def test_インフレ率の近似は交換方程式の厳密な値に近い() ->
 ```python
 def marshall_k(velocity: float) -> float:
     """マーシャルの k = 1 ÷ V。貨幣需要は、名目所得の k 倍。"""
-    if velocity <= 0:
-        raise ValueError("流通速度は、正にする")
+    validate_positive(velocity, "流通速度は、正にする")
     return 1 / velocity
 
 
@@ -259,8 +268,7 @@ def net_exports_from_exchange_rate(
     円安（e が上がる）と、輸出が増え、輸入が減るので、純輸出は増える。
     傾き s は、0 以上にする。
     """
-    if slope < 0:
-        raise ValueError("為替レートに対する純輸出の傾きは、0 以上にする")
+    validate_non_negative(slope, "為替レートに対する純輸出の傾きは、0 以上にする")
     return base_net_exports + slope * (exchange_rate - base_rate)
 ```
 
@@ -415,42 +423,44 @@ X = 30 で整合: False
 
 次の図は、為替レートと純輸出です。右へ行くほど円安で、純輸出が増えます。基準の点（125 円、20）に、印を付けました。
 
-```python
-def plot_money_and_prices(
-    velocity: float, outputs: Sequence[float], moneys: Sequence[float]
-) -> Figure:
-    """貨幣量 M と物価水準 P の関係を、生産量 Y ごとの直線で描く。
+??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
 
-    P = MV ÷ Y なので、M が 2 倍になると P も 2 倍。Y が大きいと、傾きが小さい。
-    """
-    fig, ax = plt.subplots()
-    for output in outputs:
-        prices = [price_level_from_quantity(m, velocity, output) for m in moneys]
-        ax.plot(moneys, prices, label=f"Y = {output}")
-    ax.set_xlabel("Money supply M")
-    ax.set_ylabel("Price level P")
-    ax.legend()
-    plt.close(fig)
-    return fig
+    ```python
+    def plot_money_and_prices(
+        velocity: float, outputs: Sequence[float], moneys: Sequence[float]
+    ) -> Figure:
+        """貨幣量 M と物価水準 P の関係を、生産量 Y ごとの直線で描く。
+
+        P = MV ÷ Y なので、M が 2 倍になると P も 2 倍。Y が大きいと、傾きが小さい。
+        """
+        fig, ax = plt.subplots()
+        for output in outputs:
+            prices = [price_level_from_quantity(m, velocity, output) for m in moneys]
+            ax.plot(moneys, prices, label=f"Y = {output}")
+        ax.set_xlabel("Money supply M")
+        ax.set_ylabel("Price level P")
+        ax.legend()
+        plt.close(fig)
+        return fig
 
 
-def plot_net_exports(
-    rates: Sequence[float], base_net_exports: float, base_rate: float, slope: float
-) -> Figure:
-    """為替レート（1 ドルあたりの円）と純輸出。右へ行くほど円安で、純輸出が増える。"""
-    net_exports = [
-        net_exports_from_exchange_rate(e, base_net_exports, base_rate, slope)
-        for e in rates
-    ]
-    fig, ax = plt.subplots()
-    ax.plot(rates, net_exports, label="Net exports")
-    ax.plot([base_rate], [base_net_exports], "o", label="Base")
-    ax.set_xlabel("Exchange rate (yen per dollar)")
-    ax.set_ylabel("Net exports")
-    ax.legend()
-    plt.close(fig)
-    return fig
-```
+    def plot_net_exports(
+        rates: Sequence[float], base_net_exports: float, base_rate: float, slope: float
+    ) -> Figure:
+        """為替レート（1 ドルあたりの円）と純輸出。右へ行くほど円安で、純輸出が増える。"""
+        net_exports = [
+            net_exports_from_exchange_rate(e, base_net_exports, base_rate, slope)
+            for e in rates
+        ]
+        fig, ax = plt.subplots()
+        ax.plot(rates, net_exports, label="Net exports")
+        ax.plot([base_rate], [base_net_exports], "o", label="Base")
+        ax.set_xlabel("Exchange rate (yen per dollar)")
+        ax.set_ylabel("Net exports")
+        ax.legend()
+        plt.close(fig)
+        return fig
+    ```
 
 線の座標と、軸の名前は、`test/chapter13/test_plot.py` で、手計算の値と比べています。
 

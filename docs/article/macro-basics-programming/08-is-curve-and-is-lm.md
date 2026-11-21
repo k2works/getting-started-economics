@@ -217,16 +217,16 @@ def is_interest(income: float, intercept: float, mpc: float, b: float) -> float:
     ```
 
     ```python
+    from lib.chapter01.validation import validate_non_negative, validate_positive
     from lib.chapter04.multiplier import validate_mpc
     from lib.chapter07.money_market import money_demand, validate_h, validate_k
     ```
 
     ```python
     def _check_b_positive(b: float) -> None:
-        if b <= 0:
-            raise ValueError(
-                "投資の利子感応度 b が 0 の IS 曲線は垂直で、利子率が決まらない"
-            )
+        validate_positive(
+            b, "投資の利子感応度 b が 0 の IS 曲線は垂直で、利子率が決まらない"
+        )
     ```
 
     ```python
@@ -492,31 +492,33 @@ b = 40 の傾き: -0.01 （b = 20 は -0.02 ）
 
 IS 曲線と、IS-LM の均衡を描く関数を、テストから書きます（`test/chapter08/test_plot.py`）。線の端点（利子率 0 のとき所得 1125、利子率 10 のとき 625 など）と、均衡点の座標（1000、2.5）が、手計算の値と一致することを、確かめています。
 
-```python
-def plot_is_lm_equilibrium(
-    mpc: float,
-    b: float,
-    intercept: float,
-    k: float,
-    h: float,
-    real_money: float,
-    income_min: float,
-    income_max: float,
-) -> Figure:
-    """IS 曲線と LM 曲線を描き、交点（均衡）に印を付ける。"""
-    incomes = [income_min, income_max]
-    y_star, r_star = solve_is_lm(mpc, b, intercept, k, h, real_money)
-    fig, ax = plt.subplots()
-    ax.plot(incomes, [is_interest(y, intercept, mpc, b) for y in incomes], label="IS")
-    ax.plot(incomes, [lm_interest(y, real_money, k, h) for y in incomes], label="LM")
-    ax.plot([y_star], [r_star], "o", label="Equilibrium")
-    ax.set_xlabel("Income Y")
-    ax.set_ylabel("Interest rate r")
-    ax.set_ylim(bottom=0)
-    ax.legend()
-    plt.close(fig)
-    return fig
-```
+??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
+
+    ```python
+    def plot_is_lm_equilibrium(
+        mpc: float,
+        b: float,
+        intercept: float,
+        k: float,
+        h: float,
+        real_money: float,
+        income_min: float,
+        income_max: float,
+    ) -> Figure:
+        """IS 曲線と LM 曲線を描き、交点（均衡）に印を付ける。"""
+        incomes = [income_min, income_max]
+        y_star, r_star = solve_is_lm(mpc, b, intercept, k, h, real_money)
+        fig, ax = plt.subplots()
+        ax.plot(incomes, [is_interest(y, intercept, mpc, b) for y in incomes], label="IS")
+        ax.plot(incomes, [lm_interest(y, real_money, k, h) for y in incomes], label="LM")
+        ax.plot([y_star], [r_star], "o", label="Equilibrium")
+        ax.set_xlabel("Income Y")
+        ax.set_ylabel("Interest rate r")
+        ax.set_ylim(bottom=0)
+        ax.legend()
+        plt.close(fig)
+        return fig
+    ```
 
 ![IS-LM の均衡。右下がりの IS 曲線と、右上がりの LM 曲線の交点が、所得 1000、利子率 2.5](images/ch08-is-lm.png)
 

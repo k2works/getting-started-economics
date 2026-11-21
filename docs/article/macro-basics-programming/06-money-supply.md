@@ -482,32 +482,36 @@ M1, M3, 広義流動性: 600 920 1020
 
 貨幣乗数の図を、描く関数を、テストから書きます。準備率ごとに 1 本の線を引き、座標が、手計算の値（C/D = 0 のとき 1 ÷ R/D など）と一致することを、確かめます。座標を取り出す補助関数 `xs`・`ys`、線の本数と軸の名前のテストは、`test/chapter06/test_plot.py` を見てください。
 
-```python
-def test_貨幣乗数の線の座標() -> None:
-    ax = plot_money_multiplier([0.0, 0.1, 0.2], [0.01, 0.1]).axes[0]
-    assert xs(ax.lines[0]) == pytest.approx([0.0, 0.1, 0.2])
-    assert ys(ax.lines[0]) == pytest.approx([100, 10, 1.2 / 0.21])
-    assert ys(ax.lines[1]) == pytest.approx([10, 5.5, 1.2 / 0.3])
-```
+??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
 
-```python
-def plot_money_multiplier(
-    cash_ratios: list[float], reserve_ratios: list[float]
-) -> Figure:
-    """現金預金比率 C/D を横軸に、準備預金比率 R/D ごとの貨幣乗数を描く。"""
-    fig, ax = plt.subplots()
-    for reserve_ratio in reserve_ratios:
-        ax.plot(
-            cash_ratios,
-            [money_multiplier(c, reserve_ratio) for c in cash_ratios],
-            label=f"R/D = {reserve_ratio}",
-        )
-    ax.set_xlabel("Cash-deposit ratio C/D")
-    ax.set_ylabel("Money multiplier")
-    ax.legend()
-    plt.close(fig)
-    return fig
-```
+    ```python
+    def test_貨幣乗数の線の座標() -> None:
+        ax = plot_money_multiplier([0.0, 0.1, 0.2], [0.01, 0.1]).axes[0]
+        assert xs(ax.lines[0]) == pytest.approx([0.0, 0.1, 0.2])
+        assert ys(ax.lines[0]) == pytest.approx([100, 10, 1.2 / 0.21])
+        assert ys(ax.lines[1]) == pytest.approx([10, 5.5, 1.2 / 0.3])
+    ```
+
+??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
+
+    ```python
+    def plot_money_multiplier(
+        cash_ratios: list[float], reserve_ratios: list[float]
+    ) -> Figure:
+        """現金預金比率 C/D を横軸に、準備預金比率 R/D ごとの貨幣乗数を描く。"""
+        fig, ax = plt.subplots()
+        for reserve_ratio in reserve_ratios:
+            ax.plot(
+                cash_ratios,
+                [money_multiplier(c, reserve_ratio) for c in cash_ratios],
+                label=f"R/D = {reserve_ratio}",
+            )
+        ax.set_xlabel("Cash-deposit ratio C/D")
+        ax.set_ylabel("Money multiplier")
+        ax.legend()
+        plt.close(fig)
+        return fig
+    ```
 
 信用創造の図（`plot_credit_creation`）は、同じ作りで、ラウンドごとのマネーストックと、上限（乗数 × H）を、1 つの図に描きます。テストと実装は、`test/chapter06/test_plot.py` と `lib/chapter06/plot.py` を見てください。
 

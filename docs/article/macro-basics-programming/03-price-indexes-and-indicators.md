@@ -515,17 +515,19 @@ DI: [50.0, 66.7, 100.0]
 
 物価指数の図と、景気動向指数の図を、描く関数を、テストから書きます。線の値、棒の高さ、50％の線、軸の名前を、確かめます（テストは、`test/chapter03/test_plot.py` にあります）。
 
-```python
-def plot_price_indexes(table: pd.DataFrame) -> Figure:
-    """ラスパイレス指数とパーシェ指数を、期間ごとに、2 本の線で描く。"""
-    fig, ax = plt.subplots()
-    ax.plot(table.index, table["laspeyres"], marker="o", label="Laspeyres")
-    ax.plot(table.index, table["paasche"], marker="s", label="Paasche")
-    ax.set_ylabel("Index (base = 1.0)")
-    ax.legend()
-    plt.close(fig)
-    return fig
-```
+??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
+
+    ```python
+    def plot_price_indexes(table: pd.DataFrame) -> Figure:
+        """ラスパイレス指数とパーシェ指数を、期間ごとに、2 本の線で描く。"""
+        fig, ax = plt.subplots()
+        ax.plot(table.index, table["laspeyres"], marker="o", label="Laspeyres")
+        ax.plot(table.index, table["paasche"], marker="s", label="Paasche")
+        ax.set_ylabel("Index (base = 1.0)")
+        ax.legend()
+        plt.close(fig)
+        return fig
+    ```
 
 景気動向指数の図 `plot_business_indexes` は、上の段に CI の線を、下の段に DI の棒と 50％の点線を、描きます（`lib/chapter03/plot.py`）。
 

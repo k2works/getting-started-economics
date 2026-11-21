@@ -151,14 +151,12 @@ def test_貨幣需要は所得の増加関数で利子率の減少関数() -> No
 ```python
 def validate_k(k: float) -> None:
     """貨幣需要の所得への感応度 k が、正であることを確かめる。"""
-    if k <= 0:
-        raise ValueError("貨幣需要の所得への感応度 k は、正にする")
+    validate_positive(k, "貨幣需要の所得への感応度 k は、正にする")
 
 
 def validate_h(h: float) -> None:
     """貨幣需要の利子率への感応度 h が、正であることを確かめる。"""
-    if h <= 0:
-        raise ValueError("貨幣需要の利子率への感応度 h は、正にする")
+    validate_positive(h, "貨幣需要の利子率への感応度 h は、正にする")
 
 
 def money_demand(income: float, interest: float, k: float, h: float) -> float:
@@ -191,6 +189,12 @@ def money_demand(income: float, interest: float, k: float, h: float) -> float:
     ```python
     # 浮動小数点の誤差（下限が 0 のとき、0.1 + 0.2 − 0.3 は 5.6e-17 になる）を許す
     _TOLERANCE = 1e-9
+    ```
+
+    **lib/chapter07/money_market.py**
+
+    ```python
+    from lib.chapter01.validation import validate_positive
     ```
 
 感応度 k・h が正でないとき（0 では、傾き k ÷ h や、利子率の式が、定義できません）は、どちらの値が悪いのか分かるエラーにします。
@@ -468,38 +472,42 @@ LM のシフト幅: 100.0
 
 貨幣市場の図と、LM 曲線の図を、描く関数を、テストから書きます。貨幣需要の線は、右下がりで、**所得が増えると右にシフトする**ことを、手計算の値と比べます。座標を取り出す補助関数（`xs`・`ys`）や、貨幣供給の垂直な線・均衡点のテストは、`test/chapter07/test_plot.py` を見てください。
 
-```python
-def test_貨幣需要曲線は右下がりで所得が増えると右にシフトする() -> None:
-    ax = money_market_axes()
-    assert xs(ax.lines[0]) == pytest.approx([500, 0])
-    assert ys(ax.lines[0]) == pytest.approx([0, 5])
-    assert xs(ax.lines[1]) == pytest.approx([600, 100])
-```
+??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
 
-```python
-def plot_money_market(
-    income: float,
-    income_after: float,
-    real_money: float,
-    k: float,
-    h: float,
-    interest_max: float,
-) -> Figure:
-    """貨幣市場の均衡。貨幣供給は垂直、貨幣需要は右下がり（所得が増えると右へ）。"""
-    fig, ax = plt.subplots()
-    for y in (income, income_after):
-        demand = [money_demand(y, r, k, h) for r in (0, interest_max)]
-        ax.plot(demand, [0, interest_max], label=f"Money demand (Y = {y:g})")
-    ax.plot([real_money, real_money], [0, interest_max], label="Money supply (M/P)")
-    ax.plot(
-        [real_money], [lm_interest(income, real_money, k, h)], "o", label="Equilibrium"
-    )
-    ax.set_xlabel("Real money balances")
-    ax.set_ylabel("Interest rate r")
-    ax.legend()
-    plt.close(fig)
-    return fig
-```
+    ```python
+    def test_貨幣需要曲線は右下がりで所得が増えると右にシフトする() -> None:
+        ax = money_market_axes()
+        assert xs(ax.lines[0]) == pytest.approx([500, 0])
+        assert ys(ax.lines[0]) == pytest.approx([0, 5])
+        assert xs(ax.lines[1]) == pytest.approx([600, 100])
+    ```
+
+??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
+
+    ```python
+    def plot_money_market(
+        income: float,
+        income_after: float,
+        real_money: float,
+        k: float,
+        h: float,
+        interest_max: float,
+    ) -> Figure:
+        """貨幣市場の均衡。貨幣供給は垂直、貨幣需要は右下がり（所得が増えると右へ）。"""
+        fig, ax = plt.subplots()
+        for y in (income, income_after):
+            demand = [money_demand(y, r, k, h) for r in (0, interest_max)]
+            ax.plot(demand, [0, interest_max], label=f"Money demand (Y = {y:g})")
+        ax.plot([real_money, real_money], [0, interest_max], label="Money supply (M/P)")
+        ax.plot(
+            [real_money], [lm_interest(income, real_money, k, h)], "o", label="Equilibrium"
+        )
+        ax.set_xlabel("Real money balances")
+        ax.set_ylabel("Interest rate r")
+        ax.legend()
+        plt.close(fig)
+        return fig
+    ```
 
 LM 曲線の図（`plot_lm_curves`）は、通常の LM 曲線、実質貨幣供給が増えたあとの LM 曲線、わなのある LM 曲線の、3 本を描きます。テストと実装は、`test/chapter07/test_plot.py` と `lib/chapter07/plot.py` を見てください。
 

@@ -171,16 +171,13 @@ class SmallOpenEconomy:
     def __post_init__(self) -> None:
         validate_mpc(self.mpc)
         validate_b(self.b)
-        if self.n <= 0:
-            raise ValueError("為替レートへの純輸出の感応度 n は、正にする")
+        validate_positive(self.n, "為替レートへの純輸出の感応度 n は、正にする")
         validate_k(self.k)
         validate_h(self.h)
         if not math.isfinite(self.h):
             raise ValueError("貨幣需要の利子率への感応度 h は、有限にする")
-        if self.world_rate < 0:
-            raise ValueError("世界の利子率 r* は、0 以上にする")
-        if self.exchange_rate <= 0:
-            raise ValueError("為替レート e は、正にする")
+        validate_non_negative(self.world_rate, "世界の利子率 r* は、0 以上にする")
+        validate_positive(self.exchange_rate, "為替レート e は、正にする")
 
 
 @dataclass(frozen=True)
@@ -231,6 +228,7 @@ def fixed_rate_monetary_effect(
     ```
 
     ```python
+    from lib.chapter01.validation import validate_non_negative, validate_positive
     from lib.chapter04.multiplier import validate_mpc
     from lib.chapter07.money_market import validate_h, validate_k
     from lib.chapter08.is_lm import is_lm_residuals, validate_b

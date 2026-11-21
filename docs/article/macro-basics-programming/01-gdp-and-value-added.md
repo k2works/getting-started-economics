@@ -58,7 +58,7 @@ uv run pytest test/chapter01
 ```
 
 ```text
-20 passed
+24 passed
 ```
 
 自分でコードを書くときは、`practice/chapter01/` を作って、完成形と同じ名前（`gdp.py`・`test_gdp.py`）のファイルに書きます。テストは、`uv run pytest practice/chapter01` で動かします。テストの import は、`from lib.chapter01.gdp import ...` を、**`from practice.chapter01.gdp import ...` に書き換えて**ください（書き換えないと、完成形を読み込んで、最初から通ってしまい、Red になりません）。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。import と補助関数（先頭が `_` の関数）は、記事の抜粋に出ないことがあります。そのときは、完成形のファイルの先頭を見て、写してください。「予想の答え合わせ」のスクリプトは、`practice/chapter01/check.py` に保存し、アプリのディレクトリ（`apps/macro-basics-programming/python`）で `uv run python practice/chapter01/check.py` と実行します。
@@ -429,82 +429,86 @@ NDP: 850
 
 付加価値と成長会計の図を、描く関数を、テストから書きます。棒の数と高さが、手計算の値と一致することを、確かめます。
 
-```python
-def heights(ax_patches: Iterable[Artist]) -> list[float]:
-    return [p.get_height() for p in ax_patches if isinstance(p, Rectangle)]
+??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
+
+    ```python
+    def heights(ax_patches: Iterable[Artist]) -> list[float]:
+        return [p.get_height() for p in ax_patches if isinstance(p, Rectangle)]
 
 
-def test_付加価値の図は段階ごとに中間投入と付加価値の2本の積み上げ() -> None:
-    ax = plot_value_added(["Wheat", "Flour", "Bread"], OUTPUT, INTERMEDIATE).axes[0]
-    assert len(ax.patches) == 6
-    assert [t.get_text() for t in ax.get_xticklabels()] == ["Wheat", "Flour", "Bread"]
+    def test_付加価値の図は段階ごとに中間投入と付加価値の2本の積み上げ() -> None:
+        ax = plot_value_added(["Wheat", "Flour", "Bread"], OUTPUT, INTERMEDIATE).axes[0]
+        assert len(ax.patches) == 6
+        assert [t.get_text() for t in ax.get_xticklabels()] == ["Wheat", "Flour", "Bread"]
 
 
-def test_積み上げた高さは生産額に等しい() -> None:
-    ax = plot_value_added(["Wheat", "Flour", "Bread"], OUTPUT, INTERMEDIATE).axes[0]
-    values = heights(ax.patches)
-    intermediate, added = values[:3], values[3:]
-    assert intermediate == pytest.approx(INTERMEDIATE)
-    assert added == pytest.approx([300, 400, 300])
-    totals = [i + a for i, a in zip(intermediate, added, strict=True)]
-    assert totals == pytest.approx(OUTPUT)
+    def test_積み上げた高さは生産額に等しい() -> None:
+        ax = plot_value_added(["Wheat", "Flour", "Bread"], OUTPUT, INTERMEDIATE).axes[0]
+        values = heights(ax.patches)
+        intermediate, added = values[:3], values[3:]
+        assert intermediate == pytest.approx(INTERMEDIATE)
+        assert added == pytest.approx([300, 400, 300])
+        totals = [i + a for i, a in zip(intermediate, added, strict=True)]
+        assert totals == pytest.approx(OUTPUT)
 
 
-def test_付加価値の棒は中間投入の上に積み上がる() -> None:
-    ax = plot_value_added(["Wheat", "Flour", "Bread"], OUTPUT, INTERMEDIATE).axes[0]
-    bars = [p for p in ax.patches if isinstance(p, Rectangle)]
-    intermediate_bars, added_bars = bars[:3], bars[3:]
-    assert [b.get_y() for b in intermediate_bars] == pytest.approx([0, 0, 0])
-    assert [b.get_y() for b in added_bars] == pytest.approx(INTERMEDIATE)
+    def test_付加価値の棒は中間投入の上に積み上がる() -> None:
+        ax = plot_value_added(["Wheat", "Flour", "Bread"], OUTPUT, INTERMEDIATE).axes[0]
+        bars = [p for p in ax.patches if isinstance(p, Rectangle)]
+        intermediate_bars, added_bars = bars[:3], bars[3:]
+        assert [b.get_y() for b in intermediate_bars] == pytest.approx([0, 0, 0])
+        assert [b.get_y() for b in added_bars] == pytest.approx(INTERMEDIATE)
 
 
-def test_成長会計の図は3本の棒で高さは各寄与() -> None:
-    result = growth_accounting(6.0, 7.0, 0.4, 4.0, 0.6)
-    ax = plot_growth_accounting(result).axes[0]
-    assert [t.get_text() for t in ax.get_xticklabels()] == [
-        "Labor",
-        "Capital",
-        "Technology",
-    ]
-    assert heights(ax.patches) == pytest.approx([2.8, 2.4, 0.8])
+    def test_成長会計の図は3本の棒で高さは各寄与() -> None:
+        result = growth_accounting(6.0, 7.0, 0.4, 4.0, 0.6)
+        ax = plot_growth_accounting(result).axes[0]
+        assert [t.get_text() for t in ax.get_xticklabels()] == [
+            "Labor",
+            "Capital",
+            "Technology",
+        ]
+        assert heights(ax.patches) == pytest.approx([2.8, 2.4, 0.8])
 
 
-def test_軸の名前() -> None:
-    ax = plot_value_added(["A"], [1], [0]).axes[0]
-    assert ax.get_ylabel() == "Value (10,000 yen)"
-    result = growth_accounting(6.0, 7.0, 0.4, 4.0, 0.6)
-    assert plot_growth_accounting(result).axes[0].get_ylabel() == "Growth (points)"
-```
+    def test_軸の名前() -> None:
+        ax = plot_value_added(["A"], [1], [0]).axes[0]
+        assert ax.get_ylabel() == "Value (10,000 yen)"
+        result = growth_accounting(6.0, 7.0, 0.4, 4.0, 0.6)
+        assert plot_growth_accounting(result).axes[0].get_ylabel() == "Growth (points)"
+    ```
 
-```python
-def plot_value_added(
-    stages: Sequence[str], output: Sequence[float], intermediate: Sequence[float]
-) -> Figure:
-    """段階ごとの生産額を、中間投入（下）と付加価値（上）の積み上げ棒で描く。
+??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
 
-    積み上げた高さが、その段階の生産額。付加価値の部分だけを足すと、GDP になる。
-    """
-    added = value_added(output, intermediate)
-    fig, ax = plt.subplots()
-    ax.bar(stages, intermediate, label="Intermediate input")
-    ax.bar(stages, added, bottom=intermediate, label="Value added")
-    ax.set_ylabel("Value (10,000 yen)")
-    ax.legend()
-    plt.close(fig)
-    return fig
+    ```python
+    def plot_value_added(
+        stages: Sequence[str], output: Sequence[float], intermediate: Sequence[float]
+    ) -> Figure:
+        """段階ごとの生産額を、中間投入（下）と付加価値（上）の積み上げ棒で描く。
+
+        積み上げた高さが、その段階の生産額。付加価値の部分だけを足すと、GDP になる。
+        """
+        added = value_added(output, intermediate)
+        fig, ax = plt.subplots()
+        ax.bar(stages, intermediate, label="Intermediate input")
+        ax.bar(stages, added, bottom=intermediate, label="Value added")
+        ax.set_ylabel("Value (10,000 yen)")
+        ax.legend()
+        plt.close(fig)
+        return fig
 
 
-def plot_growth_accounting(result: GrowthAccounting) -> Figure:
-    """成長会計の、労働・資本・技術進歩の寄与（% ポイント）を、3 本の棒で描く。"""
-    fig, ax = plt.subplots()
-    ax.bar(
-        ["Labor", "Capital", "Technology"],
-        [result.labor, result.capital, result.technology],
-    )
-    ax.set_ylabel("Growth (points)")
-    plt.close(fig)
-    return fig
-```
+    def plot_growth_accounting(result: GrowthAccounting) -> Figure:
+        """成長会計の、労働・資本・技術進歩の寄与（% ポイント）を、3 本の棒で描く。"""
+        fig, ax = plt.subplots()
+        ax.bar(
+            ["Labor", "Capital", "Technology"],
+            [result.labor, result.capital, result.technology],
+        )
+        ax.set_ylabel("Growth (points)")
+        plt.close(fig)
+        return fig
+    ```
 
 ![成長会計: 成長率 6% の内訳。労働 2.8、資本 2.4、技術進歩 0.8](images/ch01-growth-accounting.png)
 
@@ -515,7 +519,7 @@ uv run pytest test/chapter01
 ```
 
 ```text
-20 passed
+24 passed
 ```
 
 ## 1.6 規則で言うと

@@ -150,8 +150,7 @@ def labor_equilibrium(curves: LaborCurves) -> tuple[float, float]:
     wage = (curves.demand_intercept - curves.supply_intercept) / (
         curves.demand_slope + curves.supply_slope
     )
-    if wage < 0:
-        raise ValueError("均衡の実質賃金が負になる。需要と供給の切片を見直す")
+    validate_non_negative(wage, "均衡の実質賃金が負になる。需要と供給の切片を見直す")
     return wage, labor_demand(curves, wage)
 ```
 
@@ -167,6 +166,7 @@ def labor_equilibrium(curves: LaborCurves) -> tuple[float, float]:
     ```
 
     ```python
+    from lib.chapter01.validation import validate_positive
     from lib.chapter08.is_lm import solve_is_lm
     ```
 
@@ -176,8 +176,7 @@ def labor_equilibrium(curves: LaborCurves) -> tuple[float, float]:
 
     ```python
     def _check_price(price: float) -> None:
-        if price <= 0:
-            raise ValueError("物価は、正にする")
+        validate_positive(price, "物価は、正にする")
     ```
 
     **lib/chapter10/labor.py**
@@ -189,17 +188,22 @@ def labor_equilibrium(curves: LaborCurves) -> tuple[float, float]:
     ```
 
     ```python
+    from lib.chapter01.validation import validate_non_negative, validate_positive
+    ```
+
+    ```python
     def _check_curves(curves: LaborCurves) -> None:
-        if curves.demand_slope <= 0:
-            raise ValueError("労働需要の傾きは、正にする（需要は賃金の減少関数）")
-        if curves.supply_slope <= 0:
-            raise ValueError("労働供給の傾きは、正にする（供給は賃金の増加関数）")
+        validate_positive(
+            curves.demand_slope, "労働需要の傾きは、正にする（需要は賃金の減少関数）"
+        )
+        validate_positive(
+            curves.supply_slope, "労働供給の傾きは、正にする（供給は賃金の増加関数）"
+        )
     ```
 
     ```python
     def _check_wage(wage: float) -> None:
-        if wage < 0:
-            raise ValueError("実質賃金は、0 以上にする")
+        validate_non_negative(wage, "実質賃金は、0 以上にする")
     ```
 
 需要の傾きと供給の傾きが、0 以下のときや、均衡の賃金が負になる設定は、エラーにします（`_check_curves`。`labor_demand`・`labor_supply` は、`a − b·w`・`c + d·w` を返すだけです）。
@@ -223,10 +227,8 @@ def test_名目賃金が硬直的だと物価の下落が失業を生む() -> No
 ```python
 def real_wage(nominal_wage: float, price: float) -> float:
     """実質賃金 w = W ÷ P。"""
-    if nominal_wage < 0:
-        raise ValueError("名目賃金は、0 以上にする")
-    if price <= 0:
-        raise ValueError("物価は、正にする")
+    validate_non_negative(nominal_wage, "名目賃金は、0 以上にする")
+    validate_positive(price, "物価は、正にする")
     return nominal_wage / price
 
 
@@ -316,8 +318,7 @@ def keynesian_supply(
 ) -> float:
     """ケインズの AS。Y = min(完全雇用所得, 基準の所得 + 傾き × P)。"""
     _check_price(price)
-    if slope <= 0:
-        raise ValueError("総供給の傾きは、正にする")
+    validate_positive(slope, "総供給の傾きは、正にする")
     return min(full_employment_income, base_income + slope * price)
 ```
 
@@ -506,30 +507,32 @@ AD 物価 1 と 2: 1000.0 950.0
 
 労働市場と AD-AS の図を、描く関数（`plot_labor_market`・`plot_ad_as`。`lib/chapter10/plot.py`）を、テストから書きます。曲線の端の座標と、均衡の点を、手計算の値と比べます。
 
-```python
-def xs(ln: Line2D) -> list[float]:
-    return [float(v) for v in np.asarray(ln.get_xdata(), dtype=float)]
+??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
+
+    ```python
+    def xs(ln: Line2D) -> list[float]:
+        return [float(v) for v in np.asarray(ln.get_xdata(), dtype=float)]
 
 
-def ys(ln: Line2D) -> list[float]:
-    return [float(v) for v in np.asarray(ln.get_ydata(), dtype=float)]
+    def ys(ln: Line2D) -> list[float]:
+        return [float(v) for v in np.asarray(ln.get_ydata(), dtype=float)]
 
 
-def test_労働市場の図の失業は硬直的な賃金での需要から供給まで() -> None:
-    ax = plot_labor_market(CURVES, sticky_wage=6, wage_max=10).axes[0]
-    gap = line(ax, "Involuntary unemployment")
-    assert xs(gap) == pytest.approx([40, 80])
-    assert ys(gap) == pytest.approx([6, 6])
+    def test_労働市場の図の失業は硬直的な賃金での需要から供給まで() -> None:
+        ax = plot_labor_market(CURVES, sticky_wage=6, wage_max=10).axes[0]
+        gap = line(ax, "Involuntary unemployment")
+        assert xs(gap) == pytest.approx([40, 80])
+        assert ys(gap) == pytest.approx([6, 6])
 
 
-def test_古典派の均衡は所得が動かず物価だけが動く() -> None:
-    left, _ = draw()
-    before, after = line(left, "Equilibrium before"), line(left, "Equilibrium after")
-    assert xs(before) == pytest.approx([1000])
-    assert ys(before) == pytest.approx([1.0])
-    assert xs(after) == pytest.approx([1000])
-    assert ys(after) == pytest.approx([1.25])
-```
+    def test_古典派の均衡は所得が動かず物価だけが動く() -> None:
+        left, _ = draw()
+        before, after = line(left, "Equilibrium before"), line(left, "Equilibrium after")
+        assert xs(before) == pytest.approx([1000])
+        assert ys(before) == pytest.approx([1.0])
+        assert xs(after) == pytest.approx([1000])
+        assert ys(after) == pytest.approx([1.25])
+    ```
 
 ![労働市場。実質賃金が 6 で硬直的だと、需要 40 と供給 80 の差（40）が非自発的失業になる](images/ch10-labor-market.png)
 

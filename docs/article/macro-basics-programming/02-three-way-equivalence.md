@@ -519,23 +519,25 @@ print("最終需要の合計:", 120 + 230, "付加価値の合計:", 150 + 200)
 
 三面等価の図と、産業連関表の図を、描く関数を、テストから書きます。棒の高さ・積み上げの位置・部分の名前の位置・軸の名前を、手計算の値と、確かめます。たとえば、三面等価の図では、**積み上げた高さが、3 つの面で、すべて 500 になる**ことを、確かめます（テストは、`test/chapter02/test_plot.py` にあります）。
 
-```python
-def plot_three_way(sides: Mapping[str, Mapping[str, float]]) -> Figure:
-    """生産・分配・支出の GDP を、部分を積み上げた棒で描く。
+??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
 
-    面の名前 -> {部分の名前: 値}。三面等価が成り立てば、積み上げた高さは、すべて等しい。
-    """
-    fig, ax = plt.subplots()
-    for position, (side, parts) in enumerate(sides.items()):
-        bottom = 0.0
-        for name, value in parts.items():
-            ax.bar(side, value, bottom=bottom, edgecolor="white")
-            ax.text(position, bottom + value / 2, name, ha="center", va="center")
-            bottom += value
-    ax.set_ylabel("GDP (100 million yen)")
-    plt.close(fig)
-    return fig
-```
+    ```python
+    def plot_three_way(sides: Mapping[str, Mapping[str, float]]) -> Figure:
+        """生産・分配・支出の GDP を、部分を積み上げた棒で描く。
+
+        面の名前 -> {部分の名前: 値}。三面等価が成り立てば、積み上げた高さは、すべて等しい。
+        """
+        fig, ax = plt.subplots()
+        for position, (side, parts) in enumerate(sides.items()):
+            bottom = 0.0
+            for name, value in parts.items():
+                ax.bar(side, value, bottom=bottom, edgecolor="white")
+                ax.text(position, bottom + value / 2, name, ha="center", va="center")
+                bottom += value
+        ax.set_ylabel("GDP (100 million yen)")
+        plt.close(fig)
+        return fig
+    ```
 
 産業連関表の図 `plot_io_output` は、`output_for_demand` で、生産量を求めて、最終需要と並べる棒グラフです（`lib/chapter02/plot.py`）。
 
