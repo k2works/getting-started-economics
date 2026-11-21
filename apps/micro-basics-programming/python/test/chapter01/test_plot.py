@@ -125,3 +125,7 @@ def test_特別な図の軸と凡例() -> None:
         assert ax.get_legend() is not None
         assert ax.get_xlim()[0] == 0
         assert ax.get_ylim()[0] == 0
+
+
+def test_曲線は50点で描く() -> None:
+    assert all(len(xs(line)) == 50 for line in curves().lines)
