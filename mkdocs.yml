@@ -128,6 +128,11 @@ nav:
           - 第 7 章 貨幣需要と LM 曲線: article/macro-basics-programming/07-money-demand-and-lm.md
           - 第 8 章 IS 曲線と IS-LM の均衡: article/macro-basics-programming/08-is-curve-and-is-lm.md
           - 第 9 章 財政政策と金融政策の効果: article/macro-basics-programming/09-fiscal-and-monetary-policy.md
+          - 第 10 章 労働市場と AD-AS 分析: article/macro-basics-programming/10-labor-market-and-ad-as.md
+          - 第 11 章 物価・失業とフィリップス曲線: article/macro-basics-programming/11-phillips-curve-and-okun.md
+          - 第 12 章 消費と投資の理論: article/macro-basics-programming/12-consumption-and-investment.md
+          - 第 13 章 貨幣数量説と為替・国際収支: article/macro-basics-programming/13-quantity-theory-and-exchange-rate.md
+          - 第 14 章 マンデル・フレミング・モデル: article/macro-basics-programming/14-mundell-fleming.md
       - マクロ経済学のためのプログラミング（中級＋）:
           - 概要: article/macro-programming/index.md
           - この記事の読み方: article/macro-programming/how-to-read.md
