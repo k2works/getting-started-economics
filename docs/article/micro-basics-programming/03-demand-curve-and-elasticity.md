@@ -156,6 +156,9 @@ def test_所得が増えると需要曲線は右へ動く() -> None:
 
 `demand_x` がまだないので、テストは失敗します（**Red**）。
 
+テストの import の一覧は、完成形の**全関数**です。自分で書くときは、関数を 1 つ書くたびに、その名前を、import に足していってかまいません（まだ書いていない関数を import すると、`ImportError` になり、Green になりません）。
+
+
 ### Green: 需要曲線を実装する
 
 ```python
@@ -192,6 +195,38 @@ def demand_curve(
     # 数値微分の幅と、弾力性の分類で、同じ値と見なす誤差
     _STEP = 1e-6
     _TOLERANCE = 1e-6
+    ```
+
+    **lib/chapter03/plot.py**
+
+    ```python
+    from collections.abc import Sequence
+    ```
+
+    ```python
+    import matplotlib.pyplot as plt
+    from matplotlib.figure import Figure
+    ```
+
+    ```python
+    from lib.chapter03.demand import demand_curve, income_consumption_curve
+    ```
+
+    **test/chapter03/test_plot.py**
+
+    ```python
+    from collections.abc import Sequence
+    from typing import cast
+    ```
+
+    ```python
+    import pytest
+    from matplotlib.axes import Axes
+    from matplotlib.lines import Line2D
+    ```
+
+    ```python
+    from lib.chapter03.plot import plot_demand_curve, plot_income_consumption
     ```
 
 第 2 章の `optimal_bundle` の x を、返すだけです。コブ・ダグラス型では、財 x の需要は、**他の財の価格に依りません**（2 つ目のテスト）。所得が増えると、需要曲線は、**右へ動きます**（最後のテスト）。
@@ -405,6 +440,8 @@ Q = 100 − P の P = 75 の価格弾力性: 3.0
 
 ### 図
 
+（図の関数の import と補助関数（`_POINTS`・`_style` など）は、上の折りたたみ「import と補助関数」の、`plot.py` と `test_plot.py` の項目にあります。）
+
 需要曲線を描く関数と、座標のテストです。横軸が数量、縦軸が価格であること、右下がりであること、所得が増えると右へ動くことを、確かめます。
 
 ??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
@@ -553,7 +590,7 @@ uv run pytest test/chapter03
     **想起**:
 
     ```python
-    def test_需要曲線は右下がり() -> None:
+    def test_需要量は価格が下がると増える() -> None:
         assert [demand_x(80, p, 1) for p in (2, 1, 0.5)] == [20, 40, 80]
     ```
 
@@ -574,7 +611,7 @@ uv run pytest test/chapter03
     **多様**: Q = 150 − 2P の P = 50 では、Q = 50 なので、e = 2 × 50 ÷ 50 = 2 です。同じ点 (P = 50, Q = 50) を通る Q = 100 − P の e = 1 より、**大きく**（弾力的）、グラフでは、**緩やか**な曲線です。
 
     ```python
-    def test_傾きが大きい需要曲線は弾力的() -> None:
+    def test_緩やかな需要曲線ほど弾力的() -> None:
         assert price_elasticity_linear(150, -2, 50) == pytest.approx(2)
         assert price_elasticity_linear(100, -1, 50) == pytest.approx(1)
     ```

@@ -74,7 +74,7 @@ uv run pytest test/chapter01
 61 passed
 ```
 
-自分でコードを書くときは、`practice/chapter01/` を作って、完成形と同じ名前（`utility.py`・`test_utility.py`）のファイルに書きます。テストは、`uv run pytest practice/chapter01` で動かします。テストの import は、`from lib.chapter01.utility import ...` を、**`from practice.chapter01.utility import ...` に書き換えて**ください（書き換えないと、完成形を読み込んで、最初から通ってしまい、Red になりません）。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。入力の検証の共通関数（`validate_positive`・`validate_non_negative`）は、`lib/chapter01/validation.py` から import してかまいません。import と補助関数（先頭が `_` の関数）は、記事の抜粋に出ないことがあります。そのときは、完成形のファイルの先頭を見て、写してください。「予想の答え合わせ」のスクリプトは、`practice/chapter01/check.py` に保存し、アプリのディレクトリ（`apps/micro-basics-programming/python`）で `uv run python practice/chapter01/check.py` と実行します。
+自分でコードを書くときは、`practice/chapter01/` を作って、完成形と同じ名前（`utility.py`・`test_utility.py`）のファイルに書きます。テストは、`uv run pytest practice/chapter01` で動かします。テストの import は、`from lib.chapter01.utility import ...` を、**`from practice.chapter01.utility import ...` に書き換えて**ください（書き換えないと、完成形を読み込んで、最初から通ってしまい、Red になりません）。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。入力の検証の共通関数（`validate_positive`・`validate_non_negative`）は、`lib/chapter01/validation.py` から import してかまいません。import と補助関数（先頭が `_` の関数）は、記事の抜粋に出ないことがあります。そのときは、完成形のファイルの先頭を見て、写してください。「予想の答え合わせ」のスクリプトは、`practice/chapter01/check.py` に保存し、アプリのディレクトリ（`apps/micro-basics-programming/python`）で `uv run python -m practice.chapter01.check` と実行します（`python practice/...` と、ファイルのパスで実行すると、`lib` が見つからず、`ModuleNotFoundError` になります。**`-m` で、モジュールとして実行**してください。自分のコードを確かめるときは、スクリプトの import を `from practice.chapterNN...` に書き換えます。Windows のシェルで、日本語が文字化けするときは、`PYTHONIOENCODING=utf-8` を付けます）。
 
 ## 1.3 予想する
 
@@ -171,6 +171,9 @@ def test_財が増えると効用は増える() -> None:
 
 `cobb_douglas_utility` がまだないので、テストは失敗します（**Red**）。
 
+テストの import の一覧は、完成形の**全関数**です。自分で書くときは、関数を 1 つ書くたびに、その名前を、import に足していってかまいません（まだ書いていない関数を import すると、`ImportError` になり、Green になりません）。
+
+
 ### Green: 効用を実装する
 
 入力の検証には、共通の関数（`validate_positive`・`validate_non_negative`）を使います。メッセージは、呼び出す側が決めます。
@@ -191,6 +194,49 @@ def validate_non_negative(value: float, message: str) -> None:
 ??? note "import と補助関数（写すときに足す）"
 
     記事の抜粋には、import と、先頭が `_` の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。
+
+    **lib/chapter01/plot.py**
+
+    ```python
+    from collections.abc import Sequence
+    ```
+
+    ```python
+    import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
+    ```
+
+    ```python
+    from lib.chapter01.utility import (
+        concave_curve_y,
+        indifference_curve_y,
+        perfect_complements_curve,
+        perfect_substitutes_curve_y,
+    )
+    ```
+
+    ```python
+    _POINTS = 50
+    ```
+
+    ```python
+    def _grid(start: float, stop: float) -> list[float]:
+        """start から stop までを、_POINTS 点に等分する。"""
+        step = (stop - start) / (_POINTS - 1)
+        return [start + i * step for i in range(_POINTS)]
+    ```
+
+    ```python
+    def _style(ax: Axes, title: str | None = None) -> None:
+        ax.set_xlabel("Good x")
+        ax.set_ylabel("Good y")
+        ax.set_xlim(left=0)
+        ax.set_ylim(bottom=0)
+        if title is not None:
+            ax.set_title(title)
+        ax.legend(fontsize="x-small")
+    ```
 
     **lib/chapter01/utility.py**
 
@@ -218,6 +264,29 @@ def validate_non_negative(value: float, message: str) -> None:
     def _check_exponents(a: float, b: float) -> None:
         validate_positive(a, "べき指数 a は、正にする")
         validate_positive(b, "べき指数 b は、正にする")
+    ```
+
+    **test/chapter01/test_plot.py**
+
+    ```python
+    from collections.abc import Sequence
+    from typing import cast
+    ```
+
+    ```python
+    import pytest
+    from matplotlib.axes import Axes
+    from matplotlib.lines import Line2D
+    ```
+
+    ```python
+    from lib.chapter01.plot import plot_indifference_curves, plot_special_utilities
+    from lib.chapter01.utility import (
+        cobb_douglas_utility,
+        concave_utility,
+        perfect_complements_utility,
+        perfect_substitutes_utility,
+    )
     ```
 
 ```python
@@ -491,6 +560,8 @@ U = 40 で x = 5 のとき y: 30.0
 
 ### 図
 
+（図の関数の import と補助関数（`_POINTS`・`_style` など）は、上の折りたたみ「import と補助関数」の、`plot.py` と `test_plot.py` の項目にあります。）
+
 無差別曲線を描く関数と、座標のテストです。曲線の上の点の効用が、水準と等しいこと、右下がりであること、効用の高い曲線ほど右上にあることを、確かめます。
 
 ??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
@@ -665,7 +736,7 @@ uv run pytest test/chapter01
     **想起**:
 
     ```python
-    def test_効用は財の量の積() -> None:
+    def test_最初の効用のテスト() -> None:
         assert cobb_douglas_utility(20, 40) == 800
         assert cobb_douglas_utility(40, 20) == 800
     ```

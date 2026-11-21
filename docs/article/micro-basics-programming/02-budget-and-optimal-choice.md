@@ -150,6 +150,9 @@ def test_所得が増えると予算線は平行に動く() -> None:
 
 `budget_line_y` などがまだないので、テストは失敗します（**Red**）。
 
+テストの import の一覧は、完成形の**全関数**です。自分で書くときは、関数を 1 つ書くたびに、その名前を、import に足していってかまいません（まだ書いていない関数を import すると、`ImportError` になり、Green になりません）。
+
+
 ### Green: 予算線を実装する
 
 ```python
@@ -214,6 +217,55 @@ def is_affordable(x: float, y: float, income: float, px: float, py: float) -> bo
     def _check_exponents(a: float, b: float) -> None:
         validate_positive(a, "べき指数 a は、正にする")
         validate_positive(b, "べき指数 b は、正にする")
+    ```
+
+    **lib/chapter02/plot.py**
+
+    ```python
+    from collections.abc import Sequence
+    ```
+
+    ```python
+    import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
+    ```
+
+    ```python
+    from lib.chapter01.utility import indifference_curve_y
+    from lib.chapter02.budget import budget_intercepts, optimal_bundle
+    ```
+
+    ```python
+    _POINTS = 50
+    ```
+
+    ```python
+    def _style(ax: Axes, y_top: float) -> None:
+        ax.set_xlabel("Good x")
+        ax.set_ylabel("Good y")
+        ax.set_xlim(left=0)
+        # 無差別曲線は、x が小さいと、立ち上がるので、予算線の y 切片の 1.5 倍までを見せる
+        ax.set_ylim(0, 1.5 * y_top)
+        ax.legend(fontsize="x-small")
+    ```
+
+    **test/chapter02/test_plot.py**
+
+    ```python
+    from collections.abc import Sequence
+    from typing import cast
+    ```
+
+    ```python
+    import pytest
+    from matplotlib.axes import Axes
+    from matplotlib.lines import Line2D
+    ```
+
+    ```python
+    from lib.chapter01.utility import cobb_douglas_utility
+    from lib.chapter02.plot import plot_optimal_choice, plot_price_change
     ```
 
 入力のチェックは、第 1 章の共通関数 `validate_positive`・`validate_non_negative` を使います。**価格は正**、**所得は 0 以上**です。価格が 0.5 や 0.25 のような、0 より大きく 1 未満の値も、有効です（テスト `test_価格が1未満の正の値でも予算線を引ける`）。
@@ -367,6 +419,8 @@ Px = 1 の最適消費点: (40.0, 40.0)
 - 格子点の探索も、(20, 40) で、閉じた式と一致しました
 
 ### 図
+
+（図の関数の import と補助関数（`_POINTS`・`_style` など）は、上の折りたたみ「import と補助関数」の、`plot.py` と `test_plot.py` の項目にあります。）
 
 予算線と無差別曲線を重ねる関数と、座標のテストです。予算線の両端が切片であること、最適点が接点であることを、確かめます。
 

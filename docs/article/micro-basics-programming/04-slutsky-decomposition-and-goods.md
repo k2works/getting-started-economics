@@ -157,6 +157,9 @@ def test_代替効果のあとの点の支出は元の所得より少ない() ->
 
 `compensated_bundle` がまだないので、テストは失敗します（**Red**）。
 
+テストの import の一覧は、完成形の**全関数**です。自分で書くときは、関数を 1 つ書くたびに、その名前を、import に足していってかまいません（まだ書いていない関数を import すると、`ImportError` になり、Green になりません）。
+
+
 ### Green: スルツキー分解を実装する
 
 **補償需要**は、新しい価格のもとで、元の効用を、最も安く達成する点です。最適点では、限界代替率 = 価格比なので、y = (b ÷ a)(Px ÷ Py)·x となり、これを効用の式に入れて、x を求めます（閉じた式）。
@@ -217,6 +220,39 @@ def slutsky_decomposition(
 
     記事の抜粋には、import と、先頭が `_` の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。
 
+    **lib/chapter04/plot.py**
+
+    ```python
+    from collections.abc import Sequence
+    ```
+
+    ```python
+    import matplotlib.pyplot as plt
+    from matplotlib.axes import Axes
+    from matplotlib.figure import Figure
+    ```
+
+    ```python
+    from lib.chapter01.utility import cobb_douglas_utility, indifference_curve_y
+    from lib.chapter02.budget import budget_intercepts
+    from lib.chapter04.slutsky import (
+        demand_perfect_complements,
+        demand_perfect_substitutes,
+        slutsky_decomposition,
+    )
+    ```
+
+    ```python
+    _POINTS = 50
+    ```
+
+    ```python
+    def _style(ax: Axes) -> None:
+        ax.set_xlim(left=0)
+        ax.set_ylim(bottom=0)
+        ax.legend(fontsize="x-small")
+    ```
+
     **lib/chapter04/slutsky.py**
 
     ```python
@@ -239,6 +275,23 @@ def slutsky_decomposition(
         validate_non_negative(income, "所得は、0 以上にする")
         validate_positive(px, "財 x の価格は、正にする")
         validate_positive(py, "財 y の価格は、正にする")
+    ```
+
+    **test/chapter04/test_plot.py**
+
+    ```python
+    from collections.abc import Sequence
+    from typing import cast
+    ```
+
+    ```python
+    import pytest
+    from matplotlib.axes import Axes
+    from matplotlib.lines import Line2D
+    ```
+
+    ```python
+    from lib.chapter04.plot import plot_cross_price, plot_slutsky
     ```
 
 結果は、`SlutskyResult`（`frozen=True` の `dataclass`）にまとめます。3 つの点（元・代替効果のあと・最終）と、3 つの効果（財 x の量の変化）です。価格効果は、**元の点と最終の点の差**と、一致します（`test_価格効果は元の点と最終の点の差`）。
@@ -395,6 +448,8 @@ print("完全補完財の需要の変化:", round(comp, 4), cross_price_relation
 - **4 つ目の問い**: 代替効果 +20・所得効果 −30 は**ギッフェン財**です（値下げで、需要が 20 − 30 = −10 減る）。完全代替財の財 x の需要は、Py = 1 で 0（財 y が安い）、Py = 3 で 40（財 x が安い）で、**財 y の値上げで増える代替財**です。完全補完財は、Py = 1 で約 26.67、Py = 2 で 20 で、**減る補完財**です
 
 ### 図
+
+（図の関数の import と補助関数（`_POINTS`・`_style` など）は、上の折りたたみ「import と補助関数」の、`plot.py` と `test_plot.py` の項目にあります。）
 
 スルツキー分解の 3 点と、予算線・無差別曲線を重ねる関数と、座標のテストです。補償された予算線（点線）が、点 B を通り、新しい価格比と同じ傾きであることを、確かめます。
 
@@ -594,10 +649,10 @@ uv run pytest test/chapter04
 
 | 課題 | 目安の時間 |
 | :--- | :--- |
-| 無差別曲線の y と、限界代替率を返す関数と、テスト（U = x·y で、効用 800） | 10 分 |
-| 予算線の切片と、最適消費点を返す関数と、テスト（所得 80、Px = 2、Py = 1） | 15 分 |
-| 需要曲線の 3 点と、直線の需要曲線の価格弾力性を返す関数と、テスト | 15 分 |
-| スルツキー分解（代替効果・所得効果・価格効果）を返す関数と、テスト（Px が 2 から 0.5） | 20 分 |
+| U = x·y で、効用 800 の無差別曲線の y と、限界代替率（y ÷ x）を返す関数と、テスト（x = 10・20・40 で確かめる） | 10 分 |
+| 予算線の切片と、最適消費点を返す関数と、テスト（U = x·y、所得 80、Px = 2、Py = 1） | 15 分 |
+| 需要量（U = x·y、所得 80、Py = 1 で、Px = 2・1・0.5）と、直線の需要曲線 Q = 100 − P の P = 50 での価格弾力性を返す関数と、テスト | 15 分 |
+| スルツキー分解（代替効果・所得効果・価格効果）を返す関数と、テスト（U = x·y、所得 80、Py = 1 で、Px が 2 から 0.5） | 20 分 |
 
 ### 値の確かめ
 
@@ -610,18 +665,22 @@ from lib.chapter01.utility import (
     marginal_rate_of_substitution,
 )
 from lib.chapter02.budget import budget_intercepts, optimal_bundle
-from lib.chapter03.demand import demand_x, price_elasticity_linear
-from lib.chapter04.slutsky import slutsky_decomposition
+from lib.chapter03.demand import demand_x, price_elasticity, price_elasticity_linear
+from lib.chapter04.slutsky import classify_by_effects, slutsky_decomposition
 
 print("効用 (20, 40):", cobb_douglas_utility(20, 40))
-print("U = 800 で x = 10 のとき y:", indifference_curve_y(800, 10))
-print("MRS (20, 40):", marginal_rate_of_substitution(20, 40))
+for x in (10, 20, 40):
+    y = indifference_curve_y(800, x)
+    print("U = 800 で x =", x, "のとき y =", y, "、MRS =", marginal_rate_of_substitution(x, y))
 print("予算線の切片:", budget_intercepts(80, 2, 1))
 print("最適消費点:", optimal_bundle(80, 2, 1))
-print("Px = 1 の需要量:", demand_x(80, 1, 1))
-print("直線の需要曲線 P = 50 の価格弾力性:", price_elasticity_linear(100, -1, 50))
+for price in (2, 1, 0.5):
+    print("Px =", price, "の需要量:", demand_x(80, price, 1))
+print("U = x·y の価格弾力性:", round(price_elasticity(lambda p: demand_x(80, p, 1), 2), 4))
+print("直線 Q = 100 − P の P = 50 の価格弾力性:", price_elasticity_linear(100, -1, 50))
 r = slutsky_decomposition(80, 2, 0.5, 1)
 print("代替効果・所得効果・価格効果:", r.substitution_effect, r.income_effect, r.price_effect)
+print("代替効果 20・所得効果 −30:", classify_by_effects(20, -30))
 for new in (0.5, 0.125):
     q = slutsky_decomposition(80, 2, new, 1)
     print("Px = 2 →", new, ":", round(q.substitution_effect, 4), round(q.income_effect, 4), round(q.price_effect, 4))
@@ -629,13 +688,18 @@ for new in (0.5, 0.125):
 
 ```text
 効用 (20, 40): 800.0
-U = 800 で x = 10 のとき y: 80.0
-MRS (20, 40): 2.0
+U = 800 で x = 10 のとき y = 80.0 、MRS = 8.0
+U = 800 で x = 20 のとき y = 40.0 、MRS = 2.0
+U = 800 で x = 40 のとき y = 20.0 、MRS = 0.5
 予算線の切片: (40.0, 80.0)
 最適消費点: (20.0, 40.0)
+Px = 2 の需要量: 20.0
 Px = 1 の需要量: 40.0
-直線の需要曲線 P = 50 の価格弾力性: 1.0
+Px = 0.5 の需要量: 80.0
+U = x·y の価格弾力性: 1.0
+直線 Q = 100 − P の P = 50 の価格弾力性: 1.0
 代替効果・所得効果・価格効果: 20.0 40.0 60.0
+代替効果 20・所得効果 −30: ギッフェン財
 Px = 2 → 0.5 : 20.0 40.0 60.0
 Px = 2 → 0.125 : 60.0 240.0 300.0
 ```
@@ -644,9 +708,9 @@ Px = 2 → 0.125 : 60.0 240.0 300.0
 
 | できること | 検証の方法 | 戻る章 |
 | :--- | :--- | :--- |
-| 無差別曲線と、限界代替率を求め、原点に凸の意味を言う | U = x·y で、(20, 40) の効用 800、x = 10 で y = 80、MRS = 2。右へ進むほど MRS が小さい | [第 1 章](01-utility-and-indifference-curves.md) |
+| 無差別曲線と、限界代替率を求め、原点に凸の意味を言う | U = x·y で、(20, 40) の効用 800。効用 800 の曲線上で、x = 10・20・40 のとき y = 80・40・20、MRS = 8・2・0.5（右へ進むほど MRS が小さい） | [第 1 章](01-utility-and-indifference-curves.md) |
 | 予算線と、最適消費点を求め、接点の条件を言う | 切片 (40, 80)、最適点 (20, 40)、MRS = 価格比 = 2 | [第 2 章](02-budget-and-optimal-choice.md) |
-| 需要曲線を導き、弾力性を求める | Px = 2・1・0.5 で 20・40・80。直線 Q = 100 − P の弾力性は P = 50 で 1、U = x·y の弾力性は 1 | [第 3 章](03-demand-curve-and-elasticity.md) |
+| 需要曲線を導き、弾力性を求める | Px = 2・1・0.5 で需要量 20・40・80。U = x·y の価格弾力性は 1。直線 Q = 100 − P の価格弾力性は P = 50 で 1 | [第 3 章](03-demand-curve-and-elasticity.md) |
 | スルツキー分解を行い、財の種類を言う | 代替効果 20、所得効果 40、価格効果 60（上級財）。代替効果 20・所得効果 −30 はギッフェン財 | [この章](04-slutsky-decomposition-and-goods.md) |
 | 代替財と補完財を見分ける | 完全代替財は、財 y の値上げで需要が増え、完全補完財は減る | この章 |
 
