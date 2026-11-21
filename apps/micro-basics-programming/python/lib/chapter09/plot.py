@@ -17,7 +17,7 @@ def _style(ax: Axes, q_max: float, p_max: float) -> None:
     ax.legend(fontsize="x-small")
 
 
-def _outline(ax: Axes, xs: list[float], ys: list[float], label: str) -> None:
+def outline_area(ax: Axes, xs: list[float], ys: list[float], label: str) -> None:
     """閉じた折れ線を描き、同じ色で、面積を半透明に塗る（塗りは、凡例に載せない）。"""
     (item,) = ax.plot(xs, ys, label=label)
     ax.fill(xs, ys, color=item.get_color(), alpha=0.25, label="_nolegend_")
@@ -29,8 +29,10 @@ def plot_surplus(market: LinearMarket, q_max: float, p_max: float) -> Figure:
     fig, ax = plt.subplots()
     draw_curves(ax, market, p_max)
     choke, reservation = choke_price(market), reservation_price(market)
-    _outline(ax, [0, quantity, 0, 0], [choke, price, price, choke], "Consumer surplus")
-    _outline(
+    outline_area(
+        ax, [0, quantity, 0, 0], [choke, price, price, choke], "Consumer surplus"
+    )
+    outline_area(
         ax,
         [0, quantity, 0, 0],
         [reservation, price, price, reservation],
@@ -56,8 +58,10 @@ def plot_tax(market: LinearMarket, tax: float, q_max: float, p_max: float) -> Fi
     )
     q, buyer, seller = result.quantity, result.buyer_price, result.seller_price
     rectangle = ([0, q, q, 0, 0], [buyer, buyer, seller, seller, buyer])
-    _outline(ax, *rectangle, "Tax revenue")
-    _outline(ax, [q, q, quantity, q], [buyer, seller, price, buyer], "Deadweight loss")
+    outline_area(ax, *rectangle, "Tax revenue")
+    outline_area(
+        ax, [q, q, quantity, q], [buyer, seller, price, buyer], "Deadweight loss"
+    )
     ax.plot([quantity], [price], "o", label="Equilibrium")
     ax.plot([q], [buyer], "o", label="Equilibrium with tax")
     _style(ax, q_max, p_max)

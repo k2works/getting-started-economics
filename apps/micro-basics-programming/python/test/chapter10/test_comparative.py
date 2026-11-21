@@ -30,7 +30,9 @@ def test_農業の機会費用は工業の何単位をあきらめるか() -> No
 
 def test_2つの機会費用は逆数() -> None:
     for country in (LARGE, SMALL):
-        product = opportunity_cost_of_industry(country) * opportunity_cost_of_agriculture(country)
+        product = opportunity_cost_of_industry(
+            country
+        ) * opportunity_cost_of_agriculture(country)
         assert product == pytest.approx(1)
 
 
