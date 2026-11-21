@@ -165,3 +165,34 @@ def test_格子の分割数が2未満ならエラー() -> None:
 
 def test_格子の分割数が2なら端点と中点だけを調べる() -> None:
     assert optimal_bundle_by_grid(M, PX, PY, steps=2) == (20, 40)
+
+
+# --- 独立した変異確認で見つかった穴を埋めるテスト ---
+
+
+def test_予算線のyは財yの価格で割る() -> None:
+    assert budget_line_y(80, 2, 4, 10) == 15
+
+
+def test_買える判定の許容誤差は1e_9() -> None:
+    assert is_affordable(20, 40 + 8e-10, M, PX, PY)
+    assert not is_affordable(20, 40 + 1.2e-9, M, PX, PY)
+
+
+def test_接点の条件の差は財yの価格で割る() -> None:
+    # MRS = 40 ÷ 10 = 4、価格比 = 2 ÷ 4 = 0.5
+    assert tangency_gap(10, 40, 2, 4) == pytest.approx(3.5)
+
+
+def test_格子点の探索は価格が1でなくても予算を使い切る() -> None:
+    x, y = optimal_bundle_by_grid(90, 3, 2)
+    assert 3 * x + 2 * y == pytest.approx(90)
+
+
+def test_格子点の探索の格子は端を含む() -> None:
+    # 分割数が 2 なら、x = 0・中点・端点の 3 点。効用が最大の点は、中点
+    x, y = optimal_bundle_by_grid(M, PX, PY, steps=2)
+    assert (x, y) == (20, 40)
+    # 3 分割では、x = 40 ÷ 3 の点が選ばれる（端点は効用 0）
+    x3, _ = optimal_bundle_by_grid(M, PX, PY, steps=3)
+    assert x3 == pytest.approx(40 / 3)

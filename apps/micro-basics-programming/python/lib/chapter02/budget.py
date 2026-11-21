@@ -77,15 +77,10 @@ def optimal_bundle_by_grid(
     _check_exponents(a, b)
     validate_positive(steps - 1, "格子の分割数は、2 以上にする")
     x_max = income / px
-    best = (0.0, income / py)
-    best_utility = -1.0
-    for i in range(steps + 1):
-        x = x_max * i / steps
-        y = max(0.0, (income - px * x) / py)
-        utility = cobb_douglas_utility(x, y, a, b)
-        if utility > best_utility:
-            best, best_utility = (x, y), utility
-    return best
+    xs = [x_max * i / steps for i in range(steps + 1)]
+    points = [(x, max(0.0, (income - px * x) / py)) for x in xs]
+    # 効用が同じ点が複数あれば、先に見つけた点（x の小さいほう）を返す
+    return max(points, key=lambda point: cobb_douglas_utility(*point, a, b))
 
 
 def tangency_gap(

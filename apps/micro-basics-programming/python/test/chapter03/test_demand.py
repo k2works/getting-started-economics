@@ -180,3 +180,34 @@ def test_所得消費曲線は所得を動かしたときの最適点() -> None:
 def test_所得消費曲線はコブ_ダグラス型で原点を通る直線() -> None:
     curve = income_consumption_curve([40, 80, 160], 2, PY)
     assert all(y == pytest.approx(2 * x) for x, y in curve)
+
+
+# --- 独立した変異確認で見つかった穴を埋めるテスト ---
+
+
+def test_弾力性の種類の境界() -> None:
+    assert elasticity_type(1.5) == "弾力的"
+    assert elasticity_type(0.5) == "非弾力的"
+    assert elasticity_type(1 + 8e-7) == "単位弾力的"
+    assert elasticity_type(1 + 1.2e-6) == "弾力的"
+    assert elasticity_type(1 - 1.2e-6) == "非弾力的"
+
+
+def test_所得弾力性の分類の許容誤差は1e_6() -> None:
+    assert classify_by_income_elasticity(8e-7) == "中立財"
+    assert classify_by_income_elasticity(-8e-7) == "中立財"
+    assert classify_by_income_elasticity(1.2e-6) == "必需品"
+    assert classify_by_income_elasticity(-1.2e-6) == "下級財"
+    assert classify_by_income_elasticity(1 - 8e-7) == "奢侈品"
+    assert classify_by_income_elasticity(1 - 1.2e-6) == "必需品"
+
+
+def test_価格弾力性は直線の需要曲線でも傾きと価格で決まる() -> None:
+    # Q = 150 − 2P の P = 50（Q = 50）で e = 2 × 50 ÷ 50 = 2
+    assert price_elasticity_linear(150, -2, 50) == pytest.approx(2)
+    assert price_elasticity(lambda p: 150 - 2 * p, 50) == pytest.approx(2, rel=1e-6)
+
+
+def test_所得弾力性は傾きと所得を需要量で割る() -> None:
+    # d(m) = 20 + 0.5 m の m = 100 で、傾き 0.5 × 100 ÷ 70
+    assert income_elasticity(lambda m: 20 + 0.5 * m, 100) == pytest.approx(5 / 7)

@@ -162,3 +162,35 @@ def test_完全補完財と完全代替財の価格は正でなければエラ�
         demand_perfect_substitutes(M, 2, 0)
     with pytest.raises(ValueError, match="所得"):
         demand_perfect_substitutes(-1, 2, 1)
+
+
+# --- 独立した変異確認で見つかった穴を埋めるテスト ---
+
+
+def test_補償された消費点でべき指数が逆の場合() -> None:
+    x, y = compensated_bundle(800, 0.5, PY, 2, 1)
+    assert cobb_douglas_utility(x, y, 2, 1) == pytest.approx(800)
+    assert 2 * y / x == pytest.approx(0.5 / PY)
+
+
+def test_効果の符号の判定の許容誤差は1e_9() -> None:
+    assert classify_by_effects(20, 8e-10) == "中立財"
+    assert classify_by_effects(20, -8e-10) == "中立財"
+    assert classify_by_effects(20, 1.2e-9) == "上級財"
+    assert classify_by_effects(20, -1.2e-9) == "下級財"
+
+
+def test_ギッフェン財の判定の許容誤差は1e_9() -> None:
+    assert classify_by_effects(20, -(20 + 8e-10)) == "下級財"
+    assert classify_by_effects(20, -(20 + 1.2e-9)) == "ギッフェン財"
+
+
+def test_所得効果が小さい正の値でも上級財() -> None:
+    assert classify_by_effects(20, 0.5) == "上級財"
+
+
+def test_交差価格効果の許容誤差は1e_9() -> None:
+    assert cross_price_relation(8e-10) == "独立財"
+    assert cross_price_relation(-8e-10) == "独立財"
+    assert cross_price_relation(1.2e-9) == "代替財"
+    assert cross_price_relation(-1.2e-9) == "補完財"
