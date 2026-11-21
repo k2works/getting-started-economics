@@ -1,6 +1,7 @@
 """第 9 章: 財政政策と金融政策の効果のテスト。"""
 
 import math
+from dataclasses import astuple
 
 import pytest
 
@@ -137,7 +138,8 @@ def test_政策の効果の表() -> None:
     rows = policy_effectiveness(MPC, K, [(100, 20), (math.inf, 20), (100, 0)], 10, 10)
     assert [row.h for row in rows] == [100, math.inf, 100]
     assert [row.b for row in rows] == [20, 20, 0]
-    assert rows[0] == PolicyRow(100, 20, 20, 4, 5)
+    expected = PolicyRow(100, 20, 20, 4, 5)
+    assert astuple(rows[0]) == pytest.approx(astuple(expected))
     assert rows[1].fiscal == pytest.approx(25)
     assert rows[1].monetary == 0
     assert rows[2].monetary == 0

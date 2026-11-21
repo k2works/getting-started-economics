@@ -19,3 +19,15 @@ def test_ほぼ特異な行列は条件数でエラー() -> None:
     )  # 行列式は 5e-15 > 0 だが、条件数が巨大
     with pytest.raises(ValueError, match="特異"):
         leontief_inverse(a)
+
+
+def test_並べた棒は重ならず幅が等しい() -> None:
+    from matplotlib.patches import Rectangle
+
+    from lib.chapter02.plot import plot_io_output
+
+    ax = plot_io_output([[0.2, 0.3], [0.4, 0.1]], [100, 200], ["A", "B"]).axes[0]
+    rects = [p for p in ax.patches if isinstance(p, Rectangle)]
+    assert [r.get_width() for r in rects] == pytest.approx([0.4] * 4)
+    # 最終需要（先の 2 本）は部門の位置の左、生産量（後の 2 本）は右で、隣り合って接する
+    assert [r.get_x() for r in rects] == pytest.approx([-0.4, 0.6, 0.0, 1.0])
