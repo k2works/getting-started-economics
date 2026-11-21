@@ -130,3 +130,10 @@ def test_フロンティアの図の軸と凡例() -> None:
     assert ax.get_xlim()[0] == 0
     assert ax.get_ylim()[0] == 0
     assert ax.get_legend() is not None
+
+
+# --- 独立した変異確認で見つかった穴を埋めるテスト ---
+
+
+def test_国内価格の線の両端() -> None:
+    assert xs(line(tariff(), "Price with tariff")) == [0, 100]

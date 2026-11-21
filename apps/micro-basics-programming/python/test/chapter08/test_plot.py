@@ -134,3 +134,21 @@ def test_調整の図の軸と凡例() -> None:
         assert ax.get_legend() is not None
     assert adjustment()[0].get_ylabel() == "Price P"
     assert adjustment()[1].get_ylabel() == "Quantity Q"
+
+
+# --- 独立した変異確認で見つかった穴を埋めるテスト ---
+
+
+def test_傾きが1でない市場の曲線の切片() -> None:
+    other = LinearMarket(100, -2, -20, 4)
+    ax = plot_market(other, 100, 100).axes[0]
+    assert xs(line(ax, "Demand")) == [0, 100]
+    assert ys(line(ax, "Demand")) == [50, 0]
+    assert ys(line(ax, "Supply"))[0] == 5
+    shifted_ax = plot_shift(other, 20, 100, 100).axes[0]
+    assert ys(line(shifted_ax, "Demand after shift")) == [60, 0]
+
+
+def test_数量の推移の均衡の線の両端() -> None:
+    _, right = adjustment()
+    assert xs(line(right, "Equilibrium quantity")) == [0, 10]
