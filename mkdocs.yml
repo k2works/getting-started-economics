@@ -124,6 +124,9 @@ nav:
           - 第 2 章 予算制約と最適消費: article/micro-basics-programming/02-budget-and-optimal-choice.md
           - 第 3 章 需要曲線と弾力性: article/micro-basics-programming/03-demand-curve-and-elasticity.md
           - 第 4 章 スルツキー分解と財の種類: article/micro-basics-programming/04-slutsky-decomposition-and-goods.md
+          - 第 5 章 費用曲線: article/micro-basics-programming/05-cost-curves.md
+          - 第 6 章 生産関数と費用最小化: article/micro-basics-programming/06-production-function-and-cost-minimization.md
+          - 第 7 章 利潤最大化と供給曲線: article/micro-basics-programming/07-profit-maximization-and-supply.md
       - マクロ経済学のためのプログラミング（初級）:
           - 概要: article/macro-basics-programming/index.md
           - この記事の読み方: article/macro-basics-programming/how-to-read.md
