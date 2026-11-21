@@ -12,7 +12,7 @@ def _style(ax: Axes) -> None:
     ax.set_xlabel("Income Y")
     ax.set_ylabel("Interest rate r")
     ax.set_ylim(bottom=0)
-    ax.legend()
+    ax.legend(fontsize="x-small")
 
 
 def plot_policy_shifts(

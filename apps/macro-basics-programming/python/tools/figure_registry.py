@@ -48,6 +48,24 @@ from lib.chapter09.plot import (  # noqa: E402
     plot_liquidity_trap,
     plot_policy_shifts,
 )
+from lib.chapter10.ad_as import AdEconomy  # noqa: E402
+from lib.chapter10.labor import LaborCurves  # noqa: E402
+from lib.chapter10.plot import plot_ad_as, plot_labor_market  # noqa: E402
+from lib.chapter11.okun import OkunFit, synthetic_unemployment_change  # noqa: E402
+from lib.chapter11.plot import plot_okun, plot_phillips  # noqa: E402
+from lib.chapter12.plot import (  # noqa: E402
+    plot_accelerator,
+    plot_consumption_theories,
+)
+from lib.chapter13.plot import (  # noqa: E402
+    plot_money_and_prices,
+    plot_net_exports,
+)
+from lib.chapter14.mundell_fleming import SmallOpenEconomy  # noqa: E402
+from lib.chapter14.plot import (  # noqa: E402
+    plot_fiscal_policy_by_regime,
+    plot_policy_effects,
+)
 
 # data/ は、tools/ の 1 つ上（アプリの直下）にある
 _INDICATORS = load_indicators(
@@ -164,5 +182,79 @@ FIGURES: dict[str, Callable[[], Figure]] = {
         delta_government=10,
         income_min=600,
         income_max=1200,
+    ),
+    "ch10-labor-market": lambda: plot_labor_market(
+        LaborCurves(
+            demand_intercept=100,
+            demand_slope=10,
+            supply_intercept=20,
+            supply_slope=10,
+        ),
+        sticky_wage=6,
+        wage_max=10,
+    ),
+    "ch10-ad-as": lambda: plot_ad_as(
+        AdEconomy(mpc=0.6, b=20, intercept=450, k=0.5, h=100, nominal_money=250),
+        full_employment_income=1000,
+        base_income=480,
+        slope=400,
+        delta_government=10,
+        price_min=0.8,
+        price_max=1.6,
+    ),
+    "ch11-phillips-curve": lambda: plot_phillips(
+        natural_rate=5, expected_inflations=[2, 4], beta=0.5, u_min=3, u_max=7
+    ),
+    "ch11-okun-law": lambda: plot_okun(
+        [3.2, 1.5, 4.1, 0.8, 2.9, 5.0, -0.5, 3.6, 2.2, 4.5, 1.0, 3.0],
+        synthetic_unemployment_change(
+            [3.2, 1.5, 4.1, 0.8, 2.9, 5.0, -0.5, 3.6, 2.2, 4.5, 1.0, 3.0],
+            slope=-0.4,
+            intercept=1.2,
+            noise=0.1,
+            seed=0,
+        ),
+        OkunFit(slope=-0.4, intercept=1.2),
+    ),
+    "ch12-consumption-theories": lambda: plot_consumption_theories(
+        [100, 100, 100, 130, 100, 100], 0.8, 0.2
+    ),
+    "ch12-accelerator": lambda: plot_accelerator(2, [100, 120, 140, 150, 155, 155]),
+    "ch13-money-and-prices": lambda: plot_money_and_prices(
+        4, [200, 400], [0, 100, 200, 300]
+    ),
+    "ch13-net-exports": lambda: plot_net_exports(
+        [105, 115, 125, 135, 145], 20, 125, 0.4
+    ),
+    "ch14-fiscal-policy-by-regime": lambda: plot_fiscal_policy_by_regime(
+        SmallOpenEconomy(
+            mpc=0.6,
+            b=20,
+            intercept=400,
+            n=50,
+            k=0.5,
+            h=100,
+            real_money=250,
+            world_rate=2.5,
+            exchange_rate=1,
+        ),
+        delta_government=10,
+        income_min=600,
+        income_max=1200,
+    ),
+    "ch14-policy-effects": lambda: plot_policy_effects(
+        SmallOpenEconomy(
+            mpc=0.6,
+            b=20,
+            intercept=400,
+            n=50,
+            k=0.5,
+            h=100,
+            real_money=250,
+            world_rate=2.5,
+            exchange_rate=1,
+        ),
+        delta_government=10,
+        delta_real_money=10,
     ),
 }
