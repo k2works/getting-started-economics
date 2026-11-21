@@ -154,3 +154,15 @@ def test_排出権取引の入力のチェック() -> None:
         emissions_trading([1, 2], -1)
     with pytest.raises(ValueError, match="企業"):
         uniform_reduction([], 10)
+
+
+def test_最適な数量がちょうど0なら扱わない() -> None:
+    with pytest.raises(ValueError, match="最適な数量"):
+        socially_optimal_quantity(ExternalityMarket(100, 1, 10, 1, 90))
+    assert socially_optimal_quantity(ExternalityMarket(100, 1, 10, 1, 89)) == 0.5
+
+
+def test_税の後の数量がちょうど0なら扱わない() -> None:
+    with pytest.raises(ValueError, match="税"):
+        quantity_with_tax(POLLUTION, 90)
+    assert quantity_with_tax(POLLUTION, 89) == 0.5

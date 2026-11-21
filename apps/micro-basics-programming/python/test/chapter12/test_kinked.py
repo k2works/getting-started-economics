@@ -60,3 +60,8 @@ def test_傾きの差が大きいほど途切れが大きい() -> None:
     wide = KinkedDemand(40, 50, 0.5, 4)
     assert marginal_revenue_gap(wide) > marginal_revenue_gap(KINKED)
     assert marginal_revenue_gap(wide) == pytest.approx((4 - 0.5) * 40)
+
+
+def test_1より小さい屈折点も作れる() -> None:
+    small = KinkedDemand(0.5, 0.5, 0.5, 2)
+    assert marginal_revenue_gap(small) == pytest.approx(0.75)

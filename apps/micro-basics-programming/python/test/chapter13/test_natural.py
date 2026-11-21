@@ -94,3 +94,10 @@ def test_傾きが違う需要の平均費用価格() -> None:
     assert outcome.quantity == pytest.approx(40)
     assert outcome.price == pytest.approx(20)
     assert outcome.profit == pytest.approx(0, abs=1e-9)
+
+
+def test_平均費用が需要曲線に接する固定費用() -> None:
+    outcome = average_cost_pricing(DEMAND, 2025)
+    assert (outcome.quantity, outcome.price) == (45, 55)
+    barely = average_cost_pricing(DEMAND, 2024.9)
+    assert barely.quantity == pytest.approx(45 + 0.5 * (0.4**0.5), rel=1e-6)

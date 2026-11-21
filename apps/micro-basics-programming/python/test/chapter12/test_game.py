@@ -139,3 +139,54 @@ def test_囚人のジレンマの判定は列の利得も見る() -> None:
 def test_大きさが2かける2でなければ囚人のジレンマではない() -> None:
     big = Game((((1, 1), (1, 1), (1, 1)), ((1, 1), (1, 1), (1, 1))))
     assert not is_prisoners_dilemma(big)
+
+
+def test_戦略が1つだけの行のゲーム() -> None:
+    single = Game((((1, 1), (2, 2)),))
+    assert (single.rows, single.columns) == (1, 2)
+
+
+def test_同点の戦略は支配戦略ではない() -> None:
+    weak_row = Game((((1, 0), (1, 0)), ((1, 0), (0, 0))))
+    assert dominant_strategy_for_row(weak_row) is None
+    weak_column = Game((((1, 1), (0, 1)), ((0, 0), (0, 1))))
+    assert dominant_strategy_for_column(weak_column) is None
+
+
+def test_パレート劣位は列だけが良くなる場合も劣位() -> None:
+    assert is_pareto_dominated(Game((((1, 1), (1, 2)),)), (0, 0))
+
+
+def test_パレート劣位は行と列の利得を取り違えない() -> None:
+    assert not is_pareto_dominated(Game((((1, 5), (2, 3)),)), (0, 0))
+    assert not is_pareto_dominated(Game((((3, 1), (1, 3)),)), (0, 0))
+
+
+def test_2かける3のゲームは囚人のジレンマではない() -> None:
+    wide = Game((((3, 3), (0, 5), (0, 0)), ((5, 0), (1, 1), (0, 0))))
+    assert not is_prisoners_dilemma(wide)
+    tall = Game((((3, 3), (0, 5)), ((5, 0), (1, 1)), ((0, 0), (0, 0))))
+    assert not is_prisoners_dilemma(tall)
+
+
+def test_囚人のジレンマの判定は報酬と罰の列の利得も見る() -> None:
+    assert not is_prisoners_dilemma(Game((((3, 4), (0, 5)), ((5, 0), (1, 1)))))
+    assert not is_prisoners_dilemma(Game((((3, 3), (0, 5)), ((5, 0), (1, 2)))))
+
+
+def _symmetric(
+    temptation: float, reward: float, punishment: float, sucker: float
+) -> Game:
+    return Game(
+        (
+            ((reward, reward), (sucker, temptation)),
+            ((temptation, sucker), (punishment, punishment)),
+        )
+    )
+
+
+def test_囚人のジレンマの不等式は厳密() -> None:
+    assert is_prisoners_dilemma(_symmetric(5, 3, 1, 0))
+    assert not is_prisoners_dilemma(_symmetric(3, 3, 1, 0))
+    assert not is_prisoners_dilemma(_symmetric(5, 1, 1, 0))
+    assert not is_prisoners_dilemma(_symmetric(5, 3, 0, 0))

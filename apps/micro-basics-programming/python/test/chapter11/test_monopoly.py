@@ -187,3 +187,17 @@ def test_独占的競争の仮定のチェック() -> None:
         long_run_monopolistic_competition(10, 0, 1000)
     with pytest.raises(ValueError, match="限界費用"):
         long_run_monopolistic_competition(-1, 1, 1000)
+
+
+def test_需要の範囲は傾きが2なら数量の切片が50() -> None:
+    steep = Monopoly(demand_intercept=100, demand_slope=2, marginal_cost=10)
+    assert price_at(steep, 50) == 0
+    with pytest.raises(ValueError, match="数量"):
+        price_at(steep, 51)
+
+
+def test_傾きが違う独占的競争の長期均衡() -> None:
+    long_run = long_run_monopolistic_competition(10, 2, 1000)
+    assert long_run.quantity == pytest.approx(math.sqrt(500))
+    assert long_run.price == pytest.approx(10 + math.sqrt(2000))
+    assert long_run.demand_intercept == pytest.approx(10 + 2 * math.sqrt(2000))

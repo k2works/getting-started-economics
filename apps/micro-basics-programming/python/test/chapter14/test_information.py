@@ -141,3 +141,13 @@ def test_努力の費用が負ならエラー() -> None:
 
 def test_買い手の評価が低すぎると市場が消える() -> None:
     assert unraveling([20, 40], 0.5) == []
+
+
+def test_努力しなくても成功確率が0でない端の値() -> None:
+    assert minimum_bonus(0.8, 0, 10) == pytest.approx(12.5)
+    assert minimum_bonus(1, 0.5, 10) == pytest.approx(20)
+
+
+def test_努力させても利潤が同じなら価値はない() -> None:
+    assert principal_profit_with_bonus(100, 0.8, 0.4, 20) == pytest.approx(40)
+    assert not worth_paying_bonus(100, 0.8, 0.4, 20)

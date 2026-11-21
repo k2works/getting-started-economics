@@ -125,3 +125,11 @@ def test_有限回で近似した価値は閾値の判定と同じ向き() -> No
     assert cooperate == pytest.approx(cooperation_value(3, delta), rel=1e-6)
     assert deviate == pytest.approx(deviation_value(5, 1, delta), rel=1e-6)
     assert cooperate > deviate
+
+
+def test_罰が1でない場合の裏切る価値() -> None:
+    assert deviation_value(5, 2, 0.5) == pytest.approx(5 + 0.5 * 2 / 0.5)
+
+
+def test_1回だけのゲーム() -> None:
+    assert play(GAME, tit_for_tat, always_defect, 1) == [(0, 1)]
