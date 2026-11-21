@@ -13,7 +13,18 @@ matplotlib.use("Agg")
 
 from matplotlib.figure import Figure  # noqa: E402
 
-from tools.figures import ch01, ch02, ch03, ch04, ch05, ch06, ch07  # noqa: E402
+from tools.figures import (  # noqa: E402
+    ch01,
+    ch02,
+    ch03,
+    ch04,
+    ch05,
+    ch06,
+    ch07,
+    ch08,
+    ch09,
+    ch10,
+)
 
 FIGURES: dict[str, Callable[[], Figure]] = {
     **ch01.FIGURES,
@@ -23,4 +34,7 @@ FIGURES: dict[str, Callable[[], Figure]] = {
     **ch05.FIGURES,
     **ch06.FIGURES,
     **ch07.FIGURES,
+    **ch08.FIGURES,
+    **ch09.FIGURES,
+    **ch10.FIGURES,
 }
