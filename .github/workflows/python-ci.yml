@@ -12,6 +12,8 @@ on:
       - "docs/article/econometrics-programming/**"
       - "apps/macro-basics-programming/python/**"
       - "docs/article/macro-basics-programming/**"
+      - "apps/micro-basics-programming/python/**"
+      - "docs/article/micro-basics-programming/**"
       - "apps/article-tools/**"
       - ".github/workflows/python-ci.yml"
   pull_request:
@@ -25,6 +27,8 @@ on:
       - "docs/article/econometrics-programming/**"
       - "apps/macro-basics-programming/python/**"
       - "docs/article/macro-basics-programming/**"
+      - "apps/micro-basics-programming/python/**"
+      - "docs/article/micro-basics-programming/**"
       - "apps/article-tools/**"
       - ".github/workflows/python-ci.yml"
 
@@ -47,6 +51,7 @@ jobs:
           - macro-programming
           - econometrics-programming
           - macro-basics-programming
+          - micro-basics-programming
     runs-on: ubuntu-latest
     defaults:
       run:
