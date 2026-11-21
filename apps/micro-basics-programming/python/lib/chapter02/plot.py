@@ -43,7 +43,6 @@ def plot_price_change(income: float, prices: Sequence[float], py: float) -> Figu
     """価格が下がると、予算線の x 切片だけが右へ動く。最適点をつなぐと価格消費曲線。"""
     fig, ax = plt.subplots()
     bundles = []
-    y_intercept = income / py
     for price in prices:
         x_intercept, y_intercept = budget_intercepts(income, price, py)
         ax.plot([0, x_intercept], [y_intercept, 0], label=f"Px = {price}")
