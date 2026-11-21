@@ -52,7 +52,7 @@ uv run pytest test/chapter09
 ```
 
 ```text
-31 passed
+34 passed
 ```
 
 自分でコードを書くときは、`practice/chapter09/` を作って、完成形と同じ名前（`policy.py`・`test_policy.py`）のファイルに書きます。テストは、`uv run pytest practice/chapter09` で動かします。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。
@@ -163,12 +163,9 @@ def test_金融政策の効果() -> None:
 def _denominator(mpc: float, b: float, k: float, h: float) -> float:
     """分母 (1 − c) + b·k ÷ h。h = math.inf なら、第 2 項は 0。"""
     validate_mpc(mpc)
-    if b < 0:
-        raise ValueError("投資の利子感応度 b は、0 以上にする")
-    if k <= 0:
-        raise ValueError("貨幣需要の所得への感応度 k は、正にする")
-    if h <= 0:
-        raise ValueError("貨幣需要の利子率への感応度 h は、正にする")
+    validate_b(b)
+    validate_k(k)
+    validate_h(h)
     return (1 - mpc) + b * k / h
 
 
@@ -435,7 +432,7 @@ uv run pytest test/chapter09
 ```
 
 ```text
-31 passed
+34 passed
 ```
 
 ## 9.6 規則で言うと

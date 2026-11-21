@@ -55,7 +55,7 @@ uv run pytest test/chapter08
 ```
 
 ```text
-30 passed
+34 passed
 ```
 
 自分でコードを書くときは、`practice/chapter08/` を作って、完成形と同じ名前（`is_lm.py`・`test_is_lm.py`）のファイルに書きます。テストは、`uv run pytest practice/chapter08` で動かします。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。
@@ -183,7 +183,7 @@ def test_所得と利子率は逆関数の関係() -> None:
 ```python
 def investment_demand(interest: float, autonomous_investment: float, b: float) -> float:
     """投資関数 I = I0 − b·r。利子率の減少関数。"""
-    _check_b(b)
+    validate_b(b)
     return autonomous_investment - b * interest
 
 
@@ -201,7 +201,7 @@ def is_intercept(
 def is_income(interest: float, intercept: float, mpc: float, b: float) -> float:
     """IS 曲線: 財市場を均衡させる所得 Y = (A − b·r) ÷ (1 − c)。"""
     validate_mpc(mpc)
-    _check_b(b)
+    validate_b(b)
     return (intercept - b * interest) / (1 - mpc)
 
 
@@ -311,7 +311,7 @@ def goods_market_state(
 ) -> str:
     """点 (Y, r) での財市場。IS の右上は供給超過、左下は需要超過。"""
     validate_mpc(mpc)
-    _check_b(b)
+    validate_b(b)
     excess_supply = (1 - mpc) * income + b * interest - intercept
     if math.isclose(excess_supply, 0, abs_tol=1e-9):
         return "均衡"
@@ -366,7 +366,7 @@ def solve_is_lm(
     k·Y − h·r = M/P
     """
     validate_mpc(mpc)
-    _check_b(b)
+    validate_b(b)
     _check_lm_finite(k, h)
     coefficients = np.array([[1 - mpc, b], [k, -h]])
     constants = np.array([intercept, real_money])
@@ -386,7 +386,7 @@ def is_lm_residuals(
 ) -> tuple[float, float]:
     """点 (Y, r) が IS の式と LM の式を満たさない量。均衡では、どちらも 0。"""
     validate_mpc(mpc)
-    _check_b(b)
+    validate_b(b)
     is_residual = (1 - mpc) * income + b * interest - intercept
     lm_residual = money_demand(income, interest, k, h) - real_money
     return is_residual, lm_residual
@@ -502,7 +502,7 @@ uv run pytest test/chapter08
 ```
 
 ```text
-30 passed
+34 passed
 ```
 
 ## 8.6 規則で言うと

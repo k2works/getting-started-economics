@@ -57,7 +57,7 @@ uv run pytest test/chapter07
 ```
 
 ```text
-34 passed
+39 passed
 ```
 
 自分でコードを書くときは、`practice/chapter07/` を作って、完成形と同じ名前のファイル（`money_market.py`・`test_money_market.py` など）に書きます。テストは、`uv run pytest practice/chapter07` で動かします。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。
@@ -151,20 +151,22 @@ def test_貨幣需要は所得の増加関数で利子率の減少関数() -> No
 ### Green: 貨幣需要を実装する
 
 ```python
-def _check_k(k: float) -> None:
+def validate_k(k: float) -> None:
+    """貨幣需要の所得への感応度 k が、正であることを確かめる。"""
     if k <= 0:
         raise ValueError("貨幣需要の所得への感応度 k は、正にする")
 
 
-def _check_h(h: float) -> None:
+def validate_h(h: float) -> None:
+    """貨幣需要の利子率への感応度 h が、正であることを確かめる。"""
     if h <= 0:
         raise ValueError("貨幣需要の利子率への感応度 h は、正にする")
 
 
 def money_demand(income: float, interest: float, k: float, h: float) -> float:
     """貨幣需要 L = k·Y − h·r。所得の増加関数で、利子率の減少関数。"""
-    _check_k(k)
-    _check_h(h)
+    validate_k(k)
+    validate_h(h)
     return k * income - h * interest
 ```
 
@@ -203,15 +205,15 @@ def test_所得から利子率を求める式と逆の関係() -> None:
 ```python
 def lm_interest(income: float, real_money: float, k: float, h: float) -> float:
     """LM 曲線: 貨幣市場を均衡させる利子率 r = (k·Y − M/P) ÷ h。"""
-    _check_k(k)
-    _check_h(h)
+    validate_k(k)
+    validate_h(h)
     return (k * income - real_money) / h
 
 
 def lm_income(interest: float, real_money: float, k: float, h: float) -> float:
     """LM 曲線: 貨幣市場を均衡させる所得 Y = (M/P + h·r) ÷ k。"""
-    _check_k(k)
-    _check_h(h)
+    validate_k(k)
+    validate_h(h)
     return (real_money + h * interest) / k
 ```
 
@@ -236,8 +238,8 @@ def test_傾きは所得を1増やしたときの利子率の上昇に等しい(
 ```python
 def lm_slope(k: float, h: float) -> float:
     """LM 曲線の傾き dr/dY = k ÷ h（所得を横軸、利子率を縦軸にしたとき）。"""
-    _check_k(k)
-    _check_h(h)
+    validate_k(k)
+    validate_h(h)
     return k / h
 ```
 
@@ -259,13 +261,13 @@ def test_マネーサプライが増えるとLM曲線は右にシフトする() 
 ```python
 def money_demand_shift(income_before: float, income_after: float, k: float) -> float:
     """所得の変化による、貨幣需要曲線の右へのシフト幅 k·ΔY（利子率を縦軸にとる）。"""
-    _check_k(k)
+    validate_k(k)
     return k * (income_after - income_before)
 
 
 def lm_shift(real_money_before: float, real_money_after: float, k: float) -> float:
     """実質貨幣供給の変化による、LM 曲線の右へのシフト幅 Δ(M/P) ÷ k。"""
-    _check_k(k)
+    validate_k(k)
     return (real_money_after - real_money_before) / k
 ```
 
@@ -282,13 +284,13 @@ def test_取引需要と資産需要の和は貨幣需要() -> None:
 ```python
 def transaction_demand(income: float, k: float) -> float:
     """取引需要 k·Y。所得の増加関数。"""
-    _check_k(k)
+    validate_k(k)
     return k * income
 
 
 def asset_demand(interest: float, h: float) -> float:
     """資産需要 −h·r。利子率の減少関数（定数項は、シフトに含めて考えない）。"""
-    _check_h(h)
+    validate_h(h)
     return -h * interest
 ```
 
@@ -346,10 +348,10 @@ def money_demand_with_trap(
     income: float, interest: float, k: float, h: float, floor: float
 ) -> float:
     """流動性のわなのある貨幣需要。利子率が下限なら、貨幣需要は無限大。"""
+    if math.isclose(interest, floor, abs_tol=_TOLERANCE):
+        return math.inf
     if interest < floor:
         raise ValueError("利子率は、下限を下回らない")
-    if math.isclose(interest, floor):
-        return math.inf
     return money_demand(income, interest, k, h)
 ```
 
@@ -487,7 +489,7 @@ uv run pytest test/chapter07
 ```
 
 ```text
-34 passed
+39 passed
 ```
 
 ## 7.6 規則で言うと

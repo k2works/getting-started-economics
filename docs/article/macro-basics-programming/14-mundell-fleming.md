@@ -56,7 +56,7 @@ uv run pytest test/chapter14
 ```
 
 ```text
-40 passed
+44 passed
 ```
 
 自分でコードを書くときは、`practice/chapter14/` を作って、完成形と同じ名前（`mundell_fleming.py`・`test_mundell_fleming.py`）のファイルに書きます。テストは、`uv run pytest practice/chapter14` で動かします。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。
@@ -170,14 +170,13 @@ class SmallOpenEconomy:
 
     def __post_init__(self) -> None:
         validate_mpc(self.mpc)
-        if self.b < 0:
-            raise ValueError("投資の利子感応度 b は、0 以上にする")
+        validate_b(self.b)
         if self.n <= 0:
             raise ValueError("為替レートへの純輸出の感応度 n は、正にする")
-        if self.k <= 0:
-            raise ValueError("貨幣需要の所得への感応度 k は、正にする")
-        if self.h <= 0:
-            raise ValueError("貨幣需要の利子率への感応度 h は、正にする")
+        validate_k(self.k)
+        validate_h(self.h)
+        if not math.isfinite(self.h):
+            raise ValueError("貨幣需要の利子率への感応度 h は、有限にする")
         if self.world_rate < 0:
             raise ValueError("世界の利子率 r* は、0 以上にする")
         if self.exchange_rate <= 0:
@@ -195,7 +194,11 @@ class OpenEquilibrium:
 
 
 def fixed_rate_equilibrium(economy: SmallOpenEconomy) -> OpenEquilibrium:
-    """固定相場の均衡。r = r* を IS に入れて Y を決め、LM から M/P を逆算する。"""
+    """固定相場の均衡。r = r* を IS に入れて Y を決め、LM から M/P を逆算する。
+
+    入力の real_money は使わない（内生）。逆算した M/P が負になる条件は、
+    このモデルの範囲外だが、エラーにせず、そのまま返す。
+    """
     e = economy
     income = (e.intercept + e.n * e.exchange_rate - e.b * e.world_rate) / (1 - e.mpc)
     real_money = e.k * income - e.h * e.world_rate
@@ -235,7 +238,12 @@ def test_変動相場の均衡は貨幣供給で所得が決まる() -> None:
 
 ```python
 def floating_rate_equilibrium(economy: SmallOpenEconomy) -> OpenEquilibrium:
-    """変動相場の均衡。LM と r = r* から Y を決め、IS から e を逆算する。"""
+    """変動相場の均衡。LM と r = r* から Y を決め、IS から e を逆算する。
+
+    入力の exchange_rate は使わない（内生）。逆算した e が 0 以下になる条件は、
+    このモデルの範囲外だが、エラーにせず、そのまま返す（n が小さいと、政策で
+    e が 0 になる）。
+    """
     e = economy
     income = (e.real_money + e.h * e.world_rate) / e.k
     exchange_rate = ((1 - e.mpc) * income + e.b * e.world_rate - e.intercept) / e.n
@@ -372,7 +380,7 @@ uv run pytest test/chapter14
 ```
 
 ```text
-40 passed
+44 passed
 ```
 
 ## 14.6 規則で言うと
@@ -486,7 +494,7 @@ IS バランスの純輸出: 20
 | :--- | :--- | :--- |
 | 労働市場の均衡と、非自発的失業を求める | 需要 100 − 10w、供給 20 + 10w で、w\* = 4、L\* = 60。w = 6 で失業 40 | [第 10 章](10-labor-market-and-ad-as.md) |
 | AD-AS で、政策の効果を、古典派とケインズで比べる | G を 10 増やすと、古典派は物価 1 → 1.25 で所得 1000 のまま。ケインズは、物価も所得も上がる（1.2933、997.32） | 第 10 章 |
-| 実質利子率と、需給ギャップを求める | 名目 2%・インフレ −1% で 3%。需給ギャップ（950 ÷ 1000）は −0.05 | [第 11 章](11-phillips-curve-and-okun.md) |
+| 実質利子率と、需給ギャップを求める | 名目 2%・インフレ −1% で 3%。需給ギャップ（(950 − 1000) ÷ 1000）は −0.05 | [第 11 章](11-phillips-curve-and-okun.md) |
 | フィリップス曲線とオークンの法則を言う | u\_n = 5、π^e = 2、β = 0.5 で、u = 5 なら π = 2.0（4 なら 2.5、6 なら 1.5）。オークンの傾きは負（約 −0.41） | 第 11 章 |
 | 消費と投資の理論を計算する | ライフサイクルの毎年の消費 400。加速度原理（V = 2、ΔY = 50）で投資 100。q = 1.2 なら投資する | [第 12 章](12-consumption-and-investment.md) |
 | 貨幣数量説・購買力平価・IS バランスを計算する | M = 100・V = 4・Y = 200 で P = 2。購買力平価 125 円は、物価 10% 上昇で 137.5 円。S − I = 30、T − G = −10 で純輸出 20 | [第 13 章](13-quantity-theory-and-exchange-rate.md) |

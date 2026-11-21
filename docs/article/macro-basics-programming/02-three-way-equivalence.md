@@ -54,7 +54,7 @@ uv run pytest test/chapter02
 ```
 
 ```text
-37 passed
+39 passed
 ```
 
 自分でコードを書くときは、`practice/chapter02/` を作って、完成形と同じ名前（`three_way.py`・`test_three_way.py` など）のファイルに書きます。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。
@@ -310,7 +310,7 @@ def test_投入係数は中間取引を産出で割った値() -> None:
 補助関数 `_square`（正方行列か）と `_vector`（長さが、部門の数か）は、形が違うときに、エラーにします。
 
 ```python
-_SINGULAR = 1e-12
+_MAX_CONDITION = 1e12
 
 
 def _leontief_matrix(coefficients: ArrayLike) -> NDArray[np.float64]:
@@ -319,7 +319,7 @@ def _leontief_matrix(coefficients: ArrayLike) -> NDArray[np.float64]:
     if (a < 0).any():
         raise ValueError("投入係数は、負にならない")
     m = np.eye(len(a)) - a
-    if np.linalg.det(m) < _SINGULAR:
+    if np.linalg.det(m) <= 0 or np.linalg.cond(m) > _MAX_CONDITION:
         raise ValueError(
             "単位行列から投入係数を引いた行列が特異（行列式が 0 以下）で、解けない"
         )
@@ -493,7 +493,7 @@ uv run pytest test/chapter02
 ```
 
 ```text
-37 passed
+39 passed
 ```
 
 ## 2.6 規則で言うと

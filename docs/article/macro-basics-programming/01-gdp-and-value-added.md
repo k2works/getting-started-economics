@@ -61,7 +61,7 @@ uv run pytest test/chapter01
 20 passed
 ```
 
-自分でコードを書くときは、`practice/chapter01/` を作って、完成形と同じ名前（`gdp.py`・`test_gdp.py`）のファイルに書きます。テストは、`uv run pytest practice/chapter01` で動かします。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。
+自分でコードを書くときは、`practice/chapter01/` を作って、完成形と同じ名前（`gdp.py`・`test_gdp.py`）のファイルに書きます。テストは、`uv run pytest practice/chapter01` で動かします。テストの import は、`from lib.chapter01.gdp import ...` を、**`from practice.chapter01.gdp import ...` に書き換えて**ください（書き換えないと、完成形を読み込んで、最初から通ってしまい、Red になりません）。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。import と補助関数（先頭が `_` の関数）は、記事の抜粋に出ないことがあります。そのときは、完成形のファイルの先頭を見て、写してください。「予想の答え合わせ」のスクリプトは、`practice/chapter01/check.py` に保存し、アプリのディレクトリ（`apps/macro-basics-programming/python`）で `uv run python practice/chapter01/check.py` と実行します。
 
 ## 1.3 予想する
 
