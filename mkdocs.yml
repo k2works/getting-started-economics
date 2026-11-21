@@ -70,6 +70,7 @@ exclude_docs: |
   article/macro-programming/outline.md
   article/econometrics-programming/outline.md
   article/macro-basics-programming/outline.md
+  article/micro-basics-programming/outline.md
   # 参照用に取得した外部資料（.gitignore の対象。サイトには含めない）
   article/py4basics.github.io/
   article/py4etrics.github.io/
