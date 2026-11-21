@@ -38,6 +38,16 @@ from lib.chapter04.plot import (  # noqa: E402
     plot_multiplier_slopes,
 )
 from lib.chapter05.plot import plot_gap, plot_income_swing  # noqa: E402
+from lib.chapter06.plot import (  # noqa: E402
+    plot_credit_creation,
+    plot_money_multiplier,
+)
+from lib.chapter07.plot import plot_lm_curves, plot_money_market  # noqa: E402
+from lib.chapter08.plot import plot_is_curves, plot_is_lm_equilibrium  # noqa: E402
+from lib.chapter09.plot import (  # noqa: E402
+    plot_liquidity_trap,
+    plot_policy_shifts,
+)
 
 # data/ は、tools/ の 1 つ上（アプリの直下）にある
 _INDICATORS = load_indicators(
@@ -104,4 +114,55 @@ FIGURES: dict[str, Callable[[], Figure]] = {
         mpc=0.6, autonomous=100, full_employment_income=300, income_max=400
     ),
     "ch05-income-swing": lambda: plot_income_swing(mpc=0.6, tax_rate=0.2, shock=10),
+    "ch06-money-multiplier": lambda: plot_money_multiplier(
+        [i / 100 for i in range(0, 51)], [0.01, 0.05, 0.1]
+    ),
+    "ch06-credit-creation": lambda: plot_credit_creation(
+        base=110, cash_ratio=0.1, reserve_ratio=0.01, rounds=40
+    ),
+    "ch07-money-market": lambda: plot_money_market(
+        income=1000, income_after=1200, real_money=250, k=0.5, h=100, interest_max=5
+    ),
+    "ch07-lm-curve": lambda: plot_lm_curves(
+        incomes=list(range(600, 1501, 100)),
+        real_money=250,
+        real_money_after=300,
+        k=0.5,
+        h=100,
+        floor=2.0,
+    ),
+    "ch08-is-curves": lambda: plot_is_curves(
+        mpc=0.6, intercept=450, bs=[20, 40], interest_max=10
+    ),
+    "ch08-is-lm": lambda: plot_is_lm_equilibrium(
+        mpc=0.6,
+        b=20,
+        intercept=450,
+        k=0.5,
+        h=100,
+        real_money=250,
+        income_min=600,
+        income_max=1200,
+    ),
+    "ch09-policy-shifts": lambda: plot_policy_shifts(
+        mpc=0.6,
+        b=20,
+        intercept=450,
+        k=0.5,
+        h=100,
+        real_money=250,
+        delta_government=10,
+        delta_real_money=10,
+        income_min=600,
+        income_max=1200,
+    ),
+    "ch09-liquidity-trap": lambda: plot_liquidity_trap(
+        mpc=0.6,
+        b=20,
+        intercept=450,
+        trap_interest=2.5,
+        delta_government=10,
+        income_min=600,
+        income_max=1200,
+    ),
 }
