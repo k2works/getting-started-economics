@@ -7130,8 +7130,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">wage</span> <span class="o">=</span> <span class="p">(</span><span class="n">curves</span><span class="o">.</span><span class="n">demand_intercept</span> <span class="o">-</span> <span class="n">curves</span><span class="o">.</span><span class="n">supply_intercept</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span>
         <span class="n">curves</span><span class="o">.</span><span class="n">demand_slope</span> <span class="o">+</span> <span class="n">curves</span><span class="o">.</span><span class="n">supply_slope</span>
     <span class="p">)</span>
-    <span class="k">if</span> <span class="n">wage</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"均衡の実質賃金が負になる。需要と供給の切片を見直す"</span><span class="p">)</span>
+    <span class="n">validate_non_negative</span><span class="p">(</span><span class="n">wage</span><span class="p">,</span> <span class="s2">"均衡の実質賃金が負になる。需要と供給の切片を見直す"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">wage</span><span class="p">,</span> <span class="n">labor_demand</span><span class="p">(</span><span class="n">curves</span><span class="p">,</span> <span class="n">wage</span><span class="p">)</span>
 </code></pre></div>
 <details class="note">
@@ -7141,28 +7140,31 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">replace</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.is_lm</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_is_lm</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_positive</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.is_lm</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve_is_lm</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="n">_BISECTION_STEPS</span> <span class="o">=</span> <span class="mi">200</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_check_price</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">price</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"物価は、正にする"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="s2">"物価は、正にする"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>lib/chapter10/labor.py</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_non_negative</span><span class="p">,</span> <span class="n">validate_positive</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_check_curves</span><span class="p">(</span><span class="n">curves</span><span class="p">:</span> <span class="n">LaborCurves</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">curves</span><span class="o">.</span><span class="n">demand_slope</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"労働需要の傾きは、正にする（需要は賃金の減少関数）"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">curves</span><span class="o">.</span><span class="n">supply_slope</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"労働供給の傾きは、正にする（供給は賃金の増加関数）"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span>
+        <span class="n">curves</span><span class="o">.</span><span class="n">demand_slope</span><span class="p">,</span> <span class="s2">"労働需要の傾きは、正にする（需要は賃金の減少関数）"</span>
+    <span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span>
+        <span class="n">curves</span><span class="o">.</span><span class="n">supply_slope</span><span class="p">,</span> <span class="s2">"労働供給の傾きは、正にする（供給は賃金の増加関数）"</span>
+    <span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_check_wage</span><span class="p">(</span><span class="n">wage</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">wage</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"実質賃金は、0 以上にする"</span><span class="p">)</span>
+    <span class="n">validate_non_negative</span><span class="p">(</span><span class="n">wage</span><span class="p">,</span> <span class="s2">"実質賃金は、0 以上にする"</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <p>需要の傾きと供給の傾きが、0 以下のときや、均衡の賃金が負になる設定は、エラーにします（<code>_check_curves</code>。<code>labor_demand</code>・<code>labor_supply</code> は、<code>a − b·w</code>・<code>c + d·w</code> を返すだけです）。</p>
@@ -7180,10 +7182,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">real_wage</span><span class="p">(</span><span class="n">nominal_wage</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""実質賃金 w = W ÷ P。"""</span>
-    <span class="k">if</span> <span class="n">nominal_wage</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"名目賃金は、0 以上にする"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">price</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"物価は、正にする"</span><span class="p">)</span>
+    <span class="n">validate_non_negative</span><span class="p">(</span><span class="n">nominal_wage</span><span class="p">,</span> <span class="s2">"名目賃金は、0 以上にする"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">price</span><span class="p">,</span> <span class="s2">"物価は、正にする"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">nominal_wage</span> <span class="o">/</span> <span class="n">price</span>
 
 
@@ -7257,8 +7257,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""ケインズの AS。Y = min(完全雇用所得, 基準の所得 + 傾き × P)。"""</span>
     <span class="n">_check_price</span><span class="p">(</span><span class="n">price</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">slope</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"総供給の傾きは、正にする"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">slope</span><span class="p">,</span> <span class="s2">"総供給の傾きは、正にする"</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">full_employment_income</span><span class="p">,</span> <span class="n">base_income</span> <span class="o">+</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">price</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="ad-as">AD と AS の交点を求める<a class="headerlink" href="#ad-as" title="Permanent link">&para;</a></h3>
@@ -7423,6 +7422,8 @@ AD 物価 1 と 2: 1000.0 950.0
 </ul>
 <h3 id="_11">図<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>労働市場と AD-AS の図を、描く関数（<code>plot_labor_market</code>・<code>plot_ad_as</code>。<code>lib/chapter10/plot.py</code>）を、テストから書きます。曲線の端の座標と、均衡の点を、手計算の値と比べます。</p>
+<details class="note">
+<summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">xs</span><span class="p">(</span><span class="n">ln</span><span class="p">:</span> <span class="n">Line2D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
     <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">ln</span><span class="o">.</span><span class="n">get_xdata</span><span class="p">(),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)]</span>
 
@@ -7446,6 +7447,7 @@ AD 物価 1 と 2: 1000.0 950.0
     <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">after</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mi">1000</span><span class="p">])</span>
     <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">after</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mf">1.25</span><span class="p">])</span>
 </code></pre></div>
+</details>
 <p><img alt="労働市場。実質賃金が 6 で硬直的だと、需要 40 と供給 80 の差（40）が非自発的失業になる" src="../images/ch10-labor-market.png" /></p>
 <p>AD-AS の図は、左右 2 枚（古典派・ケインズ）で、AD の移動と、均衡の動きを描きます（章頭の図。<code>plot_ad_as</code>）。</p>
 <h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>

@@ -7182,14 +7182,17 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p><strong>lib/chapter12/consumption.py</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_positive</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_validate_years</span><span class="p">(</span><span class="n">working_years</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">lifetime_years</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">lifetime_years</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"生涯の年数は、正にする"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">lifetime_years</span><span class="p">,</span> <span class="s2">"生涯の年数は、正にする"</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">working_years</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">working_years</span> <span class="o">&gt;</span> <span class="n">lifetime_years</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"働く年数は、0 以上、生涯の年数以下にする"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>lib/chapter12/investment.py</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_non_negative</span><span class="p">,</span> <span class="n">validate_positive</span>
 </code></pre></div>
 </details>
 <p>C₀ = 20 のとき、平均消費性向は、c + C₀ ÷ Y なので、所得が大きいほど、c（0.8）に近づきます。C₀ = 0（長期）なら、いつも 0.8 です。第 4 章の <code>consumption</code> は、課税を含む関数で、名前が違います。この章では、仮説の違いを見るため、課税を省いた、別の関数にしました。</p>
@@ -7304,8 +7307,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">accelerator_investment</span><span class="p">(</span><span class="n">capital_coefficient</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">income_change</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""加速度原理 I = V × ΔY。資本係数 V は一定。所得の増加が止まると、0。"""</span>
-    <span class="k">if</span> <span class="n">capital_coefficient</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"資本係数は、0 以上にする"</span><span class="p">)</span>
+    <span class="n">validate_non_negative</span><span class="p">(</span><span class="n">capital_coefficient</span><span class="p">,</span> <span class="s2">"資本係数は、0 以上にする"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">capital_coefficient</span> <span class="o">*</span> <span class="n">income_change</span>
 
 
@@ -7359,8 +7361,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">tobins_q</span><span class="p">(</span><span class="n">market_value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">replacement_cost</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""トービンの q = 企業の市場価値 ÷ 資本の再取得価格。"""</span>
-    <span class="k">if</span> <span class="n">replacement_cost</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"再取得価格は、正にする"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">replacement_cost</span><span class="p">,</span> <span class="s2">"再取得価格は、正にする"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">market_value</span> <span class="o">/</span> <span class="n">replacement_cost</span>
 
 
@@ -7433,6 +7434,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>最初の図は、所得が 1 期だけ 130 になったときの、3 つの仮説の消費です。</p>
 <p>次の図は、加速度原理です。所得は、100、120、140、150、155、155 と、増え方が小さくなり、最後に止まります。V = 2 の投資は、40、40、20、10、0 です。<strong>所得は、まだ増えている（150 → 155）のに、投資は、すでに減っています。</strong></p>
 <p>図の線の高さと棒の高さは、<code>test/chapter12/test_plot.py</code> で、手計算の値と比べています。描画の関数は、次のとおりです。</p>
+<details class="note">
+<summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_consumption_theories</span><span class="p">(</span>
     <span class="n">incomes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">mpc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">adjust</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
@@ -7468,6 +7471,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
+</details>
 <p><img alt="加速度原理。上は所得、下は投資。所得の増え方が小さくなると、投資は減り、増加が止まると 0 になる" src="../images/ch12-accelerator.png" /></p>
 <h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter12

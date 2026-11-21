@@ -6649,7 +6649,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="_5">中・低（すべて対応または判断を記録）<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<h3 id="1">中・低（すべて対応済み。1 件は判断して現状維持）<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -6742,19 +6742,19 @@
 <td style="text-align: left;">24</td>
 <td style="text-align: left;">検証の重複（ch10〜13）</td>
 <td style="text-align: left;">アーキテクト</td>
-<td style="text-align: left;">判断して、そのまま（ch10〜13 の検証は、章固有のメッセージと条件で、共通化の利益が小さい。共通の <code>validate_k/h/b</code> は ch7〜9・14 で共有した）</td>
+<td style="text-align: left;">対応済み（<code>lib/chapter01/validation.py</code> の <code>validate_positive</code> / <code>validate_non_negative</code> に、第 7〜14 章の単純な検証をまとめた。メッセージは変えない。範囲チェックや空の系列のような、章固有の条件は、そのまま）</td>
 </tr>
 <tr>
 <td style="text-align: left;">25</td>
 <td style="text-align: left;"><code>figure_registry</code> の集約、<code>test/tools</code> がリポジトリ外で動かない</td>
 <td style="text-align: left;">アーキテクト・テスター</td>
-<td style="text-align: left;">判断して、そのまま（図の登録は、孤立した画像を検査で検出する契約。リポジトリ外では使わないことを how-to-read に明記）</td>
+<td style="text-align: left;">図の登録は対応済み（<code>tools/figures/chNN.py</code> に章ごとに分け、<code>figure_registry.py</code> は合成だけ。指紋は不変）。リポジトリ外で動かない点は、判断して現状維持（how-to-read に「リポジトリごと使う」と明記）</td>
 </tr>
 <tr>
 <td style="text-align: left;">26</td>
 <td style="text-align: left;">ch1・ch11 が 600 行をわずかに超える、各章の図の小節の分量</td>
 <td style="text-align: left;">アーキテクト・ユーザー代表</td>
-<td style="text-align: left;">判断して、そのまま（600 行は目安。分量と進め方の目安を how-to-read に追記し、図の小節は後回し可と明記）</td>
+<td style="text-align: left;">対応済み（各章の「図」の小節の描画テスト・実装を折りたたみにし、後回し可と明記。行数は、折りたたみの中身を含めて、約 600〜650 行のまま。章の分割はしない）</td>
 </tr>
 <tr>
 <td style="text-align: left;">27</td>
@@ -6764,16 +6764,16 @@
 </tr>
 </tbody>
 </table>
-<h2 id="_6">矛盾事項<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<h2 id="_5">矛盾事項<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
 <ul>
 <li>第 14 章の e・M/P の範囲外の値: プログラマーは「検査する」、記事は n = 10 で e = 0 になる例を示す。→ 記事の例を優先し、返す仕様にして文書化した</li>
 </ul>
-<h2 id="_7">検証<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<h2 id="_6">検証<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
 <ul>
 <li><code>tox -e all</code>: テスト 530 件（新規 20 件）、カバレッジ 100%、ruff・mypy クリーン、記事の検査・答え合わせ・図 28 点が OK</li>
 <li>修正は、すべてテストを先に書き、失敗を確認してから実装した</li>
 </ul>
-<h2 id="_8">各視点の要約<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+<h2 id="_7">各視点の要約<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>プログラマー</strong>: 再現できる不具合 5 件（#1〜#5）。検証の重複</li>
 <li><strong>テスター</strong>: 変異 93% 検出。許容誤差・小さい正の値・線種の穴</li>

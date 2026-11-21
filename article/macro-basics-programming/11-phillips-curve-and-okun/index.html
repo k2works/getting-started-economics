@@ -7095,21 +7095,28 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <details class="note">
 <summary>import と補助関数（写すときに足す）</summary>
 <p>記事の抜粋には、import と、先頭が <code>_</code> の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。</p>
+<p><strong>lib/chapter11/deflation.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_non_negative</span>
+</code></pre></div>
 <p><strong>lib/chapter11/okun.py</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_non_negative</span><span class="p">,</span> <span class="n">validate_positive</span>
+</code></pre></div>
 <p><strong>lib/chapter11/phillips.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_non_negative</span><span class="p">,</span> <span class="n">validate_positive</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_check_beta</span><span class="p">(</span><span class="n">beta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">beta</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"失業率への感応度 β は、正にする"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">beta</span><span class="p">,</span> <span class="s2">"失業率への感応度 β は、正にする"</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>lib/chapter11/price_shocks.py</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter10.ad_as</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_positive</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter10.ad_as</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">AdEconomy</span><span class="p">,</span>
     <span class="n">expand_demand</span><span class="p">,</span>
     <span class="n">keynesian_supply</span><span class="p">,</span>
@@ -7141,8 +7148,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="sd">    """</span>
     <span class="k">if</span> <span class="n">inflation</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"インフレ率は、−1 より大きくする（物価が 0 以下になる）"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">years</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"年数は、0 以上にする"</span><span class="p">)</span>
+    <span class="n">validate_non_negative</span><span class="p">(</span><span class="n">years</span><span class="p">,</span> <span class="s2">"年数は、0 以上にする"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">nominal_debt</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">inflation</span><span class="p">)</span> <span class="o">**</span> <span class="n">years</span>
 </code></pre></div>
 <h3 id="_6">ディマンドプルとコストプッシュ<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
@@ -7176,8 +7182,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">supply_loss</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""コストプッシュ（AS の左シフト）による、物価と所得の変化 (ΔP, ΔY)。"""</span>
-    <span class="k">if</span> <span class="n">supply_loss</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"供給の減少は、正にする"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">supply_loss</span><span class="p">,</span> <span class="s2">"供給の減少は、正にする"</span><span class="p">)</span>
     <span class="n">before</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span>
         <span class="n">keynesian_supply</span><span class="p">,</span>
         <span class="n">full_employment_income</span><span class="o">=</span><span class="n">full_employment_income</span><span class="p">,</span>
@@ -7251,8 +7256,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="sd">    u が u_n より低いと、毎期、インフレ率が上がり続ける（長期のトレードオフは無い）。</span>
 <span class="sd">    """</span>
     <span class="n">_check_beta</span><span class="p">(</span><span class="n">beta</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">periods</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"期間は、0 以上にする"</span><span class="p">)</span>
+    <span class="n">validate_non_negative</span><span class="p">(</span><span class="n">periods</span><span class="p">,</span> <span class="s2">"期間は、0 以上にする"</span><span class="p">)</span>
     <span class="n">path</span> <span class="o">=</span> <span class="p">[</span><span class="n">initial_inflation</span><span class="p">]</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">periods</span><span class="p">):</span>
         <span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -7266,8 +7270,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">output_gap_ratio</span><span class="p">(</span><span class="n">actual_gdp</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">potential_gdp</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""需給ギャップ = (実際の GDP − 潜在 GDP) ÷ 潜在 GDP。負なら、需要不足。"""</span>
-    <span class="k">if</span> <span class="n">potential_gdp</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"潜在 GDP は、正にする"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">potential_gdp</span><span class="p">,</span> <span class="s2">"潜在 GDP は、正にする"</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">actual_gdp</span> <span class="o">-</span> <span class="n">potential_gdp</span><span class="p">)</span> <span class="o">/</span> <span class="n">potential_gdp</span>
 </code></pre></div>
 <h3 id="_9">オークンの法則（自作の最小二乗法）<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
@@ -7348,8 +7351,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">seed</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""関係 Δu = 切片 + 傾き × 成長率 に、正規分布の雑音を足した、架空のデータ。"""</span>
-    <span class="k">if</span> <span class="n">noise</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"雑音の標準偏差は、0 以上にする"</span><span class="p">)</span>
+    <span class="n">validate_non_negative</span><span class="p">(</span><span class="n">noise</span><span class="p">,</span> <span class="s2">"雑音の標準偏差は、0 以上にする"</span><span class="p">)</span>
     <span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">growth</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
     <span class="n">values</span> <span class="o">=</span> <span class="n">intercept</span> <span class="o">+</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">rng</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">noise</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
@@ -7414,6 +7416,8 @@ u = 6: 1.5
 </ul>
 <h3 id="_11">図<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>図を描く関数と、座標のテストです。短期の曲線の端と、長期の垂直線の座標を、手計算の値と比べます。</p>
+<details class="note">
+<summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">phillips</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Axes</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">plot_phillips</span><span class="p">(</span>
         <span class="n">natural_rate</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">expected_inflations</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="n">beta</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">u_min</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">u_max</span><span class="o">=</span><span class="mi">7</span>
@@ -7433,6 +7437,7 @@ u = 6: 1.5
     <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">vertical</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
     <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">vertical</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">])</span>
 </code></pre></div>
+</details>
 <p>オークンの法則の図（<code>plot_okun</code>）も、散布図の点と、回帰直線の端の座標を、同じようにテストします。</p>
 <p><img alt="オークンの法則。架空の 12 期のデータと、最小二乗法で求めた直線（傾き −0.4）" src="../images/ch11-okun-law.png" /></p>
 <h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>

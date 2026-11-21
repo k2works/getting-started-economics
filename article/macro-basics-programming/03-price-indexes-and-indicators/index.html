@@ -7465,6 +7465,8 @@ DI: [50.0, 66.7, 100.0]
 </ul>
 <h3 id="_8">図<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>物価指数の図と、景気動向指数の図を、描く関数を、テストから書きます。線の値、棒の高さ、50％の線、軸の名前を、確かめます（テストは、<code>test/chapter03/test_plot.py</code> にあります）。</p>
+<details class="note">
+<summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_price_indexes</span><span class="p">(</span><span class="n">table</span><span class="p">:</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""ラスパイレス指数とパーシェ指数を、期間ごとに、2 本の線で描く。"""</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
@@ -7475,6 +7477,7 @@ DI: [50.0, 66.7, 100.0]
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
+</details>
 <p>景気動向指数の図 <code>plot_business_indexes</code> は、上の段に CI の線を、下の段に DI の棒と 50％の点線を、描きます（<code>lib/chapter03/plot.py</code>）。</p>
 <p><img alt="架空の月次指標から計算した CI（上）と DI（下）。DI の点線は 50％。DI が 50％を割ったあとも、CI は、しばらく高い" src="../images/ch03-business-indexes.png" /></p>
 <h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>

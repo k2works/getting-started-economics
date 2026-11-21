@@ -7470,6 +7470,8 @@ False True
 </ul>
 <h3 id="_9">図<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>三面等価の図と、産業連関表の図を、描く関数を、テストから書きます。棒の高さ・積み上げの位置・部分の名前の位置・軸の名前を、手計算の値と、確かめます。たとえば、三面等価の図では、<strong>積み上げた高さが、3 つの面で、すべて 500 になる</strong>ことを、確かめます（テストは、<code>test/chapter02/test_plot.py</code> にあります）。</p>
+<details class="note">
+<summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_three_way</span><span class="p">(</span><span class="n">sides</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""生産・分配・支出の GDP を、部分を積み上げた棒で描く。</span>
 
@@ -7486,6 +7488,7 @@ False True
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
+</details>
 <p>産業連関表の図 <code>plot_io_output</code> は、<code>output_for_demand</code> で、生産量を求めて、最終需要と並べる棒グラフです（<code>lib/chapter02/plot.py</code>）。</p>
 <p><img alt="産業連関表。最終需要（青）より、それを満たす生産量（オレンジ）のほうが、どの部門も大きい" src="../images/ch02-io-output.png" /></p>
 <h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>

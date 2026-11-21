@@ -7312,6 +7312,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </ul>
 <h3 id="_9">図<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>ギャップの図を、描く関数を、テストから書きます。45 度線・総需要・完全雇用所得の位置と、ギャップを表す線分の長さ（20）を、手計算の値と比べます。</p>
+<details class="note">
+<summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">xs</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Line2D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
     <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">line</span><span class="o">.</span><span class="n">get_xdata</span><span class="p">())]</span>
 
@@ -7353,6 +7355,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">segment</span> <span class="o">=</span> <span class="n">fig</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
     <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mi">220</span><span class="p">,</span> <span class="mi">200</span><span class="p">])</span>
 </code></pre></div>
+</details>
+<details class="note">
+<summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_gap</span><span class="p">(</span>
     <span class="n">mpc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">autonomous</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -7380,7 +7385,10 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
+</details>
 <p>ビルトイン・スタビライザーの図は、独立支出が 10 変動したときの、所得の変動を、2 本の棒で比べます。</p>
+<details class="note">
+<summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_振れ幅の図は2本の棒で比例税のほうが低い</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_income_swing</span><span class="p">(</span><span class="n">mpc</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">tax_rate</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">shock</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">bars</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">patches</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">Rectangle</span><span class="p">)]</span>
@@ -7390,6 +7398,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="p">]</span>
     <span class="k">assert</span> <span class="p">[</span><span class="n">b</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">bars</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mi">25</span><span class="p">,</span> <span class="mi">10</span> <span class="o">/</span> <span class="mf">0.52</span><span class="p">])</span>
 </code></pre></div>
+</details>
+<details class="note">
+<summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_income_swing</span><span class="p">(</span><span class="n">mpc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">tax_rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">shock</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""独立支出が shock だけ変動したときの、所得の変動を、比例税の有無で比べる。"""</span>
     <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
@@ -7401,6 +7412,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
+</details>
 <p><img alt="独立支出が 10 変動したときの所得の変動。比例税（税率 0.2）があると、25 から約 19.2 に小さくなる" src="../images/ch05-income-swing.png" /></p>
 <h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter05

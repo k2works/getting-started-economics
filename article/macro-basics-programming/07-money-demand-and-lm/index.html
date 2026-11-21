@@ -7173,14 +7173,12 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h3 id="green">Green: 貨幣需要を実装する<a class="headerlink" href="#green" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_k</span><span class="p">(</span><span class="n">k</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""貨幣需要の所得への感応度 k が、正であることを確かめる。"""</span>
-    <span class="k">if</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"貨幣需要の所得への感応度 k は、正にする"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="s2">"貨幣需要の所得への感応度 k は、正にする"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">validate_h</span><span class="p">(</span><span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""貨幣需要の利子率への感応度 h が、正であることを確かめる。"""</span>
-    <span class="k">if</span> <span class="n">h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"貨幣需要の利子率への感応度 h は、正にする"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="s2">"貨幣需要の利子率への感応度 h は、正にする"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">money_demand</span><span class="p">(</span><span class="n">income</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">interest</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -7205,6 +7203,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="c1"># 浮動小数点の誤差（下限が 0 のとき、0.1 + 0.2 − 0.3 は 5.6e-17 になる）を許す</span>
 <span class="n">_TOLERANCE</span> <span class="o">=</span> <span class="mf">1e-9</span>
+</code></pre></div>
+<p><strong>lib/chapter07/money_market.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_positive</span>
 </code></pre></div>
 </details>
 <p>感応度 k・h が正でないとき（0 では、傾き k ÷ h や、利子率の式が、定義できません）は、どちらの値が悪いのか分かるエラーにします。</p>
@@ -7427,12 +7428,17 @@ LM のシフト幅: 100.0
 </ul>
 <h3 id="_10">図<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p>貨幣市場の図と、LM 曲線の図を、描く関数を、テストから書きます。貨幣需要の線は、右下がりで、<strong>所得が増えると右にシフトする</strong>ことを、手計算の値と比べます。座標を取り出す補助関数（<code>xs</code>・<code>ys</code>）や、貨幣供給の垂直な線・均衡点のテストは、<code>test/chapter07/test_plot.py</code> を見てください。</p>
+<details class="note">
+<summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_貨幣需要曲線は右下がりで所得が増えると右にシフトする</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">money_market_axes</span><span class="p">()</span>
     <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mi">500</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
     <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">])</span>
     <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mi">600</span><span class="p">,</span> <span class="mi">100</span><span class="p">])</span>
 </code></pre></div>
+</details>
+<details class="note">
+<summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_money_market</span><span class="p">(</span>
     <span class="n">income</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">income_after</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -7456,6 +7462,7 @@ LM のシフト幅: 100.0
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
+</details>
 <p>LM 曲線の図（<code>plot_lm_curves</code>）は、通常の LM 曲線、実質貨幣供給が増えたあとの LM 曲線、わなのある LM 曲線の、3 本を描きます。テストと実装は、<code>test/chapter07/test_plot.py</code> と <code>lib/chapter07/plot.py</code> を見てください。</p>
 <p><img alt="LM 曲線。実質貨幣供給が 250 から 300 に増えると、LM 曲線は右にシフトする（破線は、利子率の下限 2.0 のある LM 曲線で、下限で水平になる）" src="../images/ch07-lm-curve.png" /></p>
 <h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>

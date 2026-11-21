@@ -7124,6 +7124,11 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p><strong>lib/chapter13/open_economy.py</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_non_negative</span>
+</code></pre></div>
+<p><strong>lib/chapter13/quantity.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_positive</span>
+</code></pre></div>
 </details>
 <p>生産量が 0 だと、割り算ができません。エラーにします。</p>
 <h3 id="k">マーシャルの k とインフレ率の近似<a class="headerlink" href="#k" title="Permanent link">&para;</a></h3>
@@ -7153,8 +7158,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">marshall_k</span><span class="p">(</span><span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""マーシャルの k = 1 ÷ V。貨幣需要は、名目所得の k 倍。"""</span>
-    <span class="k">if</span> <span class="n">velocity</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"流通速度は、正にする"</span><span class="p">)</span>
+    <span class="n">validate_positive</span><span class="p">(</span><span class="n">velocity</span><span class="p">,</span> <span class="s2">"流通速度は、正にする"</span><span class="p">)</span>
     <span class="k">return</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">velocity</span>
 
 
@@ -7209,8 +7213,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="sd">    円安（e が上がる）と、輸出が増え、輸入が減るので、純輸出は増える。</span>
 <span class="sd">    傾き s は、0 以上にする。</span>
 <span class="sd">    """</span>
-    <span class="k">if</span> <span class="n">slope</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"為替レートに対する純輸出の傾きは、0 以上にする"</span><span class="p">)</span>
+    <span class="n">validate_non_negative</span><span class="p">(</span><span class="n">slope</span><span class="p">,</span> <span class="s2">"為替レートに対する純輸出の傾きは、0 以上にする"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">base_net_exports</span> <span class="o">+</span> <span class="n">slope</span> <span class="o">*</span> <span class="p">(</span><span class="n">exchange_rate</span> <span class="o">-</span> <span class="n">base_rate</span><span class="p">)</span>
 </code></pre></div>
 <h3 id="_6">購買力平価<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
@@ -7344,6 +7347,8 @@ X = 30 で整合: False
 <h3 id="_8">図<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>最初の図は、貨幣量と物価水準の関係です。V = 4 のとき、Y = 200 の直線は、M = 200 で P = 4 に届きます。Y = 400 の直線は、傾きが半分です。<strong>生産量が大きいと、同じ貨幣量でも、物価は低くなります。</strong></p>
 <p>次の図は、為替レートと純輸出です。右へ行くほど円安で、純輸出が増えます。基準の点（125 円、20）に、印を付けました。</p>
+<details class="note">
+<summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_money_and_prices</span><span class="p">(</span>
     <span class="n">velocity</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">outputs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">moneys</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
@@ -7379,6 +7384,7 @@ X = 30 で整合: False
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
+</details>
 <p>線の座標と、軸の名前は、<code>test/chapter13/test_plot.py</code> で、手計算の値と比べています。</p>
 <p><img alt="為替レートと純輸出。基準の点（125 円、20）から、10 円の円安で、純輸出が 4 増える" src="../images/ch13-net-exports.png" /></p>
 <h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>

@@ -7045,7 +7045,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter01
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>20 passed
+<div class="highlight"><pre><span></span><code>24 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter01/</code> を作って、完成形と同じ名前（<code>gdp.py</code>・<code>test_gdp.py</code>）のファイルに書きます。テストは、<code>uv run pytest practice/chapter01</code> で動かします。テストの import は、<code>from lib.chapter01.gdp import ...</code> を、<strong><code>from practice.chapter01.gdp import ...</code> に書き換えて</strong>ください（書き換えないと、完成形を読み込んで、最初から通ってしまい、Red になりません）。<strong>完成形（<code>lib/</code> と <code>test/</code>）は、答え合わせ用です。</strong> 自分で書き終えてから、開いてください。import と補助関数（先頭が <code>_</code> の関数）は、記事の抜粋に出ないことがあります。そのときは、完成形のファイルの先頭を見て、写してください。「予想の答え合わせ」のスクリプトは、<code>practice/chapter01/check.py</code> に保存し、アプリのディレクトリ（<code>apps/macro-basics-programming/python</code>）で <code>uv run python practice/chapter01/check.py</code> と実行します。</p>
 <h2 id="13">1.3 予想する<a class="headerlink" href="#13" title="Permanent link">&para;</a></h2>
@@ -7374,6 +7374,8 @@ NDP: 850
 </ul>
 <h3 id="_9">図<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>付加価値と成長会計の図を、描く関数を、テストから書きます。棒の数と高さが、手計算の値と一致することを、確かめます。</p>
+<details class="note">
+<summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">heights</span><span class="p">(</span><span class="n">ax_patches</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">Artist</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">p</span><span class="o">.</span><span class="n">get_height</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ax_patches</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">Rectangle</span><span class="p">)]</span>
 
@@ -7419,6 +7421,9 @@ NDP: 850
     <span class="n">result</span> <span class="o">=</span> <span class="n">growth_accounting</span><span class="p">(</span><span class="mf">6.0</span><span class="p">,</span> <span class="mf">7.0</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">plot_growth_accounting</span><span class="p">(</span><span class="n">result</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_ylabel</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"Growth (points)"</span>
 </code></pre></div>
+</details>
+<details class="note">
+<summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_value_added</span><span class="p">(</span>
     <span class="n">stages</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">output</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">intermediate</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
@@ -7447,11 +7452,12 @@ NDP: 850
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
+</details>
 <p><img alt="成長会計: 成長率 6% の内訳。労働 2.8、資本 2.4、技術進歩 0.8" src="../images/ch01-growth-accounting.png" /></p>
 <h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter01
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>20 passed
+<div class="highlight"><pre><span></span><code>24 passed
 </code></pre></div>
 <h2 id="16">1.6 規則で言うと<a class="headerlink" href="#16" title="Permanent link">&para;</a></h2>
 <ol>

@@ -7442,12 +7442,17 @@ M1, M3, 広義流動性: 600 920 1020
 </ul>
 <h3 id="_13">図<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <p>貨幣乗数の図を、描く関数を、テストから書きます。準備率ごとに 1 本の線を引き、座標が、手計算の値（C/D = 0 のとき 1 ÷ R/D など）と一致することを、確かめます。座標を取り出す補助関数 <code>xs</code>・<code>ys</code>、線の本数と軸の名前のテストは、<code>test/chapter06/test_plot.py</code> を見てください。</p>
+<details class="note">
+<summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_貨幣乗数の線の座標</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_money_multiplier</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">])</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">])</span>
     <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mf">1.2</span> <span class="o">/</span> <span class="mf">0.21</span><span class="p">])</span>
     <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">ax</span><span class="o">.</span><span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span> <span class="mf">5.5</span><span class="p">,</span> <span class="mf">1.2</span> <span class="o">/</span> <span class="mf">0.3</span><span class="p">])</span>
 </code></pre></div>
+</details>
+<details class="note">
+<summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_money_multiplier</span><span class="p">(</span>
     <span class="n">cash_ratios</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">reserve_ratios</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
@@ -7465,6 +7470,7 @@ M1, M3, 広義流動性: 600 920 1020
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
+</details>
 <p>信用創造の図（<code>plot_credit_creation</code>）は、同じ作りで、ラウンドごとのマネーストックと、上限（乗数 × H）を、1 つの図に描きます。テストと実装は、<code>test/chapter06/test_plot.py</code> と <code>lib/chapter06/plot.py</code> を見てください。</p>
 <p><img alt="信用創造。H = 110、C/D = 0.1、R/D = 0.01 のとき、ラウンドを重ねるごとにマネーストックは、上限 1100（乗数 10 × H）に近づく" src="../images/ch06-credit-creation.png" /></p>
 <h3 id="_14">実行結果<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
