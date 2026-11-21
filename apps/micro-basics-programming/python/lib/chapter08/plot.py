@@ -22,7 +22,7 @@ def _style(ax: Axes, q_max: float, p_max: float) -> None:
     ax.legend(fontsize="x-small")
 
 
-def _draw_curves(ax: Axes, market: LinearMarket, p_max: float) -> None:
+def draw_curves(ax: Axes, market: LinearMarket, p_max: float) -> None:
     """需要曲線（数量が 0 になる価格から、価格 0 まで）と、供給曲線を描く。"""
     choke = -market.demand_intercept / market.demand_slope
     ax.plot([0, market.demand_intercept], [choke, 0], label="Demand")
@@ -33,7 +33,7 @@ def _draw_curves(ax: Axes, market: LinearMarket, p_max: float) -> None:
 def plot_market(market: LinearMarket, q_max: float, p_max: float) -> Figure:
     """需要曲線・供給曲線と、均衡点（交点）を描く。縦軸が価格、横軸が数量。"""
     fig, ax = plt.subplots()
-    _draw_curves(ax, market, p_max)
+    draw_curves(ax, market, p_max)
     price, quantity = equilibrium(market)
     ax.plot([quantity], [price], "o", label="Equilibrium")
     _style(ax, q_max, p_max)
@@ -47,7 +47,7 @@ def plot_shift(
     """需要曲線が delta だけ右へ動いたときの、均衡の移動。動かしたあとは、点線。"""
     moved = shift_demand(market, delta)
     fig, ax = plt.subplots()
-    _draw_curves(ax, market, p_max)
+    draw_curves(ax, market, p_max)
     choke = -moved.demand_intercept / moved.demand_slope
     ax.plot([0, moved.demand_intercept], [choke, 0], "--", label="Demand after shift")
     price0, quantity0 = equilibrium(market)
