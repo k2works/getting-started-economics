@@ -7033,7 +7033,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter02
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>37 passed
+<div class="highlight"><pre><span></span><code>39 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter02/</code> を作って、完成形と同じ名前（<code>three_way.py</code>・<code>test_three_way.py</code> など）のファイルに書きます。<strong>完成形（<code>lib/</code> と <code>test/</code>）は、答え合わせ用です。</strong> 自分で書き終えてから、開いてください。</p>
 <h2 id="23">2.3 予想する<a class="headerlink" href="#23" title="Permanent link">&para;</a></h2>
@@ -7296,7 +7296,7 @@ False True
 <h3 id="green">産業連関表: Green<a class="headerlink" href="#green" title="Permanent link">&para;</a></h3>
 <p>入力の検査（形・負の係数・特異）は、まとめて、小さな補助関数にします。<code>np.linalg.solve</code> は、特異な行列に、NumPy 独自のエラー（<code>LinAlgError</code>）を出しますが、経済学の言葉で、分かるエラーにするため、先に、行列式を調べます。行列式が、正でないときは、特異、または、生産が成り立たない（ある部門が、自分の産出より多くを、投入に使う）ので、同じエラーにします。</p>
 <p>補助関数 <code>_square</code>（正方行列か）と <code>_vector</code>（長さが、部門の数か）は、形が違うときに、エラーにします。</p>
-<div class="highlight"><pre><span></span><code><span class="n">_SINGULAR</span> <span class="o">=</span> <span class="mf">1e-12</span>
+<div class="highlight"><pre><span></span><code><span class="n">_MAX_CONDITION</span> <span class="o">=</span> <span class="mf">1e12</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_leontief_matrix</span><span class="p">(</span><span class="n">coefficients</span><span class="p">:</span> <span class="n">ArrayLike</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NDArray</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">]:</span>
@@ -7305,7 +7305,7 @@ False True
     <span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">any</span><span class="p">():</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"投入係数は、負にならない"</span><span class="p">)</span>
     <span class="n">m</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">))</span> <span class="o">-</span> <span class="n">a</span>
-    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">_SINGULAR</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">det</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">cond</span><span class="p">(</span><span class="n">m</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">_MAX_CONDITION</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
             <span class="s2">"単位行列から投入係数を引いた行列が特異（行列式が 0 以下）で、解けない"</span>
         <span class="p">)</span>
@@ -7450,7 +7450,7 @@ False True
 <h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter02
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>37 passed
+<div class="highlight"><pre><span></span><code>39 passed
 </code></pre></div>
 <h2 id="26">2.6 規則で言うと<a class="headerlink" href="#26" title="Permanent link">&para;</a></h2>
 <ol>

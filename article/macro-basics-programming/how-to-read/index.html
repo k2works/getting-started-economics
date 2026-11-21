@@ -2285,6 +2285,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="完成形の使い方">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#import" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        写経の手順（import と実行）
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -6953,7 +6970,19 @@
 </tr>
 <tr>
 <td style="text-align: left;">n・r*</td>
-<td style="text-align: left;">純輸出の為替レートへの感応度・世界の利子率（第 14 章）</td>
+<td style="text-align: left;">純輸出の為替レートへの感応度・世界の利子率（第 14 章）。第 13 章の純輸出の感応度は s と書き、同じ概念</td>
+</tr>
+<tr>
+<td style="text-align: left;">a・b・c・d（第 10 章の労働市場）</td>
+<td style="text-align: left;">労働需要 Ld = a − b·w、労働供給 Ls = c + d·w の係数。同じ章の AD の b（投資の利子感応度）・c（限界消費性向）とは別</td>
+</tr>
+<tr>
+<td style="text-align: left;">k</td>
+<td style="text-align: left;">貨幣需要の所得への感応度（第 7〜10・14 章）／マーシャルの k（第 13 章）／消費関数 C = kYp の k（第 12 章）。章ごとに意味が違う</td>
+</tr>
+<tr>
+<td style="text-align: left;">β・π^e</td>
+<td style="text-align: left;">フィリップス曲線の傾き・期待インフレ率（第 11 章）</td>
 </tr>
 <tr>
 <td style="text-align: left;">ギャップの符号</td>
@@ -6963,6 +6992,13 @@
 </table>
 <h2 id="_9">完成形の使い方<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
 <p>サンプルコードには、各章の完成形が入っています（<code>lib/</code> と <code>test/</code>）。<strong>答え合わせ用</strong>です。自分のコードを、<code>practice/</code> に書いてから、見比べてください。</p>
+<h3 id="import">写経の手順（import と実行）<a class="headerlink" href="#import" title="Permanent link">&para;</a></h3>
+<ul>
+<li>テストの import は、完成形では <code>from lib.chapter01.gdp import ...</code> です。自分で書くときは、<strong><code>from practice.chapter01.gdp import ...</code> に書き換えます</strong>。書き換えないと、完成形を読み込んで、最初から通ってしまい、<strong>Red</strong> になりません</li>
+<li>前の章の関数（例: 第 8 章が使う <code>lib.chapter04</code>・<code>lib.chapter07</code>）は、完成形の <code>lib</code> から import してかまいません。同じ章の中だけを、自作にします</li>
+<li>記事のコードの抜粋には、import 行と、先頭が <code>_</code> の補助関数（入力の検証など）を、省いた箇所があります。写すときは、<code>lib/chapterNN/</code> の該当ファイルの先頭を、見て、足してください</li>
+<li>「予想の答え合わせ」のスクリプトは、<code>practice/chapterNN/check.py</code> に保存し、<code>apps/macro-basics-programming/python</code> で <code>uv run python practice/chapterNN/check.py</code> と実行します（<code>from lib...</code> が通るのは、このディレクトリで実行したときだけです）</li>
+</ul>
 <h2 id="_10">参考にした資料<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h2>
 <p>この記事の章立てと、式・数値の例は、このリポジトリの <a href="../../%E7%B5%8C%E6%B8%88%E5%AD%A6%E3%83%BB%E7%B5%8C%E6%B8%88%E6%94%BF%E7%AD%96%20%E3%83%88%E3%83%94%E3%83%83%E3%82%AF%E5%88%A5%E3%83%9E%E3%82%A4%E3%83%B3%E3%83%89%E3%83%9E%E3%83%83%E3%83%97/">経済学・経済政策 トピック別マインドマップ</a> と <a href="../../%E7%B5%8C%E6%B8%88%E5%AD%A6%E3%83%BB%E7%B5%8C%E6%B8%88%E6%94%BF%E7%AD%96%20%E5%85%A8%E4%BD%93%E3%83%9E%E3%82%A4%E3%83%B3%E3%83%89%E3%83%9E%E3%83%83%E3%83%97/">全体マインドマップ</a> に基づきます。外部の教材・データは、参照していません。</p>
 

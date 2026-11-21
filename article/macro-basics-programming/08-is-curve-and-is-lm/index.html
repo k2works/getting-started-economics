@@ -7041,7 +7041,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>30 passed
+<div class="highlight"><pre><span></span><code>34 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter08/</code> を作って、完成形と同じ名前（<code>is_lm.py</code>・<code>test_is_lm.py</code>）のファイルに書きます。テストは、<code>uv run pytest practice/chapter08</code> で動かします。<strong>完成形（<code>lib/</code> と <code>test/</code>）は、答え合わせ用です。</strong> 自分で書き終えてから、開いてください。</p>
 <h2 id="83">8.3 予想する<a class="headerlink" href="#83" title="Permanent link">&para;</a></h2>
@@ -7159,7 +7159,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h3 id="green-is">Green: IS 曲線を実装する<a class="headerlink" href="#green-is" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">investment_demand</span><span class="p">(</span><span class="n">interest</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">autonomous_investment</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""投資関数 I = I0 − b·r。利子率の減少関数。"""</span>
-    <span class="n">_check_b</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">validate_b</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">autonomous_investment</span> <span class="o">-</span> <span class="n">b</span> <span class="o">*</span> <span class="n">interest</span>
 
 
@@ -7177,7 +7177,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="k">def</span><span class="w"> </span><span class="nf">is_income</span><span class="p">(</span><span class="n">interest</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">intercept</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">mpc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""IS 曲線: 財市場を均衡させる所得 Y = (A − b·r) ÷ (1 − c)。"""</span>
     <span class="n">validate_mpc</span><span class="p">(</span><span class="n">mpc</span><span class="p">)</span>
-    <span class="n">_check_b</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">validate_b</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">intercept</span> <span class="o">-</span> <span class="n">b</span> <span class="o">*</span> <span class="n">interest</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mpc</span><span class="p">)</span>
 
 
@@ -7257,7 +7257,7 @@ c = 0.8, b = 20: 傾き -0.01
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""点 (Y, r) での財市場。IS の右上は供給超過、左下は需要超過。"""</span>
     <span class="n">validate_mpc</span><span class="p">(</span><span class="n">mpc</span><span class="p">)</span>
-    <span class="n">_check_b</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">validate_b</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
     <span class="n">excess_supply</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mpc</span><span class="p">)</span> <span class="o">*</span> <span class="n">income</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="n">interest</span> <span class="o">-</span> <span class="n">intercept</span>
     <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">excess_supply</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">abs_tol</span><span class="o">=</span><span class="mf">1e-9</span><span class="p">):</span>
         <span class="k">return</span> <span class="s2">"均衡"</span>
@@ -7302,7 +7302,7 @@ c = 0.8, b = 20: 傾き -0.01
 <span class="sd">    k·Y − h·r = M/P</span>
 <span class="sd">    """</span>
     <span class="n">validate_mpc</span><span class="p">(</span><span class="n">mpc</span><span class="p">)</span>
-    <span class="n">_check_b</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">validate_b</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
     <span class="n">_check_lm_finite</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span>
     <span class="n">coefficients</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mpc</span><span class="p">,</span> <span class="n">b</span><span class="p">],</span> <span class="p">[</span><span class="n">k</span><span class="p">,</span> <span class="o">-</span><span class="n">h</span><span class="p">]])</span>
     <span class="n">constants</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">intercept</span><span class="p">,</span> <span class="n">real_money</span><span class="p">])</span>
@@ -7322,7 +7322,7 @@ c = 0.8, b = 20: 傾き -0.01
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""点 (Y, r) が IS の式と LM の式を満たさない量。均衡では、どちらも 0。"""</span>
     <span class="n">validate_mpc</span><span class="p">(</span><span class="n">mpc</span><span class="p">)</span>
-    <span class="n">_check_b</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">validate_b</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
     <span class="n">is_residual</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mpc</span><span class="p">)</span> <span class="o">*</span> <span class="n">income</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="n">interest</span> <span class="o">-</span> <span class="n">intercept</span>
     <span class="n">lm_residual</span> <span class="o">=</span> <span class="n">money_demand</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="n">interest</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span> <span class="o">-</span> <span class="n">real_money</span>
     <span class="k">return</span> <span class="n">is_residual</span><span class="p">,</span> <span class="n">lm_residual</span>
@@ -7416,7 +7416,7 @@ b = 40 の傾き: -0.01 （b = 20 は -0.02 ）
 <h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>30 passed
+<div class="highlight"><pre><span></span><code>34 passed
 </code></pre></div>
 <h2 id="86">8.6 規則で言うと<a class="headerlink" href="#86" title="Permanent link">&para;</a></h2>
 <ol>

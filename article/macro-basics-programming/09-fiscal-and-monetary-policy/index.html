@@ -7065,7 +7065,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter09
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>31 passed
+<div class="highlight"><pre><span></span><code>34 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter09/</code> を作って、完成形と同じ名前（<code>policy.py</code>・<code>test_policy.py</code>）のファイルに書きます。テストは、<code>uv run pytest practice/chapter09</code> で動かします。<strong>完成形（<code>lib/</code> と <code>test/</code>）は、答え合わせ用です。</strong> 自分で書き終えてから、開いてください。</p>
 <h2 id="93">9.3 予想する<a class="headerlink" href="#93" title="Permanent link">&para;</a></h2>
@@ -7182,12 +7182,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_denominator</span><span class="p">(</span><span class="n">mpc</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">k</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""分母 (1 − c) + b·k ÷ h。h = math.inf なら、第 2 項は 0。"""</span>
     <span class="n">validate_mpc</span><span class="p">(</span><span class="n">mpc</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">b</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"投資の利子感応度 b は、0 以上にする"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">k</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"貨幣需要の所得への感応度 k は、正にする"</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">h</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"貨幣需要の利子率への感応度 h は、正にする"</span><span class="p">)</span>
+    <span class="n">validate_b</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">validate_k</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+    <span class="n">validate_h</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">mpc</span><span class="p">)</span> <span class="o">+</span> <span class="n">b</span> <span class="o">*</span> <span class="n">k</span> <span class="o">/</span> <span class="n">h</span>
 
 
@@ -7410,7 +7407,7 @@ IS が緩やか（b = 40） 金融: 6.6667
 <h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter09
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>31 passed
+<div class="highlight"><pre><span></span><code>34 passed
 </code></pre></div>
 <h2 id="96">9.6 規則で言うと<a class="headerlink" href="#96" title="Permanent link">&para;</a></h2>
 <ol>
