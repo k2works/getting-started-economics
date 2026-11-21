@@ -442,6 +442,23 @@ def test_関税は輸入国だけにかかる() -> None:
 
 国の技術は、1 単位に必要な労働者の数で、表します。機会費用は、2 つの財の労働の**比**です。
 
+この節のテストの import は、次のとおりです（`test_comparative.py` の先頭）。
+
+```python
+import pytest
+
+from lib.chapter10.comparative import (
+    Country,
+    absolute_advantage,
+    comparative_advantage,
+    mutually_beneficial_terms,
+    opportunity_cost_of_agriculture,
+    opportunity_cost_of_industry,
+    ppf_endpoints,
+    trade_gain_per_unit,
+)
+```
+
 ```python
 LARGE = Country("Large", labor_industry=4, labor_agriculture=8)
 
@@ -611,6 +628,8 @@ def trade_gain_per_unit(own_opportunity_cost: float, terms_of_trade: float) -> f
 ### 予想の答え合わせ
 
 予想した答えを、プログラムで確かめます。
+
+> このスクリプトは、**完成形**（`lib/`）を読みます。**自分のコードで確かめる**ときは、import を、`from practice.chapterNN...` に書き換えてください。
 
 ```python
 from lib.chapter08.market import LinearMarket
@@ -848,18 +867,21 @@ uv run pytest test/chapter10
 
 ### 時間を決めて書く課題
 
-何も見ずに、時間を計って、関数とテストを書きます。
+何も見ずに、時間を計って、関数とテストを書きます。課題 1〜4 の市場は、需要 Q = 100 − P、供給 Q = P − 10 です（課税は、売り手にかけます）。
 
 | 課題 | 目安の時間 |
 | :--- | :--- |
 | 需要 Q = 100 − P、供給 Q = P − 10 の均衡と、消費者余剰・生産者余剰・総余剰を返す関数と、テスト | 15 分 |
 | 従量税 9 の、買い手の価格・売り手の手取り・数量・税収・死荷重を返す関数と、テスト | 20 分 |
 | 世界価格 40 の輸入量と、貿易の利益（自由貿易の総余剰 − 閉鎖経済の総余剰）を返す関数と、テスト | 15 分 |
-| 関税 10（世界価格 40）の関税収入と死荷重を返す関数と、大国（工業 4 人・農業 8 人）・小国（工業 20 人・農業 10 人）の比較優位を返す関数と、テスト | 20 分 |
+| 関税 10（世界価格 40）の、国内価格・輸入・関税収入・死荷重を返す関数と、テスト | 15 分 |
+| 大国（工業 1 単位に 4 人・農業 1 単位に 8 人）・小国（工業 20 人・農業 10 人）の、工業の機会費用と、比較優位のある国を返す関数と、テスト | 15 分 |
 
 ### 値の確かめ
 
 到達チェックの値を、プログラムで確かめます。各章の関数を、そのまま呼びます。
+
+「値の確かめ」のスクリプトは、`practice/chapter10/reach.py` に保存し（10 は、この章の番号）、`uv run python -m practice.chapter10.reach` で実行します。
 
 ```python
 from lib.chapter08.market import LinearMarket, equilibrium

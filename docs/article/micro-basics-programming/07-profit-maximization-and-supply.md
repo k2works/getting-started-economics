@@ -489,6 +489,8 @@ def supply_after_ad_valorem_tax(curve: CostCurve, price: float, rate: float) -> 
 
 予想した答えを、プログラムで確かめます。
 
+> このスクリプトは、**完成形**（`lib/`）を読みます。**自分のコードで確かめる**ときは、import を、`from practice.chapterNN...` に書き換えてください。
+
 ```python
 from lib.chapter05.cost import CostCurve
 from lib.chapter07.supply import (
@@ -765,6 +767,8 @@ uv run pytest test/chapter07
 ### 値の確かめ
 
 到達チェックの値を、プログラムで確かめます。各章の関数を、そのまま呼びます。
+
+「値の確かめ」のスクリプトは、`practice/chapter07/reach.py` に保存し（07 は、この章の番号）、`uv run python -m practice.chapter07.reach` で実行します。
 
 ```python
 from lib.chapter05.cost import (

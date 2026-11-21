@@ -382,6 +382,8 @@ def optimal_bundle_by_grid(
 
 予想した答えを、プログラムで確かめます。
 
+> このスクリプトは、**完成形**（`lib/`）を読みます。**自分のコードで確かめる**ときは、import を、`from practice.chapterNN...` に書き換えてください。
+
 ```python
 from lib.chapter01.utility import cobb_douglas_utility
 from lib.chapter02.budget import (

@@ -407,6 +407,8 @@ def cross_price_relation(change_in_demand: float) -> str:
 
 予想した答えを、プログラムで確かめます。
 
+> このスクリプトは、**完成形**（`lib/`）を読みます。**自分のコードで確かめる**ときは、import を、`from practice.chapterNN...` に書き換えてください。
+
 ```python
 from lib.chapter04.slutsky import (
     classify_by_effects,
@@ -657,6 +659,8 @@ uv run pytest test/chapter04
 ### 値の確かめ
 
 到達チェックの値を、プログラムで確かめます。各章の関数を、そのまま呼びます。
+
+「値の確かめ」のスクリプトは、`practice/chapter04/reach.py` に保存し（04 は、この章の番号）、`uv run python -m practice.chapter04.reach` で実行します。
 
 ```python
 from lib.chapter01.utility import (

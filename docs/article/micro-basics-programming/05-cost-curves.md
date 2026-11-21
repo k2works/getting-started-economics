@@ -408,6 +408,8 @@ MC・AVC・AC の最低点は、(q, 値) = (2, 3)、(3, 6)、(4, 15) です。�
 
 予想した答えを、プログラムで確かめます。
 
+> このスクリプトは、**完成形**（`lib/`）を読みます。**自分のコードで確かめる**ときは、import を、`from practice.chapterNN...` に書き換えてください。
+
 ```python
 from lib.chapter05.cost import (
     CostCurve,

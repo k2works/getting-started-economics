@@ -147,6 +147,11 @@ def test_均衡で需要量と供給量は等しい() -> None:
     price, quantity = equilibrium(MARKET)
     assert quantity_demanded(MARKET, price) == pytest.approx(quantity)
     assert quantity_supplied(MARKET, price) == pytest.approx(quantity)
+
+
+def test_正の均衡がなければエラー() -> None:
+    with pytest.raises(ValueError, match="均衡"):
+        equilibrium(LinearMarket(5, -1, 20, 1))
 ```
 
 `LinearMarket` などがまだないので、テストは失敗します（**Red**）。
@@ -351,7 +356,7 @@ def walras_adjustment(
     return prices
 ```
 
-この市場では、調整のたびに、均衡との差が**半分**に縮みます（係数 1 − 0.25 × 2 = 0.5）。速さを 1.5 にすると、係数が −2 になり、差が**大きくなって発散**します。
+この市場では、調整のたびに、均衡との差が**半分**に縮みます（係数 1 − 0.25 × 2 = 0.5）。速さを 1.5 にすると、係数が −2 になり、差が**大きくなって発散**します。（発散の例では、価格が**負**になる点も通ります。負の価格に、意味はなく、発散の様子を見るための、数学上の例です。）
 
 ### マーシャル的調整
 
@@ -424,6 +429,8 @@ def shift_supply(market: LinearMarket, delta: float) -> LinearMarket:
 ### 予想の答え合わせ
 
 予想した答えを、プログラムで確かめます。
+
+> このスクリプトは、**完成形**（`lib/`）を読みます。**自分のコードで確かめる**ときは、import を、`from practice.chapterNN...` に書き換えてください。
 
 ```python
 from lib.chapter08.market import (
@@ -533,7 +540,7 @@ P = 30 の超過需要: 50 需要超過（価格が上がる）
 
 需要が右へ動いたときの、均衡の移動です。動かしたあとの曲線は、点線で描きます。
 
-![需要曲線のシフト。需要が右へ 20 動く（点線）と、均衡は、（45, 55）から（55, 65）へ動く](images/ch08-demand-shift.png)
+![需要曲線のシフト。需要が右へ 20 動く（点線）と、均衡は、（数量 45、価格 55）から（数量 55、価格 65）へ動く](images/ch08-demand-shift.png)
 
 ??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
 
