@@ -7906,6 +7906,20 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>関税 0・5・10・15 の死荷重は、0・25・100・225 と、<strong>関税の 2 乗に比例して、増えます</strong>。関税が 15 に達すると、国内価格が、閉鎖経済の 55 に達して、輸入がなくなり、死荷重 225 は、<strong>貿易の利益と、等しくなります</strong>（それ以上の関税でも、国内価格は 55 のまま）。</p>
 <h3 id="_7">絶対優位と比較優位<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>国の技術は、1 単位に必要な労働者の数で、表します。機会費用は、2 つの財の労働の<strong>比</strong>です。</p>
+<p>この節のテストの import は、次のとおりです（<code>test_comparative.py</code> の先頭）。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter10.comparative</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Country</span><span class="p">,</span>
+    <span class="n">absolute_advantage</span><span class="p">,</span>
+    <span class="n">comparative_advantage</span><span class="p">,</span>
+    <span class="n">mutually_beneficial_terms</span><span class="p">,</span>
+    <span class="n">opportunity_cost_of_agriculture</span><span class="p">,</span>
+    <span class="n">opportunity_cost_of_industry</span><span class="p">,</span>
+    <span class="n">ppf_endpoints</span><span class="p">,</span>
+    <span class="n">trade_gain_per_unit</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="n">LARGE</span> <span class="o">=</span> <span class="n">Country</span><span class="p">(</span><span class="s2">"Large"</span><span class="p">,</span> <span class="n">labor_industry</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">labor_agriculture</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
 
 
@@ -8062,6 +8076,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>両国が得をする<strong>交換比率</strong>（工業 1 単位と交換する農業の量）は、<strong>2 国の機会費用の間</strong>（0.5 〜 2.0）です。範囲の外では、一方が、自国で作るより、損をします。大国が工業に、小国が農業に<strong>特化</strong>すると、世界の生産の価値（交換比率 1 で、工業 + 農業）は、18 から 24 に増えます（最後のテスト）。</p>
 <h3 id="_9">予想の答え合わせ<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>予想した答えを、プログラムで確かめます。</p>
+<blockquote>
+<p>このスクリプトは、<strong>完成形</strong>（<code>lib/</code>）を読みます。<strong>自分のコードで確かめる</strong>ときは、import を、<code>from practice.chapterNN...</code> に書き換えてください。</p>
+</blockquote>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.market</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearMarket</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter10.comparative</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">Country</span><span class="p">,</span>
@@ -8295,7 +8312,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h2 id="107-3">10.7 第 3 部の到達チェック<a class="headerlink" href="#107-3" title="Permanent link">&para;</a></h2>
 <p>第 3 部（第 8〜10 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。<strong>先に、次の「時間を決めて書く課題」を、何も見ずに試してください。</strong> そのあとで、「値の確かめ」と「できること」で、答えを見ます。</p>
 <h3 id="_13">時間を決めて書く課題<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
-<p>何も見ずに、時間を計って、関数とテストを書きます。</p>
+<p>何も見ずに、時間を計って、関数とテストを書きます。課題 1〜4 の市場は、需要 Q = 100 − P、供給 Q = P − 10 です（課税は、売り手にかけます）。</p>
 <table>
 <thead>
 <tr>
@@ -8317,13 +8334,18 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <td style="text-align: left;">15 分</td>
 </tr>
 <tr>
-<td style="text-align: left;">関税 10（世界価格 40）の関税収入と死荷重を返す関数と、大国（工業 4 人・農業 8 人）・小国（工業 20 人・農業 10 人）の比較優位を返す関数と、テスト</td>
-<td style="text-align: left;">20 分</td>
+<td style="text-align: left;">関税 10（世界価格 40）の、国内価格・輸入・関税収入・死荷重を返す関数と、テスト</td>
+<td style="text-align: left;">15 分</td>
+</tr>
+<tr>
+<td style="text-align: left;">大国（工業 1 単位に 4 人・農業 1 単位に 8 人）・小国（工業 20 人・農業 10 人）の、工業の機会費用と、比較優位のある国を返す関数と、テスト</td>
+<td style="text-align: left;">15 分</td>
 </tr>
 </tbody>
 </table>
 <h3 id="_14">値の確かめ<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <p>到達チェックの値を、プログラムで確かめます。各章の関数を、そのまま呼びます。</p>
+<p>「値の確かめ」のスクリプトは、<code>practice/chapter10/reach.py</code> に保存し（10 は、この章の番号）、<code>uv run python -m practice.chapter10.reach</code> で実行します。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.market</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearMarket</span><span class="p">,</span> <span class="n">equilibrium</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter09.surplus</span><span class="w"> </span><span class="kn">import</span> <span class="n">consumer_surplus</span><span class="p">,</span> <span class="n">producer_surplus</span><span class="p">,</span> <span class="n">tax_equilibrium</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter10.comparative</span><span class="w"> </span><span class="kn">import</span> <span class="n">Country</span><span class="p">,</span> <span class="n">comparative_advantage</span>

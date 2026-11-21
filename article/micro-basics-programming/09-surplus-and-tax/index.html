@@ -7772,6 +7772,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>どちらも、同じ数量（42）まで減り、死荷重は 13.5 と、<strong>元の 20.25 より小さい</strong>です。税の負担は、需要が急なら、買い手が 6・売り手が 3、供給が急なら、買い手が 3・売り手が 6 と、<strong>急な側（弾力性の小さい側）が、多く負担</strong>します。</p>
 <h3 id="_9">予想の答え合わせ<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>予想した答えを、プログラムで確かめます。</p>
+<blockquote>
+<p>このスクリプトは、<strong>完成形</strong>（<code>lib/</code>）を読みます。<strong>自分のコードで確かめる</strong>ときは、import を、<code>from practice.chapterNN...</code> に書き換えてください。</p>
+</blockquote>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.market</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearMarket</span><span class="p">,</span> <span class="n">equilibrium</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter09.surplus</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">consumer_surplus</span><span class="p">,</span>

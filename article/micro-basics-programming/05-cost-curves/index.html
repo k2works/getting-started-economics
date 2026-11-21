@@ -7808,6 +7808,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>MC・AVC・AC の最低点は、(q, 値) = (2, 3)、(3, 6)、(4, 15) です。限界費用は、AVC の最低点（q = 3）で 6、AC の最低点（q = 4）で 15 となり、<strong>それぞれの最低値と、一致します</strong>（最後のテスト）。平均費用と平均可変費用は、<strong>q = 0 で求められない</strong>ので、0 を除いた格子点で探します。</p>
 <h3 id="_5">予想の答え合わせ<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>予想した答えを、プログラムで確かめます。</p>
+<blockquote>
+<p>このスクリプトは、<strong>完成形</strong>（<code>lib/</code>）を読みます。<strong>自分のコードで確かめる</strong>ときは、import を、<code>from practice.chapterNN...</code> に書き換えてください。</p>
+</blockquote>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter05.cost</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">CostCurve</span><span class="p">,</span>
     <span class="n">average_cost</span><span class="p">,</span>

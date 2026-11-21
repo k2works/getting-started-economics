@@ -7878,6 +7878,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>コブ・ダグラス型は、財 x の需要が、財 y の価格に<strong>依らない</strong>ので、<strong>独立財</strong>です。代替財・補完財を試すには、完全代替財（直線）と完全補完財（L 字）を使います。</p>
 <h3 id="_7">予想の答え合わせ<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>予想した答えを、プログラムで確かめます。</p>
+<blockquote>
+<p>このスクリプトは、<strong>完成形</strong>（<code>lib/</code>）を読みます。<strong>自分のコードで確かめる</strong>ときは、import を、<code>from practice.chapterNN...</code> に書き換えてください。</p>
+</blockquote>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter04.slutsky</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">classify_by_effects</span><span class="p">,</span>
     <span class="n">cross_price_relation</span><span class="p">,</span>
@@ -8141,6 +8144,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </table>
 <h3 id="_12">値の確かめ<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p>到達チェックの値を、プログラムで確かめます。各章の関数を、そのまま呼びます。</p>
+<p>「値の確かめ」のスクリプトは、<code>practice/chapter04/reach.py</code> に保存し（04 は、この章の番号）、<code>uv run python -m practice.chapter04.reach</code> で実行します。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.utility</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">cobb_douglas_utility</span><span class="p">,</span>
     <span class="n">indifference_curve_y</span><span class="p">,</span>

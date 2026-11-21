@@ -7797,6 +7797,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>数値微分の結果には、<strong>微小な誤差</strong>があります。この章の需要の所得弾力性は、理論値が 1 ですが、数値微分では 0.9999999974752427 になり、1 に<strong>わずかに届きません</strong>。そのまま「1 以上か」で判定すると、必需品に分類されてしまいます。<strong>境界の判定</strong>（1 以上は奢侈品、0 は中立財）では、許容誤差（1e-6）を持たせます（<code>test_所得弾力性の分類の許容誤差は1e_6</code>）。</p>
 <h3 id="_9">予想の答え合わせ<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>予想した答えを、プログラムで確かめます。</p>
+<blockquote>
+<p>このスクリプトは、<strong>完成形</strong>（<code>lib/</code>）を読みます。<strong>自分のコードで確かめる</strong>ときは、import を、<code>from practice.chapterNN...</code> に書き換えてください。</p>
+</blockquote>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter03.demand</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">classify_by_income_elasticity</span><span class="p">,</span>
     <span class="n">demand_x</span><span class="p">,</span>

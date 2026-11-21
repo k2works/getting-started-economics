@@ -7968,6 +7968,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>従量税 6 のとき、q = 5 を供給する価格は、30 + 6 = 36 です。従価税 20% のときは、30 ÷ 0.8 = 37.5 です。q = 3 では、上乗せが、従量税で 6、従価税で 1.5 ですが、q = 5 では、従量税で 6、従価税で 7.5 と、<strong>従価税の上乗せは、生産量とともに大きく</strong>なります（傾きが急）。税率は、0 以上 1 未満に限ります。</p>
 <h3 id="_12">予想の答え合わせ<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p>予想した答えを、プログラムで確かめます。</p>
+<blockquote>
+<p>このスクリプトは、<strong>完成形</strong>（<code>lib/</code>）を読みます。<strong>自分のコードで確かめる</strong>ときは、import を、<code>from practice.chapterNN...</code> に書き換えてください。</p>
+</blockquote>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter05.cost</span><span class="w"> </span><span class="kn">import</span> <span class="n">CostCurve</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter07.supply</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">break_even_price</span><span class="p">,</span>
@@ -8258,6 +8261,7 @@ P = 5 の生産量: 0.0
 </table>
 <h3 id="_17">値の確かめ<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <p>到達チェックの値を、プログラムで確かめます。各章の関数を、そのまま呼びます。</p>
+<p>「値の確かめ」のスクリプトは、<code>practice/chapter07/reach.py</code> に保存し（07 は、この章の番号）、<code>uv run python -m practice.chapter07.reach</code> で実行します。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter05.cost</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">CostCurve</span><span class="p">,</span>
     <span class="n">average_cost</span><span class="p">,</span>

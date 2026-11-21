@@ -7624,6 +7624,11 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">price</span><span class="p">,</span> <span class="n">quantity</span> <span class="o">=</span> <span class="n">equilibrium</span><span class="p">(</span><span class="n">MARKET</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">quantity_demanded</span><span class="p">(</span><span class="n">MARKET</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">quantity</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">quantity_supplied</span><span class="p">(</span><span class="n">MARKET</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">quantity</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_正の均衡がなければエラー</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"均衡"</span><span class="p">):</span>
+        <span class="n">equilibrium</span><span class="p">(</span><span class="n">LinearMarket</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 </code></pre></div>
 <p><code>LinearMarket</code> などがまだないので、テストは失敗します（<strong>Red</strong>）。</p>
 <p>テストの import は、書いた関数だけを、1 つずつ足してかまいません（<a href="../05-cost-curves/">第 5 章</a>の注意を参照）。</p>
@@ -7785,7 +7790,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
         <span class="n">prices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">prices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">speed</span> <span class="o">*</span> <span class="n">excess_demand</span><span class="p">(</span><span class="n">market</span><span class="p">,</span> <span class="n">prices</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
     <span class="k">return</span> <span class="n">prices</span>
 </code></pre></div>
-<p>この市場では、調整のたびに、均衡との差が<strong>半分</strong>に縮みます（係数 1 − 0.25 × 2 = 0.5）。速さを 1.5 にすると、係数が −2 になり、差が<strong>大きくなって発散</strong>します。</p>
+<p>この市場では、調整のたびに、均衡との差が<strong>半分</strong>に縮みます（係数 1 − 0.25 × 2 = 0.5）。速さを 1.5 にすると、係数が −2 になり、差が<strong>大きくなって発散</strong>します。（発散の例では、価格が<strong>負</strong>になる点も通ります。負の価格に、意味はなく、発散の様子を見るための、数学上の例です。）</p>
 <h3 id="_7">マーシャル的調整<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>数量を、需要価格と供給価格の<strong>差</strong>に比例して、動かします。需要価格は、需要曲線の逆関数、供給価格は、供給曲線の逆関数です。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_マーシャル的調整は需要価格と供給価格の差に比例して数量を動かす</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -7844,6 +7849,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <h3 id="_9">予想の答え合わせ<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>予想した答えを、プログラムで確かめます。</p>
+<blockquote>
+<p>このスクリプトは、<strong>完成形</strong>（<code>lib/</code>）を読みます。<strong>自分のコードで確かめる</strong>ときは、import を、<code>from practice.chapterNN...</code> に書き換えてください。</p>
+</blockquote>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.market</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">LinearMarket</span><span class="p">,</span>
     <span class="n">equilibrium</span><span class="p">,</span>
@@ -7943,7 +7951,7 @@ P = 30 の超過需要: 50 需要超過（価格が上がる）
 </code></pre></div>
 </details>
 <p>需要が右へ動いたときの、均衡の移動です。動かしたあとの曲線は、点線で描きます。</p>
-<p><img alt="需要曲線のシフト。需要が右へ 20 動く（点線）と、均衡は、（45, 55）から（55, 65）へ動く" src="../images/ch08-demand-shift.png" /></p>
+<p><img alt="需要曲線のシフト。需要が右へ 20 動く（点線）と、均衡は、（数量 45、価格 55）から（数量 55、価格 65）へ動く" src="../images/ch08-demand-shift.png" /></p>
 <details class="note">
 <summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">shifted</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Axes</span><span class="p">:</span>

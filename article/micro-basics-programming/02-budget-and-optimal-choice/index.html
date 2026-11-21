@@ -7739,6 +7739,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>効用が同じ点が複数あれば、<code>max</code> は、<strong>先に見つけた点</strong>（x の小さいほう）を返します。格子点の探索は、区切りの幅（分割数 <code>steps</code>）の分だけ、誤差があります。指数が違うとき（a = 1、b = 2）は、最適な x = 13.33 が格子の上にないので、<strong>幅（0.1）以内の誤差</strong>で、一致を確かめます（<code>abs=0.1</code>）。</p>
 <h3 id="_7">予想の答え合わせ<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>予想した答えを、プログラムで確かめます。</p>
+<blockquote>
+<p>このスクリプトは、<strong>完成形</strong>（<code>lib/</code>）を読みます。<strong>自分のコードで確かめる</strong>ときは、import を、<code>from practice.chapterNN...</code> に書き換えてください。</p>
+</blockquote>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">cobb_douglas_utility</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter02.budget</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">budget_intercepts</span><span class="p">,</span>
