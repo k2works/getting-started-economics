@@ -130,6 +130,10 @@ nav:
           - 第 8 章 市場均衡と調整過程: article/micro-basics-programming/08-market-equilibrium-and-adjustment.md
           - 第 9 章 余剰分析と課税: article/micro-basics-programming/09-surplus-and-tax.md
           - 第 10 章 国際貿易と比較優位: article/micro-basics-programming/10-trade-and-comparative-advantage.md
+          - 第 11 章 独占と独占的競争: article/micro-basics-programming/11-monopoly-and-monopolistic-competition.md
+          - 第 12 章 寡占とゲーム理論: article/micro-basics-programming/12-oligopoly-and-game-theory.md
+          - 第 13 章 外部効果・公共財・費用逓減産業: article/micro-basics-programming/13-externality-public-goods-and-natural-monopoly.md
+          - 第 14 章 情報の非対称性: article/micro-basics-programming/14-information-asymmetry.md
       - マクロ経済学のためのプログラミング（初級）:
           - 概要: article/macro-basics-programming/index.md
           - この記事の読み方: article/macro-basics-programming/how-to-read.md

@@ -17,7 +17,7 @@ okf_version: "0.2"
 | 連載 | 水準・題材 | 章 | 入口 | 読み方 |
 | :--- | :--- | :--- | :--- | :--- |
 | 経済学のためのプログラミング入門 | 経済モデルを軸にした Python 入門（需要曲線・市場均衡・IS-LM・ゲーム理論など） | 15 章と付録 A | [概要](./article/economics-programming/index.md) | [読み方](./article/economics-programming/how-to-read.md) |
-| ミクロ経済学のためのプログラミング（初級） | 教科書的なミクロ（無差別曲線・費用曲線・市場均衡・余剰・独占・ゲーム理論・外部効果・情報の非対称性） | 14 章（4 部。執筆中。第 3 部まで公開） | [概要](./article/micro-basics-programming/index.md) | [読み方](./article/micro-basics-programming/how-to-read.md) |
+| ミクロ経済学のためのプログラミング（初級） | 教科書的なミクロ（無差別曲線・費用曲線・市場均衡・余剰・独占・ゲーム理論・外部効果・情報の非対称性） | 14 章（4 部） | [概要](./article/micro-basics-programming/index.md) | [読み方](./article/micro-basics-programming/how-to-read.md) |
 | マクロ経済学のためのプログラミング（初級） | 教科書的なマクロ（GDP・45 度線・IS-LM・AD-AS・フィリップス曲線・貨幣数量説・開放経済） | 14 章（3 部） | [概要](./article/macro-basics-programming/index.md) | [読み方](./article/macro-basics-programming/how-to-read.md) |
 | マクロ経済学のためのプログラミング（中級＋） | 成長・景気循環・貨幣・為替の分析と、動学モデルの数値計算 | 18 章（4 部） | [概要](./article/macro-programming/index.md) | [読み方](./article/macro-programming/how-to-read.md) |
 | 計量経済学のためのプログラミング | 回帰・推論・パネル・操作変数法・ロジット・トービット・ヘックマンの推定量 | 16 章（4 部） | [概要](./article/econometrics-programming/index.md) | [読み方](./article/econometrics-programming/how-to-read.md) |
