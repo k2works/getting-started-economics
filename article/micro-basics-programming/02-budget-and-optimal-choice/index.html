@@ -7347,6 +7347,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">assert</span> <span class="n">budget_slope</span><span class="p">(</span><span class="n">PX</span><span class="p">,</span> <span class="n">PY</span><span class="p">)</span> <span class="o">==</span> <span class="o">-</span><span class="mi">2</span>
 </code></pre></div>
 <p><code>budget_line_y</code> などがまだないので、テストは失敗します（<strong>Red</strong>）。</p>
+<p>テストの import の一覧は、完成形の<strong>全関数</strong>です。自分で書くときは、関数を 1 つ書くたびに、その名前を、import に足していってかまいません（まだ書いていない関数を import すると、<code>ImportError</code> になり、Green になりません）。</p>
 <h3 id="green">Green: 予算線を実装する<a class="headerlink" href="#green" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_check_budget</span><span class="p">(</span><span class="n">income</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">px</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">py</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">validate_non_negative</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="s2">"所得は、0 以上にする"</span><span class="p">)</span>
@@ -7399,6 +7400,37 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_check_exponents</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">validate_positive</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="s2">"べき指数 a は、正にする"</span><span class="p">)</span>
     <span class="n">validate_positive</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="s2">"べき指数 b は、正にする"</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>lib/chapter02/plot.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.axes</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Figure</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">indifference_curve_y</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter02.budget</span><span class="w"> </span><span class="kn">import</span> <span class="n">budget_intercepts</span><span class="p">,</span> <span class="n">optimal_bundle</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">_POINTS</span> <span class="o">=</span> <span class="mi">50</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_style</span><span class="p">(</span><span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span><span class="p">,</span> <span class="n">y_top</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Good x"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Good y"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="c1"># 無差別曲線は、x が小さいと、立ち上がるので、予算線の y 切片の 1.5 倍までを見せる</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span> <span class="o">*</span> <span class="n">y_top</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">"x-small"</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>test/chapter02/test_plot.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.axes</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.lines</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line2D</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">cobb_douglas_utility</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter02.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_optimal_choice</span><span class="p">,</span> <span class="n">plot_price_change</span>
 </code></pre></div>
 </details>
 <p>入力のチェックは、第 1 章の共通関数 <code>validate_positive</code>・<code>validate_non_negative</code> を使います。<strong>価格は正</strong>、<strong>所得は 0 以上</strong>です。価格が 0.5 や 0.25 のような、0 より大きく 1 未満の値も、有効です（テスト <code>test_価格が1未満の正の値でも予算線を引ける</code>）。</p>
@@ -7531,6 +7563,7 @@ Px = 1 の最適消費点: (40.0, 40.0)
 <li>格子点の探索も、(20, 40) で、閉じた式と一致しました</li>
 </ul>
 <h3 id="_8">図<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>（図の関数の import と補助関数（<code>_POINTS</code>・<code>_style</code> など）は、上の折りたたみ「import と補助関数」の、<code>plot.py</code> と <code>test_plot.py</code> の項目にあります。）</p>
 <p>予算線と無差別曲線を重ねる関数と、座標のテストです。予算線の両端が切片であること、最適点が接点であることを、確かめます。</p>
 <details class="note">
 <summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>

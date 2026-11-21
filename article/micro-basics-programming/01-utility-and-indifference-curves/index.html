@@ -7336,7 +7336,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>61 passed
 </code></pre></div>
-<p>自分でコードを書くときは、<code>practice/chapter01/</code> を作って、完成形と同じ名前（<code>utility.py</code>・<code>test_utility.py</code>）のファイルに書きます。テストは、<code>uv run pytest practice/chapter01</code> で動かします。テストの import は、<code>from lib.chapter01.utility import ...</code> を、<strong><code>from practice.chapter01.utility import ...</code> に書き換えて</strong>ください（書き換えないと、完成形を読み込んで、最初から通ってしまい、Red になりません）。<strong>完成形（<code>lib/</code> と <code>test/</code>）は、答え合わせ用です。</strong> 自分で書き終えてから、開いてください。入力の検証の共通関数（<code>validate_positive</code>・<code>validate_non_negative</code>）は、<code>lib/chapter01/validation.py</code> から import してかまいません。import と補助関数（先頭が <code>_</code> の関数）は、記事の抜粋に出ないことがあります。そのときは、完成形のファイルの先頭を見て、写してください。「予想の答え合わせ」のスクリプトは、<code>practice/chapter01/check.py</code> に保存し、アプリのディレクトリ（<code>apps/micro-basics-programming/python</code>）で <code>uv run python practice/chapter01/check.py</code> と実行します。</p>
+<p>自分でコードを書くときは、<code>practice/chapter01/</code> を作って、完成形と同じ名前（<code>utility.py</code>・<code>test_utility.py</code>）のファイルに書きます。テストは、<code>uv run pytest practice/chapter01</code> で動かします。テストの import は、<code>from lib.chapter01.utility import ...</code> を、<strong><code>from practice.chapter01.utility import ...</code> に書き換えて</strong>ください（書き換えないと、完成形を読み込んで、最初から通ってしまい、Red になりません）。<strong>完成形（<code>lib/</code> と <code>test/</code>）は、答え合わせ用です。</strong> 自分で書き終えてから、開いてください。入力の検証の共通関数（<code>validate_positive</code>・<code>validate_non_negative</code>）は、<code>lib/chapter01/validation.py</code> から import してかまいません。import と補助関数（先頭が <code>_</code> の関数）は、記事の抜粋に出ないことがあります。そのときは、完成形のファイルの先頭を見て、写してください。「予想の答え合わせ」のスクリプトは、<code>practice/chapter01/check.py</code> に保存し、アプリのディレクトリ（<code>apps/micro-basics-programming/python</code>）で <code>uv run python -m practice.chapter01.check</code> と実行します（<code>python practice/...</code> と、ファイルのパスで実行すると、<code>lib</code> が見つからず、<code>ModuleNotFoundError</code> になります。<strong><code>-m</code> で、モジュールとして実行</strong>してください。自分のコードを確かめるときは、スクリプトの import を <code>from practice.chapterNN...</code> に書き換えます。Windows のシェルで、日本語が文字化けするときは、<code>PYTHONIOENCODING=utf-8</code> を付けます）。</p>
 <h2 id="13">1.3 予想する<a class="headerlink" href="#13" title="Permanent link">&para;</a></h2>
 <p>効用が U = x·y で表される消費者がいます（x・y は、2 つの財の量）。<strong>紙で、手計算で</strong>答えてください。答えは、この節には書いてありません。「プログラミング」の節の「予想の答え合わせ」で、プログラムを動かして確かめます。</p>
 <ul>
@@ -7447,6 +7447,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">assert</span> <span class="n">cobb_douglas_utility</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">41</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">cobb_douglas_utility</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
 </code></pre></div>
 <p><code>cobb_douglas_utility</code> がまだないので、テストは失敗します（<strong>Red</strong>）。</p>
+<p>テストの import の一覧は、完成形の<strong>全関数</strong>です。自分で書くときは、関数を 1 つ書くたびに、その名前を、import に足していってかまいません（まだ書いていない関数を import すると、<code>ImportError</code> になり、Green になりません）。</p>
 <h3 id="green">Green: 効用を実装する<a class="headerlink" href="#green" title="Permanent link">&para;</a></h3>
 <p>入力の検証には、共通の関数（<code>validate_positive</code>・<code>validate_non_negative</code>）を使います。メッセージは、呼び出す側が決めます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">validate_positive</span><span class="p">(</span><span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">message</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -7463,6 +7464,36 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <details class="note">
 <summary>import と補助関数（写すときに足す）</summary>
 <p>記事の抜粋には、import と、先頭が <code>_</code> の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。</p>
+<p><strong>lib/chapter01/plot.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.axes</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Figure</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.utility</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">concave_curve_y</span><span class="p">,</span>
+    <span class="n">indifference_curve_y</span><span class="p">,</span>
+    <span class="n">perfect_complements_curve</span><span class="p">,</span>
+    <span class="n">perfect_substitutes_curve_y</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">_POINTS</span> <span class="o">=</span> <span class="mi">50</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_grid</span><span class="p">(</span><span class="n">start</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">stop</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">"""start から stop までを、_POINTS 点に等分する。"""</span>
+    <span class="n">step</span> <span class="o">=</span> <span class="p">(</span><span class="n">stop</span> <span class="o">-</span> <span class="n">start</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">_POINTS</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">start</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">step</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">_POINTS</span><span class="p">)]</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_style</span><span class="p">(</span><span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span><span class="p">,</span> <span class="n">title</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Good x"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Good y"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">title</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">title</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">"x-small"</span><span class="p">)</span>
+</code></pre></div>
 <p><strong>lib/chapter01/utility.py</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
@@ -7479,6 +7510,22 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_check_exponents</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">validate_positive</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="s2">"べき指数 a は、正にする"</span><span class="p">)</span>
     <span class="n">validate_positive</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="s2">"べき指数 b は、正にする"</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>test/chapter01/test_plot.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.axes</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.lines</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line2D</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_indifference_curves</span><span class="p">,</span> <span class="n">plot_special_utilities</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.utility</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">cobb_douglas_utility</span><span class="p">,</span>
+    <span class="n">concave_utility</span><span class="p">,</span>
+    <span class="n">perfect_complements_utility</span><span class="p">,</span>
+    <span class="n">perfect_substitutes_utility</span><span class="p">,</span>
+<span class="p">)</span>
 </code></pre></div>
 </details>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">cobb_douglas_utility</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -7720,6 +7767,7 @@ U = 40 で x = 5 のとき y: 30.0
 <li><strong>4 つ目の問い</strong>: 完全代替財 U = 2x + y の、(10, 20) の効用は 40 です。効用 40 の線は、x = 5 のとき y = 30 で、傾きは −2（直線）です。完全補完財の (3, 5) の効用は、少ないほうの 3 です</li>
 </ul>
 <h3 id="_9">図<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>（図の関数の import と補助関数（<code>_POINTS</code>・<code>_style</code> など）は、上の折りたたみ「import と補助関数」の、<code>plot.py</code> と <code>test_plot.py</code> の項目にあります。）</p>
 <p>無差別曲線を描く関数と、座標のテストです。曲線の上の点の効用が、水準と等しいこと、右下がりであること、効用の高い曲線ほど右上にあることを、確かめます。</p>
 <details class="note">
 <summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
@@ -7914,7 +7962,7 @@ U = 40 で x = 5 のとき y: 30.0
 <details class="note">
 <summary>解答（先に自分で取り組んでから、開いてください）</summary>
 <p><strong>想起</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_効用は財の量の積</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_最初の効用のテスト</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">cobb_douglas_utility</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span> <span class="o">==</span> <span class="mi">800</span>
     <span class="k">assert</span> <span class="n">cobb_douglas_utility</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span> <span class="o">==</span> <span class="mi">800</span>
 </code></pre></div>

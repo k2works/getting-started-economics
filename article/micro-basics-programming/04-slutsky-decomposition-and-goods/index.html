@@ -7467,6 +7467,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">assert</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">PY</span> <span class="o">*</span> <span class="n">y</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">40</span><span class="p">)</span>
 </code></pre></div>
 <p><code>compensated_bundle</code> がまだないので、テストは失敗します（<strong>Red</strong>）。</p>
+<p>テストの import の一覧は、完成形の<strong>全関数</strong>です。自分で書くときは、関数を 1 つ書くたびに、その名前を、import に足していってかまいません（まだ書いていない関数を import すると、<code>ImportError</code> になり、Green になりません）。</p>
 <h3 id="green">Green: スルツキー分解を実装する<a class="headerlink" href="#green" title="Permanent link">&para;</a></h3>
 <p><strong>補償需要</strong>は、新しい価格のもとで、元の効用を、最も安く達成する点です。最適点では、限界代替率 = 価格比なので、y = (b ÷ a)(Px ÷ Py)·x となり、これを効用の式に入れて、x を求めます（閉じた式）。</p>
 <div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -7522,6 +7523,28 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <details class="note">
 <summary>import と補助関数（写すときに足す）</summary>
 <p>記事の抜粋には、import と、先頭が <code>_</code> の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。</p>
+<p><strong>lib/chapter04/plot.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.axes</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Figure</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">cobb_douglas_utility</span><span class="p">,</span> <span class="n">indifference_curve_y</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter02.budget</span><span class="w"> </span><span class="kn">import</span> <span class="n">budget_intercepts</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter04.slutsky</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">demand_perfect_complements</span><span class="p">,</span>
+    <span class="n">demand_perfect_substitutes</span><span class="p">,</span>
+    <span class="n">slutsky_decomposition</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">_POINTS</span> <span class="o">=</span> <span class="mi">50</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_style</span><span class="p">(</span><span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">bottom</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">"x-small"</span><span class="p">)</span>
+</code></pre></div>
 <p><strong>lib/chapter04/slutsky.py</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 </code></pre></div>
@@ -7536,6 +7559,16 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">validate_non_negative</span><span class="p">(</span><span class="n">income</span><span class="p">,</span> <span class="s2">"所得は、0 以上にする"</span><span class="p">)</span>
     <span class="n">validate_positive</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="s2">"財 x の価格は、正にする"</span><span class="p">)</span>
     <span class="n">validate_positive</span><span class="p">(</span><span class="n">py</span><span class="p">,</span> <span class="s2">"財 y の価格は、正にする"</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>test/chapter04/test_plot.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.axes</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.lines</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line2D</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter04.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_cross_price</span><span class="p">,</span> <span class="n">plot_slutsky</span>
 </code></pre></div>
 </details>
 <p>結果は、<code>SlutskyResult</code>（<code>frozen=True</code> の <code>dataclass</code>）にまとめます。3 つの点（元・代替効果のあと・最終）と、3 つの効果（財 x の量の変化）です。価格効果は、<strong>元の点と最終の点の差</strong>と、一致します（<code>test_価格効果は元の点と最終の点の差</code>）。</p>
@@ -7673,6 +7706,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <li><strong>4 つ目の問い</strong>: 代替効果 +20・所得効果 −30 は<strong>ギッフェン財</strong>です（値下げで、需要が 20 − 30 = −10 減る）。完全代替財の財 x の需要は、Py = 1 で 0（財 y が安い）、Py = 3 で 40（財 x が安い）で、<strong>財 y の値上げで増える代替財</strong>です。完全補完財は、Py = 1 で約 26.67、Py = 2 で 20 で、<strong>減る補完財</strong>です</li>
 </ul>
 <h3 id="_8">図<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>（図の関数の import と補助関数（<code>_POINTS</code>・<code>_style</code> など）は、上の折りたたみ「import と補助関数」の、<code>plot.py</code> と <code>test_plot.py</code> の項目にあります。）</p>
 <p>スルツキー分解の 3 点と、予算線・無差別曲線を重ねる関数と、座標のテストです。補償された予算線（点線）が、点 B を通り、新しい価格比と同じ傾きであることを、確かめます。</p>
 <details class="note">
 <summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
@@ -7878,19 +7912,19 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">無差別曲線の y と、限界代替率を返す関数と、テスト（U = x·y で、効用 800）</td>
+<td style="text-align: left;">U = x·y で、効用 800 の無差別曲線の y と、限界代替率（y ÷ x）を返す関数と、テスト（x = 10・20・40 で確かめる）</td>
 <td style="text-align: left;">10 分</td>
 </tr>
 <tr>
-<td style="text-align: left;">予算線の切片と、最適消費点を返す関数と、テスト（所得 80、Px = 2、Py = 1）</td>
+<td style="text-align: left;">予算線の切片と、最適消費点を返す関数と、テスト（U = x·y、所得 80、Px = 2、Py = 1）</td>
 <td style="text-align: left;">15 分</td>
 </tr>
 <tr>
-<td style="text-align: left;">需要曲線の 3 点と、直線の需要曲線の価格弾力性を返す関数と、テスト</td>
+<td style="text-align: left;">需要量（U = x·y、所得 80、Py = 1 で、Px = 2・1・0.5）と、直線の需要曲線 Q = 100 − P の P = 50 での価格弾力性を返す関数と、テスト</td>
 <td style="text-align: left;">15 分</td>
 </tr>
 <tr>
-<td style="text-align: left;">スルツキー分解（代替効果・所得効果・価格効果）を返す関数と、テスト（Px が 2 から 0.5）</td>
+<td style="text-align: left;">スルツキー分解（代替効果・所得効果・価格効果）を返す関数と、テスト（U = x·y、所得 80、Py = 1 で、Px が 2 から 0.5）</td>
 <td style="text-align: left;">20 分</td>
 </tr>
 </tbody>
@@ -7903,30 +7937,39 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">marginal_rate_of_substitution</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter02.budget</span><span class="w"> </span><span class="kn">import</span> <span class="n">budget_intercepts</span><span class="p">,</span> <span class="n">optimal_bundle</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter03.demand</span><span class="w"> </span><span class="kn">import</span> <span class="n">demand_x</span><span class="p">,</span> <span class="n">price_elasticity_linear</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter04.slutsky</span><span class="w"> </span><span class="kn">import</span> <span class="n">slutsky_decomposition</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter03.demand</span><span class="w"> </span><span class="kn">import</span> <span class="n">demand_x</span><span class="p">,</span> <span class="n">price_elasticity</span><span class="p">,</span> <span class="n">price_elasticity_linear</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter04.slutsky</span><span class="w"> </span><span class="kn">import</span> <span class="n">classify_by_effects</span><span class="p">,</span> <span class="n">slutsky_decomposition</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="s2">"効用 (20, 40):"</span><span class="p">,</span> <span class="n">cobb_douglas_utility</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"U = 800 で x = 10 のとき y:"</span><span class="p">,</span> <span class="n">indifference_curve_y</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"MRS (20, 40):"</span><span class="p">,</span> <span class="n">marginal_rate_of_substitution</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">):</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">indifference_curve_y</span><span class="p">(</span><span class="mi">800</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"U = 800 で x ="</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="s2">"のとき y ="</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s2">"、MRS ="</span><span class="p">,</span> <span class="n">marginal_rate_of_substitution</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"予算線の切片:"</span><span class="p">,</span> <span class="n">budget_intercepts</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"最適消費点:"</span><span class="p">,</span> <span class="n">optimal_bundle</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Px = 1 の需要量:"</span><span class="p">,</span> <span class="n">demand_x</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"直線の需要曲線 P = 50 の価格弾力性:"</span><span class="p">,</span> <span class="n">price_elasticity_linear</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">price</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">"Px ="</span><span class="p">,</span> <span class="n">price</span><span class="p">,</span> <span class="s2">"の需要量:"</span><span class="p">,</span> <span class="n">demand_x</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="n">price</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"U = x·y の価格弾力性:"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">price_elasticity</span><span class="p">(</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">demand_x</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">4</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"直線 Q = 100 − P の P = 50 の価格弾力性:"</span><span class="p">,</span> <span class="n">price_elasticity_linear</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
 <span class="n">r</span> <span class="o">=</span> <span class="n">slutsky_decomposition</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"代替効果・所得効果・価格効果:"</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">substitution_effect</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">income_effect</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">price_effect</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"代替効果 20・所得効果 −30:"</span><span class="p">,</span> <span class="n">classify_by_effects</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="o">-</span><span class="mi">30</span><span class="p">))</span>
 <span class="k">for</span> <span class="n">new</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.125</span><span class="p">):</span>
     <span class="n">q</span> <span class="o">=</span> <span class="n">slutsky_decomposition</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">"Px = 2 →"</span><span class="p">,</span> <span class="n">new</span><span class="p">,</span> <span class="s2">":"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">substitution_effect</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">income_effect</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="nb">round</span><span class="p">(</span><span class="n">q</span><span class="o">.</span><span class="n">price_effect</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>効用 (20, 40): 800.0
-U = 800 で x = 10 のとき y: 80.0
-MRS (20, 40): 2.0
+U = 800 で x = 10 のとき y = 80.0 、MRS = 8.0
+U = 800 で x = 20 のとき y = 40.0 、MRS = 2.0
+U = 800 で x = 40 のとき y = 20.0 、MRS = 0.5
 予算線の切片: (40.0, 80.0)
 最適消費点: (20.0, 40.0)
+Px = 2 の需要量: 20.0
 Px = 1 の需要量: 40.0
-直線の需要曲線 P = 50 の価格弾力性: 1.0
+Px = 0.5 の需要量: 80.0
+U = x·y の価格弾力性: 1.0
+直線 Q = 100 − P の P = 50 の価格弾力性: 1.0
 代替効果・所得効果・価格効果: 20.0 40.0 60.0
+代替効果 20・所得効果 −30: ギッフェン財
 Px = 2 → 0.5 : 20.0 40.0 60.0
 Px = 2 → 0.125 : 60.0 240.0 300.0
 </code></pre></div>
@@ -7942,7 +7985,7 @@ Px = 2 → 0.125 : 60.0 240.0 300.0
 <tbody>
 <tr>
 <td style="text-align: left;">無差別曲線と、限界代替率を求め、原点に凸の意味を言う</td>
-<td style="text-align: left;">U = x·y で、(20, 40) の効用 800、x = 10 で y = 80、MRS = 2。右へ進むほど MRS が小さい</td>
+<td style="text-align: left;">U = x·y で、(20, 40) の効用 800。効用 800 の曲線上で、x = 10・20・40 のとき y = 80・40・20、MRS = 8・2・0.5（右へ進むほど MRS が小さい）</td>
 <td style="text-align: left;"><a href="../01-utility-and-indifference-curves/">第 1 章</a></td>
 </tr>
 <tr>
@@ -7952,7 +7995,7 @@ Px = 2 → 0.125 : 60.0 240.0 300.0
 </tr>
 <tr>
 <td style="text-align: left;">需要曲線を導き、弾力性を求める</td>
-<td style="text-align: left;">Px = 2・1・0.5 で 20・40・80。直線 Q = 100 − P の弾力性は P = 50 で 1、U = x·y の弾力性は 1</td>
+<td style="text-align: left;">Px = 2・1・0.5 で需要量 20・40・80。U = x·y の価格弾力性は 1。直線 Q = 100 − P の価格弾力性は P = 50 で 1</td>
 <td style="text-align: left;"><a href="../03-demand-curve-and-elasticity/">第 3 章</a></td>
 </tr>
 <tr>

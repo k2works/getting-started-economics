@@ -7291,7 +7291,7 @@
 <li>テストの import は、完成形では <code>from lib.chapter01.gdp import ...</code> です。自分で書くときは、<strong><code>from practice.chapter01.gdp import ...</code> に書き換えます</strong>。書き換えないと、完成形を読み込んで、最初から通ってしまい、<strong>Red</strong> になりません</li>
 <li>前の章の関数（例: 第 8 章が使う <code>lib.chapter04</code>・<code>lib.chapter07</code>）は、完成形の <code>lib</code> から import してかまいません。同じ章の中だけを、自作にします。入力の検証の共通関数（<code>validate_positive</code>・<code>validate_non_negative</code>）も、<code>lib/chapter01/validation.py</code> から import します</li>
 <li>記事のコードの抜粋には、import 行と、先頭が <code>_</code> の補助関数（入力の検証など）を、省いた箇所があります。写すときは、<code>lib/chapterNN/</code> の該当ファイルの先頭を、見て、足してください</li>
-<li>「予想の答え合わせ」のスクリプトは、<code>practice/chapterNN/check.py</code> に保存し、<code>apps/macro-basics-programming/python</code> で <code>uv run python practice/chapterNN/check.py</code> と実行します（<code>from lib...</code> が通るのは、このディレクトリで実行したときだけです）</li>
+<li>「予想の答え合わせ」のスクリプトは、<code>practice/chapterNN/check.py</code> に保存し、<code>apps/macro-basics-programming/python</code> で <code>uv run python -m practice.chapterNN.check</code> と実行します（<code>from lib...</code> が通るのは、このディレクトリで実行したときだけです）</li>
 </ul>
 <h2 id="_12">参考にした資料<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h2>
 <p>この記事の章立てと、式・数値の例は、このリポジトリの <a href="../../%E7%B5%8C%E6%B8%88%E5%AD%A6%E3%83%BB%E7%B5%8C%E6%B8%88%E6%94%BF%E7%AD%96%20%E3%83%88%E3%83%94%E3%83%83%E3%82%AF%E5%88%A5%E3%83%9E%E3%82%A4%E3%83%B3%E3%83%89%E3%83%9E%E3%83%83%E3%83%97/">経済学・経済政策 トピック別マインドマップ</a> と <a href="../../%E7%B5%8C%E6%B8%88%E5%AD%A6%E3%83%BB%E7%B5%8C%E6%B8%88%E6%94%BF%E7%AD%96%20%E5%85%A8%E4%BD%93%E3%83%9E%E3%82%A4%E3%83%B3%E3%83%89%E3%83%9E%E3%83%83%E3%83%97/">全体マインドマップ</a> に基づきます。外部の教材・データは、参照していません。</p>

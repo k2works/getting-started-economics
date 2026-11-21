@@ -7400,6 +7400,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">assert</span> <span class="n">demand_x</span><span class="p">(</span><span class="mi">160</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">PY</span><span class="p">)</span> <span class="o">==</span> <span class="mi">40</span>
 </code></pre></div>
 <p><code>demand_x</code> がまだないので、テストは失敗します（<strong>Red</strong>）。</p>
+<p>テストの import の一覧は、完成形の<strong>全関数</strong>です。自分で書くときは、関数を 1 つ書くたびに、その名前を、import に足していってかまいません（まだ書いていない関数を import すると、<code>ImportError</code> になり、Green になりません）。</p>
 <h3 id="green">Green: 需要曲線を実装する<a class="headerlink" href="#green" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">demand_x</span><span class="p">(</span>
     <span class="n">income</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">px</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">py</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span>
@@ -7426,6 +7427,24 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <div class="highlight"><pre><span></span><code><span class="c1"># 数値微分の幅と、弾力性の分類で、同じ値と見なす誤差</span>
 <span class="n">_STEP</span> <span class="o">=</span> <span class="mf">1e-6</span>
 <span class="n">_TOLERANCE</span> <span class="o">=</span> <span class="mf">1e-6</span>
+</code></pre></div>
+<p><strong>lib/chapter03/plot.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Figure</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter03.demand</span><span class="w"> </span><span class="kn">import</span> <span class="n">demand_curve</span><span class="p">,</span> <span class="n">income_consumption_curve</span>
+</code></pre></div>
+<p><strong>test/chapter03/test_plot.py</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.axes</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.lines</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line2D</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter03.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_demand_curve</span><span class="p">,</span> <span class="n">plot_income_consumption</span>
 </code></pre></div>
 </details>
 <p>第 2 章の <code>optimal_bundle</code> の x を、返すだけです。コブ・ダグラス型では、財 x の需要は、<strong>他の財の価格に依りません</strong>（2 つ目のテスト）。所得が増えると、需要曲線は、<strong>右へ動きます</strong>（最後のテスト）。</p>
@@ -7613,6 +7632,7 @@ Q = 100 − P の P = 75 の価格弾力性: 3.0
 <li><strong>4 つ目の問い</strong>: U = x·y の所得弾力性は 1（<strong>奢侈品</strong>の境界。需要が所得に比例する）です。100 − 0.1m は −1（<strong>下級財</strong>）、10√m は 0.5（<strong>必需品</strong>）、0.01m² は 2（<strong>奢侈品</strong>）です</li>
 </ul>
 <h3 id="_10">図<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>（図の関数の import と補助関数（<code>_POINTS</code>・<code>_style</code> など）は、上の折りたたみ「import と補助関数」の、<code>plot.py</code> と <code>test_plot.py</code> の項目にあります。）</p>
 <p>需要曲線を描く関数と、座標のテストです。横軸が数量、縦軸が価格であること、右下がりであること、所得が増えると右へ動くことを、確かめます。</p>
 <details class="note">
 <summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
@@ -7781,7 +7801,7 @@ Q = 100 − P の P = 75 の価格弾力性: 3.0
 <details class="note">
 <summary>解答（先に自分で取り組んでから、開いてください）</summary>
 <p><strong>想起</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_需要曲線は右下がり</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_需要量は価格が下がると増える</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="p">[</span><span class="n">demand_x</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)]</span> <span class="o">==</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">80</span><span class="p">]</span>
 </code></pre></div>
 <p><strong>生成</strong>: 総支出は、価格に、需要量を掛けます。</p>
@@ -7793,7 +7813,7 @@ Q = 100 − P の P = 75 の価格弾力性: 3.0
 </code></pre></div>
 <p><strong>価格弾力性が 1 なら、価格が下がると需要量が同じ割合で増え、総支出は変わりません。</strong> どの価格でも、所得の半分（40）です。</p>
 <p><strong>多様</strong>: Q = 150 − 2P の P = 50 では、Q = 50 なので、e = 2 × 50 ÷ 50 = 2 です。同じ点 (P = 50, Q = 50) を通る Q = 100 − P の e = 1 より、<strong>大きく</strong>（弾力的）、グラフでは、<strong>緩やか</strong>な曲線です。</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_傾きが大きい需要曲線は弾力的</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_緩やかな需要曲線ほど弾力的</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">price_elasticity_linear</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">price_elasticity_linear</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
 </code></pre></div>
