@@ -131,3 +131,15 @@ def test_特化して貿易すると世界全体の価値が増える() -> None:
     assert before == 18
     assert after == 24
     assert after > before
+
+
+# --- 独立した変異確認で見つかった穴を埋めるテスト ---
+
+
+def test_絶対優位が財ごとに分かれる国の組() -> None:
+    # A は工業が得意（4 人 < 8 人）、B は農業が得意（5 人 < 10 人）
+    a, b = Country("A", 4, 10), Country("B", 8, 5)
+    assert absolute_advantage(a, b, "industry") == "A"
+    assert absolute_advantage(a, b, "agriculture") == "B"
+    assert comparative_advantage(a, b, "industry") == "A"
+    assert comparative_advantage(a, b, "agriculture") == "B"
