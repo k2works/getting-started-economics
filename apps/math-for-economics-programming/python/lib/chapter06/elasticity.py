@@ -31,7 +31,7 @@ def linear_demand_elasticity(price: float, a: float, b: float) -> float:
 
 
 def classify_elasticity(elasticity: float) -> str:
-    """|ε| > 1 なら弾力的、< 1 なら非弾力的、ほぼ 1 なら単位弾力的。"""
+    """ε > 1 なら弾力的、< 1 なら非弾力的、ほぼ 1 なら単位弾力的。"""
     if math.isclose(elasticity, 1, abs_tol=1e-9):
         return "unit elastic"
     return "elastic" if elasticity > 1 else "inelastic"

@@ -66,7 +66,7 @@ uv run pytest test/chapter08
 
 自分でコードを書くときは、`practice/chapter08/` に、完成形と同じ名前のファイル（`partial.py`・`utility.py`・`plot.py`・`test_partial.py`・`test_utility.py`・`test_plot.py`）を作ります。図を後回しにするなら、`plot.py` と `test_plot.py` は要らず、テストは 45 件になります。
 
-- テスト・`plot.py`・check スクリプトの import を、`from practice.chapter08...` に書き換えます（書き換えないと、完成形を動かします）
+- テスト・`utility.py`・`plot.py`・check スクリプトの import を、`from practice.chapter08...` に書き換えます（`utility.py` は `partial` を、`plot.py` は `utility` を import します。書き換えないと、完成形を動かします）
 - 第 5 章の `numerical_derivative` と、第 7 章の `budget_intercepts` などは、自分で写した `practice.chapter05`・`practice.chapter07` から import します。写していなければ、`lib.chapter05`・`lib.chapter07` のままでかまいません。この章では、それらの実装を再掲しません
 - テストの import の一覧は、完成形の**全関数**です。まだ書いていない関数を import すると、`ImportError` になります。関数を 1 つ書くたびに、名前を import に足してください
 
@@ -638,6 +638,8 @@ def test_消費と貯蓄は来期の価格1割る1プラスrの予算での効�
 
 ??? note "準凹とオイラーの定理のテストと実装（発展。後回しにしても、学習は成り立ちます）"
 
+    `test_partial.py` に足すテストです。
+
     ```python
     def _cobb_douglas_03(x: float, y: float) -> float:
         """U = x^0.3·y^0.7（1 次同次）。"""
@@ -710,6 +712,8 @@ def test_消費と貯蓄は来期の価格1割る1プラスrの予算での効�
             is_quasi_concave_on_points(_product, _SAMPLE_POINTS, steps=1)
     ```
 
+    `partial.py` に足す実装です（`combinations` の import は、先頭で済ませています）。
+
     ```python
     def euler_degree_of_homogeneity(func: Surface, x: float, y: float) -> float:
         """(x·f_x + y·f_y) ÷ f。k 次同次の関数なら、どの点でも k（オイラーの定理）。"""
@@ -741,9 +745,13 @@ def test_消費と貯蓄は来期の価格1割る1プラスrの予算での効�
 ### 予想の答え合わせ
 
 ```python
+from functools import partial
+
 from lib.chapter08.partial import (
     classify_critical_point_2d,
     euler_degree_of_homogeneity,
+    numerical_partial_x,
+    numerical_partial_y,
     quadratic_2d_critical_point,
 )
 from lib.chapter08.utility import (
@@ -763,7 +771,10 @@ x, y = quadratic_2d_critical_point(-1, -1, -1, 50, 40)
 print(x, y, 50 * x + 40 * y - x**2 - x * y - y**2)
 print(classify_critical_point_2d(-2, -1, -2))
 print(quasilinear_demand([1, 2], 10, 4), quasilinear_demand([1, 2], 30, 4))
-utility = lambda u, v: cobb_douglas_utility(u, v, 0.5)
+utility = partial(cobb_douglas_utility, share=0.5)
+ux = numerical_partial_x(utility, 25, 10)
+uy = numerical_partial_y(utility, 25, 10)
+print(round(25 * ux + 10 * uy, 6))
 print(round(euler_degree_of_homogeneity(utility, 25, 10), 6))
 ```
 
@@ -775,6 +786,7 @@ print(round(euler_degree_of_homogeneity(utility, 25, 10), 6))
 20.0 10.0 700.0
 maximum
 (10.0, 0.0) (16.0, 7.0)
+15.811388
 1.0
 ```
 
@@ -782,13 +794,15 @@ maximum
 - **2 つ目の問い**: 所得の 3 割（42）を x に使い、x = 42 ÷ 2 = 21、y = 98 ÷ 7 = 14 です
 - **3 つ目の問い**: 50 − 2x − y = 0、40 − x − 2y = 0 から (20, 10)、利潤は 1000 + 400 − 400 − 200 − 100 = 700 です。ヘッセ行列は [[−2, −1], [−1, −2]] で、D = 4 − 1 = 3 > 0、f_xx < 0 なので、極大です
 - **4 つ目の問い**: MRS = 4 ÷ (2√x) = 1 ÷ 2 から x* = 16 ですが、所得 10 では買えないので、**端点解** (10, 0) です。所得 30 なら (16, 7) です（増えた所得は、すべて y に回る）
-- **5 つ目の問い**（発展）: 1 次同次なので x·U_x + y·U_y = U です。`euler_degree_of_homogeneity` は、その比 1 を返します
+- **5 つ目の問い**（発展）: 1 次同次なので、x·U_x + y·U_y = U = √250 ≈ 15.81 です（最後から 2 行目の出力）。最後の行は、`euler_degree_of_homogeneity` が返す U との比 1 です。`functools.partial` は、`share=0.5` を固定した 2 変数の関数を作ります（`lambda` を変数に入れる書き方の代わり）
 
 ### 境界のテスト
 
 完成形には、本文に載せなかったテストがあります。係数が対称でない 2 次関数、2 階の偏微分が 0 < |f_xx| < 1、行列式が 0（判定できない・停留点が決まらない）、a = 0.3 の需要、数量 0、a が 0〜1 の外、負の数量、所得 0・負の所得・2 財でない予算・正でない価格、所得がちょうど足りる端点、2 点だけの格子です。テストの件数を合わせるため、ここに全件載せます。
 
 ??? note "境界のテスト"
+
+    `test_partial.py` に足すテストです。
 
     ```python
     def test_停留点は係数が対称でない2次関数でも連立方程式の解() -> None:
@@ -812,6 +826,8 @@ maximum
         with pytest.raises(ValueError):
             quadratic_2d_critical_point(1, 2, 1, -4, -4)
     ```
+
+    `test_utility.py` に足すテストです。
 
     ```python
     def test_aが0点3なら所得の3割をxに使う() -> None:
@@ -1162,7 +1178,7 @@ uv run pytest test/chapter08
 
 ## 8.7 第 2 部の到達チェック
 
-第 2 部（第 5〜8 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。**先に、次の「時間を決めて書く課題」を、何も見ずに試してください。** 課題の解答（実行できるテスト）は、8.8 節の練習問題の解答のあとに、折りたたんで置きます。自分のコードは、`practice/chapter08/checkpoint.py` などに書きます。第 5・7 章の関数は、自分で写した `practice.chapter05`・`practice.chapter07` から import します（写していなければ、`lib` の完成形でかまいません）。
+第 2 部（第 5〜8 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。**先に、次の「時間を決めて書く課題」を、何も見ずに試してください。** 課題の解答（実行できるテスト）は、8.8 節の練習問題の解答のあとに、折りたたんで置きます。自分のコードは、関数を `practice/chapter08/checkpoint.py` に、テストを `practice/chapter08/test_checkpoint.py` に書きます。第 5・7 章の関数は、自分で写した `practice.chapter05`・`practice.chapter07` から import します（写していなければ、`lib` の完成形でかまいません）。
 
 ### 時間を決めて書く課題
 
@@ -1170,7 +1186,7 @@ uv run pytest test/chapter08
 
 | 課題 | 目安の時間 |
 | :--- | :--- |
-| 費用 C(q) = q² + 4q + 25 の企業が、価格 24 で売るときの、利潤を最大にする数量と利潤。平均費用が最小になる数量と、その平均費用（第 5 章の関数を使う） | 10 分 |
+| 費用 C(q) = q² + 4q + 25 の企業が、価格 24 で売るときの、利潤を最大にする数量と利潤。平均費用が最小になる数量と、その平均費用（第 5 章の関数を使う。ヒント: 費用は `Polynomial` に**次数の低い順**（定数項、1 次、2 次）で係数を渡す。`profit_maximizing_quantity(price, cost)`・`competitive_profit(price, cost, quantity)`・`minimum_average_cost(cost)`（数量と平均費用の組を返す）・`marginal_cost(cost, quantity)`） | 10 分 |
 | 需要 q = 90 − 3p の点弾力性を、数値微分で返す関数と、テスト。価格 10 と 20 で、弾力的か非弾力的か。価格を 1 下げると、収入は増えるか | 15 分 |
 | 価格 (4, 5)・所得 100 の予算線の切片。(10, 12) と (15, 9) は、予算内・予算線上・予算外のどれか。予算線上の 2 点の差が、価格ベクトルと直交すること（第 7 章の関数を使う） | 10 分 |
 | U = x^0.25·y^0.75・価格 (1, 3)・所得 80 の最適点を、解析解で返す関数と、テスト。格子探索（この章の関数）と一致すること、MRS ＝ 価格比 を確かめる | 15 分 |
@@ -1205,6 +1221,20 @@ uv run pytest test/chapter08
 | 交互 | [第 5 章](05-derivatives-and-profit-maximization.md)の `classify_stationary_point` は 1 変数、この章の `classify_critical_point_2d` は 2 変数の判定です。y を含まない利潤 π = 50x − x² を 2 変数の関数とみると、ヘッセ行列は (−2, 0, 0) で、この章の関数は何を返しますか。1 変数の判定と、なぜ食い違うのですか |
 
 ??? note "解答（先に自分で取り組んでから、開いてください）"
+
+    解答のテストの import です（写したものを使うなら、`practice` に書き換えます）。
+
+    ```python
+    import pytest
+
+    from lib.chapter05.derivative import Polynomial, classify_stationary_point
+    from lib.chapter08.partial import classify_critical_point_2d, numerical_partial_x
+    from lib.chapter08.utility import (
+        cobb_douglas_demand,
+        cobb_douglas_mrs,
+        cobb_douglas_utility,
+    )
+    ```
 
     **想起**:
 
@@ -1251,10 +1281,12 @@ uv run pytest test/chapter08
 
 ??? note "解答: 第 2 部の到達チェック（先に自分で取り組んでから、開いてください）"
 
-    第 5・7 章とこの章の関数の import です（写したものを使うなら、`practice` に書き換えます）。
+    関数（`checkpoint_point_elasticity`・`checkpoint_cobb_douglas_optimum`）は `practice/chapter08/checkpoint.py` に、テストは `practice/chapter08/test_checkpoint.py` に書きます。`checkpoint.py` の先頭には `from collections.abc import Callable` と、第 5 章の `numerical_derivative` の import を書きます。`test_checkpoint.py` の先頭の import は、次のとおりです（写したものを使うなら、`lib` を `practice` に書き換えます）。自分で書いた関数は、`from practice.chapter08.checkpoint import checkpoint_cobb_douglas_optimum, checkpoint_point_elasticity` で import します（この行は、記事の検査では実行しないので、コードブロックの外に書いています）。
 
     ```python
     from collections.abc import Callable
+
+    import pytest
 
     from lib.chapter05.cost import (
         competitive_profit,
@@ -1262,7 +1294,11 @@ uv run pytest test/chapter08
         minimum_average_cost,
         profit_maximizing_quantity,
     )
-    from lib.chapter05.derivative import Polynomial, numerical_derivative
+    from lib.chapter05.derivative import (
+        Polynomial,
+        classify_stationary_point,
+        numerical_derivative,
+    )
     from lib.chapter07.budget import budget_intercepts, budget_status
     from lib.chapter07.vectors import vector_dot
     from lib.chapter08.utility import best_bundle_on_budget_line, numerical_mrs

@@ -131,7 +131,7 @@ uv run pytest test/chapter06
 | 関数 | 導関数 | 例 |
 | :--- | :--- | :--- |
 | e^x | e^x（自分自身） | (e^(0.03t))' = 0.03·e^(0.03t) |
-| ln x | 1 ÷ x | (ln 4)' = 0.25 |
+| ln x | 1 ÷ x | x = 4 での (ln x)' = 1 ÷ 4 = 0.25 |
 | a^x | a^x·ln a | (2^x)' = 2^x·ln 2 ≈ 0.693·2^x |
 
 e^x は、微分しても形が変わらない、ただ 1 つの指数関数です。第 3 章で自然対数の底に e を使ったのは、このためです。
@@ -283,7 +283,7 @@ def linear_demand_elasticity(price: float, a: float, b: float) -> float:
 
 
 def classify_elasticity(elasticity: float) -> str:
-    """|ε| > 1 なら弾力的、< 1 なら非弾力的、ほぼ 1 なら単位弾力的。"""
+    """ε > 1 なら弾力的、< 1 なら非弾力的、ほぼ 1 なら単位弾力的。"""
     if math.isclose(elasticity, 1, abs_tol=1e-9):
         return "unit elastic"
     return "elastic" if elasticity > 1 else "inelastic"
@@ -399,6 +399,8 @@ def test_対数関数の導関数は1分のx(x: float) -> None:
 ```
 
 ### 対数で見る弾力性
+
+この節のテストは、`test_growth.py` ではなく `test_elasticity.py` に書きます（使う関数の import が、そちらにあるからです）。
 
 弾力性が一定の需要 q = 50·p^(−1.5) を、テストの関数にします。弾力性が 1.5 と 0.4 の 2 つで、どの価格でも同じことを確かめます。対数の傾きで求めた弾力性が、点弾力性と一致することも確かめます。
 
@@ -707,7 +709,7 @@ print([aggregate_supply_quantity(p, [cost] * 10) for p in (30, 8)])
 - **1 つ目の問い**: ε = 2 × 40 ÷ 40 = 2 で、**弾力的**です。値下げすると、収入は 39.6 × 40.8 = 1615.68 に**増えます**（dR/dp = 40 × (1 − 2) = −40 < 0）
 - **2 つ目の問い**: 豊作の前は 0.5 × 60 ÷ 70 ≈ 0.43、後は 0.5 × 40 ÷ 80 = 0.25 で、どちらも**非弾力的**です。だから、豊作で価格が下がると、収入が減りました（4200 → 3200）
 - **3 つ目の問い**: 数量は 40 → 60 です。(20 ÷ 50) ÷ (10 ÷ 35) = **1.4** です。価格 40 では 2、価格 30 では 1 で、弧弾力性は、そのどちらとも違います
-- **4 つ目の問い**: 2 次までで 1.105、3 次までで 1.105166667 です。本当の値は 1.105170918 で、3 次までの近似は、小数第 4 位まで一致します（1.1051…）。誤差 0.0000043 は、次の項 0.1⁴ ÷ 24 ≈ 0.0000042 とほぼ同じです
+- **4 つ目の問い**: 2 次までで 1.105、3 次までで 1.105166667 です。本当の値は 1.105170918 です。2 次までの近似は小数第 3 位まで（1.105）、3 次までの近似は小数第 4 位まで（1.1051…）一致します。誤差 0.0000043 は、次の項 0.1⁴ ÷ 24 ≈ 0.0000042 とほぼ同じです
 - **5 つ目の問い**: 価格 30 では 1 社 (30 − 10) ÷ 2 = 10 で、10 社で **100** です（5 × (30 − 10)）。価格 8 は MC の切片 10 より低いので、どの企業も作らず **0** です
 
 ### 境界のテスト
@@ -940,6 +942,25 @@ uv run pytest test/chapter06
 | 交互 | [第 3 章](03-exponents-logarithms-and-interest.md) の `continuous_compound_amount`（連続複利）と `compound_amount`（年 1 回の複利）を、年利 5% で `instantaneous_growth_rate` に渡してください（自分で写した `practice.chapter03.interest` から import します）。それぞれの成長率は、いくつですか |
 
 ??? note "解答（先に自分で取り組んでから、開いてください）"
+
+    解答のテストの import です（写経では、`lib.chapter06` を `practice.chapter06` に、`lib.chapter01` を `practice.chapter01` に書き換えます。交互の `lib.chapter03` も同じです）。
+
+    ```python
+    import math
+
+    import pytest
+
+    from lib.chapter01.market import demand_quantity
+    from lib.chapter03.interest import compound_amount, continuous_compound_amount
+    from lib.chapter06.elasticity import (
+        constant_elasticity_demand,
+        linear_demand_elasticity,
+        point_price_elasticity,
+        revenue_price_slope,
+        sales_revenue,
+    )
+    from lib.chapter06.growth import instantaneous_growth_rate
+    ```
 
     **想起**:
 

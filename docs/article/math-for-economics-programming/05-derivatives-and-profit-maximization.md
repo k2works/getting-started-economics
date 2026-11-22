@@ -154,7 +154,7 @@ P = MC の数量でも、利潤が負になることがあります。それで�
 
 ### Red: 多項式と導関数のテスト
 
-`test_derivative.py` の先頭の import です（完成形の全関数）。
+`test_derivative.py` の先頭の import です（完成形の全関数）。自分で書くときは、まだ書いていない名前を外しておき、関数を 1 つ書くたびに足してください（最初から全部写すと、`ImportError` になります）。
 
 ```python
 import math
@@ -384,7 +384,7 @@ def classify_stationary_point(poly: Polynomial, x: float) -> str:
 
 ### 費用の諸概念
 
-`test_cost.py` の先頭です。`COST`・`COST_HALF`・`COST_CUBIC` は、この章で使い回す費用関数です。
+`test_cost.py` の先頭です（ここも、名前は関数を書くたびに足します）。`COST`・`COST_HALF`・`COST_CUBIC` は、この章で使い回す費用関数です。
 
 ```python
 import pytest
@@ -918,9 +918,23 @@ uv run pytest test/chapter05
 | 想起 | 本文を閉じて、`profit_maximizing_quantity` の最初のテスト（費用 q² + 10q + 100・価格 50 で、数量 20・利潤 300）を書いてください |
 | 生成 | 解説を見る前に、**損益分岐点**（利潤がちょうど 0 になる最低の価格。AC の最小値）を返す `break_even_price(cost)` を、テストから書いてください。その価格で `profit_maximizing_quantity` を呼ぶと、利潤が 0 になることも、確かめてください |
 | 多様 | 費用 C(q) = 2q² + 8q + 200・価格 48 の企業の、利潤を最大にする数量と、そのときの利潤は、いくつですか。平均費用の最小値と比べてください。先に手計算で予想してから、確かめてください |
-| 交互 | [第 2 章](02-quadratics-monopoly-and-oligopoly.md) の独占（逆需要 P = 100 − 2Q・費用 20Q）の利潤を `Polynomial` で表し、`stationary_points` の答えが、`monopoly_outcome`（自分で写した `practice.chapter02.monopoly` から import します）の数量と一致することを確かめてください。最適な数量で、**限界収入**（収入 100Q − 2Q² の導関数）が、限界費用 20 に等しいことも確かめてください |
+| 交互 | [第 2 章](02-quadratics-monopoly-and-oligopoly.md) の独占（逆需要 P = 100 − 2Q・費用 20Q）の利潤を `Polynomial` で表し、`stationary_points` の答えが、`monopoly_outcome`（自分で写した `practice.chapter02.monopoly` から import します。第 2 章を写していなければ、`lib.chapter02.monopoly` のままでかまいません）の数量と一致することを確かめてください。最適な数量で、**限界収入**（収入 100Q − 2Q² の導関数）が、限界費用 20 に等しいことも確かめてください |
 
 ??? note "解答（先に自分で取り組んでから、開いてください）"
+
+    解答のテストと関数の import です（`practice` で書くときは、`lib` を `practice` に書き換えます）。
+
+    ```python
+    import pytest
+
+    from lib.chapter02.monopoly import monopoly_outcome
+    from lib.chapter05.cost import (
+        competitive_profit,
+        minimum_average_cost,
+        profit_maximizing_quantity,
+    )
+    from lib.chapter05.derivative import Polynomial, stationary_points
+    ```
 
     **想起**:
 

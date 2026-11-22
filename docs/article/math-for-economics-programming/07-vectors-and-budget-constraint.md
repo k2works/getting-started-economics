@@ -22,7 +22,7 @@ generated: { by: claude-code/claude-opus-5-5, at: 2026-11-22T00:00:00Z }
 | 経済学の題材 | 予算制約、予算線と予算集合、労働と余暇、消費と貯蓄（2 期間）、証券の価格（発展） |
 | 数学 | ベクトル、内積、大きさ、なす角、直交、直線の式と法線ベクトル、平均・分散の内積表示 |
 | 使う Python の機能 | リスト、`zip`（`strict=True`）、`sum`、`math.acos`、`math.isclose`、`Literal`、テスト（`pytest`） |
-| 新しく導入するライブラリ | **NumPy**（`np.array`・`np.dot`・`np.linalg.norm`） |
+| 新しく導入するライブラリ | **NumPy** を、正面から説明する（配列・`np.dot`・`np.linalg.norm` など。これまでは図のテストで、説明なしに使ってきた） |
 | 完成形 | `vector_dot`、`vector_length`、`vector_angle_degrees`、`mean_by_dot`、`variance_by_dot`、`line_normal_form`、`budget_expenditure`、`budget_status`、`budget_intercepts`、`budget_line_quantity`、`full_income`、`consumption_given_leisure`、`second_period_consumption`、`lifetime_income_present_value`、`security_price` |
 | ファイル | 実装: `lib/chapter07/vectors.py`（標準ライブラリ）、`lib/chapter07/budget.py`（NumPy）、`lib/chapter07/plot.py`（図）／テスト: `test/chapter07/test_vectors.py`、`test/chapter07/test_budget.py`、`test/chapter07/test_plot.py` |
 | データ | なし（手計算できる小さな例だけ） |
@@ -54,7 +54,7 @@ generated: { by: claude-code/claude-opus-5-5, at: 2026-11-22T00:00:00Z }
 | 直線の式（傾きと切片）を書く | この連載の[第 1 章](01-linear-functions-and-markets.md) |
 | 割引現在価値（将来のお金を、今のお金に換算する）を計算する | この連載の[第 3 章](03-exponents-logarithms-and-interest.md) |
 
-NumPy は、この章で初めて使います。第 1 シリーズの NumPy の章は、前提にしません。予算制約と最適な消費の**経済学**は、[ミクロ経済学のためのプログラミング（初級）の第 2 章](../micro-basics-programming/02-budget-and-optimal-choice.md)で扱います。この章は、そこで使う数学（ベクトルと内積）を、関数とテストで確かめます。
+NumPy は、第 1〜6 章の図のテスト（`np.asarray(...).tolist()`）や、第 2・3 章の `plot.py`（`np.linspace`）で、説明なしに使ってきました。この章で、正面から説明します。第 1 シリーズの NumPy の章は、前提にしません。予算制約と最適な消費の**経済学**は、[ミクロ経済学のためのプログラミング（初級）の第 2 章](../micro-basics-programming/02-budget-and-optimal-choice.md)で扱います。この章は、そこで使う数学（ベクトルと内積）を、関数とテストで確かめます。
 
 ## 7.2 準備
 
@@ -263,15 +263,52 @@ def vector_angle_degrees(u: Sequence[float], v: Sequence[float]) -> float:
 - (0.1, 1) と (0.2, 2)（同じ向き）では、cos θ が **1.0000000000000002** になり、`acos` が `ValueError`（math domain error）を出しました。0.1 が 2 進数で割り切れないためです。cos θ を [−1, 1] に収めて直しました
 - (1, 2) と (2, 4) の角は、0 でなく **1.2e-6 度**になりました。cos θ = 1 の近くでは、`acos` が cos の丸め誤差を大きく拡大します。0 度・180 度のテストは、許容誤差を `abs=1e-5` にしています（境界のテスト）
 
+### 平均と分散を、内積で
+
+```python
+def test_5つの値の平均3は1のベクトルとの内積を5で割る() -> None:
+    assert mean_by_dot([1, 2, 3, 4, 5]) == 3
+
+
+def test_5つの値の分散2は偏差の内積を5で割る() -> None:
+    assert variance_by_dot([1, 2, 3, 4, 5]) == 2
+```
+
+```python
+def mean_by_dot(xs: Sequence[float]) -> float:
+    """平均 = x·1 ÷ n（1 は、成分がすべて 1 のベクトル）。"""
+    if not xs:
+        raise ValueError("空のデータの平均は、決まりません")
+    return vector_dot(xs, [1] * len(xs)) / len(xs)
+
+
+def variance_by_dot(xs: Sequence[float]) -> float:
+    """分散 = d·d ÷ n（d は、平均からの偏差のベクトル）。"""
+    mean = mean_by_dot(xs)
+    deviations = [x - mean for x in xs]
+    return vector_dot(deviations, deviations) / len(xs)
+```
+
 ### NumPy を導入する
 
-ここで、**NumPy** を導入します。NumPy は、数の並び（**配列**）の計算を、まとめて速く行うライブラリです。この章では、次の 3 つだけを使います。
+ここまでの `vectors.py` は、標準ライブラリ（リストと `zip`）だけで書き、内積の仕組みを自分で確かめました。仕組みがわかったので、ここから先（`budget.py`）は、道具の **NumPy** を使います。
 
-| 道具 | 意味 | 自作の関数 |
-| :--- | :--- | :--- |
-| `np.array(リスト, dtype=np.float64)` | リストを、浮動小数点数の配列にする | （リスト） |
-| `np.dot(u, v)` | 内積 | `vector_dot` |
-| `np.linalg.norm(v)` | 大きさ | `vector_length` |
+NumPy は、数の並び（**配列**）の計算を、まとめて行うライブラリです。第 1〜6 章の図のテストで、説明なしに `import numpy as np` と書いてきた `np` が、これです。`pyproject.toml` の依存に入っていて、`uv sync` で入るので、`uv add` は要りません。この章で使う道具は、次のとおりです。
+
+| 道具 | 意味 |
+| :--- | :--- |
+| `np.array(リスト, dtype=np.float64)` | リストを、浮動小数点数（`float64`）の配列にする |
+| `np.asarray(値, dtype=np.float64)` | `np.array` と同じ。ただし、すでに同じ型の配列なら、コピーせずにそのまま返す |
+| `np.dot(u, v)` | 内積（自作の `vector_dot`）。リストをそのまま渡しても、内部で配列に変換される |
+| `np.linalg.norm(v)` | 大きさ（自作の `vector_length`） |
+| `np.mean`・`np.var`・`np.std` | 平均・分散・標準偏差。`np.var` は **n で割る**分散（`statistics.variance` は n − 1 で割るので、値が違う） |
+| `u * v`、`.sum()` | 配列どうしの `*` は**成分ごとの積**（内積ではない）。`.sum()` は成分の和 |
+| `60 / 配列`、`配列 <= 0` | 数と配列の計算・比較は、**成分ごと**に行われる（ブロードキャスト） |
+| `np.any(配列 <= 0)` | 「どれか 1 つでも 0 以下か」 |
+| `.tolist()` | 配列を、Python のリストに戻す |
+| `NDArray[np.float64]` | 「`float64` の配列」という型ヒント（`from numpy.typing import NDArray`） |
+
+NumPy の計算結果の数は、Python の `float` でなく `np.float64` です（配列を `for` で回して取り出した成分も同じ）。値は同じですが型が違うので、この連載では、公開する関数の戻り値を `float(...)` で `float` に変換します（型ヒントと mypy をそろえるため）。
 
 自作の関数と NumPy の関数が一致することを、テストにします（0 < x < 1 の成分・負の成分・0 ベクトル・4 次元も試す）。2 つの計算を突き合わせる考え方は、第 4 章の「公式と、項を足した値の一致」と同じです。
 
@@ -293,21 +330,6 @@ def test_NumPyの配列の掛け算は成分ごとで内積は和をとる() -> 
     v = np.array([4, 5, 6], dtype=np.float64)
     assert (u * v).tolist() == [4, 10, 18]
     assert float(np.dot(u, v)) == float((u * v).sum()) == 32
-```
-
-この 2 つは、新しい関数なしで最初から通ります（NumPy の使い方を確かめるテストです）。配列どうしの `*` は**成分ごとの積**で、内積ではありません。内積は、その和です。
-
-`np.dot` の戻り値は、Python の `float` でなく、NumPy の `np.float64` です。この連載では、公開する関数の戻り値を `float(...)` で `float` に変換します（型ヒントと mypy をそろえるため）。
-
-### 平均と分散を、内積で
-
-```python
-def test_5つの値の平均3は1のベクトルとの内積を5で割る() -> None:
-    assert mean_by_dot([1, 2, 3, 4, 5]) == 3
-
-
-def test_5つの値の分散2は偏差の内積を5で割る() -> None:
-    assert variance_by_dot([1, 2, 3, 4, 5]) == 2
 
 
 def test_内積の平均と分散は統計の公式と一致する() -> None:
@@ -317,22 +339,7 @@ def test_内積の平均と分散は統計の公式と一致する() -> None:
         assert math.sqrt(variance_by_dot(xs)) == pytest.approx(float(np.std(xs)))
 ```
 
-```python
-def mean_by_dot(xs: Sequence[float]) -> float:
-    """平均 = x·1 ÷ n（1 は、成分がすべて 1 のベクトル）。"""
-    if not xs:
-        raise ValueError("空のデータの平均は、決まりません")
-    return vector_dot(xs, [1] * len(xs)) / len(xs)
-
-
-def variance_by_dot(xs: Sequence[float]) -> float:
-    """分散 = d·d ÷ n（d は、平均からの偏差のベクトル）。"""
-    mean = mean_by_dot(xs)
-    deviations = [x - mean for x in xs]
-    return vector_dot(deviations, deviations) / len(xs)
-```
-
-`np.var` は、n で割る分散（母分散）です。標準ライブラリの `statistics.variance` は、n − 1 で割る分散（標本分散）なので、値が違います。比べる相手を、`np.var` にしています。
+この 3 つは、新しい関数なしで最初から通ります（NumPy の使い方を確かめるテストです）。
 
 ### Red: 支出と予算制約のテスト
 
@@ -415,8 +422,8 @@ def budget_status(
     return "inside" if spending < income else "outside"
 ```
 
-- `_as_vector` は、リストを `dtype=np.float64`（浮動小数点数）の配列にします。整数のリストから作ると、`dtype` が `int64` になり、割り算などで型が変わるので、そろえます。型ヒントは `NDArray[np.float64]` です
-- `np.any(配列 <= 0)` は、「どれか 1 つでも 0 以下か」を、まとめて調べます。配列と数の比較は、成分ごとに行われます
+- `_as_vector` は、リストを `dtype=np.float64`（浮動小数点数）の配列にします。`[2, 3]` のような整数のリストから作ると、`dtype` が `int64` の配列になります。`dtype` を指定して、型ヒントを `NDArray[np.float64]` の 1 つにそろえます
+- `np.any(配列 <= 0)` は、「どれか 1 つでも 0 以下か」を、まとめて調べます。`budget_intercepts`（次の節）の `income / 配列` も、成分ごとの割り算です
 - 予算線上かどうかは、`==` でなく、`math.isclose` で比べます。0.1 × 1 + 0.2 × 1 は、浮動小数点では 0.30000000000000004 で、`==` では所得 0.3 と等しくなりません。`==` で書いて、このテストが落ちることを確かめてから、直しました
 - 戻り値の型 `Literal["inside", "on", "outside"]` は、「この 3 つの文字列のどれか」という意味です
 
@@ -1038,6 +1045,20 @@ uv run pytest test/chapter07
 | 交互 | [第 3 章](03-exponents-logarithms-and-interest.md)の `discount_to_present` で、来期の所得 110 を利子率 10% で割り引き、今期の所得 100 に足してください。この章の `lifetime_income_present_value(100, 110, 0.1)` と、一致しますか |
 
 ??? note "解答（先に自分で取り組んでから、開いてください）"
+
+    解答のテストの import です（自分で写した関数を使うなら、`lib` を `practice` に書き換えます）。
+
+    ```python
+    import pytest
+
+    from lib.chapter03.interest import discount_to_present
+    from lib.chapter07.budget import (
+        budget_intercepts,
+        budget_status,
+        lifetime_income_present_value,
+    )
+    from lib.chapter07.vectors import vector_angle_degrees, vector_dot
+    ```
 
     **想起**:
 
