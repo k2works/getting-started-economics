@@ -101,7 +101,9 @@ RUN curl -LsSf https://astral.sh/uv/install.sh     | env UV_INSTALL_DIR=/usr/loc
 
 # JupyterLab のインストール（Codespaces の「Open in JupyterLab」が、jupyter-lab コマンドを使う）
 # 連載のカーネルは、npm run setup:* が、連載の .venv を指す形で登録する
-RUN UV_TOOL_DIR=/opt/uv-tools UV_TOOL_BIN_DIR=/usr/local/bin uv tool install jupyterlab
+# root で uv tool を使うと、Python が /root 以下に入り、一般ユーザーが起動できないので、
+# システムの Python（/usr/bin/python3）に入れる。jupyter-lab も python3 -m jupyterlab も使える
+RUN uv pip install --system --break-system-packages --python /usr/bin/python3 jupyterlab ipykernel     && jupyter-lab --version
 
 # Gemini CLIのインストール
 RUN npm install -g @google/gemini-cli
