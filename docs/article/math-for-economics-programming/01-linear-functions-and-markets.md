@@ -768,6 +768,10 @@ from lib.chapter01.market import equilibrium
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/math-for-economics-programming/python/notebooks/ch01_linear_functions_and_markets.ipynb` を開き、「Parameters」のセルの数字（需要・供給の切片と傾き、豊作のあとの供給の切片）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

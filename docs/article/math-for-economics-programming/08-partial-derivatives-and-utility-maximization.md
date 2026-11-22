@@ -1187,6 +1187,18 @@ maximum
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/math-for-economics-programming/python/notebooks/ch08_partial_derivatives_and_utility_maximization.ipynb` を開き、「Parameters」のセルの数字（2 つの価格、所得、コブ・ダグラス型の指数 a、準線形効用の重み b）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
+### 動かして見る
+
+価格 (1, 2)・a = 0.5 で、所得を 8 から 40 へ増やします。予算線（青）が外へ平行に動き、最適点（赤）は、無差別曲線（緑）との接点として、原点を通る直線（所得拡張経路）の上を動きます。
+
+![所得を増やすと、予算線が平行に動き、最適点が所得拡張経路の上を動く（アニメーション）](images/ch08-budget-moves.gif)
+
+このアニメーションは、`lib/animations/` の関数で作っています（`uv run python -m tools.render_animations` で、GIF を書き出します）。**写経は、不要**です。動きを見て、式と図の対応を、確かめてください。
+
 ### 実行結果
 
 ```bash

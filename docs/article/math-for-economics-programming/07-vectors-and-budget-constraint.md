@@ -1001,6 +1001,10 @@ from lib.chapter07.vectors import vector_length
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/math-for-economics-programming/python/notebooks/ch07_vectors_and_budget_constraint.ipynb` を開き、「Parameters」のセルの数字（価格・所得・財の組合せ、時給・非労働所得・余暇）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

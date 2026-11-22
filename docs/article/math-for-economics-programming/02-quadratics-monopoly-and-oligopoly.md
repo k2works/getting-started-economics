@@ -750,6 +750,18 @@ from lib.chapter02.monopoly import (
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/math-for-economics-programming/python/notebooks/ch02_quadratics_monopoly_and_oligopoly.ipynb` を開き、「Parameters」のセルの数字（逆需要の切片と傾き、費用、企業の数）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
+### 動かして見る
+
+企業の数を 1 から 10 へ増やします。クールノー均衡の点（赤）が、需要曲線の上を、独占の点（黒）から完全競争の点（緑）へ向かって動き、市場全体の利潤（橙の長方形。高さが価格 − 費用）が、薄くなっていきます。
+
+![企業の数を増やすと、クールノー均衡が独占から完全競争へ近づく（アニメーション）](images/ch02-cournot-n.gif)
+
+このアニメーションは、`lib/animations/` の関数で作っています（`uv run python -m tools.render_animations` で、GIF を書き出します）。**写経は、不要**です。動きを見て、式と図の対応を、確かめてください。
+
 ### 実行結果
 
 ```bash

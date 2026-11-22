@@ -885,6 +885,18 @@ converges with oscillation
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/math-for-economics-programming/python/notebooks/ch12_recurrence_and_economic_growth.ipynb` を開き、「Parameters」のセルの数字（漸化式の a・b・x(0)、ソロー・モデルの s・α・δ・k(0)）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
+### 動かして見る
+
+ソロー・モデルの**蜘蛛の巣図**です。横軸が今期の資本 k(t)、縦軸が来期の資本 k(t + 1) です。45 度線から曲線へ縦に進むと来期の資本が決まり、45 度線へ横に戻ると、それが次の期の出発点になります。s = 0.5・α = 1/3・δ = 0.5（定常状態 k* = 1）で、初期値 0.1 と 2.5 から、資本が階段状に、曲線と 45 度線の交点（定常状態）へ近づきます。交点での曲線の傾きが 1 より小さいので、収束します。
+
+![ソロー・モデルの蜘蛛の巣図。資本が、定常状態へ階段状に近づく（アニメーション）](images/ch12-solow-cobweb.gif)
+
+このアニメーションは、`lib/animations/` の関数で作っています（`uv run python -m tools.render_animations` で、GIF を書き出します）。**写経は、不要**です。動きを見て、式と図の対応を、確かめてください。
+
 ### 実行結果
 
 ```bash

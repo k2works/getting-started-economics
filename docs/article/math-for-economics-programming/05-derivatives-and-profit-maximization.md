@@ -865,6 +865,11 @@ from lib.chapter05.derivative import Polynomial, difference_quotient_errors
         box = ax.collections[0].get_paths()[0].get_extents()
         assert (box.x0, box.x1, box.y0, box.y1) == pytest.approx((0, 20, 35, 50))
         assert ax.collections[0].get_label() == "Profit"
+        # 操業停止点（AVC の最小 10）より安いと、作らないので、点も長方形も描かない
+        shutdown = plot_cost_curves(Polynomial((100, 10, 1)), 8, 30).axes[0]
+        assert len(shutdown.collections) == 0
+        labels = [x.get_label() for x in shutdown.lines]
+        assert "Profit maximum (P = MC)" not in labels
 
 
     def test_誤差の図は刻み幅ごとの誤差を両対数で描く() -> None:
@@ -886,9 +891,10 @@ from lib.chapter05.derivative import Polynomial, difference_quotient_errors
         best = profit_maximizing_quantity(price, cost)
         low_q, low_ac = minimum_average_cost(cost)
         fig, ax = plt.subplots()
-        ax.fill_between(
-            [0, best], average_cost(cost, best), price, alpha=0.2, label="Profit"
-        )
+        if best > 0:  # 操業停止点より安ければ作らないので、利潤の長方形はない
+            ax.fill_between(
+                [0, best], average_cost(cost, best), price, alpha=0.2, label="Profit"
+            )
         curves = [
             ("Marginal cost (MC)", marginal_cost),
             ("Average cost (AC)", average_cost),
@@ -897,7 +903,8 @@ from lib.chapter05.derivative import Polynomial, difference_quotient_errors
         for label, curve in curves:
             ax.plot(quantities, [curve(cost, q) for q in quantities], label=label)
         ax.plot([0, q_max], [price, price], "--", label="Price")
-        ax.plot([best], [price], "ko", label="Profit maximum (P = MC)")
+        if best > 0:
+            ax.plot([best], [price], "ko", label="Profit maximum (P = MC)")
         ax.plot([low_q], [low_ac], "s", label="Minimum AC")
         ax.set_xlabel("Quantity")
         ax.set_ylabel("Cost / Price")
@@ -923,6 +930,18 @@ from lib.chapter05.derivative import Polynomial, difference_quotient_errors
         plt.close(fig)
         return fig
     ```
+
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/math-for-economics-programming/python/notebooks/ch05_derivatives_and_profit_maximization.ipynb` を開き、「Parameters」のセルの数字（費用の係数、価格、数値微分の刻み幅）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
+### 動かして見る
+
+3 次の費用 C(q) = q³ − 6q² + 15q + 20 の q = 4 で、q − h と q + h を結ぶ割線（傾きは中心差分）を描きます。h を 2 から 0.001 へ縮めると、割線の傾きは 19 から 15 に近づき、接線（傾き MC = 15）に重なります。
+
+![刻み幅 h を縮めると、割線が接線に近づく（アニメーション）](images/ch05-secant-tangent.gif)
+
+このアニメーションは、`lib/animations/` の関数で作っています（`uv run python -m tools.render_animations` で、GIF を書き出します）。**写経は、不要**です。動きを見て、式と図の対応を、確かめてください。
 
 ### 実行結果
 

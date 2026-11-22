@@ -895,6 +895,18 @@ from lib.chapter06.growth import taylor_exp_approximation
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/math-for-economics-programming/python/notebooks/ch06_elasticity_and_growth_rates.ipynb` を開き、「Parameters」のセルの数字（需要の切片と傾き、価格、テイラー展開の x と次数、企業の数）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
+### 動かして見る
+
+テイラー展開の次数を、0 から 6 へ 1 つずつ上げます。近似（赤の点線）が、0 の近くから順に e^x（青の実線）に重なっていき、x = 1 での誤差が小さくなります。
+
+![テイラー近似の次数を上げると、e^x に近づく（アニメーション）](images/ch06-taylor-order.gif)
+
+このアニメーションは、`lib/animations/` の関数で作っています（`uv run python -m tools.render_animations` で、GIF を書き出します）。**写経は、不要**です。動きを見て、式と図の対応を、確かめてください。
+
 ### 実行結果
 
 ```bash

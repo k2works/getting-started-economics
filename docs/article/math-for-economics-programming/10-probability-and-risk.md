@@ -1268,6 +1268,10 @@ from lib.chapter10.risk import (
 
     `ax.bar(位置, 高さ, width=...)` は棒グラフを描き、棒の集まりを返します（`ax.containers` に、描いた順に入ります）。`ax.bar_label` は、棒の上に値を書きます。2 組の棒を、仮説の位置から左右に 0.2 ずつずらして並べています。
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/math-for-economics-programming/python/notebooks/ch10_probability_and_risk.ipynb` を開き、「Parameters」のセルの数字（有病率・感度・偽陽性率、賭けの賞金と確率、サイコロを投げる回数と乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

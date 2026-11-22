@@ -801,6 +801,18 @@ from lib.chapter03.interest import compound_amount, continuous_compound_amount
 
     最初の版は、単利を両端の 2 点だけで描いていました。線形目盛では直線で正しいのですが、対数目盛でも直線に見えてしまい、「単利は、対数目盛では鈍る」ことが、図に出ませんでした。図を目で見て気づき、毎年の点で描くテストを、先に足してから直しました。
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/math-for-economics-programming/python/notebooks/ch03_exponents_logarithms_and_interest.ipynb` を開き、「Parameters」のセルの数字（元本・年利・年数・年あたりの複利の回数・将来の額）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
+### 動かして見る
+
+年利を 1% から 12% へ上げます。複利の曲線（青）が反り上がり、単利の直線（点線）との差が開きます。倍になる年数（赤の縦線）は短くなり、72 の法則（紫の破線）は、年利 8% の近くで、赤の線に重なります（年利が低いうちは、縦線は 30 年より右にあり、図の上の文字だけで示します）。
+
+![年利を上げると、複利の曲線が反り上がり、倍になる年数が短くなる（アニメーション）](images/ch03-compound-rate.gif)
+
+このアニメーションは、`lib/animations/` の関数で作っています（`uv run python -m tools.render_animations` で、GIF を書き出します）。**写経は、不要**です。動きを見て、式と図の対応を、確かめてください。
+
 ### 実行結果
 
 ```bash

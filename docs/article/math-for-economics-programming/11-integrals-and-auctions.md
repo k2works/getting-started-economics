@@ -1275,6 +1275,18 @@ from lib.chapter11.integral import (
     - `ax.hist(値の並び, bins=区切り, density=True)` は、ヒストグラムを、面積の合計が 1 になる高さ（密度）で描きます。`np.histogram` は、描かずに、同じ高さを数えます
     - `ax.axvline(x)` は、x の位置に縦線を引きます。`ax.set_xscale("log")` で、横軸を対数目盛にします
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/math-for-economics-programming/python/notebooks/ch11_integrals_and_auctions.ipynb` を開き、「Parameters」のセルの数字（積分する関数の次数と区間、分割数、需要の切片と傾き、価格、参加者の数、シミュレーションの回数と乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
+### 動かして見る
+
+y = x² の 0 から 1 までの面積を、中点の高さの長方形 n 本で近似します。n を 1 から 50 へ増やすと、長方形が曲線に沿い、面積の和が、積分の値 1/3 に近づきます。誤差は、およそ 1/n² で小さくなります。
+
+![区分求積の分割数 n を 1 から 50 へ増やすと、長方形の面積の和が積分の値に近づく（アニメーション）](images/ch11-riemann-sum.gif)
+
+このアニメーションは、`lib/animations/` の関数で作っています（`uv run python -m tools.render_animations` で、GIF を書き出します）。**写経は、不要**です。動きを見て、式と図の対応を、確かめてください。
+
 ### 実行結果
 
 ```bash

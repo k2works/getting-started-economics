@@ -58,6 +58,8 @@ NumPy は、前提にしません。必要な章（第 7 章）で、必要な�
 | `lib/chapterNN/` | 各章の完成した実装（答え合わせ用） |
 | `test/chapterNN/` | 各章の完成したテスト（答え合わせ用） |
 | `data/` | 実在のデータは使いません（手計算できる小さな例と、種を固定した架空の数値だけ） |
+| `notebooks/` | 各章のノートブック（数字を書き換えて、結果と図を確かめる）。[読み方](how-to-read.md) を参照 |
+| `lib/animations/` | 一部の章の、アニメーション（GIF）の実装（写経は不要） |
 
 ```bash
 cd apps/math-for-economics-programming/python

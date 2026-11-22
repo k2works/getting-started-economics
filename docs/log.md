@@ -1,6 +1,7 @@
 # Docs Update Log
 
 ## 2026-11-22
+* **Update**: [経済学で出る数学プログラミング](article/math-for-economics-programming/index.md) に、アニメーション 8 点（第 2・3・4・5・6・8・11・12 章）と、Jupyter Notebook 12 本（全章）を追加。第 5 章の図 `plot_cost_curves` が、生産しないときに落ちる不具合を直した（claude-code/claude-sonnet-5-5）
 * **Creation**: [経済学で出る数学プログラミング 全体レビュー](/review/math-for-economics-programming_review_20261122.md) を作成し、高 10 件のうち 8 件と中の多くに対応（第 2・4 章の冒頭の図が予想の答えを見せていた点、第 9・12 章の記事の誤り、危険回避度・回帰・オークションの実装の誤りなど）。共通ツールの 2 件は、ADR を書く別の Unit で行う（claude-code/claude-sonnet-5-5）
 * **Update**: 他の 5 連載の index.md に、[経済学で出る数学プログラミング](article/math-for-economics-programming/index.md) への案内を追加（数学の復習は、こちらへ）
 * **Creation**: [経済学で出る数学プログラミング](article/math-for-economics-programming/index.md)（全 12 章。1 次関数・2 次関数・指数対数・数列・微分・ベクトル・偏微分・行列・確率・積分・漸化式を、式を関数にして、テストで確かめる）を作成し、公開。目次の [マインドマップ](article/経済学で出る数学 マインドマップ.md) を追加（claude-code/claude-sonnet-5-5）

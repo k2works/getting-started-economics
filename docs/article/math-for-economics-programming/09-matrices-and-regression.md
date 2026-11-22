@@ -1156,6 +1156,10 @@ print(round(matrix_trace(regression_projection_matrix(with_income)), 6))
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/math-for-economics-programming/python/notebooks/ch09_matrices_and_regression.ipynb` を開き、「Parameters」のセルの数字（逆行列を調べる行列、データを作る真の切片と傾き、誤差の標準偏差、乱数の種、価格）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

@@ -728,6 +728,18 @@ from lib.chapter04.sequence import (
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/math-for-economics-programming/python/notebooks/ch04_sequences_and_saving.ipynb` を開き、「Parameters」のセルの数字（初項・公比・項数、毎年の受け取り・利子率・年数・額面）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
+### 動かして見る
+
+初項 2・公比 0.6 の等比数列の項を、1 つずつ足します。部分和の棒が 1 本ずつ増え（いま足した項は、橙色）、無限級数の値（点線）に近づきます。左上に、部分和と、点線との差が出ます。差は、毎回 0.6 倍に縮みます。
+
+![等比数列の項を 1 つずつ足すと、部分和の棒が、無限級数の値（点線）に近づく（アニメーション）](images/ch04-series-converge.gif)
+
+このアニメーションは、`lib/animations/` の関数で作っています（`uv run python -m tools.render_animations` で、GIF を書き出します）。**写経は、不要**です。動きを見て、式と図の対応を、確かめてください。
+
 ### 実行結果
 
 ```bash
