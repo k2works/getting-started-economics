@@ -8676,9 +8676,9 @@
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/math-for-economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>57 passed
+<div class="highlight"><pre><span></span><code>59 passed
 </code></pre></div>
-<p>自分でコードを書くときは、<code>practice/chapter08/</code> に、完成形と同じ名前のファイル（<code>partial.py</code>・<code>utility.py</code>・<code>plot.py</code>・<code>test_partial.py</code>・<code>test_utility.py</code>・<code>test_plot.py</code>）を作ります。図を後回しにするなら、<code>plot.py</code> と <code>test_plot.py</code> は要らず、テストは 48 件になります。</p>
+<p>自分でコードを書くときは、<code>practice/chapter08/</code> に、完成形と同じ名前のファイル（<code>partial.py</code>・<code>utility.py</code>・<code>plot.py</code>・<code>test_partial.py</code>・<code>test_utility.py</code>・<code>test_plot.py</code>）を作ります。図を後回しにするなら、<code>plot.py</code> と <code>test_plot.py</code> は要らず、テストは 50 件になります。</p>
 <ul>
 <li>テスト・<code>utility.py</code>・<code>plot.py</code>・check スクリプトの import を、<code>from practice.chapter08...</code> に書き換えます（<code>utility.py</code> は <code>partial</code> を、<code>plot.py</code> は <code>utility</code> を import します。書き換えないと、完成形を動かします）</li>
 <li>第 5 章の <code>numerical_derivative</code> と、第 7 章の <code>budget_intercepts</code> などは、自分で写した <code>practice.chapter05</code>・<code>practice.chapter07</code> から import します。写していなければ、<code>lib.chapter05</code>・<code>lib.chapter07</code> のままでかまいません。この章では、それらの実装を再掲しません</li>
@@ -9366,7 +9366,7 @@ maximum
 <li><strong>5 つ目の問い</strong>（発展）: 1 次同次なので、x·U_x + y·U_y = U = √250 ≈ 15.81 です（最後から 2 行目の出力）。最後の行は、<code>euler_degree_of_homogeneity</code> が返す U との比 1 です。<code>functools.partial</code> は、<code>share=0.5</code> を固定した 2 変数の関数を作ります（<code>lambda</code> を変数に入れる書き方の代わり）</li>
 </ul>
 <h3 id="_18">境界のテスト<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
-<p>完成形には、本文に載せなかったテストがあります。係数が対称でない 2 次関数、2 階の偏微分が 0 &lt; |f_xx| &lt; 1、行列式が 0 か、数値でほぼ 0（判定できない・停留点が決まらない）、a = 0.3 の需要、数量 0、a が 0〜1 の外、負の数量、所得 0・負の所得・2 財でない予算・正でない価格、所得がちょうど足りる端点、2 点だけの格子、負の効用水準、正でない重みです。テストの件数を合わせるため、ここに全件載せます。</p>
+<p>完成形には、本文に載せなかったテストがあります。係数が対称でない 2 次関数、2 階の偏微分が 0 &lt; |f_xx| &lt; 1、行列式が 0 か、数値でほぼ 0（係数が負の場合・0 とみなす幅が係数の大きさに比例すること。判定できない・停留点が決まらない）、a = 0.3 の需要、数量 0、a が 0〜1 の外、負の数量、所得 0・負の所得・2 財でない予算・正でない価格、所得がちょうど足りる端点、2 点だけの格子、負の効用水準、正でない重みです。テストの件数を合わせるため、ここに全件載せます。</p>
 <details class="note">
 <summary>境界のテスト</summary>
 <p><code>test_partial.py</code> に足すテストです。</p>
@@ -9397,6 +9397,20 @@ maximum
     <span class="n">hessian</span> <span class="o">=</span> <span class="n">numerical_hessian_2d</span><span class="p">(</span><span class="n">_negative_square_of_sum</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">classify_critical_point_2d</span><span class="p">(</span><span class="o">*</span><span class="n">hessian</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"undetermined"</span>
     <span class="k">assert</span> <span class="n">classify_critical_point_2d</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"undetermined"</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_係数が負でも行列式がちょうど0なら判定できない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">hessian</span> <span class="ow">in</span> <span class="p">[(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)]:</span>
+        <span class="k">assert</span> <span class="n">classify_critical_point_2d</span><span class="p">(</span><span class="o">*</span><span class="n">hessian</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"undetermined"</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_行列式を0とみなす幅は係数の大きさに比例する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># D = 1 でも、係数が 10⁶ と大きければ、0 とみなす</span>
+    <span class="k">assert</span> <span class="n">classify_critical_point_2d</span><span class="p">(</span><span class="mf">1e6</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"undetermined"</span>
+    <span class="k">assert</span> <span class="n">classify_critical_point_2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1e-6</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"minimum"</span>
+    <span class="c1"># 幅は 10⁻⁹ × (1 + 1 + 1) = 3 × 10⁻⁹。f_xy が負でも、2 乗で足す</span>
+    <span class="k">assert</span> <span class="n">classify_critical_point_2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">2.5e-9</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"undetermined"</span>
+    <span class="k">assert</span> <span class="n">classify_critical_point_2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="mf">4e-9</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"minimum"</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_行列式が0の2次関数には停留点が1つに決まらない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -9717,7 +9731,7 @@ maximum
 <h3 id="_20">実行結果<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>57 passed
+<div class="highlight"><pre><span></span><code>59 passed
 </code></pre></div>
 <h2 id="86">8.6 規則で言うと<a class="headerlink" href="#86" title="Permanent link">&para;</a></h2>
 <ol>
