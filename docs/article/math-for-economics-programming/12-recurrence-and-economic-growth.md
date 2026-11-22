@@ -216,7 +216,7 @@ def test_不動点から始めると動かない() -> None:
 
 ### Green: 閉じた解
 
-`recurrence.py` の先頭の import です。不動点は、第 4 章の `affine_fixed_point` で求めます（実装は、[第 4 章](04-sequences-and-saving.md)を見てください）。
+`recurrence.py` の先頭の import です。不動点は、第 4 章の `affine_fixed_point` で求めます（実装は、[第 4 章](04-sequences-and-saving.md)を見てください）。`math` は、後の節の半減期で使います（この節では、まだ使いません）。
 
 ```python
 import math
@@ -336,7 +336,7 @@ k = 8・α = 1/3 なら、f(k) = 8^(1/3) = 2 なので、手計算できます�
 
 ### Green: 資本の蓄積
 
-`solow.py` の先頭の import です。第 2 章の `argmax_on_grid` を、黄金律の格子探索で使います。
+`solow.py` の先頭の import です。第 2 章の `argmax_on_grid` は、後の節（黄金律の格子探索）で使います。この節では、まだ使いません。
 
 ```python
 from lib.chapter02.quadratic import argmax_on_grid
@@ -884,7 +884,7 @@ uv run pytest test/chapter12
 
 ## 12.7 第 3 部の到達チェック
 
-第 3 部（第 9〜12 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。**先に、次の「時間を決めて書く課題」を、何も見ずに試してください。** 課題の解答（実行できるテスト）は、12.8 節の練習問題の解答のあとに、折りたたんで置きます。自分のコードは、関数を `practice/chapter12/checkpoint.py` に、テストを `practice/chapter12/test_checkpoint.py` に書きます。第 1・4・5・7・12 章の関数は、前の章を写していなければ、`lib.chapterNN...` のままでかまいません（写したなら、`practice.chapterNN...` に書き換えます）。行列・回帰・期待効用の関数は、**第 9・10 章の関数を使わずに**、自分で書きます（何も見ずに書けるかを確かめるため）。
+第 3 部（第 9〜12 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。**先に、次の「時間を決めて書く課題」を、何も見ずに試してください。** 課題の解答（実行できるテスト）は、12.8 節の練習問題の解答のあとに、折りたたんで置きます。自分のコードは、関数を `practice/chapter12/checkpoint.py` に、テストを `practice/chapter12/test_checkpoint.py` に書きます。第 1・4・5・7・12 章の関数は、前の章を写していなければ、`lib.chapterNN...` のままでかまいません（写したなら、`practice.chapterNN...` に書き換えます）。行列・回帰・期待効用の関数は、**第 9・10 章の関数を使わずに**、自分で書きます（何も見ずに書けるかを確かめるため）。積分（[第 11 章](11-integrals-and-auctions.md)）は、課題に含めていません。台形法・中点法と消費者余剰の積分を、何も見ずに書けるかは、第 11 章の練習問題で確かめてください。
 
 ### 時間を決めて書く課題
 
@@ -894,7 +894,7 @@ uv run pytest test/chapter12
 | :--- | :--- |
 | 需要 q = 90 − 2p・供給 q = −6 + p の均衡を、連立方程式 q + 2p = 90、q − p = −6 を**行列**で解いて求める関数 `checkpoint_solve_2x2(matrix, rhs)` と、テスト。第 1 章の `equilibrium(a, b, c, d)` と、`numpy.linalg.solve` と一致すること。行列式が 0 なら `ValueError` | 15 分 |
 | 4 点 (0, 1)・(1, 4)・(2, 5)・(3, 8) に、最小 2 乗法で直線 y = β₀ + β₁x を当てはめる関数 `checkpoint_simple_regression(xs, ys)`（(β₀, β₁) を返す）と、テスト。`numpy.polyfit(xs, ys, 1)` と一致すること。残差の和が 0、残差と x の内積が 0（第 7 章の `vector_dot`）になること | 15 分 |
-| 確率 1/4 で 0、3/4 で 64 を受け取る賭けの、期待値・期待効用（効用 √x）・確実性等価・危険プレミアムを、確率を `Fraction` で書いて求める関数 `checkpoint_certainty_equivalent(outcomes, probabilities)` と、テスト。確率の和が 1 でなければ `ValueError` | 10 分 |
+| 確率 1/4 で 0、3/4 で 64 を受け取る賭けの確実性等価（効用 √x）を、確率を `Fraction` で受け取って返す関数 `checkpoint_certainty_equivalent(outcomes, probabilities)` と、期待値・期待効用・危険プレミアムも確かめるテスト。確率の和が 1 でなければ `ValueError` | 10 分 |
 | x(t + 1) = 0.8·x(t) + 4・x(0) = 0 の x(3) を、閉じた解で返す関数 `checkpoint_closed_form(a, b, start, t)` と、テスト（第 4 章の `iterate_map` と一致）。s = 0.2・α = 0.5・δ = 0.05 のソロー・モデルの定常状態の資本と消費を、手計算で求め、来期も同じ値になること（`solow_next_capital`）、定常状態での傾きが 1 − δ(1 − α) であること（第 5 章の数値微分）、貯蓄率を α に上げると消費が増えることを確かめる | 15 分 |
 
 ### できること
@@ -997,7 +997,6 @@ uv run pytest test/chapter12
     関数（`checkpoint_solve_2x2`・`checkpoint_simple_regression`・`checkpoint_certainty_equivalent`・`checkpoint_closed_form`）は `practice/chapter12/checkpoint.py` に、テストは `practice/chapter12/test_checkpoint.py` に書きます。`checkpoint.py` の先頭には、`import math` と `from fractions import Fraction` を書きます。`test_checkpoint.py` の先頭の import は、次のとおりです。前の章を写していなければ、`lib.chapterNN...` のままでかまいません（写したなら、`practice.chapterNN...` に書き換えます）。自分で書いた関数は、`from practice.chapter12.checkpoint import checkpoint_certainty_equivalent, checkpoint_closed_form, checkpoint_simple_regression, checkpoint_solve_2x2` で import します（この行は、記事の検査では実行しないので、コードブロックの外に書いています）。
 
     ```python
-    import math
     from fractions import Fraction
 
     import numpy as np
@@ -1127,13 +1126,13 @@ uv run pytest test/chapter12
 
 ### 連載のまとめ
 
-これで、この連載は終わりです。第 1 部（第 1〜4 章）では 1 次・2 次関数と指数・対数・数列で市場と金利を、第 2 部（第 5〜8 章）では微分と偏微分で最適化を、第 3 部（第 9〜12 章）では行列・確率・積分・漸化式で、データ・リスク・オークション・成長を扱いました。どの章でも、**式を関数にして、公式と数値の 2 つの答えを、テストで突き合わせる**、という同じ方法を使いました。
+これで、この連載は終わりです。第 1 部（第 1〜4 章）では 1 次・2 次関数と指数・対数・数列で市場と金利を、第 2 部（第 5〜8 章）では微分と偏微分で最適化を、第 3 部（第 9〜12 章）では行列（[第 9 章](09-matrices-and-regression.md)）・確率（[第 10 章](10-probability-and-risk.md)）・積分（[第 11 章](11-integrals-and-auctions.md)）・漸化式（この章）で、データ・リスク・オークション・成長を扱いました。どの章でも、**式を関数にして、公式と数値の 2 つの答えを、テストで突き合わせる**、という同じ方法を使いました。
 
 次は、この連載の数学を使う、経済学の連載へ進んでください。
 
 | 次に読む連載 | この連載の、どの章が土台か |
 | :--- | :--- |
-| [ミクロ経済学のためのプログラミング（初級）](../micro-basics-programming/index.md) | 第 1・2 章（市場・独占）、第 5〜8 章（費用・弾力性・効用最大化）、第 10 章（リスク） |
+| [ミクロ経済学のためのプログラミング（初級）](../micro-basics-programming/index.md) | 第 1・2 章（市場・独占）、第 5〜8 章（費用・弾力性・効用最大化）、第 10 章（リスク）、第 11 章（余剰の積分・オークション） |
 | [マクロ経済学のためのプログラミング（初級）](../macro-basics-programming/index.md) | 第 1 章（連立方程式）、第 3・4 章（金利・割引現在価値） |
 | [マクロ経済学のためのプログラミング（中級＋）](../macro-programming/index.md) | 第 4・12 章（漸化式・ソロー・モデル）、第 6 章（成長率） |
 | [計量経済学のためのプログラミング](../econometrics-programming/index.md) | 第 7 章（内積・平均・分散）、第 9 章（行列と回帰）、第 10 章（確率） |
