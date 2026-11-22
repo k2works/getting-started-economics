@@ -8580,7 +8580,7 @@
 </tbody>
 </table>
 <blockquote>
-<p><strong>記号について</strong>: 多項式の係数は、<strong>次数の低い順</strong>に並べます。C(q) = q² + 10q + 100 は <code>Polynomial((100, 10, 1))</code> です（定数項が先頭）。第 2 章の <code>quadratic_roots(a, b, c)</code> は、a·x² + b·x + c と<strong>次数の高い順</strong>なので、向きが逆です。</p>
+<p><strong>記号について</strong>: 多項式の係数は、<strong>次数の低い順</strong>に並べます。C(q) = q² + 10q + 100 は <code>Polynomial((100, 10, 1))</code> です（定数項が先頭）。第 2 章の <code>quadratic_roots(a, b, c)</code> は、a·x² + b·x + c と<strong>次数の高い順</strong>なので、向きが逆です。指数関数は、この章では eˣ、第 6 章では e^x と書きます（同じものです）。</p>
 </blockquote>
 <h3 id="_2">前提とする章<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <table>
@@ -8627,7 +8627,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </blockquote>
 <p>グラフでは、f'(x) は、x での<strong>接線の傾き</strong>です。f'(x) &gt; 0 なら、f は x の近くで増加し、f'(x) &lt; 0 なら減少します。</p>
 <h3 id="_4">微分の公式<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
-<p>多項式の導関数は、3 つの公式で求まります。</p>
+<p>多項式の導関数は、次の 3 つの公式で求まります。</p>
 <table>
 <thead>
 <tr>
@@ -8652,15 +8652,28 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <td style="text-align: left;">(f + g)' = f' + g'</td>
 <td style="text-align: left;">(x² + 4x + 7)' = 2x + 4</td>
 </tr>
+</tbody>
+</table>
+<p>係数を次数の低い順に並べると、導関数は、「各係数に次数を掛けて、1 つ左にずらす」操作です。(7, 4, 1) は (4, 2) になります。</p>
+<p>多項式以外（分数の関数や、第 6 章の指数・対数の関数）には、次の 3 つの公式も使います。この章のコードは多項式の公式だけを実装し、この 3 つは、数値微分との一致をテストで確かめます。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">公式</th>
+<th style="text-align: left;">式</th>
+<th style="text-align: left;">例</th>
+</tr>
+</thead>
+<tbody>
 <tr>
 <td style="text-align: left;">積</td>
 <td style="text-align: left;">(f·g)' = f'·g + f·g'</td>
-<td style="text-align: left;">(x²·eˣ)' = 2x·eˣ + x²·eˣ</td>
+<td style="text-align: left;">(x²·(x + 1))' = 2x·(x + 1) + x²</td>
 </tr>
 <tr>
 <td style="text-align: left;">商</td>
 <td style="text-align: left;">(f ÷ g)' = (f'·g − f·g') ÷ g²</td>
-<td style="text-align: left;">(1 ÷ x)' = −1 ÷ x²</td>
+<td style="text-align: left;">(1 ÷ x)' = (0·x − 1·1) ÷ x² = −1 ÷ x²</td>
 </tr>
 <tr>
 <td style="text-align: left;">合成</td>
@@ -8669,7 +8682,6 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<p>係数を次数の低い順に並べると、導関数は、「各係数に次数を掛けて、1 つ左にずらす」操作です。(7, 4, 1) は (4, 2) になります。積・商・合成の公式は、多項式以外（eˣ や分数の関数）にも使います（第 6 章の弾力性で使います）。この章のコードは多項式の公式だけを実装し、積・商・合成は、数値微分との一致をテストで確かめます。</p>
 <h3 id="_5">数値微分と刻み幅<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>公式を使わずに、傾きを<strong>数値</strong>で求めることもできます。h を小さな正の数にして、x の左右の値の差を使います（<strong>中心差分</strong>）。</p>
 <blockquote>
@@ -8847,6 +8859,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_数値微分は中心差分で傾きを近似する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># x² の x = 3 での傾きは 6。中心差分は 2 次関数なら（丸めを除き）正確</span>
     <span class="k">assert</span> <span class="n">numerical_derivative</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+    <span class="c1"># eˣ・ln x の微分（eˣ と 1 ÷ x）は、第 6 章で説明する</span>
     <span class="k">assert</span> <span class="n">numerical_derivative</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">numerical_derivative</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
 
@@ -8868,14 +8881,15 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"刻み幅 h は、正でなければなりません"</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">step</span><span class="p">)</span> <span class="o">-</span> <span class="n">func</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">step</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">step</span><span class="p">)</span>
 </code></pre></div>
+<p>数値微分の最初のテストの eˣ・ln x の傾き（x = 0 で 1、x = 0.5 で 2）は、第 6 章で説明します。ここでは、数値微分が、そうした関数にも使えることだけを見ます。</p>
 <details class="note">
-<summary>積・商・合成の公式を、数値微分で確かめる</summary>
+<summary>積・商・合成の公式を、数値微分で確かめる（<code>test_derivative.py</code> に書く。件数を合わせるため、ここに載せます）</summary>
 <p>5.4 節の表の 3 つの例を、負・0 &lt; x &lt; 1・正の点で、数値微分と比べます。公式を書き間違えると（積の片方の項を落とすなど）、一致しません。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_積と商と合成関数の公式は数値微分と一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
-        <span class="c1"># 積: (f·g)' = f'·g + f·g'。(x²·eˣ)' = 2x·eˣ + x²·eˣ</span>
-        <span class="n">product</span> <span class="o">=</span> <span class="n">numerical_derivative</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">product</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="c1"># 積: (f·g)' = f'·g + f·g'。(x²·(x + 1))' = 2x·(x + 1) + x²</span>
+        <span class="n">product</span> <span class="o">=</span> <span class="n">numerical_derivative</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">product</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
         <span class="c1"># 商: (f ÷ g)' = (f'·g − f·g') ÷ g²。(1 ÷ x)' = −1 ÷ x²</span>
         <span class="n">quotient</span> <span class="o">=</span> <span class="n">numerical_derivative</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
         <span class="k">assert</span> <span class="n">quotient</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
@@ -9112,6 +9126,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">assert</span> <span class="n">quantities</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([(</span><span class="n">p</span> <span class="o">-</span> <span class="mi">10</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">prices</span><span class="p">])</span>
     <span class="k">for</span> <span class="n">cost</span> <span class="ow">in</span> <span class="p">[</span><span class="n">COST_HALF</span><span class="p">,</span> <span class="n">COST_CUBIC</span><span class="p">]:</span>
         <span class="n">supply</span> <span class="o">=</span> <span class="p">[</span><span class="n">profit_maximizing_quantity</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">cost</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">prices</span><span class="p">]</span>
+        <span class="c1"># 隣どうしを比べる。supply[1:] は 1 つ短いので、strict=False（長さが違っても可）</span>
         <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">q1</span> <span class="o">&lt;</span> <span class="n">q2</span> <span class="k">for</span> <span class="n">q1</span><span class="p">,</span> <span class="n">q2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">supply</span><span class="p">,</span> <span class="n">supply</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 </code></pre></div>
 <h3 id="_14">平均費用の最小と操業停止点<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
@@ -9162,8 +9177,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>3 次の費用 q³ − 6q² + 15q + 20 の AVC は q² − 6q + 15 で、U 字です。最小は q = 3 で 6 です。価格 6.1 では生産し、5.9 では生産しません（P = MC の極大はあるが、利潤が −固定費用より低い）。2 次の費用の AVC は c₁ + c₂q で右上がりなので、最小は q → 0 の極限 c₁ です。</p>
 <h3 id="_15">発展: 凹関数の判定<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <details class="note">
-<summary>凹関数の判定のテストと実装（発展。後回しにしても、学習は成り立ちます）</summary>
-<p>区間を格子に区切り、どの点でも 2 階の導関数が 0 以下かを調べます。凸の判定は、−f が凹かどうかで代用します。</p>
+<summary>凹関数の判定のテストと実装（発展。後回しにすると、テストは 45 件、図も外すと 42 件）</summary>
+<p>後回しにするなら、テストの import から <code>is_concave_on</code> を外します。区間を格子に区切り、どの点でも 2 階の導関数が 0 以下かを調べます。凸の判定は、−f が凹かどうかで代用します。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_2階の導関数が0以下の区間で関数は凹</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">profit</span> <span class="o">=</span> <span class="n">Polynomial</span><span class="p">((</span><span class="o">-</span><span class="mi">100</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span>  <span class="c1"># 価格 50 の利潤 −q² + 40q − 100</span>
     <span class="k">assert</span> <span class="n">is_concave_on</span><span class="p">(</span><span class="n">profit</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
@@ -9362,7 +9377,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_cost_curves</span><span class="p">(</span><span class="n">Polynomial</span><span class="p">((</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">)),</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">assert</span> <span class="n">_line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="s2">"Price"</span><span class="p">)</span> <span class="o">==</span> <span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">])</span>
     <span class="k">assert</span> <span class="n">_line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="s2">"Profit maximum (P = MC)"</span><span class="p">)</span> <span class="o">==</span> <span class="p">([</span><span class="mi">20</span><span class="p">],</span> <span class="p">[</span><span class="mi">50</span><span class="p">])</span>
-    <span class="k">assert</span> <span class="n">_line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="s2">"Minimum AC (MC = AC)"</span><span class="p">)</span> <span class="o">==</span> <span class="p">([</span><span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">30</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="n">_line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="s2">"Minimum AC"</span><span class="p">)</span> <span class="o">==</span> <span class="p">([</span><span class="mi">10</span><span class="p">],</span> <span class="p">[</span><span class="mi">30</span><span class="p">])</span>
     <span class="c1"># 長方形の高さは P − AC(20) = 50 − 35、幅は 20。面積は利潤 300</span>
     <span class="n">box</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">collections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_paths</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">get_extents</span><span class="p">()</span>
     <span class="k">assert</span> <span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">x0</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">x1</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">y0</span><span class="p">,</span> <span class="n">box</span><span class="o">.</span><span class="n">y1</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
@@ -9398,7 +9413,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
         <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">quantities</span><span class="p">,</span> <span class="p">[</span><span class="n">curve</span><span class="p">(</span><span class="n">cost</span><span class="p">,</span> <span class="n">q</span><span class="p">)</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">quantities</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="n">label</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">q_max</span><span class="p">],</span> <span class="p">[</span><span class="n">price</span><span class="p">,</span> <span class="n">price</span><span class="p">],</span> <span class="s2">"--"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Price"</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">best</span><span class="p">],</span> <span class="p">[</span><span class="n">price</span><span class="p">],</span> <span class="s2">"ko"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Profit maximum (P = MC)"</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">low_q</span><span class="p">],</span> <span class="p">[</span><span class="n">low_ac</span><span class="p">],</span> <span class="s2">"s"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Minimum AC (MC = AC)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">low_q</span><span class="p">],</span> <span class="p">[</span><span class="n">low_ac</span><span class="p">],</span> <span class="s2">"s"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Minimum AC"</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Quantity"</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Cost / Price"</span><span class="p">)</span>
     <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>

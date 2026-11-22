@@ -8849,7 +8849,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">fixed</span> <span class="o">=</span> <span class="n">affine_fixed_point</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">recurrence_closed_form</span><span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">fixed</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">fixed</span><span class="p">)</span>
 </code></pre></div>
-<p><code>lib.chapter12.recurrence</code> がないので、収集の時点で失敗します（<strong>Red</strong>）。</p>
+<p>自分の <code>recurrence.py</code>（<code>practice.chapter12.recurrence</code>）がまだないので、収集の時点で <code>ModuleNotFoundError</code> で失敗します（<strong>Red</strong>）。</p>
 <h3 id="green">Green: 閉じた解<a class="headerlink" href="#green" title="Permanent link">&para;</a></h3>
 <p><code>recurrence.py</code> の先頭の import です。不動点は、第 4 章の <code>affine_fixed_point</code> で求めます（実装は、<a href="../04-sequences-and-saving/">第 4 章</a>を見てください）。<code>math</code> は、後の節の半減期で使います（この節では、まだ使いません）。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
@@ -9498,7 +9498,7 @@ converges with oscillation
 <li><strong>技術進歩を、モデルの外から与えています。</strong> 長期の成長率を決める技術進歩率 g が、なぜその値なのかを、このモデルは説明しません（内生的成長理論が扱う）</li>
 <li><strong>資本は、国を越えて動きます。</strong> 閉鎖経済では貯蓄 ＝ 投資ですが、開放経済では、外国から借りて投資できます</li>
 <li><strong>定常状態への収束は、遅いです。</strong> 半減期が 10 期（10 年）なら、差の 9 割が消えるのに、30 年以上かかります。現実の経済は、その間に、貯蓄率・技術・人口が変わります</li>
-<li><strong>生産関数が、k^α とは限りません。</strong> α = 1（資本の限界生産物が一定。AK 型）なら、定常状態がなく、成長が続きます。α &lt; 1 なら k* は有限ですが、α → 1 では k* が大きくなり、収束が遅くなります</li>
+<li><strong>生産関数が、k^α とは限りません。</strong> α = 1（資本の限界生産物が一定。AK 型）なら、s &gt; δ のとき、定常状態がなく、成長が続きます（s &lt; δ なら縮み続け、s = δ ならどこでも止まる）。α &lt; 1 なら k* は有限です。α → 1 では、収束が遅くなり、k* は s &gt; δ なら大きく、s &lt; δ なら 0 に近づきます</li>
 </ul>
 <h2 id="127-3">12.7 第 3 部の到達チェック<a class="headerlink" href="#127-3" title="Permanent link">&para;</a></h2>
 <p>第 3 部（第 9〜12 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。<strong>先に、次の「時間を決めて書く課題」を、何も見ずに試してください。</strong> 課題の解答（実行できるテスト）は、12.8 節の練習問題の解答のあとに、折りたたんで置きます。自分のコードは、関数を <code>practice/chapter12/checkpoint.py</code> に、テストを <code>practice/chapter12/test_checkpoint.py</code> に書きます。第 1・4・5・7・12 章の関数は、前の章を写していなければ、<code>lib.chapterNN...</code> のままでかまいません（写したなら、<code>practice.chapterNN...</code> に書き換えます）。行列・回帰・期待効用の関数は、<strong>第 9・10 章の関数を使わずに</strong>、自分で書きます（何も見ずに書けるかを確かめるため）。積分（<a href="../11-integrals-and-auctions/">第 11 章</a>）は、課題に含めていません。台形法・中点法と消費者余剰の積分を、何も見ずに書けるかは、第 11 章の練習問題で確かめてください。</p>
@@ -9683,8 +9683,17 @@ converges with oscillation
 </details>
 <details class="note">
 <summary>解答: 第 3 部の到達チェック（先に自分で取り組んでから、開いてください）</summary>
-<p>関数（<code>checkpoint_solve_2x2</code>・<code>checkpoint_simple_regression</code>・<code>checkpoint_certainty_equivalent</code>・<code>checkpoint_closed_form</code>）は <code>practice/chapter12/checkpoint.py</code> に、テストは <code>practice/chapter12/test_checkpoint.py</code> に書きます。<code>checkpoint.py</code> の先頭には、<code>import math</code> と <code>from fractions import Fraction</code> を書きます。<code>test_checkpoint.py</code> の先頭の import は、次のとおりです。前の章を写していなければ、<code>lib.chapterNN...</code> のままでかまいません（写したなら、<code>practice.chapterNN...</code> に書き換えます）。自分で書いた関数は、<code>from practice.chapter12.checkpoint import checkpoint_certainty_equivalent, checkpoint_closed_form, checkpoint_simple_regression, checkpoint_solve_2x2</code> で import します（この行は、記事の検査では実行しないので、コードブロックの外に書いています）。</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fraction</span>
+<p>関数（<code>checkpoint_solve_2x2</code>・<code>checkpoint_simple_regression</code>・<code>checkpoint_certainty_equivalent</code>・<code>checkpoint_closed_form</code>）は <code>practice/chapter12/checkpoint.py</code> に、テストは <code>practice/chapter12/test_checkpoint.py</code> に書きます。<code>checkpoint.py</code> の先頭には、<code>import math</code> と <code>from fractions import Fraction</code> を書きます。<code>test_checkpoint.py</code> の先頭の import は、次のとおりです。前の章を写していなければ、<code>lib.chapterNN...</code> のままでかまいません（写したなら、<code>practice.chapterNN...</code> に書き換えます）。自分で書いた関数は、次の import で読み込みます（この import は、記事の検査では実行しないので、Python のコードブロックの外に書いています）。</p>
+<div class="highlight"><pre><span></span><code>from practice.chapter12.checkpoint import (
+    checkpoint_certainty_equivalent,
+    checkpoint_closed_form,
+    checkpoint_simple_regression,
+    checkpoint_solve_2x2,
+)
+</code></pre></div>
+<p>テストの先頭の import は、次のとおりです。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">fractions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Fraction</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
@@ -9754,6 +9763,9 @@ converges with oscillation
     <span class="n">probabilities</span> <span class="o">=</span> <span class="p">[</span><span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)]</span>
     <span class="n">mean</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">x</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="n">probabilities</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
     <span class="k">assert</span> <span class="n">mean</span> <span class="o">==</span> <span class="mi">48</span>
+    <span class="n">pairs</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="n">probabilities</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">expected_utility</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">pairs</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">expected_utility</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
     <span class="n">certain</span> <span class="o">=</span> <span class="n">checkpoint_certainty_equivalent</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="n">probabilities</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">certain</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">36</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">mean</span> <span class="o">-</span> <span class="n">certain</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
