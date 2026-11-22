@@ -1,9 +1,9 @@
-"""第 12 章: 繰り返しゲーム（しっぺ返し・トリガー戦略）のテスト。"""
+"""第 13 章: 繰り返しゲーム（しっぺ返し・トリガー戦略）のテスト。"""
 
 import pytest
 
 from lib.chapter12.game import prisoners_dilemma
-from lib.chapter12.repeated import (
+from lib.chapter13.repeated import (
     always_cooperate,
     always_defect,
     cooperation_threshold,

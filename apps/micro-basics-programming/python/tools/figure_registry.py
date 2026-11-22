@@ -28,6 +28,8 @@ from tools.figures import (  # noqa: E402
     ch12,
     ch13,
     ch14,
+    ch15,
+    ch16,
 )
 
 FIGURES: dict[str, Callable[[], Figure]] = {
@@ -45,4 +47,6 @@ FIGURES: dict[str, Callable[[], Figure]] = {
     **ch12.FIGURES,
     **ch13.FIGURES,
     **ch14.FIGURES,
+    **ch15.FIGURES,
+    **ch16.FIGURES,
 }

@@ -1,9 +1,9 @@
-"""第 13 章: 自然独占（限界費用価格形成と平均費用価格形成）のテスト。"""
+"""第 15 章: 自然独占（限界費用価格形成と平均費用価格形成）のテスト。"""
 
 import pytest
 
 from lib.chapter11.monopoly import Monopoly
-from lib.chapter13.natural import (
+from lib.chapter15.natural import (
     average_cost_pricing,
     marginal_cost_pricing,
     natural_average_cost,

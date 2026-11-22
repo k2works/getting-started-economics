@@ -1,8 +1,8 @@
-"""第 14 章: 逆選択・シグナル・モラルハザードのテスト。"""
+"""第 16 章: 逆選択・シグナル・モラルハザードのテスト。"""
 
 import pytest
 
-from lib.chapter14.information import (
+from lib.chapter16.information import (
     agent_works,
     expected_value_of_unknown_quality,
     good_quality_sells,

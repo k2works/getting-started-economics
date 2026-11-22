@@ -1,8 +1,8 @@
-"""第 13 章: 公共財（フリーライダー）と財の分類のテスト。"""
+"""第 15 章: 公共財（フリーライダー）と財の分類のテスト。"""
 
 import pytest
 
-from lib.chapter13.public import (
+from lib.chapter15.public import (
     PublicGood,
     classify_good,
     individual_quantity,

@@ -4,9 +4,17 @@ from collections.abc import Callable
 
 from matplotlib.figure import Figure
 
-from lib.chapter14.plot import plot_bonus, plot_signal
+from lib.chapter14.externality import ExternalityMarket
+from lib.chapter14.plot import plot_externality
+
+_POLLUTION = ExternalityMarket(
+    demand_intercept=100,
+    demand_slope=1,
+    cost_intercept=10,
+    cost_slope=1,
+    external_cost=20,
+)
 
 FIGURES: dict[str, Callable[[], Figure]] = {
-    "ch14-signal": lambda: plot_signal(100, 60, 10, 20, 6),
-    "ch14-bonus": lambda: plot_bonus(0.8, 0.4, 10, 60),
+    "ch14-externality": lambda: plot_externality(_POLLUTION, 100, 100),
 }

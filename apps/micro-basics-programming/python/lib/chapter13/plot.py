@@ -1,72 +1,83 @@
-"""外部不経済（死荷重の三角形）と、自然独占の価格規制の図。"""
+"""屈折需要曲線と、協調が続く条件（割引因子の閾値）の図。"""
 
 import matplotlib.pyplot as plt
-from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-from lib.chapter09.plot import outline_area
-from lib.chapter11.monopoly import Monopoly, monopoly_outcome
-from lib.chapter13.externality import (
-    ExternalityMarket,
-    market_quantity,
-    socially_optimal_quantity,
+from lib.chapter13.kinked import (
+    KinkedDemand,
+    marginal_revenue_above,
+    marginal_revenue_below,
 )
-from lib.chapter13.natural import average_cost_pricing, marginal_cost_pricing
+from lib.chapter13.repeated import (
+    cooperation_threshold,
+    cooperation_value,
+    deviation_value,
+)
 
-_POINTS = 100
 
-
-def _style(ax: Axes, q_max: float, p_max: float) -> None:
+def plot_kinked(
+    demand: KinkedDemand,
+    q_max: float,
+    p_max: float,
+    cost_low: float,
+    cost_high: float,
+) -> Figure:
+    """屈折需要曲線と、限界収入の途切れ。限界費用が途切れの中なら、価格は動かない。"""
+    q, p = demand.kink_quantity, demand.kink_price
+    b1, b2 = demand.upper_slope, demand.lower_slope
+    above, below = marginal_revenue_above(demand), marginal_revenue_below(demand)
+    y_min = below - 40
+    a2 = p + b2 * q
+    fig, ax = plt.subplots()
+    ax.plot([0, q, q + p / b2], [p + b1 * q, p, 0], label="Demand")
+    ax.plot([0, q], [p + b1 * q, above], label="Marginal revenue (upper)")
+    ax.plot(
+        [q, (a2 - y_min) / (2 * b2)], [below, y_min], label="Marginal revenue (lower)"
+    )
+    ax.plot([q, q], [below, above], linestyle=":", label="MR gap")
+    ax.plot([0, q_max], [cost_low, cost_low], label="Marginal cost (low)")
+    ax.plot([0, q_max], [cost_high, cost_high], label="Marginal cost (high)")
     ax.set_xlabel("Quantity Q")
     ax.set_ylabel("Price P")
     ax.set_xlim(0, q_max)
-    ax.set_ylim(0, p_max)
+    ax.set_ylim(y_min, p_max)
     ax.legend(fontsize="x-small")
-
-
-def plot_externality(market: ExternalityMarket, q_max: float, p_max: float) -> Figure:
-    """需要・私的限界費用・社会的限界費用（点線）と、死荷重の三角形を描く。"""
-    a, b = market.demand_intercept, market.demand_slope
-    c, d, e = market.cost_intercept, market.cost_slope, market.external_cost
-    q_market, q_opt = market_quantity(market), socially_optimal_quantity(market)
-    fig, ax = plt.subplots()
-    ax.plot([0, a / b], [a, 0], label="Demand")
-    ax.plot([0, q_max], [c, c + d * q_max], label="Private marginal cost")
-    ax.plot(
-        [0, q_max],
-        [c + e, c + e + d * q_max],
-        linestyle="--",
-        label="Social marginal cost",
-    )
-    outline_area(
-        ax,
-        [q_opt, q_market, q_market, q_opt],
-        [a - b * q_opt, a - b * q_market, c + d * q_market + e, a - b * q_opt],
-        "Deadweight loss",
-    )
-    ax.plot([q_market], [a - b * q_market], "o", label="Market point")
-    ax.plot([q_opt], [a - b * q_opt], "o", label="Optimal point")
-    _style(ax, q_max, p_max)
     plt.close(fig)
     return fig
 
 
-def plot_natural_monopoly(
-    monopoly: Monopoly, fixed_cost: float, q_max: float, p_max: float
+def plot_trigger(
+    temptation: float,
+    reward: float,
+    punishment: float,
+    delta_max: float,
+    delta_points: int,
+    y_max: float,
 ) -> Figure:
-    """需要・限界費用・平均費用と、3 つの価格設定（限界費用・平均費用・規制なし）。"""
-    a, b, c = monopoly.demand_intercept, monopoly.demand_slope, monopoly.marginal_cost
-    qs = [q_max * (i + 1) / _POINTS for i in range(_POINTS)]
-    mc = marginal_cost_pricing(monopoly, fixed_cost)
-    ac = average_cost_pricing(monopoly, fixed_cost)
-    free = monopoly_outcome(monopoly)
+    """協調を続ける価値と、一度裏切る価値。割引因子が閾値を超えると、協調が上回る。"""
+    deltas = [delta_max * i / (delta_points - 1) for i in range(delta_points)]
+    threshold = cooperation_threshold(temptation, reward, punishment)
     fig, ax = plt.subplots()
-    ax.plot([0, a / b], [a, 0], label="Demand")
-    ax.plot([0, q_max], [c, c], label="Marginal cost")
-    ax.plot(qs, [c + fixed_cost / q for q in qs], label="Average cost")
-    ax.plot([mc.quantity], [mc.price], "o", label="MC pricing")
-    ax.plot([ac.quantity], [ac.price], "o", label="AC pricing")
-    ax.plot([free.quantity], [free.price], "o", label="Unregulated")
-    _style(ax, q_max, p_max)
+    ax.plot(
+        deltas,
+        [cooperation_value(reward, d) for d in deltas],
+        label="Cooperate forever",
+    )
+    ax.plot(
+        deltas,
+        [deviation_value(temptation, punishment, d) for d in deltas],
+        label="Defect once",
+    )
+    ax.plot(
+        [threshold],
+        [cooperation_value(reward, threshold)],
+        "o",
+        label="Threshold",
+    )
+    ax.set_xlabel("Discount factor")
+    ax.set_ylabel("Present value")
+    ax.set_xlim(0, 1)
+    ax.set_ylim(0, y_max)
+    ax.legend(fontsize="x-small")
     plt.close(fig)
     return fig

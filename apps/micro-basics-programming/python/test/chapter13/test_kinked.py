@@ -1,8 +1,8 @@
-"""第 12 章: 屈折需要曲線（価格の硬直性）のテスト。"""
+"""第 13 章: 屈折需要曲線（価格の硬直性）のテスト。"""
 
 import pytest
 
-from lib.chapter12.kinked import (
+from lib.chapter13.kinked import (
     KinkedDemand,
     marginal_revenue_above,
     marginal_revenue_below,

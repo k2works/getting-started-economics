@@ -1,58 +1,47 @@
-"""シグナル（教育年数）と、成果報酬（努力の誘因）の図。"""
+"""外部不経済（死荷重の三角形）の図。"""
 
 import matplotlib.pyplot as plt
 from matplotlib.axes import Axes
 from matplotlib.figure import Figure
 
-from lib.chapter14.information import (
-    minimum_bonus,
-    separating_education_range,
+from lib.chapter09.plot import outline_area
+from lib.chapter14.externality import (
+    ExternalityMarket,
+    market_quantity,
+    socially_optimal_quantity,
 )
 
 
-def _style(ax: Axes, x_max: float, xlabel: str, ylabel: str) -> None:
-    ax.set_xlabel(xlabel)
-    ax.set_ylabel(ylabel)
-    ax.set_xlim(0, x_max)
+def _style(ax: Axes, q_max: float, p_max: float) -> None:
+    ax.set_xlabel("Quantity Q")
+    ax.set_ylabel("Price P")
+    ax.set_xlim(0, q_max)
+    ax.set_ylim(0, p_max)
     ax.legend(fontsize="x-small")
 
 
-def plot_signal(
-    wage_high: float,
-    wage_low: float,
-    cost_high: float,
-    cost_low: float,
-    e_max: float,
-) -> Figure:
-    """教育年数ごとの利得。範囲の中なら、高い能力の人だけが、教育を選ぶ。"""
-    low, high = separating_education_range(wage_high, wage_low, cost_high, cost_low)
-    y_min = wage_high - cost_low * e_max
+def plot_externality(market: ExternalityMarket, q_max: float, p_max: float) -> Figure:
+    """需要・私的限界費用・社会的限界費用（点線）と、死荷重の三角形を描く。"""
+    a, b = market.demand_intercept, market.demand_slope
+    c, d, e = market.cost_intercept, market.cost_slope, market.external_cost
+    q_market, q_opt = market_quantity(market), socially_optimal_quantity(market)
     fig, ax = plt.subplots()
+    ax.plot([0, a / b], [a, 0], label="Demand")
+    ax.plot([0, q_max], [c, c + d * q_max], label="Private marginal cost")
     ax.plot(
-        [0, e_max],
-        [wage_high, wage_high - cost_high * e_max],
-        label="High type (signal)",
+        [0, q_max],
+        [c + e, c + e + d * q_max],
+        linestyle="--",
+        label="Social marginal cost",
     )
-    ax.plot(
-        [0, e_max],
-        [wage_high, wage_high - cost_low * e_max],
-        label="Low type (imitate)",
+    outline_area(
+        ax,
+        [q_opt, q_market, q_market, q_opt],
+        [a - b * q_opt, a - b * q_market, c + d * q_market + e, a - b * q_opt],
+        "Deadweight loss",
     )
-    ax.plot([0, e_max], [wage_low, wage_low], label="Low type (no signal)")
-    ax.plot([low, low], [y_min, wage_high], linestyle=":", label="Lower bound")
-    ax.plot([high, high], [y_min, wage_high], linestyle=":", label="Upper bound")
-    _style(ax, e_max, "Years of education", "Payoff")
-    plt.close(fig)
-    return fig
-
-
-def plot_bonus(p_high: float, p_low: float, effort_cost: float, b_max: float) -> Figure:
-    """成果報酬 b ごとの、努力する・しない場合の、期待利得。交点が最低の成果報酬。"""
-    bonus = minimum_bonus(p_high, p_low, effort_cost)
-    fig, ax = plt.subplots()
-    ax.plot([0, b_max], [-effort_cost, p_high * b_max - effort_cost], label="Work")
-    ax.plot([0, b_max], [0, p_low * b_max], label="Shirk")
-    ax.plot([bonus], [p_low * bonus], "o", label="Minimum bonus")
-    _style(ax, b_max, "Bonus b", "Expected payoff")
+    ax.plot([q_market], [a - b * q_market], "o", label="Market point")
+    ax.plot([q_opt], [a - b * q_opt], "o", label="Optimal point")
+    _style(ax, q_max, p_max)
     plt.close(fig)
     return fig

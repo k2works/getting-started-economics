@@ -1,8 +1,8 @@
-"""第 13 章: 外部効果（ピグー税・コースの定理・排出権取引）のテスト。"""
+"""第 14 章: 外部効果（ピグー税・コースの定理・排出権取引）のテスト。"""
 
 import pytest
 
-from lib.chapter13.externality import (
+from lib.chapter14.externality import (
     ExternalityMarket,
     abatement_cost,
     coase_outcome,

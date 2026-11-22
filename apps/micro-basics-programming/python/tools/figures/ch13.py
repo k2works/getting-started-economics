@@ -4,20 +4,12 @@ from collections.abc import Callable
 
 from matplotlib.figure import Figure
 
-from lib.chapter11.monopoly import Monopoly
-from lib.chapter13.externality import ExternalityMarket
-from lib.chapter13.plot import plot_externality, plot_natural_monopoly
+from lib.chapter13.kinked import KinkedDemand
+from lib.chapter13.plot import plot_kinked, plot_trigger
 
-_POLLUTION = ExternalityMarket(
-    demand_intercept=100,
-    demand_slope=1,
-    cost_intercept=10,
-    cost_slope=1,
-    external_cost=20,
-)
-_DEMAND = Monopoly(demand_intercept=100, demand_slope=1, marginal_cost=10)
+_KINKED = KinkedDemand(kink_quantity=40, kink_price=50, upper_slope=0.5, lower_slope=2)
 
 FIGURES: dict[str, Callable[[], Figure]] = {
-    "ch13-externality": lambda: plot_externality(_POLLUTION, 100, 100),
-    "ch13-natural-monopoly": lambda: plot_natural_monopoly(_DEMAND, 800, 100, 100),
+    "ch13-kinked": lambda: plot_kinked(_KINKED, 100, 80, 10, 25),
+    "ch13-trigger": lambda: plot_trigger(5, 3, 1, 0.95, 100, 60),
 }
