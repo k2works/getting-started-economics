@@ -1,14 +1,41 @@
 # 経済学入門
 
+[![Python CI](https://github.com/k2works/getting-started-economics/actions/workflows/python-ci.yml/badge.svg)](https://github.com/k2works/getting-started-economics/actions/workflows/python-ci.yml)
+[![Article Docs CI](https://github.com/k2works/getting-started-economics/actions/workflows/article-docs.yml/badge.svg)](https://github.com/k2works/getting-started-economics/actions/workflows/article-docs.yml)
+[![Deploy MkDocs](https://github.com/k2works/getting-started-economics/actions/workflows/mkdocs.yml/badge.svg)](https://github.com/k2works/getting-started-economics/actions/workflows/mkdocs.yml)
+![Python](https://img.shields.io/badge/python-3.12%2B-blue?logo=python&logoColor=white)
+![Node.js](https://img.shields.io/badge/node-22.x-339933?logo=node.js&logoColor=white)
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://k2works.github.io/getting-started-economics/)
+
 ## 概要
 
 ### 目的
+
+経済学の基本モデルを、式を関数にして、テストを書きながら Python で学ぶ記事シリーズを作り、公開します。記事のコード・実行結果・図は、サンプル実装から機械的に検査し、記事と実装がずれないようにしています。
+
+### 記事シリーズ
+
+記事は [`docs/article/`](docs/article/index.md)、サンプル実装は `apps/<連載>/python/` にあります。
+
+| 連載 | 章 | 記事 | 実装 |
+| :--- | :-: | :--- | :--- |
+| 経済学のためのプログラミング入門 | 15 | [記事](docs/article/economics-programming/index.md) | [`apps/economics-programming`](apps/economics-programming/python) |
+| 経済学で出る数学プログラミング | 12 | [記事](docs/article/math-for-economics-programming/index.md) | [`apps/math-for-economics-programming`](apps/math-for-economics-programming/python) |
+| ミクロ経済学のためのプログラミング（初級） | 16 | [記事](docs/article/micro-basics-programming/index.md) | [`apps/micro-basics-programming`](apps/micro-basics-programming/python) |
+| マクロ経済学のためのプログラミング（初級） | 14 | [記事](docs/article/macro-basics-programming/index.md) | [`apps/macro-basics-programming`](apps/macro-basics-programming/python) |
+| マクロ経済学のためのプログラミング（中級＋） | 18 | [記事](docs/article/macro-programming/index.md) | [`apps/macro-programming`](apps/macro-programming/python) |
+| 計量経済学のためのプログラミング | 16 | [記事](docs/article/econometrics-programming/index.md) | [`apps/econometrics-programming`](apps/econometrics-programming/python) |
+
+共通の検査ツールは [`apps/article-tools`](apps/article-tools) にあります（決定は [ADR](docs/adr/article-tools/index.md)）。
 
 ### 前提
 
 | ソフトウェア | バージョン | 備考 |
 | :----------- | :--------- | :--- |
-| nodejs       | 22.x       |      |
+| nodejs       | 22.x       | ドキュメントのビルド・ツール類 |
+| Python       | 3.12 以上  | サンプル実装 |
+| uv           | 最新       | Python の依存関係の管理（連載のセットアップに使用） |
+| Docker       | 最新       | MkDocs のビルド（任意） |
 
 ## 構成
 
@@ -24,6 +51,15 @@
 ```bash
 npm install
 npm start
+```
+
+連載のサンプル実装を動かす場合（例: 経済学で出る数学プログラミング）:
+
+```bash
+npm run setup:math        # 依存関係のインストール
+npm run notebook:math     # ノートブックを JupyterLab で開く
+cd apps/math-for-economics-programming/python
+uv run tox -e all         # テスト・静的検査・記事の検査をまとめて実行
 ```
 
 ### 構築
