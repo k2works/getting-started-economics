@@ -44,8 +44,23 @@
     "vscode" : {
       "extensions" : [
         "ms-python.python",
+        "ms-python.vscode-python-envs",
         "ms-toolsai.jupyter"
-      ]
+      ],
+      "settings" : {
+        // 連載ごとに、Python のプロジェクトと、その .venv（npm run setup:* が作る）を割り当てる。
+        // これで、テストの検出と実行が、各連載の .venv（pytest を含む）で動く。
+        "python-envs.pythonProjects": [
+          { "path": "apps/economics-programming/python", "envManager": "ms-python.python:venv", "packageManager": "ms-python.python:pip" },
+          { "path": "apps/micro-basics-programming/python", "envManager": "ms-python.python:venv", "packageManager": "ms-python.python:pip" },
+          { "path": "apps/macro-basics-programming/python", "envManager": "ms-python.python:venv", "packageManager": "ms-python.python:pip" },
+          { "path": "apps/macro-programming/python", "envManager": "ms-python.python:venv", "packageManager": "ms-python.python:pip" },
+          { "path": "apps/econometrics-programming/python", "envManager": "ms-python.python:venv", "packageManager": "ms-python.python:pip" },
+          { "path": "apps/math-for-economics-programming/python", "envManager": "ms-python.python:venv", "packageManager": "ms-python.python:pip" }
+        ],
+        "python.testing.pytestEnabled": true,
+        "python.testing.unittestEnabled": false
+      }
     },
     "jetbrains" : {
       "backend" : "IntelliJ"
