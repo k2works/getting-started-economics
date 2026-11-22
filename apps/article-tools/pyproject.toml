@@ -1,7 +1,7 @@
 [project]
 name = "article-tools"
 version = "0.1.0"
-description = "記事とサンプル実装のずれを検出する、3 シリーズ共通のツール"
+description = "記事とサンプル実装のずれを検出する、全連載共通のツール"
 requires-python = ">=3.12"
 # 対象のシリーズ（apps/<シリーズ名>/python/）の環境で実行する。そのシリーズが、これらを入れている
 dependencies = [

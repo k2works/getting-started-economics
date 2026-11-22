@@ -22,7 +22,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-22T00:00:00Z }
 | 項目 | 内容 |
 | :--- | :--- |
 | 経済学の題材 | 逆選択（レモン市場・市場の崩れ）、シグナル（教育）、モラルハザード（プリンシパル・エージェント、成果報酬） |
-| 使う Python の機能 | 繰り返し（`while`）、リスト内包表記、条件、`dataclass`は使わず関数だけ、テスト（`pytest`） |
+| 使う Python の機能 | 繰り返し（`while`）、リスト内包表記、条件、`dataclass` は使わず関数だけ、テスト（`pytest`） |
 | 新しく導入するライブラリ | なし |
 | 完成形 | `expected_value_of_unknown_quality`、`good_quality_sells`、`unraveling`、`separating_education_range`、`signal_separates`、`minimum_bonus`、`agent_works`、`principal_profit_with_bonus`、`worth_paying_bonus` |
 | ファイル | 実装: `lib/chapter14/information.py`、`lib/chapter14/plot.py`（図）／テスト: `test/chapter14/test_information.py`、`test/chapter14/test_plot.py`（自分で書くときは、`practice/chapter14/` に、同じ名前で作ります） |
@@ -56,7 +56,7 @@ uv run pytest test/chapter14
 ```
 
 ```text
-34 passed
+37 passed
 ```
 
 自分でコードを書くときは、`practice/chapter14/` に、`information.py` とそのテストを作ります。
@@ -168,10 +168,8 @@ def good_quality_sells(
     seller_reservation: float,
 ) -> bool:
     """良い品が、市場に出るか。期待値が、良い品の売り手の最低価格以上のとき。"""
-    return (
-        expected_value_of_unknown_quality(good_share, value_good, value_bad)
-        >= seller_reservation
-    )
+    expected = expected_value_of_unknown_quality(good_share, value_good, value_bad)
+    return expected >= seller_reservation - _TOLERANCE
 ```
 
 ??? note "import と補助関数（写すときに足す）"
@@ -186,6 +184,10 @@ def good_quality_sells(
 
     ```python
     from lib.chapter01.validation import validate_non_negative, validate_positive
+    ```
+
+    ```python
+    _TOLERANCE = 1e-9  # 境界ちょうどの判定を、浮動小数点の誤差に左右させない
     ```
 
     ```python
@@ -365,7 +367,7 @@ def signal_separates(
 ) -> bool:
     """教育年数 e で、高い能力の人だけが、教育を選ぶか。"""
     low, high = separating_education_range(wage_high, wage_low, cost_high, cost_low)
-    return low <= education <= high
+    return low - _TOLERANCE <= education <= high + _TOLERANCE
 ```
 
 賃金の差 40 を、1 年あたりの費用で割ると、低い能力の人は 40 ÷ 20 = 2 年、高い能力の人は 40 ÷ 10 = 4 年が、境目で、**2 年〜4 年**が区別できる範囲です。下の端（2 年）は、**低い能力の人**が、教育しても、しなくても、同じになる年数。上の端（4 年）は、**高い能力の人**が、同じになる年数です。両端を範囲に含めるのは、無差別のとき、望ましい側（低い能力の人はまねしない、高い能力の人は選ぶ）に倒す、という約束です。
@@ -426,7 +428,7 @@ def minimum_bonus(p_high: float, p_low: float, effort_cost: float) -> float:
 def agent_works(bonus: float, p_high: float, p_low: float, effort_cost: float) -> bool:
     """努力すると、期待報酬 p_high·b − 費用 が、努力しない p_low·b 以上になるか。"""
     _check_probabilities(p_high, p_low)
-    return bonus >= minimum_bonus(p_high, p_low, effort_cost)
+    return bonus >= minimum_bonus(p_high, p_low, effort_cost) - _TOLERANCE
 
 
 def principal_profit_with_bonus(
@@ -441,9 +443,8 @@ def worth_paying_bonus(
     value: float, p_high: float, p_low: float, effort_cost: float
 ) -> bool:
     """努力させる利潤が、努力しない場合の期待利潤 p_low·V を、上回るか。"""
-    return (
-        principal_profit_with_bonus(value, p_high, p_low, effort_cost) > p_low * value
-    )
+    profit = principal_profit_with_bonus(value, p_high, p_low, effort_cost)
+    return profit > p_low * value + _TOLERANCE
 ```
 
 ### 予想の答え合わせ
@@ -648,7 +649,7 @@ uv run pytest test/chapter14
 ```
 
 ```text
-34 passed
+37 passed
 ```
 
 ## 14.6 規則で言うと
@@ -671,7 +672,7 @@ uv run pytest test/chapter14
 - **離散的な、小さな例です。** 教科書や論文により、数値や前提が違います。この章は、前提を、明示しました（売り手の最低価格が質に等しい、など）
 - **能力や質の種類を、少数にしました。** 連続的な質の分布では、式が変わります
 - **シグナルは、生産性を上げないと仮定しました。** 教育が、生産性も上げるなら、社会的な評価が変わります
-- **成果報酬は、リスク中立の代理人を仮定しました。** リスク回避的なら、保険と誘因の間の、トレードオフが生じます
+- **成果報酬は、リスク中立で、有限責任（固定給を負にできない）の代理人を仮定しました。** 有限責任がなければ、依頼人は、努力の費用だけで努力させられ、期待利潤は 70 になります（60 ではありません）。 リスク回避的なら、保険と誘因の間の、トレードオフが生じます
 - **保証・ブランド・評判・規制で、逆選択は、緩和されます。** 中古車の保証は、質のシグナルです
 
 ## 14.7 第 4 部の到達チェック
@@ -729,6 +730,8 @@ print("最低の成果報酬:", minimum_bonus(0.8, 0.4, 10))
 逆選択 (倍率 1.5): 市場に残る質 [20, 40, 60]
 最低の成果報酬: 25.0
 ```
+
+出力の読み方: `ナッシュ均衡: [(1, 1)]` は、戦略の番号（1 = 裏切り）で、（裏切り、裏切り）です。利得の (1, 1) と見た目が同じなので、注意してください。また、囚人のジレンマの P（罰）は、逆需要 P = 100 − Q の P（価格）とは、別の意味です。
 
 ### できること
 

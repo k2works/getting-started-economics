@@ -18,7 +18,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-21T00:00:00Z }
 - 価格が均衡より**高い**と、供給が需要を上回り（**超過供給**）、価格が**下がる**
 - 価格が均衡より**低い**と、需要が供給を上回り（**超過需要**）、価格が**上がる**
 
-![市場均衡。需要曲線（青）と供給曲線（橙）の交点（赤い丸）が、均衡。価格 55、数量 45](images/ch08-market.png)
+![市場均衡。需要曲線（青）と供給曲線（橙）の交点（緑の丸）が、均衡。価格 55、数量 45](images/ch08-market.png)
 
 | 項目 | 内容 |
 | :--- | :--- |
@@ -39,6 +39,8 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-21T00:00:00Z }
 | ワルラス的調整 | P' = P + 速さ × 超過需要 | `walras_adjustment(market, price0, speed, steps)` |
 | マーシャル的調整 | Q' = Q + 速さ × (需要価格 − 供給価格) | `marshall_adjustment(market, quantity0, speed, steps)` |
 | シフト | 切片が、数量の方向に動く | `shift_demand`、`shift_supply` |
+
+> **記号の注意（第 11・13 章との違い）**: この章の需要は Q = a + s_d·P（数量を価格で表す式。傾きは負）です。第 11・13 章の逆需要は P = a − b·Q（価格を数量で表す式。傾きは正）で、同じ `demand_intercept`・`demand_slope` という名前でも、**軸と符号が違います**。移すときは、式の向きを変えてください。
 
 ### 前提とする章
 

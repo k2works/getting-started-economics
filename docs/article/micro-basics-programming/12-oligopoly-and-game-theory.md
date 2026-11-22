@@ -61,7 +61,7 @@ uv run pytest test/chapter12
 ```
 
 ```text
-61 passed
+64 passed
 ```
 
 自分でコードを書くときは、`practice/chapter12/` に、`game.py`・`repeated.py`・`kinked.py` と、それぞれのテストを作ります。
@@ -285,6 +285,10 @@ def prisoners_dilemma(
     ```
 
     ```python
+    _TOLERANCE = 1e-9  # 閾値ちょうどの判定を、浮動小数点の誤差に左右させない
+    ```
+
+    ```python
     def _check_delta(delta: float) -> None:
         if not 0 <= delta < 1:
             raise ValueError("割引因子は、0 以上 1 未満にする")
@@ -492,7 +496,7 @@ def is_prisoners_dilemma(game: Game) -> bool:
     return row_ok and column_ok
 ```
 
-協調ゲーム（同じ戦略をそろえると得）では、均衡が 2 つあり、一致ゲーム（相手と違う手を出したい）では、**純粋戦略の均衡がありません**（混合戦略が必要ですが、この章は扱いません）。
+協調ゲーム（同じ戦略をそろえると得）では、均衡が 2 つあり、一致ゲーム（行は手をそろえたく、列は違う手を出したい）では、**純粋戦略の均衡がありません**（混合戦略が必要ですが、この章は扱いません）。
 
 ### 繰り返しゲーム
 
@@ -615,7 +619,8 @@ def trigger_sustains_cooperation(
     temptation: float, reward: float, punishment: float, delta: float
 ) -> bool:
     """割引因子が閾値以上なら、トリガー戦略で、協調を保てる。"""
-    return delta >= cooperation_threshold(temptation, reward, punishment)
+    threshold = cooperation_threshold(temptation, reward, punishment)
+    return delta >= threshold - _TOLERANCE
 ```
 
 最後に `test_有限回で近似した価値は閾値の判定と同じ向き` が、無限の閉じた式を、**200 回の合計で近似**した値と、比べます（近似であることを、テストが示します）。
@@ -1134,7 +1139,7 @@ uv run pytest test/chapter12
 ```
 
 ```text
-61 passed
+64 passed
 ```
 
 ## 12.6 規則で言うと
@@ -1157,7 +1162,7 @@ uv run pytest test/chapter12
 
 - **純粋戦略だけを扱いました。** 混合戦略（確率的に選ぶ）の均衡は、扱っていません
 - **2 人・同時手番だけです。** 順番に選ぶゲーム（先手・後手）や、3 人以上は、扱っていません
-- **無限に繰り返すことを、閉じた式で近似しました。** 実際の取引は、有限回で、最後の期に、協調が崩れることがあります（後ろ向き帰納法）
+- **無限に繰り返すことを、閉じた式で近似しました。** 実際の取引は、有限回で、終わりが分かっていれば、最後の期から順に協調が崩れ、全期で崩れることがあります（後ろ向き帰納法）
 - **屈折需要曲線は、価格の硬直性を、仮定として置くだけで、説明しません。** 実証的にも、支持は限定的です
 
 ## 12.7 練習問題

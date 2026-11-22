@@ -58,7 +58,7 @@ uv run pytest test/chapter04
 ```
 
 ```text
-43 passed
+44 passed
 ```
 
 自分でコードを書くときは、`practice/chapter04/` に、`slutsky.py` と `test_slutsky.py` を作ります。第 1〜3 章の関数は、完成形の `lib/` から import してかまいません（[この記事の読み方](how-to-read.md)を参照）。
@@ -188,6 +188,8 @@ def compensated_bundle(
     validate_positive(utility_level, "効用の水準は、正にする")
     validate_positive(px, "財 x の価格は、正にする")
     validate_positive(py, "財 y の価格は、正にする")
+    validate_positive(a, "べき指数 a は、正にする")
+    validate_positive(b, "べき指数 b は、正にする")
     ratio = (b / a) * (px / py)
     x = (utility_level / ratio**b) ** (1 / (a + b))
     return x, ratio * x
@@ -616,7 +618,7 @@ uv run pytest test/chapter04
 ```
 
 ```text
-43 passed
+44 passed
 ```
 
 ## 4.6 規則で言うと
@@ -638,7 +640,8 @@ uv run pytest test/chapter04
 
 - **ギッフェン財は、実際には、ほとんど見つかっていません。** 理論上ありうる、という位置づけです
 - **補償需要は、仮想の点です。** 実際の消費者は、「元の効用を保つ」ように、調整してくれません。観察できるのは、A と C だけです
-- **コブ・ダグラス型は、代替効果と所得効果の比が、一定です。** 実際の財では、財によって、大きく違います
+- **この章の例は、コブ・ダグラス型だけです。** 価格の下がり方によって、代替効果と所得効果の比は、変わります（上の出力では、1:2、1:4）。実際の財では、財によって、大きく違います
+- **補償は、元の効用を一定にする方式（ヒックス型）です。** 元の消費点を買えるように所得を調整する方式（スルツキー型）とは、少し違います。教科書によって、呼び方が違うので、読み比べるときは、注意してください
 - **完全代替財・完全補完財は、極端な形です。** 現実の財は、その間にあります
 
 ## 4.7 第 1 部の到達チェック

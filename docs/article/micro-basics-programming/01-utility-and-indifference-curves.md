@@ -74,7 +74,7 @@ uv run pytest test/chapter01
 61 passed
 ```
 
-自分でコードを書くときは、`practice/chapter01/` を作って、完成形と同じ名前（`utility.py`・`test_utility.py`）のファイルに書きます。テストは、`uv run pytest practice/chapter01` で動かします。テストの import は、`from lib.chapter01.utility import ...` を、**`from practice.chapter01.utility import ...` に書き換えて**ください（書き換えないと、完成形を読み込んで、最初から通ってしまい、Red になりません）。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。入力の検証の共通関数（`validate_positive`・`validate_non_negative`）は、`lib/chapter01/validation.py` から import してかまいません。import と補助関数（先頭が `_` の関数）は、記事の抜粋に出ないことがあります。そのときは、完成形のファイルの先頭を見て、写してください。「予想の答え合わせ」のスクリプトは、`practice/chapter01/check.py` に保存し、アプリのディレクトリ（`apps/micro-basics-programming/python`）で `uv run python -m practice.chapter01.check` と実行します（`python practice/...` と、ファイルのパスで実行すると、`lib` が見つからず、`ModuleNotFoundError` になります。**`-m` で、モジュールとして実行**してください。自分のコードを確かめるときは、スクリプトの import を `from practice.chapterNN...` に書き換えます。Windows のシェルで、日本語が文字化けするときは、`PYTHONIOENCODING=utf-8` を付けます）。
+自分でコードを書くときは、`practice/chapter01/` を作って、完成形と同じ名前（`utility.py`・`test_utility.py`）のファイルに書きます。テストは、`uv run pytest practice/chapter01` で動かします。テストの import は、`from lib.chapter01.utility import ...` を、**`from practice.chapter01.utility import ...` に書き換えて**ください（書き換えないと、完成形を読み込んで、最初から通ってしまい、Red になりません）。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。入力の検証の共通関数（`validate_positive`・`validate_non_negative`）は、`lib/chapter01/validation.py` から import してかまいません。import と補助関数（先頭が `_` の関数）は、記事の抜粋に出ません。各章の折りたたみ「import と補助関数」に、写す内容があります（完成形は、見なくてかまいません）。「予想の答え合わせ」のスクリプトは、`practice/chapter01/check.py` に保存し、アプリのディレクトリ（`apps/micro-basics-programming/python`）で `uv run python -m practice.chapter01.check` と実行します（`python practice/...` と、ファイルのパスで実行すると、`lib` が見つからず、`ModuleNotFoundError` になります。**`-m` で、モジュールとして実行**してください。自分のコードを確かめるときは、スクリプトの import を `from practice.chapterNN...` に書き換えます。Windows のシェルで、日本語が文字化けするときは、`PYTHONUTF8=1` を付けます）。
 
 ## 1.3 予想する
 
@@ -109,7 +109,7 @@ uv run pytest test/chapter01
 | :--- | :--- | :--- |
 | 右下がり | 多いほど嬉しい（**単調性**） | ふつうの財 |
 | 右上がり | 一方が、**マイナスの財**（多いと嫌） | 騒音（x）と、お金（y） |
-| 原点に凸（下に凸） | **一緒に消費したい** | パンとジャム |
+| 原点に凸（下に凸） | **偏らずに、組み合わせたい**（混ぜる方が、偏るより好き） | 主食とおかずを、バランスよく |
 | 原点に凹（上に凸） | **別々に消費したい** | 辛い料理と甘い料理 |
 | 直線 | **完全代替財**（交換比率が一定） | 同じ性能の 2 つの鉛筆 |
 | L 字 | **完全補完財**（一定の比率で、一緒に使う） | 右の靴と左の靴 |
@@ -305,8 +305,8 @@ print(cobb_douglas_utility(40, 20))
 ```
 
 ```text
-800
-800
+800.0
+800.0
 ```
 
 (20, 40) と (40, 20) の効用は、どちらも 800 で、**同じ無差別曲線の上**にあります。
@@ -543,9 +543,9 @@ print("完全補完財 (3, 5) の効用:", perfect_complements_utility(3, 5))
 ```
 
 ```text
-効用 (20, 40) 800
-効用 (40, 20) 800
-効用 (10, 80) 800
+効用 (20, 40) 800.0
+効用 (40, 20) 800.0
+効用 (10, 80) 800.0
 U = 800 で x = 10 のとき y: 80.0
 U = 800 で x = 80 のとき y: 10.0
 MRS (20, 40): 2.0

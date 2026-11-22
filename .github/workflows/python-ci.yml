@@ -91,7 +91,7 @@ jobs:
         if: matrix.series == 'econometrics-programming'
         run: uv run tox -e realdata
 
-  # 3 シリーズ共通の、記事の検査ツール（apps/article-tools/）のテスト・lint・型検査
+  # 全連載共通の、記事の検査ツール（apps/article-tools/）のテスト・lint・型検査
   article-tools:
     timeout-minutes: 10
     runs-on: ubuntu-latest

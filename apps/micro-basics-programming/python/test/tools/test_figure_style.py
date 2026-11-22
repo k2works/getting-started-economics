@@ -1,6 +1,6 @@
 """全体レビュー（2026-11-21）の指摘: 全図に共通する、凡例と線種の規則。
 
-章ごとのテストが、線種・凡例を確かめていなかったので、登録された全 28 図に、規則を課す。
+章ごとのテストが、線種・凡例を確かめていなかったので、登録された全図に、規則を課す。
 """
 
 import matplotlib.pyplot as plt
@@ -20,7 +20,7 @@ def _labelled_lines(ax: Axes) -> list[Line2D]:
 
 
 def _shifted_curves(ax: Axes) -> list[Line2D]:
-    """動かしたあとの曲線（マーカーのない線。均衡の点と、第 6 章の累積の系列は除く）。"""
+    """動かしたあとの曲線（マーカーのない線。均衡の点は除く）。"""
     return [
         x
         for x in _labelled_lines(ax)
@@ -46,7 +46,7 @@ def test_名前のある線は凡例に載る(name: str) -> None:
 def test_動かしたあとの曲線は点線で描く(name: str) -> None:
     for ax in _axes(name):
         for item in _shifted_curves(ax):
-            # 破線（動かした曲線）か点線（為替調整後の IS。第 14 章）。実線は元の曲線だけ
+            # 破線（動かした曲線）か点線。実線は元の曲線だけ
             assert item.get_linestyle() in ("--", ":"), f"{name}: {item.get_label()}"
 
 
@@ -56,6 +56,12 @@ def test_規則は動かしたあとの曲線を見分ける() -> None:
     ax.plot([0, 1], [0, 1], label="IS")
     ax.plot([0, 1], [1, 2], "--", label="IS after policy")
     ax.plot([0.5], [0.5], "o", label="Equilibrium after")
-    ax.plot([0, 1], [0, 2], label="Money stock after each round")
+    ax.plot([0, 1], [0, 2], label="Cumulative series after each round")
     assert [x.get_label() for x in _shifted_curves(ax)] == ["IS after policy"]
     plt.close(fig)
+
+
+def test_実際の図に規則の対象が十分にある() -> None:
+    """ラベルから "after" が消えて、規則が黙って空振りになるのを防ぐ。"""
+    count = sum(len(_shifted_curves(ax)) for name in FIGURES for ax in _axes(name))
+    assert count >= 5

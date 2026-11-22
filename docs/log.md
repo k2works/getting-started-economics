@@ -1,5 +1,9 @@
 # Docs Update Log
 
+## 2026-11-22
+* **Creation**: [ミクロ経済学のためのプログラミング（初級） 全体レビュー](/review/micro-basics-programming_review_20261122.md) を作成し、高 3 件と中の多くに対応（claude-code/claude-sonnet-5-5）
+* **Update**: [ミクロ経済学のためのプログラミング（初級）](article/micro-basics-programming/index.md) の第 11〜14 章（第 4 部）を追加し、全 14 章を公開
+
 ## 2026-11-21
 * **Creation**: [ミクロ経済学のためのプログラミング（初級）](article/micro-basics-programming/index.md) の執筆計画・雛形・第 1 章を作成（claude-code/claude-sonnet-5-5）
 * **Creation**: [マクロ経済学のためのプログラミング（初級） 全体レビュー](/review/macro-basics-programming_review_20261121.md) を作成し、高 10 件に対応（claude-code/claude-sonnet-5-5）

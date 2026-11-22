@@ -229,7 +229,7 @@ NumPy は、第 1 シリーズの第 9 章で学びますが、この記事は�
 
 ### 章の型
 
-全章を、同じ 8 節にそろえます。
+全章を、同じ節の構成（準備を含めて 9 節。到達チェックの章は 10 節）にそろえます。
 
 | 節 | 内容 |
 | :--- | :--- |
@@ -300,7 +300,7 @@ NumPy は、第 1 シリーズの第 9 章で学びますが、この記事は�
 | 読者が自分のコードを書く場所 | `apps/micro-basics-programming/python/practice/chapterNN/`（`README.md` だけを管理する） |
 | データ | `apps/micro-basics-programming/python/data/`（`README.md` だけ） |
 | 記事の整合の検査（シリーズ固有の設定） | `apps/micro-basics-programming/python/tools/`（`figure_registry.py`・`figures/chNN.py` など）、`test/tools/` |
-| 記事の整合の検査（共通） | `apps/article-tools/`（変更しない） |
+| 記事の整合の検査（共通） | `apps/article-tools/`（計画時は、変更しない方針。実際は、数値の読み込みを任意にする変更を、1 回行った。Bolt 0） |
 | 共通の検証関数 | `apps/micro-basics-programming/python/lib/chapter01/validation.py`（第 1 章で作る） |
 | レビュー | `docs/review/micro-basics-programming_review_YYYYMMDD.md`（全章の完成後） |
 
@@ -322,8 +322,8 @@ NumPy は、第 1 シリーズの第 9 章で学びますが、この記事は�
 | 10 | `10-trade-and-comparative-advantage.md` |
 | 11 | `11-monopoly-and-monopolistic-competition.md` |
 | 12 | `12-oligopoly-and-game-theory.md` |
-| 13 | `13-externalities-public-goods-and-natural-monopoly.md` |
-| 14 | `14-asymmetric-information.md` |
+| 13 | `13-externality-public-goods-and-natural-monopoly.md` |
+| 14 | `14-information-asymmetry.md` |
 
 ## 開発環境
 
@@ -485,4 +485,10 @@ NumPy は、第 1 シリーズの第 9 章で学びますが、この記事は�
         - **中**: しっぺ返しの閾値は 0.5 ではない（トリガー戦略のもの。しっぺ返しは δ ≥ (T − R) ÷ (R − S)）→ 書き分けた。独占的競争の「平均費用の最小点に届かない」は、この費用関数（AC = c + F ÷ Q）に最小点がなく、テストも主張を確かめていなかった → 主張を P > MC に変え、テストを入れ替えた。第 12・13 章のテストの import 行が、記事になかった → 足した
         - **低**: シグナルの両端の説明、e ÷ (b + d) の一般化、e ≥ 1、`price_when_demand_shifts` を `price_when_cost_shifts` に改名、`or` で通りやすいアサーションの修正、第 14 章の前提の表、`reach.py` の注意、Windows の文字化けの注意
     - **未対応（理由付き）**: 第 12 章（約 1180 行）と第 13 章（約 1140 行）を、分割する提案は、章構成の変更で、承認ゲートの対象のため、**分割せず**、モジュールごとに「ここで一度、休んでかまいません」の目印を置いた。分割する場合は、第 15・16 章を足す案を、ユーザーに確認する。「できること」の表の 2 項目（自然独占・成果報酬）に、対応する課題がないことは、記事に書いた
+9. **Bolt 5（U6。全体レビューと対応）**（2026-11-22）: 5 視点の全体レビューを、[報告書](../../review/micro-basics-programming_review_20261122.md)に統合した。計画との差（記録）:
+    - **計画時の名前と実際**: 計画の関数名の約半数（56 個中 29 個）は、実装で、より正確な名前に変わった（`monopoly_equilibrium` は `monopoly_outcome`、`nash_equilibria` は `pure_nash_equilibria` など）。章の表（上）は、計画時の案。実際の名前は、各章の「完成形」の行を、正とする
+    - **Bolt の番号**: 計画は、Bolt 4 が第 11〜12 章、Bolt 5 が第 13〜14 章だったが、実際は、Bolt 4 で第 11〜14 章を進めた。第 12・13 章の分割は、承認ゲートの対象のため、見送った
+    - **章の長さ**: 第 10 章 約 1000 行、第 12 章 約 1220 行、第 13 章 約 1210 行。目安の 600 行を、大きく超えた（補助関数が、本文と折りたたみの両方に載る重複を含む）。**分割案**: 第 12 章は、モジュールの境界（`game.py`・`repeated.py` と `kinked.py`）で、第 13 章は、`externality.py` と（`public.py`・`natural.py`）で切れる。分割する場合は、章番号の方針（振り直すか、第 15・16 章として足すか）を、ADR に記録する
+    - **第 2 版の候補**: `LinearMarket`（Q = a + s·P）と `Monopoly`（P = a − b·Q）の、フィールド名の軸の衝突を解消する（名前を変える）。検証関数の共通化（区間・大小関係）。解答の実行を、`import *` から、章ごとの明示的な import に変える（`article_tools` の変更で、ADR が要る）。`test/tools` の共通化と、図の指紋に、軸の範囲・線種を含める
+    - **後回しにした指摘（理由つき）**: `CostCurve` の係数の経済的な検証、格子探索の上限（第 5・7 章の API と記事の説明を伴う）、第 7 章の「新規参入・長期の供給」の追加（計画の範囲の確認が要る）、pytest-timeout の導入（新しい依存で、承認が要る）、戦略・分類の戻り値の型（`Literal`・Enum）
 
