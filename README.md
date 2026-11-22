@@ -87,6 +87,20 @@ Skills 一覧は [CLAUDE.md の Skills 体系](CLAUDE.md#skills-体系) を参�
 
 プロジェクトには以下のGulpタスクが用意されています：
 
+##### 連載のセットアップとノートブック
+
+連載の名前は `economics`・`micro-basics`・`macro-basics`・`macro`・`econometrics`・`math` です（`uv` が必要）。
+
+- 連載の依存関係をインストール（全連載は `setup:all`）:
+  ```
+  npm run setup:math
+  ```
+
+- ノートブックを JupyterLab で起動（`apps/<連載>/python/notebooks/`）:
+  ```
+  npm run notebook:math
+  ```
+
 ##### MkDocsタスク
 
 - MkDocsサーバーの起動:
