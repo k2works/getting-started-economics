@@ -453,3 +453,8 @@ NumPy と pandas は、第 1 シリーズの第 9 章以降で学びますが、
     - 登録は `tools/animation_registry.py`、書き出しは `tools/render_animations.py`。GIF が登録と記事に対応していることを、`test/tools/test_animation_registry.py` が確かめる。静止画の図（PNG・指紋）とは、別の仕組み
     - 記事には、小節「動かして見る」を、「実行結果」の直前に足した。**写経は不要**。図の中の文字は、英語にした（GIF のフォントに日本語がない）
     - 学び: 第 10 章の AD-AS は、政府支出を増やしすぎると、AS が垂直（完全雇用）で、AD との交点が、二分法の探索範囲の外になる（AD が AS を、どの物価でも上回る）ので、動かす範囲を 15 までにした
+15. **ノートブック（Jupyter Notebook）の追加**（2026-11-22。ユーザーの依頼）: 全 14 章に、数字を書き換えて、結果と図を手軽に確かめるノートブックを足した（ミクロ初級の第 9 章の手本と同じ作り）。
+    - 実装は `tools/notebook_builder.py`（セルを作って書く。実行結果は保存しない）と `tools/build_notebooks.py`（章ごとの内容。`uv run python -m tools.build_notebooks` で `notebooks/*.ipynb` を書き出す）。各ノートブックは、説明、Parameters（数字を書き換えるセル）、各章の `lib/` の関数を呼ぶ計算、図、「試してみよう」の順。式は、ノートブックの中で書き直さない
+    - 開発用の依存に、`ipykernel`・`nbclient`・`nbformat` を足した（JupyterLab は、依存に入れない。読者は、`uv run --with jupyterlab jupyter lab notebooks/` で起動する）。`test/notebooks/test_notebooks.py` が、全ノートブックの実行、実行結果を保存していないこと、先頭のコードのセルが Parameters であること、登録と記事からの案内を確かめる
+    - 記事には、小節「ノートブックで試す」を、「動かして見る」（なければ「実行結果」）の直前に足した。**写経は不要**
+    - 学び: 「試してみよう」の数値は、実際に実行して確かめた値だけを書く。数字を変えると、エラーになる範囲（分配率の合計、税率、`h` の無限大と連立方程式）は、書かずに、別に確かめる

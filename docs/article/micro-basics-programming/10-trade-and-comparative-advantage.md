@@ -831,6 +831,10 @@ print("両国が得をする交換比率の範囲:", mutually_beneficial_terms(l
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/micro-basics-programming/python/notebooks/ch10_trade_and_comparative_advantage.ipynb` を開き、「Parameters」のセルの数字（世界価格、関税、各国の労働投入）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 関税を 0 から 15 へ上げます。国内価格が上がり、関税収入（紫）と、2 つの死荷重（茶・桃）が現れます。関税が 15 に達すると、国内価格が閉鎖経済の価格（55）に届き、**輸入がなくなります**。

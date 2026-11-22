@@ -505,6 +505,10 @@ def plot_standard_errors(values: Mapping[str, float]) -> Figure:
     return fig
 ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/econometrics-programming/python/notebooks/ch08_heteroskedasticity.ipynb` を開き、「Parameters」のセルの数字（標本の大きさ・誤差が不均一か・繰り返しの回数・乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

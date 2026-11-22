@@ -446,6 +446,10 @@ IS が緩やか（b = 40） 金融: 6.6667
 
 ![流動性のわな。LM が水平（利子率 2.5）なので、IS が右へ動くと、均衡は、1000 から 1025（単純な乗数どおり）へ動く](images/ch09-liquidity-trap.png)
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/macro-basics-programming/python/notebooks/ch09_fiscal_and_monetary_policy.ipynb` を開き、「Parameters」のセルの数字（政府支出の増加、実質貨幣供給の増加、k・h・b、利子率の下限）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 政府支出を 20 増やしたとき、貨幣需要の利子感応度 h を 20 から 400 へ上げます。LM 曲線が平らになるほど、所得の増加が大きくなり、クラウディングアウトが小さくなります。

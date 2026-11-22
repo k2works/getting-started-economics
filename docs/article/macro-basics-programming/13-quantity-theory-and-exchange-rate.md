@@ -466,6 +466,10 @@ X = 30 で整合: False
 
 ![為替レートと純輸出。基準の点（125 円、20）から、10 円の円安で、純輸出が 4 増える](images/ch13-net-exports.png)
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/macro-basics-programming/python/notebooks/ch13_quantity_theory_and_exchange_rate.ipynb` を開き、「Parameters」のセルの数字（貨幣量、流通速度、生産量、為替レートと純輸出の傾き、物価上昇率）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

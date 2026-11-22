@@ -614,6 +614,10 @@ print("完全補完財の需要の変化:", round(comp, 4), cross_price_relation
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/micro-basics-programming/python/notebooks/ch04_slutsky_decomposition_and_goods.ipynb` を開き、「Parameters」のセルの数字（所得、元の価格と新しい価格）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

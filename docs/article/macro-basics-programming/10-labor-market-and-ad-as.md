@@ -538,6 +538,10 @@ AD 物価 1 と 2: 1000.0 950.0
 
 AD-AS の図は、左右 2 枚（古典派・ケインズ）で、AD の移動と、均衡の動きを描きます（章頭の図。`plot_ad_as`）。
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/macro-basics-programming/python/notebooks/ch10_labor_market_and_ad_as.ipynb` を開き、「Parameters」のセルの数字（労働需要と労働供給の係数、硬直的な賃金、AD と AS の係数、政府支出と供給の変化）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 政府支出を 0 から 15 へ増やします。AD 曲線が右へ動き、AS が右上がりの間は、物価も所得も上がります。所得が完全雇用所得に達すると、あとは、物価だけが上がります。

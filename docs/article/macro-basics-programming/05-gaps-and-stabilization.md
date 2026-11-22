@@ -459,6 +459,10 @@ print("必要な政府支出の変化:", round(required_spending_change(gap2, 0.
 
 ![独立支出が 10 変動したときの所得の変動。比例税（税率 0.2）があると、25 から約 19.2 に小さくなる](images/ch05-income-swing.png)
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/macro-basics-programming/python/notebooks/ch05_gaps_and_stabilization.ipynb` を開き、「Parameters」のセルの数字（限界消費性向、独立支出、完全雇用所得、税率）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

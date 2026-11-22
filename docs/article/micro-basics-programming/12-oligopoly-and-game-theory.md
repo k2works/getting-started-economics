@@ -462,6 +462,10 @@ print("協調ゲームの均衡:", pure_nash_equilibria(coordination))
 - **2 つ目の問い**: ナッシュ均衡は（裏切り、裏切り）だけで、(1, 1) は、（協調、協調）の (3, 3) に、**パレート劣位**です
 - **協調ゲーム**（同じ戦略をそろえると得）では、均衡が 2 つあります（[(0, 0), (1, 1)]）
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/micro-basics-programming/python/notebooks/ch12_oligopoly_and_game_theory.ipynb` を開き、「Parameters」のセルの数字（囚人のジレンマと協調ゲームの利得）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

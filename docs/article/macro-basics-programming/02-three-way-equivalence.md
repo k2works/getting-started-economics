@@ -543,6 +543,10 @@ print("最終需要の合計:", 120 + 230, "付加価値の合計:", 150 + 200)
 
 ![産業連関表。最終需要（青）より、それを満たす生産量（オレンジ）のほうが、どの部門も大きい](images/ch02-io-output.png)
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/macro-basics-programming/python/notebooks/ch02_three_way_equivalence.ipynb` を開き、「Parameters」のセルの数字（産出額と中間投入、分配面・支出面の各項目、投入係数と最終需要）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

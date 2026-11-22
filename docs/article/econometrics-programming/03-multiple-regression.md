@@ -569,6 +569,10 @@ def plot_collinearity_distributions(
     return fig
 ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/econometrics-programming/python/notebooks/ch03_multiple_regression.ipynb` を開き、「Parameters」のセルの数字（標本の大きさ・説明変数の相関・繰り返しの回数・乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 x1 と x2 の相関を、0 から 0.97 へ上げます。2 つの係数の推定値の散らばりが、右下がりに伸びます。平均は真の値（星）のまわりのままで、**ばらつき**だけが増えます。多重共線性は、偏りでなく、精度を落とします。

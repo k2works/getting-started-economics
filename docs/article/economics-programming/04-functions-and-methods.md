@@ -254,6 +254,10 @@ print(average_variable_cost(2))
 
 MC(2) = 3 は AC(2) = 12 より小さく、MC が AC より小さいときは AC が下がっている、というマインドマップの関係も、ここで確かめられます。
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/economics-programming/python/notebooks/ch04_functions_and_methods.ipynb` を開き、「Parameters」のセルの数字（生産量、固定費用、財の消費量、効用の指数）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

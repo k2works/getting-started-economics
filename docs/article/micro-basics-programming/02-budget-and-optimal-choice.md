@@ -544,6 +544,10 @@ Px = 1 の最適消費点: (40.0, 40.0)
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/micro-basics-programming/python/notebooks/ch02_budget_and_optimal_choice.ipynb` を開き、「Parameters」のセルの数字（所得、価格、効用のべき指数）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

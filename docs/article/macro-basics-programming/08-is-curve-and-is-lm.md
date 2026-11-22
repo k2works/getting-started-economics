@@ -522,6 +522,10 @@ IS 曲線と、IS-LM の均衡を描く関数を、テストから書きます�
 
 ![IS-LM の均衡。右下がりの IS 曲線と、右上がりの LM 曲線の交点が、所得 1000、利子率 2.5](images/ch08-is-lm.png)
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/macro-basics-programming/python/notebooks/ch08_is_curve_and_is_lm.ipynb` を開き、「Parameters」のセルの数字（限界消費性向、投資の利子感応度、IS 曲線の切片、k と h、実質貨幣供給）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 政府支出を 0 から 40 へ増やします。IS 曲線が右へ動き、均衡が LM 曲線に沿って、右上へ動きます（所得も利子率も上がります）。

@@ -454,6 +454,10 @@ uv run python -c "from lib.chapter07.plot import draw_market; draw_market(100, 2
 
 ![需要曲線・供給曲線・均衡点](images/ch07-market.png)
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/economics-programming/python/notebooks/ch07_plotting_with_matplotlib.ipynb` を開き、「Parameters」のセルの数字（需要・供給の切片と傾き、税額）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 税額を 0 から 15 へ上げます。破線の供給曲線（供給 + 税）が上へ動き、税収（緑）と**死荷重（赤）**が現れます。税額を 2 倍にすると、死荷重は 4 倍になります（税額の 2 乗に比例します）。

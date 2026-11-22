@@ -636,6 +636,10 @@ P = 30 の超過需要: 50 需要超過（価格が上がる）
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/micro-basics-programming/python/notebooks/ch08_market_equilibrium_and_adjustment.ipynb` を開き、「Parameters」のセルの数字（需要・供給の切片と傾き、出発点、調整の速さ）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 価格 80 から、ワルラス的調整を始めます。需要量と供給量の差（超過）に応じて、価格が動き、**均衡（価格 55）**へ近づきます。

@@ -334,6 +334,10 @@ table.loc[["C01", "C12", "C24"]]
 
 > **これは、架空のデータの結果です。** 実際の統計で試す手順は、第 7 章にあります。
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/macro-programming/python/notebooks/ch02_growth_accounting.ipynb` を開き、「Parameters」のセルの数字（資本分配率 α、資本・人的資本・TFP の成長率、成長率を測る期間）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

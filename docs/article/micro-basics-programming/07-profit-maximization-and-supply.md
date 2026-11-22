@@ -767,6 +767,10 @@ P = 5 の生産量: 0.0
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/micro-basics-programming/python/notebooks/ch07_profit_maximization_and_supply.ipynb` を開き、「Parameters」のセルの数字（費用関数の係数、価格、企業の数、税）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 価格を 0 から 40 へ上げます。P = MC の点が MC 曲線の上を動き、利潤の長方形（緑）の大きさが変わります。操業停止点（6）を超えると、**供給曲線**ができ始めます。

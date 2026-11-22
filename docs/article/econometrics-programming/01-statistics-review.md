@@ -443,6 +443,10 @@ def plot_densities(degrees_of_freedom: Sequence[int] = (2, 5, 30)) -> Figure:
     return fig
 ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/econometrics-programming/python/notebooks/ch01_statistics_review.ipynb` を開き、「Parameters」のセルの数字（標本の大きさ・母集団の平均と標準偏差・乱数の種・t 分布の自由度）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

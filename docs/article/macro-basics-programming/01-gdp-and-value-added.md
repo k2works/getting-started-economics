@@ -512,6 +512,10 @@ NDP: 850
 
 ![成長会計: 成長率 6% の内訳。労働 2.8、資本 2.4、技術進歩 0.8](images/ch01-growth-accounting.png)
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/macro-basics-programming/python/notebooks/ch01_gdp_and_value_added.ipynb` を開き、「Parameters」のセルの数字（各段階の産出額と中間投入、成長率・労働と資本の増加率・分配率）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

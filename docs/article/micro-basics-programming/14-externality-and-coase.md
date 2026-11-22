@@ -612,6 +612,10 @@ print("一律規制の削減量", [round(x, 4) for x in uniform], "費用", roun
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/micro-basics-programming/python/notebooks/ch14_externality_and_coase.ipynb` を開き、「Parameters」のセルの数字（外部費用、コースの定理の利益と被害、削減費用の傾き）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 外部費用を 0 から 40 へ上げます。社会的限界費用が上へ動き、最適な数量が減って、**死荷重**が広がります。

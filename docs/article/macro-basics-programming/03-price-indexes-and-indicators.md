@@ -533,6 +533,10 @@ DI: [50.0, 66.7, 100.0]
 
 ![架空の月次指標から計算した CI（上）と DI（下）。DI の点線は 50％。DI が 50％を割ったあとも、CI は、しばらく高い](images/ch03-business-indexes.png)
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/macro-basics-programming/python/notebooks/ch03_price_indexes_and_indicators.ipynb` を開き、「Parameters」のセルの数字（価格と数量、基準時、名目 GDP とデフレータ、基準の月）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

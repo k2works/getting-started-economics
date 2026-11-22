@@ -474,6 +474,10 @@ def plot_slope_distribution(slopes: Sequence[float], true_slope: float) -> Figur
     return fig
 ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/econometrics-programming/python/notebooks/ch02_simple_regression.ipynb` を開き、「Parameters」のセルの数字（標本の大きさ・真の切片と傾き・誤差の標準偏差・乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 x の端にある 1 点を、直線の上から、下へ動かします。最小二乗法の直線（橙）は、この 1 点に引きずられ、傾きが正から負へ変わります。残差の二乗を最小にするので、離れた点ほど、強く効きます。

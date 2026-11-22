@@ -634,6 +634,10 @@ print("必要な補助金", required_subsidy(demand, 800))
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/micro-basics-programming/python/notebooks/ch15_public_goods_and_natural_monopoly.ipynb` を開き、「Parameters」のセルの数字（固定費用、公共財の限界便益と費用）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

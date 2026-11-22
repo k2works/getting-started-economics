@@ -318,6 +318,10 @@ print(round(find_equilibrium_price(excess, 0, 100), 4))
 - 1 つ目の問い: 超過需要は、価格 0 で +100、価格 100 で −300 と符号が逆なので、間に必ず均衡があります（超過需要は連続だからです）。真ん中の価格 50 の超過需要は −150 で負なので、均衡は [0, 50] にあります。
 - 2 つ目の問い: 区間の幅は 100 → 50 → 25 → 12.5 → 6.25 → 3.125 → 1.5625 → 0.78125 と縮み、7 回で 1 未満になります。`find_equilibrium_price` が返す均衡価格は 20.0 です。
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/economics-programming/python/notebooks/ch06_modules_errors_and_algorithms.ipynb` を開き、「Parameters」のセルの数字（需要・供給の切片と傾き、探す区間の下限と上限）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

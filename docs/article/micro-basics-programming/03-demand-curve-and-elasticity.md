@@ -552,6 +552,10 @@ Q = 100 − P の P = 75 の価格弾力性: 3.0
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/micro-basics-programming/python/notebooks/ch03_demand_curve_and_elasticity.ipynb` を開き、「Parameters」のセルの数字（所得、価格、直線の需要の切片と傾き）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 価格が 4 から 1 へ下がります。左: 予算線の x 切片が右へ伸び、最適点が動きます。右: 最適点の x と価格をつなぐと、**需要曲線**ができます。

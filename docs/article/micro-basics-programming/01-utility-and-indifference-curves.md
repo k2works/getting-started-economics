@@ -692,6 +692,10 @@ U = 40 で x = 5 のとき y: 30.0
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/micro-basics-programming/python/notebooks/ch01_utility_and_indifference_curves.ipynb` を開き、「Parameters」のセルの数字（効用のべき指数、調べる点、無差別曲線の水準）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

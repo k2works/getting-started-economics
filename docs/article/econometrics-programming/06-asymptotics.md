@@ -571,6 +571,10 @@ def plot_estimate_distributions(
     return fig
 ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/econometrics-programming/python/notebooks/ch06_asymptotics.ipynb` を開き、「Parameters」のセルの数字（標本の大きさの並び・誤差が歪んでいるか・繰り返しの回数・乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 標本の大きさを、20 から 1000 へ増やします。傾きの推定値のヒストグラムが、真の値（赤の線）のまわりに、狭く集まります。これが、一致性です。

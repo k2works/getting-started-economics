@@ -764,6 +764,10 @@ print("長期: 数量", round(r.quantity, 4), "価格", round(r.price, 4), "需�
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/micro-basics-programming/python/notebooks/ch11_monopoly_and_monopolistic_competition.ipynb` を開き、「Parameters」のセルの数字（需要の切片と傾き、限界費用、固定費用）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 限界費用を 0 から 40 へ上げます。MR = MC の点が動き、独占の価格と数量が変わります。利潤（緑）と死荷重（赤）の大きさも変わります。

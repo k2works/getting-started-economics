@@ -404,6 +404,10 @@ print("変動相場の金融政策の Δe（プラスは円安）:", round(rows[
 
 ![4 通りの効果（所得の変化）。固定相場では、財政政策が 25、金融政策が 0。変動相場では、財政政策が 0、金融政策が 20](images/ch14-policy-effects.png)
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/macro-basics-programming/python/notebooks/ch14_mundell_fleming.ipynb` を開き、「Parameters」のセルの数字（限界消費性向、純輸出の為替感応度 n、世界の利子率、政府支出と実質貨幣供給の増加）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 政府支出を 0 から 20 へ増やします。固定相場では、所得が増えますが、変動相場では、為替レートが動いて、純輸出が減り、所得は変わりません。

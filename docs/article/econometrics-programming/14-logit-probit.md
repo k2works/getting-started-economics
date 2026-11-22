@@ -764,6 +764,10 @@ def plot_probability_curves(x: NDArray[np.float64], y: NDArray[np.float64]) -> F
     return fig
 ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/econometrics-programming/python/notebooks/ch14_logit_probit.ipynb` を開き、「Parameters」のセルの数字（標本の大きさ・データを作る誤差の分布（ロジットかプロビット）・乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 ロジットの傾きを、0 から、最尤推定値の 1.8 倍まで動かします。左のロジット曲線が、寝た形から立った形へ変わります。右の対数尤度は、山を登って下ります。**頂上が、最尤推定値**です。

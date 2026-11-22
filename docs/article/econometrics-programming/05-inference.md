@@ -487,6 +487,10 @@ def plot_confidence_intervals(intervals: pd.DataFrame, true_value: float) -> Fig
     return fig
 ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/econometrics-programming/python/notebooks/ch05_inference.ipynb` を開き、「Parameters」のセルの数字（標本の大きさ・信頼水準・帰無仮説の傾き・乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 標本を取り直して作った信頼区間を、1 本ずつ足します。多くは、真の値（破線）を含みます（青）。含まない区間（赤）は、95% の水準では、およそ 20 本に 1 本です。

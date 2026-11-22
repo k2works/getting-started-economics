@@ -513,6 +513,10 @@ LM 曲線の図（`plot_lm_curves`）は、通常の LM 曲線、実質貨幣供
 
 ![LM 曲線。実質貨幣供給が 250 から 300 に増えると、LM 曲線は右にシフトする（破線は、利子率の下限 2.0 のある LM 曲線で、下限で水平になる）](images/ch07-lm-curve.png)
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/macro-basics-programming/python/notebooks/ch07_money_demand_and_lm.ipynb` を開き、「Parameters」のセルの数字（所得、実質貨幣供給、貨幣需要の感応度 k と h、利子率の下限）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 実質貨幣供給 M/P を 250 から 400 へ増やします。LM 曲線が下へ動き、流動性のわなのある LM 曲線（破線）は、利子率の下限で、水平になります。

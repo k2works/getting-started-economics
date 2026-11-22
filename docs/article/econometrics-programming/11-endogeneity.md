@@ -499,6 +499,10 @@ def plot_market(market: pd.DataFrame) -> Figure:
     return fig
 ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/econometrics-programming/python/notebooks/ch11_endogeneity.ipynb` を開き、「Parameters」のセルの数字（説明変数の相関・測定誤差の大きさ・需要と供給の誤差の大きさ・乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 x1 と x2 の相関を、0 から 0.9 へ上げます。x2 を入れた回帰（青）は、真の値のまま動きません。x2 を落とした回帰（赤）は、相関に比例して、真の値から離れます。標本を増やしても、この偏りは、消えません。

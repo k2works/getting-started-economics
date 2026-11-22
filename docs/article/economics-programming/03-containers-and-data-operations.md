@@ -237,6 +237,10 @@ print(market_clearing_prices(demand, supply))
 - 1 つ目の問い: 需要量は価格 0・10・20・30 の順に 100・80・60・40、供給量は 0・30・60・90 です。
 - 2 つ目の問い: 超過需要は 100・50・0・−50 で、0 になるのは価格 20 のときです。`market_clearing_prices` も `[20]` を返します。式で 100 − 2P = 3P を解いても、P = 20 になります。
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/economics-programming/python/notebooks/ch03_containers_and_data_operations.ipynb` を開き、「Parameters」のセルの数字（価格のリスト、需要・供給の切片と傾き）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

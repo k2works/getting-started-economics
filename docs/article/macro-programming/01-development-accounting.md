@@ -420,6 +420,10 @@ variance_shares(df, alpha=1 / 3)
 
 > **これは、架空のデータの結果です。** 実際の国のデータで、同じ計算をした結果は、第 7 章の「実際の統計で試す」で確かめます。TFP の割合は、α の値や、人的資本・資本の測り方で変わります（練習問題の「多様」）。
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/macro-programming/python/notebooks/ch01_development_accounting.ipynb` を開き、「Parameters」のセルの数字（資本分配率 α、2 か国の所得・資本・人的資本、所得の差を分解する国）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

@@ -501,6 +501,10 @@ c = 0.8: 政府支出乗数 5.0、租税乗数 -4.0
 
 ![c = 0.6 と c = 0.8 の総需要。c が大きいと、傾きが急で、交点（均衡）が右へ動く](images/ch04-multiplier-slopes.png)
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/macro-basics-programming/python/notebooks/ch04_45_degree_line_and_multiplier.ipynb` を開き、「Parameters」のセルの数字（限界消費性向、基礎消費、投資、政府支出、租税）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 限界消費性向 c を 0.3 から 0.9 へ上げます。総需要の線が 45 度線に近づいて急になり、均衡国民所得が右へ大きく動きます。乗数 1 ÷ (1 − c) が、c とともに大きくなる様子です。

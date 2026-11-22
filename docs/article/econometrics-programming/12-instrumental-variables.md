@@ -531,6 +531,10 @@ TestResult(statistic=587.2525578899554, p_value=2.8096968237923527e-86)
 
 ![強い操作変数（strong）の IV 推定値は、真の値 1 に集まる。弱い操作変数（weak）は、広く散らばる（図では −1〜3 に切り詰めた）](images/ch12-iv-distributions.png)
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/econometrics-programming/python/notebooks/ch12_instrumental_variables.ipynb` を開き、「Parameters」のセルの数字（操作変数の強さ・内生性・標本の大きさ・乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 操作変数の強さを、1 から 0.05 へ下げます。IV（青）の推定値は、真の値のまわりから、広い範囲に散らばります（図では、両端に切り詰めています）。OLS（橙）は、偏ったまま、狭く集まります。弱い操作変数では、IV は、偏りが少なくても、ばらつきが大きすぎます。

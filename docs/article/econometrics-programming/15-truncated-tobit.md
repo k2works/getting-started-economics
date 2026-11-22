@@ -844,6 +844,10 @@ def plot_censored_data(x: NDArray[np.float64], y: NDArray[np.float64]) -> Figure
     return fig
 ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/econometrics-programming/python/notebooks/ch15_truncated_tobit.ipynb` を開き、「Parameters」のセルの数字（標本の大きさ・乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

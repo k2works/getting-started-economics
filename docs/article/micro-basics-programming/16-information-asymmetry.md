@@ -642,6 +642,10 @@ print("努力させる価値 費用 10・50:", worth_paying_bonus(100, 0.8, 0.4,
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/micro-basics-programming/python/notebooks/ch16_information_asymmetry.ipynb` を開き、「Parameters」のセルの数字（品質の割合、賃金と教育の費用、成果報酬）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

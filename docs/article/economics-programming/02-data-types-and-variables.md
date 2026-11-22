@@ -251,6 +251,10 @@ print(round(e, 4), is_price_elastic(e))
 - 2 つ目の問い: 需要量の変化率は −5%（−5.0）です。
 - 3 つ目の問い: 価格弾力性は 0.25 で、`is_price_elastic` は `False` です。1 より小さいので「非弾力的」、つまり価格が上がっても需要量があまり減らない財です。
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/economics-programming/python/notebooks/ch02_data_types_and_variables.ipynb` を開き、「Parameters」のセルの数字（値上げ前後の価格と需要量、所得と需要量、需要曲線の切片・傾き）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

@@ -505,6 +505,10 @@ print(round(fit_simple(d["x1"], d["y"]).slope, 4), result.coefficients.round(4).
 
 誤差のある x1 での OLS は 0.5102 と、減衰係数 0.5 のとおり、半分に縮みます（第 11 章）。もう 1 回の測定 x2 を操作変数にすると、**1.0481（標準誤差 0.0303）**で、真の値 1 に近づきます。
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/econometrics-programming/python/notebooks/ch13_iv_tests.ipynb` を開き、「Parameters」のセルの数字（操作変数の不備の度合い・内生性・有意水準・標本の大きさ・乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

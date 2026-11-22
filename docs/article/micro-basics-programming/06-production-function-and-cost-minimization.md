@@ -576,6 +576,10 @@ print("生産量 20 の最小費用:", round(minimum_cost(20, 1, 4), 4))
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/micro-basics-programming/python/notebooks/ch06_production_function_and_cost_minimization.ipynb` を開き、「Parameters」のセルの数字（生産量、賃金、資本の価格、生産関数のべき指数）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

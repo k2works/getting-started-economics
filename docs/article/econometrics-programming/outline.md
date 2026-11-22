@@ -482,3 +482,8 @@ mypy は、`statsmodels.*`・`linearmodels.*`・`wooldridge.*` を、`ignore_mis
     - 実装は `lib/animations/`（フレームごとのデータを返す関数と、アニメーションを作る関数）。フレームのデータは、各章の関数（`fit_simple`・`multicollinearity_experiment`・`slope_intervals`・`consistency_experiment`・`simulate_omitted`・`weak_instrument_experiment`・`fit_binary` など）を呼んで求め、式を二重に書かない。乱数を使う図は、種を固定し、テストが同じ結果を再現する
     - 登録は `tools/animation_registry.py`、書き出しは `tools/render_animations.py`。GIF が登録と記事に対応していることを、`test/tools/test_animation_registry.py` が確かめる。静止画の図（PNG・指紋）とは、別の仕組み
     - 記事には、小節「動かして見る」を足した。**写経は不要**とした。図の中の文字は、GIF のフォントに日本語がないので、英語にした
+15. **Jupyter Notebook の追加**（2026-11-22。ユーザーの依頼）: ミクロ初級の第 9 章を手本に、全 16 章に、数字を書き換えて試せるノートブックを足した（`apps/econometrics-programming/python/notebooks/`）。
+    - 各ノートブックは、説明・Parameters（標本の大きさ・真の係数・誤差の大きさ・乱数の種など）・計算（各章の `lib/` の関数を呼ぶ）・図（各章の `plot` 関数）・「試してみよう」の順。実行結果は保存しない。`tools/notebook_builder.py` と `tools/build_notebooks.py` で書き出す
+    - 「試してみよう」の数値は、種を固定して実際に実行した値だけ。テスト `test/notebooks/test_notebooks.py` が、全ノートブックの実行（1 つ 60 秒以内）・実行結果の不在・Parameters の印・記事からの案内を確かめる
+    - データは乱数だけ。実データ（`wooldridge`）の手順は、ノートブックに含めない（ネットワークや外部データに依存させないため）
+    - 開発用の依存に `ipykernel`・`nbclient`・`nbformat` を足した。JupyterLab は、依存に入れない（`uv run --with jupyterlab`）

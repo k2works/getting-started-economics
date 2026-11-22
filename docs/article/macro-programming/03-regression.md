@@ -343,6 +343,10 @@ result.coefficients, result.standard_errors, result.t_values(), result.r_squared
 
 > **回帰の係数を、生産関数の係数と読むと、間違えます。** 発展会計は、α を**外から与えて**、TFP を残りとして求めました。回帰で α を推定しようとすると、TFP が資本と相関している場合、α は過大になります。実際のデータでは、真の値が分からないので、ずれていることにも気づけません。この章のデータが架空で、真の値が分かっているから、確かめられました。
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/macro-programming/python/notebooks/ch03_regression.ipynb` を開き、「Parameters」のセルの数字（回帰する 3 つの点の座標）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

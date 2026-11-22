@@ -767,6 +767,10 @@ print("限界費用 10・30・40 で価格は動かないか:", [price_stays(kin
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/micro-basics-programming/python/notebooks/ch13_repeated_games_and_kinked_demand.ipynb` を開き、「Parameters」のセルの数字（利得、割引因子、繰り返す回数、屈折需要の傾き）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 割引因子を 0 から 0.95 へ上げます。閾値 0.5 を超えると、協調を続ける価値が、一度裏切る価値を**上回り**、協調が続きます。

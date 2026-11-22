@@ -1,6 +1,7 @@
 # Docs Update Log
 
 ## 2026-11-22
+* **Update**: 5 連載に、Jupyter Notebook（数字を書き換えて、結果と図を確かめる）を追加（経済学入門 16 本、マクロ初級 14 本、ミクロ初級 16 本、マクロ中級＋ 18 本、計量経済学 16 本。claude-code/claude-sonnet-5-5）
 * **Update**: 経済学入門・マクロ初級・マクロ中級＋・計量経済学の 4 連載に、アニメーション（GIF）を追加（経済学入門 8 点、マクロ初級 8 点、マクロ中級＋ 7 点、計量経済学 7 点。claude-code/claude-sonnet-5-5）
 * **Update**: ミクロ経済学のためのプログラミング（初級）の主要 8 図に、アニメーション（GIF）を追加（claude-code/claude-sonnet-5-5）
 * **Update**: ミクロ経済学のためのプログラミング（初級）の第 12・13 章を分割し、全 16 章にした。[ADR](adr/micro-basics-programming/index.md) を 3 件追加（claude-code/claude-sonnet-5-5）

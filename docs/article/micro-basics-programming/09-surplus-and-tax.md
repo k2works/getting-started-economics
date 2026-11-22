@@ -584,6 +584,10 @@ Q = 30・60 の死荷重: [225.0, 225.0]
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/micro-basics-programming/python/notebooks/ch09_surplus_and_tax.ipynb` を開き、「Parameters」のセルの数字（需要・供給の切片と傾き、税額）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 動かして見る
 
 税額を 0 から 20 へ上げます。供給曲線が上へ動き、税収（紫）と**死荷重（赤）**が現れます。死荷重は、税額の 2 乗に比例して、増えます。

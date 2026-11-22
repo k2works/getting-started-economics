@@ -17,6 +17,8 @@ select = [
 ignore = []
 
 [format]
+# ノートブックは、tools/build_notebooks.py から生成するので、整形の対象にしない（検査は、する）
+exclude = ["notebooks/*.ipynb"]
 quote-style = "double"
 indent-style = "space"
 

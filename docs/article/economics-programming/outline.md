@@ -274,3 +274,7 @@ uv run tox -e articles
     - 登録は `tools/animation_registry.py`、書き出しは `tools/render_animations.py`。GIF が登録と記事に対応していること（登録した名前の GIF があり、記事から参照される）を、`test/tools/test_animation_registry.py` が確かめる。静止画の図（PNG・指紋）とは、別の仕組み
     - 記事には、小節「動かして見る」を足した。**写経は不要**とした。日本語の文字は、GIF のフォントにないので、図の中の文字は、英語にした
     - 学び: 面積（長方形・三角形）は、色を分けた（利潤・税収は緑、死荷重は赤または紫、損失は赤）。価格が AC を下回る間の「利潤」は負なので、赤にして区別した
+12. **Jupyter Notebook の追加**（2026-11-22。ユーザーの依頼）: 全 16 章（第 1〜15 章と付録 A）に、数字を書き換えて、結果と図を確かめるノートブックを追加した（ミクロ初級の第 9 章の手本と同じ構成）。
+    - 実装は `notebooks/`（生成物）と `tools/build_notebooks.py`（セルのデータ）・`tools/notebook_builder.py`。構成は、説明・Parameters・各章の `lib/` の関数を呼ぶ計算・図・「試してみよう」。実行結果は保存しない
+    - 検査は `test/notebooks/test_notebooks.py`（すべて上から順にエラーなく実行できる、実行結果を保存していない、先頭のコードのセルが Parameters、記事から案内されている）。開発用の依存に `ipykernel`・`nbclient`・`nbformat` を追加した。JupyterLab は、依存に入れず、`uv run --with jupyterlab` で起動する
+    - 記事には、小節「ノートブックで試す」を足した。ノートブックは、`.ruff.toml` で、整形の対象から外した（生成物のため。検査は、する）

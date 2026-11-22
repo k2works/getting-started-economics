@@ -520,6 +520,10 @@ for value in (120, 80):
 
 ![加速度原理。上は所得、下は投資。所得の増え方が小さくなると、投資は減り、増加が止まると 0 になる](images/ch12-accelerator.png)
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/macro-basics-programming/python/notebooks/ch12_consumption_and_investment.ipynb` を開き、「Parameters」のセルの数字（所得の系列、限界消費性向、調整係数、資本係数、市場価値と再取得価格）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

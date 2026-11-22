@@ -365,6 +365,10 @@ for price in (0, 10, 60):
 - 2 つ目の問い（価格 10）: 需要量は 80 です。
 - 3 つ目の問い（価格 60）: 式のとおりに計算すると、100 − 2 × 60 = −20 とマイナスになります。需要量は負にならないので、`quantity_demanded` は 0 を返します。ここで「マイナスになる」と気づけたら、経済学の感覚が働いています。
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/economics-programming/python/notebooks/ch01_preparation_and_first_test.ipynb` を開き、「Parameters」のセルの数字（需要曲線の切片・傾き、価格）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ## 1.5 規則で言うと
 
 この章で身につけたことを、原則にまとめます。

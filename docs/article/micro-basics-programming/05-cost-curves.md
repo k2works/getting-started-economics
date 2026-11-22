@@ -581,6 +581,10 @@ AC の最低点: 4.0 15.0
         return fig
     ```
 
+### ノートブックで試す
+
+数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。`apps/micro-basics-programming/python/notebooks/ch05_cost_curves.ipynb` を開き、「Parameters」のセルの数字（費用関数の係数、固定費用）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで `uv run --with jupyterlab jupyter lab notebooks/` です。
+
 ### 実行結果
 
 ```bash

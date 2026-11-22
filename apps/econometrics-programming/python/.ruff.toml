@@ -19,6 +19,8 @@ ignore = []
 [format]
 quote-style = "double"
 indent-style = "space"
+# ノートブックは tools/build_notebooks.py から書き出す。Parameters のコメントの桁そろえを残すため、整形の対象にしない（lint は対象）
+exclude = ["notebooks/*.ipynb"]
 
 [lint.per-file-ignores]
 "test/**/*.py" = ["E501"]
