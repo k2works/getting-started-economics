@@ -97,3 +97,4 @@ uv run pytest test/chapter01
 - [Pythonで学ぶマクロ経済学（中級＋レベル）](https://py4macro.github.io/)（春山鉄源氏）— 章の順序と題材の選び方の参考にしました。本文・コード・図・データは、本シリーズで新たに書いています
 - [経済学のためのプログラミング入門](../economics-programming/index.md) — 前提とする、第 1 シリーズです
 - [経済学・経済政策 トピック別マインドマップ](<../経済学・経済政策 トピック別マインドマップ.md>) — 経済学の題材の出典です
+- [経済学で出る数学プログラミング](../math-for-economics-programming/index.md) — 数学の復習は、こちらへ。漸化式・ソロー・モデル（[第 12 章](../math-for-economics-programming/12-recurrence-and-economic-growth.md)）、数列（[第 4 章](../math-for-economics-programming/04-sequences-and-saving.md)）、行列と回帰（[第 9 章](../math-for-economics-programming/09-matrices-and-regression.md)）

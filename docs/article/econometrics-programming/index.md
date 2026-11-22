@@ -105,3 +105,4 @@ uv run pytest test/chapter01
 - [Pythonで学ぶ入門計量経済学](https://py4etrics.github.io/)（春山鉄源氏）— 章の順序と題材の選び方の参考にしました。本文・コード・図・データは、本シリーズで新たに書いています
 - [経済学のためのプログラミング入門](../economics-programming/index.md) — 前提とする、第 1 シリーズです
 - [マクロ経済学のためのプログラミング（中級＋）](../macro-programming/index.md) — 同じ構成の、第 2 シリーズです
+- [経済学で出る数学プログラミング](../math-for-economics-programming/index.md) — 数学の復習は、こちらへ。行列と最小 2 乗法（[第 9 章](../math-for-economics-programming/09-matrices-and-regression.md)）、確率・ベイズの定理・期待値（[第 10 章](../math-for-economics-programming/10-probability-and-risk.md)）

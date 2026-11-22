@@ -22,7 +22,7 @@ generated: { by: claude-code/claude-opus-5-5, at: 2026-11-22T00:00:00Z }
 | 経済学の題材 | 経済理論（需要関数）と経済データの照合、係数の推定、重回帰（価格と所得） |
 | 数学 | 行列、行列の積・転置・単位行列、行列式（余因子展開）、逆行列、特異行列、最小 2 乗法、正規方程式、残差の直交、決定係数、射影（発展） |
 | 使う Python の機能 | リストのリスト、内包表記、`enumerate`、`zip(*列)`（転置）、`math.prod`、テスト（`pytest`） |
-| 新しく使う NumPy の道具 | `@`・`.T`・`np.linalg`（`det`・`inv`・`solve`・`lstsq`）・`np.random.default_rng` |
+| 新しく導入するライブラリ | なし（第 7 章の NumPy の、`@`・`.T`・`np.linalg`（`det`・`inv`・`solve`・`lstsq`）・`np.random.default_rng` を新しく使う） |
 | 完成形 | `matrix_shape`、`matrix_transpose`、`matrix_product`、`identity_matrix`、`matrix_trace`、`matrix_determinant`、`is_singular_matrix`、`matrix_inverse`、`simple_regression_coefficients`、`regression_design_matrix`、`least_squares_beta`、`regression_fitted_values`、`regression_residuals`、`coefficient_of_determination`、`regression_projection_matrix`、`noisy_regression_sample` |
 | ファイル | 実装: `lib/chapter09/matrix.py`（行列。標準ライブラリ）、`lib/chapter09/regression.py`（最小 2 乗法）、`lib/chapter09/plot.py`（図）／テスト: `test/chapter09/test_matrix.py`、`test/chapter09/test_regression.py`、`test/chapter09/test_plot.py` |
 | データ | なし（手計算できる小さな例と、種を固定した乱数で作る架空のデータ） |
@@ -63,10 +63,10 @@ uv run pytest test/chapter09
 ```
 
 ```text
-57 passed
+59 passed
 ```
 
-自分でコードを書くときは、`practice/chapter09/` に、完成形と同じ名前のファイル（`matrix.py`・`regression.py`・`plot.py`・`test_matrix.py`・`test_regression.py`・`test_plot.py`）を作ります。図を後回しにするなら、`plot.py` と `test_plot.py` は要らず、テストは 48 件になります。
+自分でコードを書くときは、`practice/chapter09/` に、完成形と同じ名前のファイル（`matrix.py`・`regression.py`・`plot.py`・`test_matrix.py`・`test_regression.py`・`test_plot.py`）を作ります。図を後回しにするなら、`plot.py` と `test_plot.py` は要らず、テストは 50 件になります。
 
 - テスト・`regression.py`・`plot.py`・check スクリプトの import を、`from practice.chapter09...` に書き換えます（`regression.py` は `matrix` を、`plot.py` は `regression` を import します。書き換えないと、完成形を動かします）
 - 第 7 章の `vector_dot`・`vector_length`・`mean_by_dot` は、前の章を写していなければ、`lib.chapter07...` のままでかまいません（写したなら、`practice.chapter07...` に書き換えます）。この章では、それらの実装を再掲しません
@@ -122,7 +122,7 @@ A（m × n）と B（n × k）の**積** AB は、m × k 行列で、(i, j) 成�
 
 det A = 0 の行列を、**特異行列**と言い、逆行列はありません。ある行が、ほかの行の定数倍（や組み合わせ）になっているときです。数の世界の「0 で割れない」にあたります。
 
-コンピューターでは、det A が「ちょうど 0」になるとは限りません。丸め誤差で 10⁻¹⁵ のような値が出ます。一方で、成分がすべて 10⁻⁸ の行列は、det が 10⁻¹⁶ でも特異ではありません。そこで、**行列の大きさに対する相対的な基準**で判定します。|det A| は、行の長さ（第 7 章の `vector_length`）の積を超えません（アダマールの不等式）。その比が 10⁻¹² 以下なら、特異とみなします。
+コンピューターでは、det A が「ちょうど 0」になるとは限りません。丸め誤差で 10⁻¹⁵ のような値が出ます。一方で、対角成分が 10⁻⁸ の対角行列 [[10⁻⁸, 0], [0, 10⁻⁸]] は、det が 10⁻¹⁶ でも特異ではありません。そこで、**行列の大きさに対する相対的な基準**で判定します。|det A| は、行の長さ（第 7 章の `vector_length`）の積を超えません（アダマールの不等式）。その比が 10⁻¹² 以下なら、特異とみなします。
 
 ### 経済理論と経済データ
 
@@ -367,23 +367,26 @@ def matrix_determinant(a: Matrix) -> float:
     return sum(a[0][j] * _cofactor(a, 0, j) for j in range(size))
 
 
-def is_singular_matrix(a: Matrix, tolerance: float = 1e-12) -> bool:
-    """行列式が、行の長さの積に比べて 0 とみなせるほど小さいか（相対的な判定）。
+_SINGULAR_TOLERANCE = 1e-12
 
-    |det A| は、行の長さの積を超えない（アダマールの不等式）。
-    その比が tolerance 以下なら、特異とみなす。
-    """
-    _square_size(a)
+
+def _is_negligible_determinant(a: Matrix, det: float, tolerance: float) -> bool:
+    """|det A| と行の長さの積（アダマールの不等式の上限）の比が、tolerance 以下か。"""
     scale = math.prod(vector_length(row) for row in a)
-    return abs(matrix_determinant(a)) <= tolerance * scale
+    return abs(det) <= tolerance * scale
+
+
+def is_singular_matrix(a: Matrix, tolerance: float = _SINGULAR_TOLERANCE) -> bool:
+    """行列式が、行の長さの積に比べて 0 とみなせるほど小さいか（相対的な判定）。"""
+    return _is_negligible_determinant(a, matrix_determinant(a), tolerance)
 
 
 def matrix_inverse(a: Matrix) -> list[list[float]]:
     """逆行列 A⁻¹ = 余因子行列の転置 ÷ 行列式。特異なら、エラー。"""
     size = _square_size(a)
-    if is_singular_matrix(a):
-        raise ValueError("特異な行列（行列式が 0）には、逆行列がありません")
     det = matrix_determinant(a)
+    if _is_negligible_determinant(a, det, _SINGULAR_TOLERANCE):
+        raise ValueError("特異な行列（行列式が 0）には、逆行列がありません")
     if size == 1:
         return [[1 / det]]
     # (i, j) 成分は、(j, i) の余因子（余因子行列の転置）
@@ -391,6 +394,7 @@ def matrix_inverse(a: Matrix) -> list[list[float]]:
 ```
 
 - 行列式は、1 行目で余因子展開し、小さな行列の行列式を、同じ関数で求めます（**再帰**）。1 × 1 まで小さくなったら、その成分を返します
+- 特異の判定（`_is_negligible_determinant`）は、行列式を受け取ります。`matrix_inverse` は、行列式を 1 回だけ求めて、判定と割り算の両方に使います。行列式は負にもなるので、絶対値で比べます（置換行列 [[0, 1], [1, 0]] の行列式は −1。境界のテストを参照）
 - 最初は、余因子の符号を `(-1) ** (i + j)` と書きました。mypy が「戻り値が `Any`」と指摘しました（整数の負の累乗は、小数になり得るため）。偶奇で `1` か `-1` を選ぶ `_cofactor` に括り出し、行列式と逆行列で使い回しました
 - 逆行列の (i, j) 成分は、`_cofactor(a, j, i)`（添字が逆）です。2 × 2 だけのテストでは、対称な行列 [[2, 1], [1, 3]] だと、添字を取り違えても気づきません。対称でない [[4, 7], [2, 6]] と 3 × 3 でも、AA⁻¹ = I を確かめます
 - 3 × 3 の特異行列 [[2, 0, 1], [1, 3, 2], [3, 3, 3]] は、3 行目が 1 行目と 2 行目の和です
@@ -517,17 +521,17 @@ def simple_regression_coefficients(
     """単回帰 y = β₀ + β₁x の係数。β₁ = x と y の共分散 ÷ x の分散、β₀ = ȳ − β₁x̄。"""
     if len(xs) < 2:
         raise ValueError("回帰には、2 点以上のデータが要ります")
+    # 平均の丸め誤差で、偏差の 2 乗和は 0 にならないことがあるので、値そのものを比べる
+    if max(xs) == min(xs):
+        raise ValueError("x がすべて同じ値では、傾きが決まりません")
     x_bar, y_bar = mean_by_dot(xs), mean_by_dot(ys)
     dx = [x - x_bar for x in xs]
     dy = [y - y_bar for y in ys]
-    sxx = vector_dot(dx, dx)
-    if sxx == 0:
-        raise ValueError("x がすべて同じ値では、傾きが決まりません")
-    slope = vector_dot(dx, dy) / sxx
+    slope = vector_dot(dx, dy) / vector_dot(dx, dx)
     return y_bar - slope * x_bar, slope
 ```
 
-偏差のベクトル dx・dy を作り、内積で、共分散と分散（の n 倍）を求めます。n で割る前の値どうしの比なので、n は消えます。
+偏差のベクトル dx・dy を作り、内積で、共分散と分散（の n 倍）を求めます。n で割る前の値どうしの比なので、n は消えます。x がすべて同じかは、偏差の 2 乗和が 0 かでなく、`max(xs) == min(xs)` で調べます。0.1 が 3 つの平均は、丸め誤差で 0.10000000000000002 になり、偏差の 2 乗和が 0 にならないからです（`coefficient_of_determination` の y も同じ）。
 
 ### 正規方程式で、行列の 1 行に
 
@@ -627,12 +631,11 @@ def coefficient_of_determination(
     ys: Sequence[float], residuals: Sequence[float]
 ) -> float:
     """決定係数 R² = 1 − e·e ÷ (y − ȳ)·(y − ȳ)。"""
+    if max(ys) == min(ys):
+        raise ValueError("y がすべて同じ値では、決定係数が決まりません")
     y_bar = mean_by_dot(ys)
     deviations = [y - y_bar for y in ys]
-    total = vector_dot(deviations, deviations)
-    if total == 0:
-        raise ValueError("y がすべて同じ値では、決定係数が決まりません")
-    return 1 - vector_dot(residuals, residuals) / total
+    return 1 - vector_dot(residuals, residuals) / vector_dot(deviations, deviations)
 ```
 
 3 つ目のテストは、Xᵀe = 0（X の各列と残差の内積が 0）を、浮動小数点の許容誤差 10⁻⁹ で確かめます。
@@ -800,7 +803,7 @@ print(round(matrix_trace(regression_projection_matrix(with_income)), 6))
 
 ### 境界のテスト
 
-完成形には、本文に載せなかったテストがあります。行列の形、2 × 3 と 3 × 1 の積、積の転置、単位行列、トレース、0 < 成分 の小さい値・大きい値の特異、0 の行、1 × 1、空・長さのそろわない行、形の合わない積、正方でない行列、特異の閾値と、回帰の 2 点だけ、負や 0 < x < 1 の x、x と関係のないデータ（R² = 0）、誤差 0・種・負の標準偏差・誤差の中身、1 点・x がすべて同じ、データが係数より少ない、長さの違い、y がすべて同じ、です。テストの件数を合わせるため、ここに全件載せます。
+完成形には、本文に載せなかったテストがあります。行列の形、2 × 3 と 3 × 1 の積、積の転置、単位行列、トレース、0 < 成分 の小さい値・大きい値の特異、0 の行、行列式が負の置換行列、1 × 1、空・長さのそろわない行、形の合わない積、正方でない行列、特異の閾値と、回帰の 2 点だけ、負や 0 < x < 1 の x、x と関係のないデータ（R² = 0）、誤差 0・種・負の標準偏差・誤差の中身、1 点・x がすべて同じ（丸め誤差で平均がずれる場合も）、データが係数より少ない、長さの違い、y がすべて同じ、です。テストの件数を合わせるため、ここに全件載せます。
 
 ??? note "境界のテスト"
 
@@ -842,6 +845,13 @@ print(round(matrix_trace(regression_projection_matrix(with_income)), 6))
 
     def test_0の行がある行列は特異() -> None:
         assert is_singular_matrix([[0, 0], [1, 2]])
+
+
+    def test_行列式が負の置換行列は特異でなく逆行列は自分自身() -> None:
+        swap = [[0, 1], [1, 0]]
+        assert matrix_determinant(swap) == -1
+        assert not is_singular_matrix(swap)
+        assert _array(matrix_inverse(swap)) == pytest.approx(_array(swap))
 
 
     def test_1行1列の行列式と逆行列() -> None:
@@ -955,6 +965,14 @@ print(round(matrix_trace(regression_projection_matrix(with_income)), 6))
     def test_yがすべて同じでは決定係数は決まらない() -> None:
         with pytest.raises(ValueError):
             coefficient_of_determination([4, 4, 4], [0, 0, 0])
+
+
+    def test_丸め誤差で平均がずれてもxやyがすべて同じなら決まらない() -> None:
+        # 0.1 × 3 ÷ 3 は 0.10000000000000002 で、偏差の 2 乗和が 0 にならない
+        with pytest.raises(ValueError):
+            simple_regression_coefficients([0.1] * 3, [1, 2, 3])
+        with pytest.raises(ValueError):
+            coefficient_of_determination([0.1] * 3, [0, 0, 0])
     ```
 
 ### 図
@@ -1092,11 +1110,11 @@ print(round(matrix_trace(regression_projection_matrix(with_income)), 6))
     ```
 
     ```python
-    def _fit_line(
-        xs: Sequence[float], ys: Sequence[float]
+    def _line_ends(
+        xs: Sequence[float], beta: Sequence[float]
     ) -> tuple[list[float], list[float]]:
-        """単回帰の直線を、x の最小から最大まで結ぶ 2 点。"""
-        intercept, slope = simple_regression_coefficients(xs, ys)
+        """直線 y = β₀ + β₁x を、x の最小から最大まで結ぶ 2 点。"""
+        intercept, slope = beta
         ends = [min(xs), max(xs)]
         return ends, [intercept + slope * x for x in ends]
 
@@ -1107,7 +1125,7 @@ print(round(matrix_trace(regression_projection_matrix(with_income)), 6))
         fitted = regression_fitted_values(regression_design_matrix([xs]), beta)
         fig, ax = plt.subplots()
         ax.plot(xs, ys, "o", color="C0", label="Data")
-        ax.plot(*_fit_line(xs, ys), color="C1", label="Regression line")
+        ax.plot(*_line_ends(xs, beta), color="C1", label="Regression line")
         for i, (x, y, f) in enumerate(zip(xs, ys, fitted, strict=True)):
             label = "Residual" if i == 0 else "_nolegend_"
             ax.plot([x, x], [y, f], ":", color="C3", label=label, gid="residual")
@@ -1125,8 +1143,11 @@ print(round(matrix_trace(regression_projection_matrix(with_income)), 6))
         residuals = regression_residuals(design, ys, beta)
         fig, ax = plt.subplots()
         ax.plot(xs, residuals, "o", color="C3", label="Residuals")
+        residual_beta = simple_regression_coefficients(xs, residuals)
         ax.plot(
-            *_fit_line(xs, residuals), color="C1", label="Regression of residuals on price"
+            *_line_ends(xs, residual_beta),
+            color="C1",
+            label="Regression of residuals on price",
         )
         ax.set_xlabel("Price")
         ax.set_ylabel("Residual")
@@ -1142,7 +1163,7 @@ uv run pytest test/chapter09
 ```
 
 ```text
-57 passed
+59 passed
 ```
 
 ## 9.6 規則で言うと

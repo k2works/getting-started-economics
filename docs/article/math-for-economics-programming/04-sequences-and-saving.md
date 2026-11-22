@@ -15,7 +15,7 @@ generated: { by: claude-code/claude-opus-5-5, at: 2026-11-22T00:00:00Z }
 
 この章の道具は、**等比数列**と、その和（**級数**）です。前の章の「割引現在価値」を、何年分も足すと、等比数列の和になります。年金・債券・株価の値段は、どれも、この和で決まります。この章は、第 1 部（第 1〜4 章）の最後で、**到達チェック**も行います。
 
-![初項 1・公比 0.5 の部分和（点）は、項を足すほど、無限級数の値（点線）に近づく](images/ch04-partial-sums.png)
+![初項 2・公比 0.6 の部分和（点）は、項を足すほど、無限級数の値（点線）に近づく](images/ch04-partial-sums.png)
 
 | 項目 | 内容 |
 | :--- | :--- |
@@ -51,7 +51,7 @@ generated: { by: claude-code/claude-opus-5-5, at: 2026-11-22T00:00:00Z }
 | 1 次関数・連立方程式で、均衡と余剰を求める | この連載の[第 1 章](01-linear-functions-and-markets.md) |
 | 複利と、割引現在価値（将来のお金を、今のお金に換算する）を計算する | この連載の[第 3 章](03-exponents-logarithms-and-interest.md) |
 
-漸化式の経済学での使い方（所得の調整・資本の蓄積）は、[マクロ経済学のためのプログラミングの第 4 章](../macro-programming/04-difference-equations.md)で扱います。この章は、そこで使う数学（等比数列・級数・不動点）を、関数とテストで確かめます。
+漸化式の経済学での使い方（所得の調整・資本の蓄積）は、[マクロ経済学のためのプログラミング（中級＋）の第 4 章](../macro-programming/04-difference-equations.md)で扱います。この章は、そこで使う数学（等比数列・級数・不動点）を、関数とテストで確かめます。
 
 ## 4.2 準備
 
@@ -62,10 +62,10 @@ uv run pytest test/chapter04
 ```
 
 ```text
-56 passed
+62 passed
 ```
 
-自分でコードを書くときは、`practice/chapter04/` に、`sequence.py` と `test_sequence.py` を作ります。テストの import は、`from practice.chapter04.sequence import ...` に書き換えてください（書き換えないと、完成形を読み込んで、最初から通ってしまいます）。「予想の答え合わせ」のスクリプトは、`practice/chapter04/check.py` に保存し、`uv run python -m practice.chapter04.check` で実行します。
+自分でコードを書くときは、`practice/chapter04/` に、完成形と同じ名前のファイル（`sequence.py`・`plot.py`・`test_sequence.py`・`test_plot.py`）を作ります（図の節を後回しにするなら、`plot.py` と `test_plot.py` は要らず、テストは 55 件になります）。テストと `plot.py` の import は、`from practice.chapter04...` に書き換えてください（書き換えないと、完成形を読み込んで、最初から通ってしまいます）。「予想の答え合わせ」のスクリプトは、`practice/chapter04/check.py` に保存し、`uv run python -m practice.chapter04.check` で実行します。
 
 ## 4.3 予想する
 
@@ -97,7 +97,7 @@ uv run pytest test/chapter04
 
 ### 数列の極限
 
-公比 0.5 の部分和は、1、1.5、1.75、1.875、…と、増えていきますが、2 を超えません。項数 n を大きくすると、S_n は、2 に、いくらでも近づきます。これを、「S_n の**極限**は 2」と言い、**S_n は 2 に収束する**と言います。
+初項 2・公比 1/3 の部分和は、2、2.67、2.89、2.96、…と、増えていきますが、3 を超えません。項数 n を大きくすると、S_n は、3 に、いくらでも近づきます。これを、「S_n の**極限**は 3」と言い、**S_n は 3 に収束する**と言います。
 
 「いくらでも近づく」とは、「どんなに小さな許容誤差を決めても、ある項数から先は、差が、その許容誤差より小さくなる」ということです。この章では、その項数を、実際に数える関数を書きます。
 
@@ -190,7 +190,9 @@ def test_公比1の部分和は初項のn倍() -> None:
 
 ```python
 def geometric_term(first: float, ratio: float, n: int) -> float:
-    """等比数列の第 n 項 = 初項 × 公比^(n − 1)。"""
+    """等比数列の第 n 項 = 初項 × 公比^(n − 1)。n は 1 から数える。"""
+    if n < 1:
+        raise ValueError("第 n 項の n は 1 以上でなければなりません")
     return first * ratio ** (n - 1)
 
 
@@ -203,7 +205,7 @@ def geometric_partial_sum(first: float, ratio: float, n: int) -> float:
     return first * (1 - ratio**n) / (1 - ratio)
 ```
 
-項数 n が負のときは、意味がないので、`ValueError` にします（境界のテストで確かめます）。
+第 n 項の n は 1 から数えるので、`geometric_term` は n < 1 を、和の項数は 0 項まで意味があるので、`geometric_partial_sum` は n < 0 を、`ValueError` にします（境界のテストで確かめます）。
 
 ### 数列の極限と無限級数
 
@@ -306,10 +308,16 @@ def test_毎年10を3パーセントで5年積み立てた将来価値() -> None
 ```
 
 ```python
+def _require_rate_above_minus_one(rate: float) -> None:
+    if rate <= -1:
+        raise ValueError(
+            "利子率が −100% 以下では、割り引くことも、積み立てることもできません"
+        )
+
+
 def annuity_present_value(payment: float, rate: float, periods: int) -> float:
     """毎期末に payment を periods 期受け取る年金の現在価値 C(1 − (1 + r)^−n) ÷ r。"""
-    if rate <= -1:
-        raise ValueError("利子率が −100% 以下では、割り引けません")
+    _require_rate_above_minus_one(rate)
     discount = 1 / (1 + rate)
     return geometric_partial_sum(payment * discount, discount, periods)
 
@@ -323,6 +331,7 @@ def perpetuity_present_value(payment: float, rate: float) -> float:
 
 def savings_future_value(payment: float, rate: float, periods: int) -> float:
     """毎期末に payment を積み立てたときの、periods 期末の残高 C((1 + r)^n − 1) ÷ r。"""
+    _require_rate_above_minus_one(rate)
     return geometric_partial_sum(payment, 1 + rate, periods)
 ```
 
@@ -357,7 +366,7 @@ def coupon_bond_price(face: float, coupon: float, rate: float, years: int) -> fl
 
 ### 発展: 漸化式と配当割引モデル
 
-??? note "漸化式・配当割引モデルのテストと実装（発展。後回しにしても、学習は成り立ちます）"
+??? note "漸化式・配当割引モデルのテストと実装（発展。`iterate_map`・`affine_fixed_point` は、第 12 章で使います）"
 
     漸化式は、**反復（数値）と、不動点（公式）の一致**をテストにします。初期値と、a の符号（正・負）を変えて、どれも不動点に近づくこと、|a| > 1 では、差が毎期 2 倍になって離れていくことを、確かめます。
 
@@ -479,7 +488,7 @@ print(gordon_stock_price(2, 0.07, 0.02))
 
 ### 境界のテスト
 
-完成形には、**境界**を確かめるテストがあります。0 項・1 項の和、差が許容誤差と**ちょうど等しい**とき（「小さい」ではないので、もう 1 項足す。`>=` を `>` と書き違えると、ここで落ちます）、負の公比（部分和が、級数の上下を行き来する）、公比 0、負の初項、利子率 0・負・−100% 以下、満期 0 年、反復 0 回、不動点の a = 0・a = −1 です。完成形の「テストの件数」を合わせるため、ここに載せます。
+完成形には、**境界**を確かめるテストがあります。0 項・1 項の和、差が許容誤差と**ちょうど等しい**とき（「小さい」ではないので、もう 1 項足す。`>=` を `>` と書き違えると、ここで落ちます）、負の公比・負の初項での項数（差の**大きさ**で比べる。`abs` を忘れると、差が負の項で、すぐ止まります）、負の公比（部分和が、級数の上下を行き来する）、公比 0、負の初項、利子率 0・負・−100% 以下（年金の割引も、積立も）、第 n 項の n が 0 以下、満期 0 年、反復 0 回、不動点の a = 0・a = −1 です。完成形の「テストの件数」を合わせるため、ここに載せます。
 
 1 項の和のテストは、`== 3` ではなく、`pytest.approx(3)` で比べています。公式 3 × (1 − 0.2) ÷ (1 − 0.2) は、浮動小数点では 3.0000000000000004 になるからです（**公式が正しくても、`==` では落ちます**）。
 
@@ -516,6 +525,15 @@ print(gordon_stock_price(2, 0.07, 0.02))
     def test_差が許容誤差とちょうど等しければもう1項足す() -> None:
         # 7 項までの差は 2 × 0.5^7 = 0.015625（等しいので「小さい」ではない）
         assert terms_until_within(1, 0.5, 0.015625) == 8
+
+
+    def test_負の公比でも差の大きさで項数を数える() -> None:
+        # 差は 2/3 × 0.5^n。0.01 より小さくなるのは n = 7（0.0052…。n = 6 では 0.0104…）
+        assert terms_until_within(1, -0.5, 0.01) == 7
+
+
+    def test_負の初項でも差の大きさで項数を数える() -> None:
+        assert terms_until_within(-1, 0.5, 0.01) == 8
 
 
     @pytest.mark.parametrize("tolerance", [0, -0.1])
@@ -568,6 +586,20 @@ print(gordon_stock_price(2, 0.07, 0.02))
     def test_成長率がわずかに利子率より小さいと株価は大きい() -> None:
         assert gordon_stock_price(1, 0.05, 0.04) == pytest.approx(100)
         assert gordon_stock_price(3, 0.5, 0.25) == pytest.approx(12)
+
+
+    @pytest.mark.parametrize("rate", [-1, -2])
+    def test_利子率がマイナス100パーセント以下なら積み立てられない(rate: float) -> None:
+        with pytest.raises(ValueError):
+            savings_future_value(1, rate, 3)
+
+
+    @pytest.mark.parametrize("n", [0, -1])
+    def test_第n項のnは1以上(n: int) -> None:
+        with pytest.raises(ValueError):
+            geometric_term(1, 2, n)
+        with pytest.raises(ValueError):
+            geometric_term(1, 0, n)
     ```
 
 ### 図
@@ -703,7 +735,7 @@ uv run pytest test/chapter04
 ```
 
 ```text
-56 passed
+62 passed
 ```
 
 ## 4.6 規則で言うと
@@ -733,7 +765,7 @@ uv run pytest test/chapter04
 
 ## 4.7 第 1 部の到達チェック
 
-第 1 部（第 1〜4 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。**先に、次の「時間を決めて書く課題」を、何も見ずに試してください。** 課題の解答（実行できるテスト）は、4.8 節の練習問題の解答のあとに、折りたたんで置きます。自分のコードは、`practice/chapter04/checkpoint.py` などに書きます。第 1 章の関数は、`from practice.chapter01.market import ...`（自分で写したもの）から import します（第 2・3 章は、この連載の `lib` に、完成形があります。解答では、何も見ずに書く練習として、頂点・複利・割引の関数を、自分で定義しています。第 2・3 章の関数を使ってもかまいません）。
+第 1 部（第 1〜4 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。**先に、次の「時間を決めて書く課題」を、何も見ずに試してください。** 課題の解答（実行できるテスト）は、4.8 節の練習問題の解答のあとに、折りたたんで置きます。自分のコードは、関数を `practice/chapter04/checkpoint.py` に、テストを `practice/chapter04/test_checkpoint.py` に書きます。第 1・4 章の関数は、前の章を写していなければ、`lib.chapterNN...` のままでかまいません（写したなら、`practice.chapterNN...` に書き換えます）。頂点・複利・割引の関数は、何も見ずに書けるかを確かめるため、第 2・3 章の関数を使わずに、自分で書きます。
 
 ### 時間を決めて書く課題
 
@@ -777,6 +809,19 @@ uv run pytest test/chapter04
 
 ??? note "解答（先に自分で取り組んでから、開いてください）"
 
+    解答のテストの import です。前の章を写していなければ、`lib.chapter04...` のままでかまいません（写したなら、`practice.chapter04...` に書き換えます）。
+
+    ```python
+    import pytest
+
+    from lib.chapter04.sequence import (
+        affine_fixed_point,
+        coupon_bond_price,
+        geometric_partial_sum,
+        iterate_map,
+    )
+    ```
+
     **想起**:
 
     ```python
@@ -818,6 +863,19 @@ uv run pytest test/chapter04
     ```
 
 ??? note "解答: 第 1 部の到達チェック（先に自分で取り組んでから、開いてください）"
+
+    関数（`parabola_vertex`・`compound_value`・`discounted_value`）は `practice/chapter04/checkpoint.py` に、テストは `practice/chapter04/test_checkpoint.py` に書きます。`test_checkpoint.py` の先頭の import は、次のとおりです。前の章を写していなければ、`lib.chapterNN...` のままでかまいません（写したなら、`practice.chapterNN...` に書き換えます）。自分で書いた関数は、`from practice.chapter04.checkpoint import compound_value, discounted_value, parabola_vertex` で import します（この行は、記事の検査では実行しないので、コードブロックの外に書いています）。
+
+    ```python
+    import pytest
+
+    from lib.chapter01.market import consumer_surplus, equilibrium, producer_surplus
+    from lib.chapter04.sequence import (
+        geometric_partial_sum,
+        geometric_series_limit,
+        perpetuity_present_value,
+    )
+    ```
 
     **需要・供給と余剰**（第 1 章の関数）:
 
@@ -888,4 +946,4 @@ uv run pytest test/chapter04
 - 漸化式 x(t + 1) = a·x(t) + b は、|a| < 1 なら、不動点 b ÷ (1 − a) に収束する。不動点との差が、公比 a の等比数列になるから
 - 公式は、手計算の値だけでなく、**数値との一致**（公式と、項を足した値。公式と、反復の行き着く先）で、テストできる
 
-これで、第 1 部（関数と金利）は終わりです。次の章から、第 2 部に入り、**微分**を学びます。第 2 章では、利潤を最大にする数量を、2 次関数の頂点として求めました。第 5 章では、微分を使って、2 次関数に限らない費用・利潤の関数で、**利潤最大化**の条件（限界収入 ＝ 限界費用）を求めます。
+これで、第 1 部（関数と金利）は終わりです。次の章から、第 2 部に入り、**微分**を学びます。第 2 章では、利潤を最大にする数量を、2 次関数の頂点として求めました。第 5 章では、微分を使って、2 次関数に限らない費用・利潤の関数で、価格を所与とする企業の**利潤最大化**の条件（価格 ＝ 限界費用）を求め、練習問題で、独占の 限界収入 ＝ 限界費用 も確かめます。

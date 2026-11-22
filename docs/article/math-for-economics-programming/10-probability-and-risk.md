@@ -64,10 +64,10 @@ uv run pytest test/chapter10
 ```
 
 ```text
-46 passed
+47 passed
 ```
 
-自分でコードを書くときは、`practice/chapter10/` に、完成形と同じ名前のファイル（`probability.py`・`bayes.py`・`expectation.py`・`risk.py`・`simulation.py`・`plot.py`・`test_probability.py`・`test_bayes.py`・`test_expectation.py`・`test_risk.py`・`test_simulation.py`・`test_plot.py`）を作ります。図を後回しにするなら、`plot.py` と `test_plot.py` は要らず、テストは 43 件になります。
+自分でコードを書くときは、`practice/chapter10/` に、完成形と同じ名前のファイル（`probability.py`・`bayes.py`・`expectation.py`・`risk.py`・`simulation.py`・`plot.py`・`test_probability.py`・`test_bayes.py`・`test_expectation.py`・`test_risk.py`・`test_simulation.py`・`test_plot.py`）を作ります。図を後回しにするなら、`plot.py` と `test_plot.py` は要らず、テストは 44 件になります。
 
 - テスト・check スクリプトの import を、`from practice.chapter10...` に書き換えます。**ほかのファイルを import している実装ファイル**（`bayes.py` は `probability` を、`expectation.py` は `probability` を、`risk.py` は `expectation` を、`plot.py` は `bayes`・`expectation`・`risk` を import します）も、同じく書き換えます。書き換えないと、完成形を動かすことになります
 - 第 5 章の `numerical_derivative`（発展の節だけで使う）は、自分で写した `practice.chapter05` から import します。写していなければ、`lib.chapter05` のままでかまいません。この章では、その実装を再掲しません
@@ -91,16 +91,7 @@ uv run pytest test/chapter10
 
 サイコロ 2 個を投げたときに起こりうる結果は、(1, 1) から (6, 6) までの 36 通りです。起こりうる結果をすべて集めた集合を、**標本空間** Ω と言います。その一部分（部分集合）を、**事象**と言います。「和が 7」は、{(1, 6), (2, 5), (3, 4), (4, 3), (5, 2), (6, 1)} という事象です。
 
-事象どうしは、集合の演算で組み合わせます。
-
-| 事象 | 意味 |
-| :--- | :--- |
-| A∩B（共通部分） | A かつ B |
-| A∪B（和集合） | A または B |
-| Aᶜ（余事象） | A でない |
-| ∅（空事象） | 決して起きない |
-
-Python の集合では、A∩B を `a & b`、A∪B を `a | b`、Aᶜ を `space - a`、∅ を `frozenset()` と書きます。
+事象どうしは、集合の演算で組み合わせます。A∩B（A かつ B）は `a & b`、A∪B（A または B）は `a | b`、余事象 Aᶜ（A でない）は `space - a`、空事象 ∅（決して起きない）は `frozenset()` と書きます。
 
 ### 確率の定義と基本的性質
 
@@ -154,13 +145,11 @@ P(H) を**事前確率**、P(E∣H) を**尤度**、P(H∣E) を**事後確率**
 
 値を a 倍して b を足すと、期待値は a·E[X] + b、分散は a²·Var[X] です（分散は、足した b の影響を受けない）。サイコロ 1 個の分散は 35/12 で、**独立な** 2 個の和の分散は、その 2 倍の 35/6 です。
 
-### 期待効用
+### 期待効用・確実性等価・危険プレミアム
 
 賭け（くじ）を、金額の確率変数 X として表します。お金そのものでなく、お金から得る満足（**効用** u）の期待値で選ぶ、という考え方が、**期待効用理論**です。
 
 > 期待効用 E[u(X)] = Σ u(x)·P(X = x)
-
-### 確実性等価と危険プレミアム
 
 賭けと同じ効用を、確実にくれる金額を、**確実性等価** CE と言います。u(CE) = E[u(X)] を満たす CE です。期待値との差を、**危険プレミアム**と言います。
 
@@ -284,17 +273,9 @@ def equally_likely_probability[T](event: Set[T], space: Set[T]) -> Fraction:
 
 ### 確率の基本的性質
 
-0 ≤ P ≤ 1、全事象と空事象、余事象、加法定理を確かめます。これらは、`equally_likely_probability` が正しければ成り立つ**性質**のテストです。新しい関数は要りません。余事象は `SPACE - seven`、和集合は `eight | doubles` と、集合の演算で作ります。
+余事象と加法定理を確かめます（0 ≤ P ≤ 1、全事象と空事象のテストは、10.5 節の終わりの折りたたみに載せます）。これらは、`equally_likely_probability` が正しければ成り立つ**性質**のテストです。新しい関数は要りません。余事象は `SPACE - seven`、和集合は `eight | doubles` と、集合の演算で作ります。
 
 ```python
-def test_確率は0以上1以下で全事象は1で空事象は0() -> None:
-    for total in range(1, 14):
-        assert 0 <= equally_likely_probability(_sum_is(total), SPACE) <= 1
-    assert equally_likely_probability(SPACE, SPACE) == 1
-    assert equally_likely_probability(frozenset(), SPACE) == 0
-    assert equally_likely_probability(_sum_is(13), SPACE) == 0
-
-
 def test_余事象の確率は1から引く() -> None:
     seven = _sum_is(7)
     assert equally_likely_probability(SPACE - seven, SPACE) == Fraction(5, 6)
@@ -388,14 +369,6 @@ FALSE_POSITIVE = Fraction(5, 100)
 検査の形の関数（`disease_probability_given_positive`）と、仮説がいくつでもよい一般の形（`bayes_posteriors`）の 2 つを書き、**同じ答えになる**ことを確かめます。片方を書き間違えれば、一致しません。
 
 ```python
-def test_陽性になる確率は病気の人と健康な人の陽性を足す() -> None:
-    p = positive_test_probability(PREVALENCE, SENSITIVITY, FALSE_POSITIVE)
-    assert p == Fraction(1, 100) * Fraction(9, 10) + Fraction(99, 100) * Fraction(
-        5, 100
-    )
-    assert p == Fraction(117, 2000)
-
-
 def test_陽性のとき病気である確率は感度の90パーセントよりずっと低い() -> None:
     p = disease_probability_given_positive(PREVALENCE, SENSITIVITY, FALSE_POSITIVE)
     assert p == Fraction(2, 13)
@@ -423,17 +396,6 @@ def test_2回続けて陽性なら事後確率を事前確率にして更新す�
     twice = bayes_posteriors(once, likelihoods)
     assert twice["disease"] == Fraction(36, 47)
     assert float(twice["disease"]) == pytest.approx(0.766, abs=1e-3)
-
-
-def test_有病率が高いほど陽性の意味は大きく0と1では動かない() -> None:
-    def posterior(prevalence: Fraction) -> Fraction:
-        return disease_probability_given_positive(
-            prevalence, SENSITIVITY, FALSE_POSITIVE
-        )
-
-    assert posterior(Fraction(1, 10)) == Fraction(2, 3)
-    assert posterior(Fraction(0)) == 0
-    assert posterior(Fraction(1)) == 1
 ```
 
 確率が 0 以上 1 以下かを確かめる関数を、`probability.py` に足します（`bayes.py` と、あとの `expectation.py` で使います）。
@@ -540,16 +502,6 @@ def test_分散は期待値からのずれの2乗の期待値() -> None:
     assert discrete_variance(two_dice) == Fraction(35, 6)
     assert discrete_variance({0: HALF, 100: HALF}) == 2500
     assert discrete_variance({0: Fraction(3, 4), 40: Fraction(1, 4)}) == 300
-
-
-def test_値を3倍して2を足すと期待値も3倍して2を足し分散は9倍() -> None:
-    space = dice_sample_space()
-    scaled = random_variable_distribution(space, lambda o: 3 * sum(o) + 2)
-    assert discrete_expected_value(scaled) == 3 * 7 + 2
-    assert discrete_variance(scaled) == 9 * Fraction(35, 6)
-    halved = random_variable_distribution(space, lambda o: Fraction(sum(o), 2))
-    assert discrete_expected_value(halved) == Fraction(7, 2)
-    assert discrete_variance(halved) == Fraction(35, 24)
 ```
 
 `random_variable_distribution(space, sum)` の `sum` は、Python の組み込み関数 `sum` です。結果 (2, 5) を受け取り、和 7 を返す関数として、そのまま渡せます。
@@ -650,14 +602,6 @@ def _square(x: float) -> float:
 確実性等価は、**公式と数値**の 2 つで確かめます。効用 √x なら、√CE = 期待効用なので、CE は期待効用の 2 乗（公式）です。実装は、2 分法（数値）で求めます。ln x なら、CE は e の期待効用乗です。
 
 ```python
-def test_期待効用は効用かける確率の和() -> None:
-    assert expected_utility_of_lottery(COIN_FLIP, math.sqrt) == 5
-    assert expected_utility_of_lottery(SIXTEEN_OR_HUNDRED, math.sqrt) == 7
-    eu = expected_utility_of_lottery(UNEVEN, math.sqrt)
-    assert eu == pytest.approx(math.sqrt(40) / 4)
-    assert expected_utility_of_lottery(COIN_FLIP, _linear) == 50
-
-
 def test_確実性等価は期待効用と同じ効用を確実にくれる金額() -> None:
     assert certainty_equivalent_of_lottery(COIN_FLIP, math.sqrt) == pytest.approx(25)
     ce = certainty_equivalent_of_lottery(SIXTEEN_OR_HUNDRED, math.sqrt)
@@ -668,14 +612,6 @@ def test_確実性等価は期待効用と同じ効用を確実にくれる金�
     # 効用 ln x なら、確実性等価は e の期待効用乗（ここでは 25 と 100 の幾何平均 50）
     log_lottery = {25: HALF, 100: HALF}
     assert certainty_equivalent_of_lottery(log_lottery, math.log) == pytest.approx(50)
-
-
-def test_危険プレミアムは期待値と確実性等価の差() -> None:
-    assert risk_premium_of_lottery(COIN_FLIP, math.sqrt) == pytest.approx(25)
-    assert risk_premium_of_lottery(SIXTEEN_OR_HUNDRED, math.sqrt) == pytest.approx(9)
-    assert risk_premium_of_lottery(UNEVEN, math.sqrt) == pytest.approx(7.5)
-    premium = risk_premium_of_lottery({25: HALF, 100: HALF}, math.log)
-    assert premium == pytest.approx(12.5)
 
 
 def test_凹の効用では期待値の効用が期待効用以上になる() -> None:
@@ -771,6 +707,8 @@ def classify_risk_attitude[V: int | Fraction](
 `test_simulation.py` の先頭です。
 
 ```python
+import math
+
 import pytest
 
 from lib.chapter10.expectation import random_variable_distribution
@@ -788,23 +726,15 @@ def test_6万回投げると和が7の相対頻度は6分の1に近い() -> None
     assert frequencies[2] == pytest.approx(1 / 36, abs=0.005)
 
 
-def test_どの和の相対頻度も分数で求めた確率に近い() -> None:
-    exact = random_variable_distribution(dice_sample_space(), sum)
-    frequencies = simulate_dice_sum_frequencies(60_000, seed=4)
-    for total, p in exact.items():
-        assert frequencies[int(total)] == pytest.approx(float(p), abs=0.01)
-
-
-def test_回数を増やすほど相対頻度は確率に近づく() -> None:
+def test_回数を増やすほど相対頻度と確率のずれの許容幅が狭まる() -> None:
     exact = {7: 1 / 6, 2: 1 / 36, 12: 1 / 36}
-
-    def worst_error(trials: int) -> float:
+    for trials in (100, 10_000, 100_000):
         frequencies = simulate_dice_sum_frequencies(trials, seed=3)
-        return max(abs(frequencies[s] - p) for s, p in exact.items())
-
-    errors = [worst_error(n) for n in (100, 10_000, 100_000)]
-    assert errors[0] > errors[1] > errors[2]
-    assert errors[2] < 0.005
+        for total, p in exact.items():
+            # 標準誤差 √(p(1 − p) ÷ n) の 4 倍以内。回数を 100 倍にすると幅は 1/10
+            standard_error = math.sqrt(p * (1 - p) / trials)
+            assert abs(frequencies[total] - p) < 4 * standard_error
+    assert abs(frequencies[7] - 1 / 6) < 0.005
 ```
 
 `simulation.py` の先頭の import です。
@@ -828,14 +758,13 @@ def simulate_dice_sum_frequencies(
     return {s: counts[s] / trials for s in range(dice, dice * faces + 1)}
 ```
 
-- `random.Random(seed)` は、種 seed から始まる、自分専用の乱数の発生器です。同じ種なら、同じ列が出ます。`rng.randint(1, 6)` は、1 以上 6 以下（6 も含む）の整数を、等しい確率で返します
-- `Counter(...)` は、値ごとの出現回数を数えます。出なかった和は、`counts[s]` が 0 を返します
+`random.Random(seed)` は、種 seed から始まる、自分専用の乱数の発生器です。同じ種なら、同じ列が出ます（整数の目を 1 つずつ作るだけなので、NumPy を使わず、標準ライブラリで書きます）。`rng.randint(1, 6)` は、1 以上 6 以下（6 も含む）の整数を、等しい確率で返します。`Counter(...)` は、値ごとの出現回数を数えます。出なかった和は、`counts[s]` が 0 を返します
 
 ### 発展: 危険回避度
 
 ??? note "危険回避度のテストと実装（発展。後回しにしても、学習は成り立ちます）"
 
-    テストは `test_risk.py` に、実装は `risk.py` に書きます。2 階微分は、第 5 章の `numerical_derivative` を 2 回使って求めます（傾きの傾き）。外側の刻み幅を 1e−3 と大きめにするのは、内側の数値微分の小さな誤差を、小さな刻み幅で割って大きくしないためです（第 5 章の、刻み幅が小さすぎるときの誤差）。
+    テストは `test_risk.py` に、実装は `risk.py` に書きます。1 階微分は第 5 章の `numerical_derivative`、2 階微分は (u(w + h) − 2u(w) + u(w − h)) ÷ h² で求めます。**刻み幅 h は、値の大きさに合わせます**（富の 1 万分の 1）。h を固定すると、富が 1 万のとき、u(w ± h) の差が浮動小数点数の桁に埋もれ、ln の相対的危険回避度（正しくは 1）が 0 になります（第 5 章の、刻み幅が小さすぎるときの誤差）。
 
     ```python
     def _exponential_utility(x: float) -> float:
@@ -864,6 +793,16 @@ def simulate_dice_sum_frequencies(
         )
 
 
+    def test_富が大きくても危険回避度は正しい() -> None:
+        # 刻み幅が固定だと、富 1 万で ln の相対的危険回避度が 0 になっていた
+        for wealth in (1e4, 1e6):
+            assert relative_risk_aversion(math.log, wealth) == pytest.approx(1, rel=1e-3)
+            expected = 1 / (2 * wealth)
+            assert absolute_risk_aversion(math.sqrt, wealth) == pytest.approx(
+                expected, rel=1e-3
+            )
+
+
     def test_小さなリスクの危険プレミアムは2分の1かける危険回避度かける分散() -> None:
         small = {90: HALF, 110: HALF}
         approximation = (
@@ -884,13 +823,14 @@ def simulate_dice_sum_frequencies(
 
     ```python
     def absolute_risk_aversion(utility: UtilityFunction, wealth: float) -> float:
-        """アロー・プラットの絶対的危険回避度 −u''(w) ÷ u'(w)（数値微分を 2 回使う）。"""
-        first = numerical_derivative(utility, wealth)
-        if math.isclose(first, 0, abs_tol=1e-12):
+        """アロー・プラットの絶対的危険回避度 −u''(w) ÷ u'(w)（数値微分で近似する）。"""
+        # 刻み幅は、富の大きさに合わせる（固定だと、富が大きいとき桁が落ちる）
+        step = 1e-4 * max(1.0, abs(wealth))
+        first = numerical_derivative(utility, wealth, step)
+        if first == 0:
             raise ValueError("限界効用が 0 の点では、危険回避度は決まりません")
-        second = numerical_derivative(
-            lambda w: numerical_derivative(utility, w), wealth, step=1e-3
-        )
+        around = utility(wealth + step) + utility(wealth - step)
+        second = (around - 2 * utility(wealth)) / step**2
         return -second / first
 
 
@@ -963,13 +903,21 @@ print(round(frequencies[7] * 60_000), round(frequencies[7], 3))
 
 ### 境界のテスト
 
-完成形には、ほかに**境界**を確かめるテストがあります。空の標本空間・標本空間の外の事象・個数や面の数が 0 以下のサイコロ、確率 0 の事象を条件にする、確率の値の範囲、仮説が 3 つ、尤度がどれも同じ、合計が 1 でない事前確率、仮説の食い違い、観測の確率が 0、確率 1 の値だけの分布と確率 0 の値、確率の合計が 1 でない分布、確実なくじ、確実性等価が賞金の間にあること、相対頻度の並び、種の再現性、投げる回数が 0 以下です。テストの件数を合わせるため、ここに載せます。
+完成形には、ほかに、別の例と**境界**を確かめるテストがあります。0 ≤ P ≤ 1 と全事象・空事象、陽性になる確率、有病率を変えた事後確率、値の 1 次変換と期待値・分散、期待効用と危険プレミアムの別の例、全部の和の相対頻度、空の標本空間・標本空間の外の事象・個数や面の数が 0 以下のサイコロ、確率 0 の事象を条件にする、確率の値の範囲、仮説が 3 つ、尤度がどれも同じ、合計が 1 でない事前確率、仮説の食い違い、観測の確率が 0、確率 1 の値だけの分布と確率 0 の値、確率の合計が 1 でない分布、確実なくじ、確実性等価が賞金の間にあること、相対頻度の並び、種の再現性、投げる回数が 0 以下です。テストの件数を合わせるため、ここに載せます。
 
-??? note "境界のテスト"
+??? note "別の例と境界のテスト"
 
     `test_probability.py` に書くテスト:
 
     ```python
+    def test_確率は0以上1以下で全事象は1で空事象は0() -> None:
+        for total in range(1, 14):
+            assert 0 <= equally_likely_probability(_sum_is(total), SPACE) <= 1
+        assert equally_likely_probability(SPACE, SPACE) == 1
+        assert equally_likely_probability(frozenset(), SPACE) == 0
+        assert equally_likely_probability(_sum_is(13), SPACE) == 0
+
+
     def test_標本空間は空でなく事象はその部分集合() -> None:
         with pytest.raises(ValueError):
             equally_likely_probability(frozenset(), frozenset())
@@ -997,6 +945,25 @@ print(round(frequencies[7] * 60_000), round(frequencies[7], 3))
     `test_bayes.py` に書くテスト:
 
     ```python
+    def test_陽性になる確率は病気の人と健康な人の陽性を足す() -> None:
+        p = positive_test_probability(PREVALENCE, SENSITIVITY, FALSE_POSITIVE)
+        assert p == Fraction(1, 100) * Fraction(9, 10) + Fraction(99, 100) * Fraction(
+            5, 100
+        )
+        assert p == Fraction(117, 2000)
+
+
+    def test_有病率が高いほど陽性の意味は大きく0と1では動かない() -> None:
+        def posterior(prevalence: Fraction) -> Fraction:
+            return disease_probability_given_positive(
+                prevalence, SENSITIVITY, FALSE_POSITIVE
+            )
+
+        assert posterior(Fraction(1, 10)) == Fraction(2, 3)
+        assert posterior(Fraction(0)) == 0
+        assert posterior(Fraction(1)) == 1
+
+
     def test_仮説が3つでも尤度の比で事後確率が決まる() -> None:
         priors = {"A": Fraction(1, 2), "B": Fraction(3, 10), "C": Fraction(1, 5)}
         likelihoods = {"A": Fraction(1, 10), "B": Fraction(1, 2), "C": Fraction(1, 4)}
@@ -1036,6 +1003,16 @@ print(round(frequencies[7] * 60_000), round(frequencies[7], 3))
     `test_expectation.py` に書くテスト:
 
     ```python
+    def test_値を3倍して2を足すと期待値も3倍して2を足し分散は9倍() -> None:
+        space = dice_sample_space()
+        scaled = random_variable_distribution(space, lambda o: 3 * sum(o) + 2)
+        assert discrete_expected_value(scaled) == 3 * 7 + 2
+        assert discrete_variance(scaled) == 9 * Fraction(35, 6)
+        halved = random_variable_distribution(space, lambda o: Fraction(sum(o), 2))
+        assert discrete_expected_value(halved) == Fraction(7, 2)
+        assert discrete_variance(halved) == Fraction(35, 24)
+
+
     def test_確率1の値だけなら期待値はその値で分散は0() -> None:
         assert discrete_expected_value({40: Fraction(1)}) == 40
         assert discrete_variance({40: Fraction(1)}) == 0
@@ -1061,6 +1038,22 @@ print(round(frequencies[7] * 60_000), round(frequencies[7], 3))
     `test_risk.py` に書くテスト:
 
     ```python
+    def test_期待効用は効用かける確率の和() -> None:
+        assert expected_utility_of_lottery(COIN_FLIP, math.sqrt) == 5
+        assert expected_utility_of_lottery(SIXTEEN_OR_HUNDRED, math.sqrt) == 7
+        eu = expected_utility_of_lottery(UNEVEN, math.sqrt)
+        assert eu == pytest.approx(math.sqrt(40) / 4)
+        assert expected_utility_of_lottery(COIN_FLIP, _linear) == 50
+
+
+    def test_危険プレミアムは期待値と確実性等価の差() -> None:
+        assert risk_premium_of_lottery(COIN_FLIP, math.sqrt) == pytest.approx(25)
+        assert risk_premium_of_lottery(SIXTEEN_OR_HUNDRED, math.sqrt) == pytest.approx(9)
+        assert risk_premium_of_lottery(UNEVEN, math.sqrt) == pytest.approx(7.5)
+        premium = risk_premium_of_lottery({25: HALF, 100: HALF}, math.log)
+        assert premium == pytest.approx(12.5)
+
+
     def test_確実なくじの確実性等価はその金額でプレミアムは0() -> None:
         sure = {40: Fraction(1)}
         assert expected_utility_of_lottery(sure, math.sqrt) == pytest.approx(math.sqrt(40))
@@ -1094,6 +1087,13 @@ print(round(frequencies[7] * 60_000), round(frequencies[7], 3))
     `test_simulation.py` に書くテスト:
 
     ```python
+    def test_どの和の相対頻度も分数で求めた確率に近い() -> None:
+        exact = random_variable_distribution(dice_sample_space(), sum)
+        frequencies = simulate_dice_sum_frequencies(60_000, seed=4)
+        for total, p in exact.items():
+            assert frequencies[int(total)] == pytest.approx(float(p), abs=0.01)
+
+
     def test_相対頻度はとりうる和ごとに並び合計は1() -> None:
         frequencies = simulate_dice_sum_frequencies(1_000, seed=2)
         assert list(frequencies) == list(range(2, 13))
@@ -1275,7 +1275,7 @@ uv run pytest test/chapter10
 ```
 
 ```text
-46 passed
+47 passed
 ```
 
 ## 10.6 規則で言うと
@@ -1297,7 +1297,6 @@ uv run pytest test/chapter10
 | 排反と独立 | 排反は「同時に起きない」（P(A∩B) = 0）。独立は「片方が分かっても、もう片方の確率が変わらない」。確率が正の排反な事象は、独立ではない |
 | 期待値と期待効用 | 期待値は金額の平均。期待効用は効用の平均。賭けを比べるのは、期待効用 |
 | 確実性等価と危険プレミアム | 確実性等価は、賭けと同じ満足の確実な金額。危険プレミアムは、期待値から確実性等価を引いた差 |
-| 確率と相対頻度 | 確率はモデルの数。相対頻度は、実際に数えた割合。回数を増やすと近づくが、一致はしない |
 
 ### このモデルが成り立たない場面
 

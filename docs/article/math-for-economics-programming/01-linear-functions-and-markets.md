@@ -30,7 +30,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-22T00:00:00Z }
 | 経済学の題材 | 需要・供給、市場均衡、消費者余剰・生産者余剰、需要の集計、豊作貧乏、単位あたり費用が一定のケース |
 | 数学 | 関数と変数、比例関数、1 次関数（直線）の式、連立方程式、三角形の面積 |
 | 使う Python の機能 | 関数、タプル、`dataclass`、テスト（`pytest`） |
-| 新しく導入するライブラリ | Matplotlib（図。[第 1 シリーズ](../economics-programming/index.md) の第 7 章で学習済み） |
+| 新しく導入するライブラリ | Matplotlib（図。[第 1 シリーズ](../economics-programming/index.md) の第 7 章で学習済み）。図のテストでは、NumPy（`np.asarray` など）も、説明なしに少し使います（第 7 章で、きちんと説明します。ここでは、写すだけでかまいません） |
 | 完成形 | `line_through`、`demand_quantity`、`supply_quantity`、`Equilibrium`、`equilibrium`、`consumer_surplus`、`producer_surplus`、`total_surplus`、`market_demand`、`constant_cost_equilibrium` |
 | ファイル | 実装: `lib/chapter01/market.py`、`lib/chapter01/plot.py`（図）／テスト: `test/chapter01/test_market.py`、`test/chapter01/test_plot.py`（自分で書くときは、`practice/chapter01/` に、同じ名前で作ります） |
 | データ | なし（手計算できる小さな例だけ） |
@@ -48,7 +48,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-22T00:00:00Z }
 | 需要の集計 | 個人の需要量を、価格ごとに足す | `market_demand(price, individuals)` |
 | 費用が一定のケース | 供給は水平。価格 ＝ 単位あたり費用 | `constant_cost_equilibrium(a, b, unit_cost)` |
 
-> **記号について**: a・b は需要、c・d は供給の係数です。この章では、**価格 p を、グラフの縦軸**に、**数量 q を、横軸**に描きます。式は q = a − b·p（数量を価格で表す）と書き、グラフは p を縦軸にします。向きが逆に見えますが、同じ直線です（第 1 部の全章で、この約束を使います）。
+> **記号について**: a・b は需要、c・d は供給の係数です。この章では、**価格 p を、グラフの縦軸**に、**数量 q を、横軸**に描きます。式は q = a − b·p（数量を価格で表す）と書き、グラフは p を縦軸にします。向きが逆に見えますが、同じ直線です（第 2 章では、独占の分析のために、価格を数量の式（逆需要 P = a − b·Q）で書きます。切り替えは、第 2 章で、注記します）。
 
 ### 前提とする第 1 シリーズの章
 
@@ -62,7 +62,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-22T00:00:00Z }
 
 高校数学の 1 次関数（傾きと切片）と、連立方程式を、一度は学んだ方を想定しています。忘れていても、1.4 節で思い出せます。
 
-需要・供給・余剰の**経済学としての意味**（調整過程・課税の効果など）は、[ミクロ経済学のためのプログラミング（初級）の第 8 章](../micro-basics-programming/08-market-equilibrium-and-adjustment.md) と [第 9 章](../micro-basics-programming/09-surplus-and-tax.md) で扱います。この章は、**そこで使う数学**（直線・連立方程式・三角形の面積）を、関数とテストで確かめます。独立して読めるように、この連載は、自分のコードで書き、ほかの連載のコードを import しません。
+需要・供給・余剰の**経済学としての意味**（調整過程・課税の効果など）は、[ミクロ経済学のためのプログラミング（初級）の第 8 章](../micro-basics-programming/08-market-equilibrium-and-adjustment.md) と [第 9 章](../micro-basics-programming/09-surplus-and-tax.md) で扱います。この章は、**そこで使う数学**（直線・連立方程式・三角形の面積）を、関数とテストで確かめます。**記号の違いに注意**: ミクロ（初級）の連載は、需要を Q = a + s_d·P（傾き s_d は負）と、**符号つきの傾き**で書きます。この連載は、q = a − b·p（b は正）です。式の形は、b = −s_d と読み替えれば、同じです。独立して読めるように、この連載は、自分のコードで書き、ほかの連載のコードを import しません。
 
 ## 1.2 準備
 
@@ -75,10 +75,10 @@ uv run pytest test/chapter01
 ```
 
 ```text
-44 passed
+46 passed
 ```
 
-自分でコードを書くときは、`practice/chapter01/` を作って、完成形と同じ名前（`market.py`・`test_market.py`）のファイルに書きます。テストは、`uv run pytest practice/chapter01` で動かします。テストの import は、`from lib.chapter01.market import ...` を、**`from practice.chapter01.market import ...` に書き換えて**ください（書き換えないと、完成形を読み込んで、最初から通ってしまい、Red になりません）。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。
+自分でコードを書くときは、`practice/chapter01/` を作って、完成形と同じ名前（`market.py`・`test_market.py`、図の節も書くなら、`plot.py`・`test_plot.py`）のファイルに書きます（図の節を後回しにするなら、`plot.py` と `test_plot.py` は要らず、テストは 30 件になります）。テストは、`uv run pytest practice/chapter01` で動かします。テストの import は、`from lib.chapter01.market import ...` を、**`from practice.chapter01.market import ...` に書き換えて**ください（書き換えないと、完成形を読み込んで、最初から通ってしまい、Red になりません）。`plot.py` が `market.py` を import する行と、下の check スクリプトの import も、同じく `from practice.chapter01...` に書き換えます。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。
 
 「予想の答え合わせ」のスクリプトは、`practice/chapter01/check.py` に保存し、アプリのディレクトリ（`apps/math-for-economics-programming/python`）で `uv run python -m practice.chapter01.check` と実行します（`python practice/...` と、ファイルのパスで実行すると、`lib`（import を書き換えたあとは `practice`）が見つからず、`ModuleNotFoundError` になります。**`-m` で、モジュールとして実行**してください。自分のコードを確かめるときは、スクリプトの import を `from practice.chapter01...` に書き換えます。Windows のシェルで、日本語が文字化けするときは、`PYTHONUTF8=1` を付けます）。
 
@@ -286,9 +286,14 @@ class Equilibrium:
         return self.price * self.quantity
 
 
+def _require_positive_slope(slope: float, name: str) -> None:
+    if slope <= 0:
+        raise ValueError(f"{name}は、正でなければなりません")
+
+
 def _validate_slopes(b: float, d: float) -> None:
-    if b <= 0 or d <= 0:
-        raise ValueError("需要の傾き b と供給の傾き d は、正でなければなりません")
+    _require_positive_slope(b, "需要の傾き b")
+    _require_positive_slope(d, "供給の傾き d")
 
 
 def equilibrium(a: float, b: float, c: float, d: float) -> Equilibrium:
@@ -300,6 +305,10 @@ def equilibrium(a: float, b: float, c: float, d: float) -> Equilibrium:
         raise ValueError("価格も数量も正になる均衡がありません")
     return Equilibrium(price=price, quantity=quantity)
 ```
+
+`Equilibrium` の中の `@property` は、**括弧なしで、計算した値を読む**ための書き方です。`result.revenue` と書くと、`result.price * result.quantity` が計算されます（`result.revenue()` とは、書きません）。`@dataclass(frozen=True)` は、「価格」と「数量」を持つだけの、書き換えられない入れ物を、短く書くための書き方です（第 1 シリーズの第 2〜4 章の、辞書やタプルの代わりです）。
+
+傾きの検証は、`equilibrium` だけでなく、余剰の関数や、費用一定の均衡でも、同じ関数（`_require_positive_slope`）で行います。**同じ入力の誤りは、どの関数でも、同じように弾く**ためです（0 や負の傾きを、黙って受け入れたり、ゼロ除算にしたりしません）。
 
 均衡が、正の価格・数量にならない設定（需要の上限が低すぎる、など）は、`ValueError` にします。**エラーにする条件を、先にテストにする**と、「どんな入力で、このモデルが意味を持たなくなるか」を、自分で確かめることになります。
 
@@ -332,6 +341,7 @@ def test_価格が供給の下限以下なら生産者余剰は0() -> None:
 ```python
 def consumer_surplus(price: float, a: float, b: float) -> float:
     """消費者余剰: 需要曲線の下で、価格の上の三角形の面積。"""
+    _require_positive_slope(b, "需要の傾き b")
     top = a / b
     if price >= top:
         return 0
@@ -340,6 +350,7 @@ def consumer_surplus(price: float, a: float, b: float) -> float:
 
 def producer_surplus(price: float, c: float, d: float) -> float:
     """生産者余剰: 価格の下で、供給曲線の上の面積（供給量を足す）。"""
+    _require_positive_slope(d, "供給の傾き d")
     low = max(-c / d, 0)
     if price <= low:
         return 0
@@ -417,6 +428,7 @@ def test_単位あたり費用が需要の上限以上なら均衡がない() ->
 ```python
 def constant_cost_equilibrium(a: float, b: float, unit_cost: float) -> Equilibrium:
     """単位あたり費用が一定のとき、供給は水平で、価格は費用に等しい。"""
+    _require_positive_slope(b, "需要の傾き b")
     quantity = demand_quantity(unit_cost, a, b)
     if unit_cost <= 0 or quantity <= 0:
         raise ValueError("費用が正で、需要の上限より低いときだけ、均衡があります")
@@ -466,7 +478,7 @@ print(after.price, after.quantity, after.revenue)
 
 ### 境界のテスト
 
-ここまでのテストに加えて、完成形には、**境界**を確かめるテストがあります。価格が 0 や数量が 0 の均衡、1 未満の小さな値、供給の傾きが 0・1 でないとき、費用が 0 のときです。「d = 1 の例ばかり」「0 や 1 の近くを試していない」と、式の誤りを、テストが見逃します。完成形の「テストの件数」を合わせるため、ここに載せます（読むだけで、かまいません）。
+ここまでのテストに加えて、完成形には、**境界**を確かめるテストがあります。価格が 0 や数量が 0 の均衡、1 未満の小さな値、供給の傾きが 0・1 でないとき、費用が 0 のとき、余剰の関数に、傾きが 0 以下の値を渡したときです。「d = 1 の例ばかり」「0 や 1 の近くを試していない」と、式の誤りを、テストが見逃します。完成形の「テストの件数」を合わせるため、ここに載せます。
 
 ??? note "境界のテスト"
 
@@ -510,6 +522,24 @@ print(after.price, after.quantity, after.revenue)
     def test_費用も数量も1未満の均衡を求める() -> None:
         result = constant_cost_equilibrium(1, 1, 0.5)
         assert result == Equilibrium(price=0.5, quantity=0.5)
+
+
+    def test_余剰の関数も傾きが正でなければエラー() -> None:
+        with pytest.raises(ValueError):
+            consumer_surplus(40, 120, 0)
+        with pytest.raises(ValueError):
+            consumer_surplus(40, 120, -2)
+        with pytest.raises(ValueError):
+            producer_surplus(40, 0, 0)
+        with pytest.raises(ValueError):
+            producer_surplus(40, 0, -1)
+
+
+    def test_費用一定の均衡も需要の傾きが正でなければエラー() -> None:
+        with pytest.raises(ValueError):
+            constant_cost_equilibrium(120, 0, 20)
+        with pytest.raises(ValueError):
+            constant_cost_equilibrium(120, -2, 20)
     ```
 
 ### 図
@@ -745,12 +775,12 @@ uv run pytest test/chapter01
 ```
 
 ```text
-44 passed
+46 passed
 ```
 
 ## 1.6 規則で言うと
 
-1. **均衡は、連立方程式の解である。** 需要量 ＝ 供給量 を、価格について解く。解が、負（価格も数量も）なら、そのモデルでは、取引が成り立たない
+1. **均衡は、連立方程式の解である。** 需要量 ＝ 供給量 を、価格について解く。価格か数量が 0 以下なら、そのモデルでは、取引が成り立たない
 2. **余剰は、面積である。** 消費者余剰は、需要曲線の下・価格の上、生産者余剰は、価格の下・供給曲線の上。直線なら、三角形（または台形）の面積で、式で求まる
 3. **市場の需要は、個人の需要を、横に足す。** 数量を足す（価格を足すのではない）。個人の需要が 0 になる価格で、折れ点ができる
 
@@ -780,6 +810,19 @@ uv run pytest test/chapter01
 | 交互 | [第 1 シリーズ](../economics-programming/index.md)の第 3 章のリスト内包表記で、価格 10・20・…・60 での、市場の需要量（A: q = 60 − p、B: q = 40 − p）を、一度に求めてください。価格が上がるにつれて、需要量は、減り続けますか |
 
 ??? note "解答（先に自分で取り組んでから、開いてください）"
+
+    解答の先頭に、次の import を書きます（`practice/chapter01/exercises.py` などに書くときは、`lib` を `practice` に書き換えます）。
+
+    ```python
+    import pytest
+
+    from lib.chapter01.market import (
+        consumer_surplus,
+        equilibrium,
+        market_demand,
+        producer_surplus,
+    )
+    ```
 
     **想起**:
 
@@ -820,7 +863,7 @@ uv run pytest test/chapter01
         people = [(60, 1), (40, 1)]
         values = [market_demand(p, people) for p in range(10, 70, 10)]
         assert values == [80, 60, 40, 20, 10, 0]
-        assert all(a > b for a, b in zip(values, values[1:]))
+        assert all(a > b for a, b in zip(values, values[1:], strict=False))
     ```
 
 ## 1.8 振り返り
@@ -837,4 +880,4 @@ uv run pytest test/chapter01
 - 豊作貧乏は、需要が非弾力的なときに起きる（収入 ＝ 価格 × 数量が減る）。弾力的なら、収入は増える
 - 式は、手計算の答えだけでなく、**性質**（均衡で需給が等しい、面積が余剰に等しい）でも、テストできる
 
-次の章では、**2 次関数**を学びます。独占企業の利潤は、数量の 2 次関数で、頂点が、利潤を最大にする数量です。そこでも、第 1 章の需要曲線（価格 ＝ 100 − 数量 の形）が、また登場します。
+次の章では、**2 次関数**を学びます。独占企業の利潤は、数量の 2 次関数で、頂点が、利潤を最大にする数量です。そこでも、第 1 章と同じ形の（直線の）需要が、また登場します（価格を数量の式で書く、逆需要の形で）。

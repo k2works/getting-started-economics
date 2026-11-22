@@ -97,3 +97,4 @@ uv run pytest test/chapter01
 - [経済学・経済政策 トピック別マインドマップ](<../経済学・経済政策 トピック別マインドマップ.md>)・[全体マインドマップ](<../経済学・経済政策 全体マインドマップ.md>) — 章立ての根拠です
 - [経済学のためのプログラミング入門](../economics-programming/index.md) — 前提とする、第 1 シリーズです
 - [マクロ経済学のためのプログラミング（初級）](../macro-basics-programming/index.md) — 姉妹編です
+- [経済学で出る数学プログラミング](../math-for-economics-programming/index.md) — 数学の復習は、こちらへ。1 次関数・連立方程式・余剰（[第 1 章](../math-for-economics-programming/01-linear-functions-and-markets.md)）、微分と利潤最大化（[第 5 章](../math-for-economics-programming/05-derivatives-and-profit-maximization.md)）、弾力性（[第 6 章](../math-for-economics-programming/06-elasticity-and-growth-rates.md)）、偏微分と効用最大化（[第 8 章](../math-for-economics-programming/08-partial-derivatives-and-utility-maximization.md)）、積分と余剰（[第 11 章](../math-for-economics-programming/11-integrals-and-auctions.md)）。**記号の違いに注意**: この連載の需要は Q = a + s_d·P（傾きは負）、数学の連載は q = a − b·p（b は正）です

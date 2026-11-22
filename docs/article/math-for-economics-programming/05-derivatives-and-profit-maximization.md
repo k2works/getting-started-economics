@@ -44,7 +44,9 @@ generated: { by: claude-code/claude-opus-5-5, at: 2026-11-22T00:00:00Z }
 
 ### 前提とする章
 
-[第 2 章](02-quadratics-monopoly-and-oligopoly.md) の、2 次関数の頂点・解の公式・格子探索と、関数を引数に渡す書き方（`lambda`）、`dataclass` を使います。
+| できること | 場所 |
+| :--- | :--- |
+| 2 次関数の頂点・解の公式・格子探索、関数を引数に渡す（`lambda`）、`dataclass` | この連載の[第 2 章](02-quadratics-monopoly-and-oligopoly.md) |
 
 費用曲線と供給の**経済学としての意味**は、[ミクロ経済学のためのプログラミング（初級）の第 5 章](../micro-basics-programming/05-cost-curves.md) と [第 7 章](../micro-basics-programming/07-profit-maximization-and-supply.md) で扱います。この章は、そこで使う数学（微分と最適化）を、関数とテストで確かめます。
 
@@ -56,10 +58,10 @@ uv run pytest test/chapter05
 ```
 
 ```text
-45 passed
+47 passed
 ```
 
-自分でコードを書くときは、`practice/chapter05/` に、完成形と同じ名前のファイル（`derivative.py`・`cost.py`・`plot.py`・`test_derivative.py`・`test_cost.py`・`test_plot.py`）を作ります。図を後回しにするなら、`plot.py` と `test_plot.py` は要らず、テストは 42 件になります。
+自分でコードを書くときは、`practice/chapter05/` に、完成形と同じ名前のファイル（`derivative.py`・`cost.py`・`plot.py`・`test_derivative.py`・`test_cost.py`・`test_plot.py`）を作ります。図を後回しにするなら、`plot.py` と `test_plot.py` は要らず、テストは 44 件になります。
 
 - テスト・`plot.py`・check スクリプトの import を、`from practice.chapter05...` に書き換えます（書き換えないと、完成形を動かします）
 - 第 2 章の関数（`quadratic_roots`・`parabola_vertex`・`argmax_on_grid`）は、自分で写した `practice.chapter02` から import します。写していなければ、`lib.chapter02` のままでかまいません
@@ -95,8 +97,11 @@ uv run pytest test/chapter05
 | 冪の公式 | (x^n)' = n·x^(n−1)（定数の微分は 0） | (x³)' = 3x² |
 | 定数倍 | (k·f)' = k·f' | (5x²)' = 10x |
 | 和 | (f + g)' = f' + g' | (x² + 4x + 7)' = 2x + 4 |
+| 積 | (f·g)' = f'·g + f·g' | (x²·eˣ)' = 2x·eˣ + x²·eˣ |
+| 商 | (f ÷ g)' = (f'·g − f·g') ÷ g² | (1 ÷ x)' = −1 ÷ x² |
+| 合成 | (f(g(x)))' = f'(g(x))·g'(x) | ((x² + 1)³)' = 3(x² + 1)²·2x |
 
-係数を次数の低い順に並べると、導関数は、「各係数に次数を掛けて、1 つ左にずらす」操作です。(7, 4, 1) は (4, 2) になります。
+係数を次数の低い順に並べると、導関数は、「各係数に次数を掛けて、1 つ左にずらす」操作です。(7, 4, 1) は (4, 2) になります。積・商・合成の公式は、多項式以外（eˣ や分数の関数）にも使います（第 6 章の弾力性で使います）。この章のコードは多項式の公式だけを実装し、積・商・合成は、数値微分との一致をテストで確かめます。
 
 ### 数値微分と刻み幅
 
@@ -282,6 +287,24 @@ def numerical_derivative(
         raise ValueError("刻み幅 h は、正でなければなりません")
     return (func(x + step) - func(x - step)) / (2 * step)
 ```
+
+??? note "積・商・合成の公式を、数値微分で確かめる"
+
+    5.4 節の表の 3 つの例を、負・0 < x < 1・正の点で、数値微分と比べます。公式を書き間違えると（積の片方の項を落とすなど）、一致しません。
+
+    ```python
+    def test_積と商と合成関数の公式は数値微分と一致する() -> None:
+        for x in [-1.5, 0.3, 2]:
+            # 積: (f·g)' = f'·g + f·g'。(x²·eˣ)' = 2x·eˣ + x²·eˣ
+            product = numerical_derivative(lambda t: t**2 * math.exp(t), x)
+            assert product == pytest.approx((2 * x + x**2) * math.exp(x))
+            # 商: (f ÷ g)' = (f'·g − f·g') ÷ g²。(1 ÷ x)' = −1 ÷ x²
+            quotient = numerical_derivative(lambda t: 1 / t, x)
+            assert quotient == pytest.approx(-1 / x**2)
+            # 合成: (f(g(x)))' = f'(g(x))·g'(x)。((x² + 1)³)' = 3(x² + 1)²·2x
+            chain = numerical_derivative(lambda t: (t**2 + 1) ** 3, x)
+            assert chain == pytest.approx(3 * (x**2 + 1) ** 2 * 2 * x)
+    ```
 
 ### 刻み幅と誤差の実験
 
@@ -535,6 +558,21 @@ def profit_maximizing_quantity(price: float, cost: Polynomial) -> float:
 ```
 
 費用が 1 次関数（C = 100 + 10q）だと、P > 10 なら作るほど利潤が増え、最大がありません。そこで、最高次の係数が正の、2 次か 3 次の費用だけを扱います。
+
+### 利潤最大化の解の性質: 価格と数量
+
+P = MC の解は、**価格が上がると増えます**。MC が右上がりなので、P が上がると、MC が P に追いつく数量も大きくなるからです。価格ごとの最適な数量を並べたものが、企業の**供給曲線**で、MC の右上がりの部分（操業停止点より上）に一致します。MC = 2q + 10 なら、q = (P − 10) ÷ 2 です。
+
+```python
+def test_価格が上がると最適な数量が増える() -> None:
+    # 供給曲線は MC の右上がりの部分。MC = 2q + 10 なら q = (P − 10) ÷ 2
+    prices = [12, 20, 35, 50, 80]
+    quantities = [profit_maximizing_quantity(p, COST) for p in prices]
+    assert quantities == pytest.approx([(p - 10) / 2 for p in prices])
+    for cost in [COST_HALF, COST_CUBIC]:
+        supply = [profit_maximizing_quantity(p, cost) for p in prices]
+        assert all(q1 < q2 for q1, q2 in zip(supply, supply[1:], strict=False))
+```
 
 ### 平均費用の最小と操業停止点
 
@@ -884,7 +922,7 @@ uv run pytest test/chapter05
 ```
 
 ```text
-45 passed
+47 passed
 ```
 
 ## 5.6 規則で言うと
@@ -892,7 +930,7 @@ uv run pytest test/chapter05
 1. **導関数は、傾きの関数である。** 多項式なら、冪・定数倍・和の公式で求まる。数値微分（中心差分）と一致する
 2. **数値微分の刻み幅は、大きすぎても小さすぎても悪い。** 大きいと打ち切りの誤差、小さいと丸めの誤差。中心差分では 10⁻⁵ 前後がよい
 3. **極値の候補は f'(x) = 0 の点。** f'' が負なら極大、正なら極小、0 なら判定できない
-4. **価格を所与とする企業は、P = MC で利潤を最大にする。** MC が右上がりの部分で。P が AVC の最小値より低ければ、生産しない
+4. **価格を所与とする企業は、P = MC で利潤を最大にする。** MC が右上がりの部分で。P が AVC の最小値より低ければ、生産しない。価格が上がると、最適な数量は増える（供給曲線は MC の右上がりの部分）
 5. **AC は、MC と交わる点で最小。** 2 次の費用なら q = √(c₀ ÷ c₂)
 
 混同しやすい点を、表にまとめます。

@@ -50,6 +50,7 @@ generated: { by: claude-code/claude-opus-5-5, at: 2026-11-22T00:00:00Z }
 | :--- | :--- |
 | 需要 q = a − b·p と消費者余剰（三角形の面積） | [第 1 章](01-linear-functions-and-markets.md) |
 | 連続複利 e^(rt)、年金・永久債の現在価値 | [第 3 章](03-exponents-logarithms-and-interest.md)・[第 4 章](04-sequences-and-saving.md) |
+| 格子探索 `argmax_on_grid`（発展のテスト） | [第 2 章](02-quadratics-monopoly-and-oligopoly.md) |
 | 多項式 `Polynomial`、数値微分 `numerical_derivative` | [第 5 章](05-derivatives-and-profit-maximization.md) |
 | 離散の期待値・分散、期待効用と確実性等価 | [第 10 章](10-probability-and-risk.md) |
 
@@ -93,8 +94,6 @@ uv run pytest test/chapter11
 | ファーストプライス（封印入札） | 最高の入札者 | 自分の入札額 | 公共工事の入札（価格の低さを競う逆の形） |
 | セカンドプライス（封印入札） | 最高の入札者 | 2 番目に高い入札額 | ネット広告の枠の販売の一部 |
 | 競り上げ（イングリッシュ） | 最後まで残った人 | 2 番目の人が降りた額 | 美術品・魚の競り |
-
-競り上げは、2 番目の人が降りたところで終わるので、払う額は、セカンドプライスと同じです。
 
 ### 分布関数と密度関数
 
@@ -242,6 +241,9 @@ from lib.chapter05.derivative import Polynomial
 IntegrationRule = Callable[[Callable[[float], float], float, float, int], float]
 
 
+DEFAULT_PIECES = 10_000
+
+
 def _require_pieces(pieces: int) -> None:
     if pieces < 1:
         raise ValueError("分割数は、1 以上でなければなりません")
@@ -317,15 +319,6 @@ def test_多項式の不定積分は冪の公式の逆で微分すると元に�
     assert polynomial_antiderivative(Polynomial((5,))).coefficients == (0, 5)
 
 
-def test_定積分は不定積分の差で数値積分と一致する() -> None:
-    # F(2) − F(−1) = (2 − 4 + 12) − (−1 − 1 + 0.75) = 11.25
-    assert polynomial_definite_integral(CUBIC, -1, 2) == pytest.approx(11.25)
-    for low, high in [(-1, 2), (0, 0.5), (1.5, 3)]:
-        exact = polynomial_definite_integral(CUBIC, low, high)
-        assert midpoint_rule_integral(CUBIC, low, high, 2000) == pytest.approx(exact)
-        assert trapezoid_rule_integral(CUBIC, low, high, 2000) == pytest.approx(exact)
-
-
 def test_積分してから微分すると元の関数に戻る() -> None:
     # 微積分学の基本定理: F(x) = ∫₀ˣ f(t) dt なら F'(x) = f(x)
     for func in (math.cos, math.exp, lambda t: 1 / (1 + t)):
@@ -379,14 +372,6 @@ from lib.chapter11.integral import midpoint_rule_integral
 TWO_TO_SIX = functools.partial(uniform_density, low=2, high=6)
 
 
-def test_一様分布の密度は区間の中で一定で外では0() -> None:
-    assert uniform_density(0.3) == 1
-    assert [TWO_TO_SIX(x) for x in (2, 3, 5.5, 6)] == [0.25] * 4
-    assert [TWO_TO_SIX(x) for x in (1.9, 6.1, -4)] == [0, 0, 0]
-    # 密度の下の面積（全体の確率）は 1
-    assert midpoint_rule_integral(TWO_TO_SIX, 2, 6, 100) == pytest.approx(1)
-
-
 def test_分布関数はその値以下になる確率で密度の下の面積() -> None:
     def cdf(x: float) -> float:
         return uniform_cdf(x, low=2, high=6)
@@ -415,7 +400,7 @@ def test_連続の期待値はxかける密度の積分で一様分布なら区�
 from collections.abc import Callable
 from fractions import Fraction
 
-from lib.chapter11.integral import midpoint_rule_integral
+from lib.chapter11.integral import DEFAULT_PIECES, midpoint_rule_integral
 ```
 
 ```python
@@ -441,14 +426,17 @@ def continuous_expectation(
     density: Callable[[float], float],
     low: float,
     high: float,
-    pieces: int = 10_000,
+    pieces: int = DEFAULT_PIECES,
 ) -> float:
     """E[g(X)] = ∫ g(x)·f(x) dx。離散の Σ g(x)·P(x) の、和を積分に替えたもの。"""
     return midpoint_rule_integral(lambda x: value(x) * density(x), low, high, pieces)
 
 
 def continuous_expected_value(
-    density: Callable[[float], float], low: float, high: float, pieces: int = 10_000
+    density: Callable[[float], float],
+    low: float,
+    high: float,
+    pieces: int = DEFAULT_PIECES,
 ) -> float:
     """連続確率変数の期待値 E[X] = ∫ x·f(x) dx。"""
     return continuous_expectation(lambda x: x, density, low, high, pieces)
@@ -456,7 +444,7 @@ def continuous_expected_value(
 
 - `low <= x <= high` は、2 つの比較をつないだ書き方で、「low ≤ x かつ x ≤ high」です
 - 分布関数は、(x − low) ÷ (high − low) を、`max(..., 0)` で 0 以上に、`min(..., 1)` で 1 以下に切りそろえます
-- `continuous_expectation` は、g(x)·f(x) を中点法で積分します。期待値は g(x) = x の場合です。分割数の既定値は 10000 にしています（√x のように、端で傾きが急な関数でも、誤差を小さくするため）
+- `continuous_expectation` は、g(x)·f(x) を中点法で積分します。期待値は g(x) = x の場合です。分割数の既定値は、`integral.py` の `DEFAULT_PIECES`（10000）にそろえています（√x のように、端で傾きが急な関数でも、誤差を小さくするため。積分を使う関数は、すべてこの既定値です）
 
 ### 離散と連続の対比
 
@@ -477,19 +465,6 @@ def test_一様分布を細かく離散化すると離散の期待値と分散�
     variance = continuous_expectation(lambda x: (x - 0.5) ** 2, uniform_density, 0, 1)
     assert variance == pytest.approx(1 / 12)
     assert float(discrete_variance(fine)) == pytest.approx(variance, rel=1e-5)
-
-
-def test_連続の期待効用は効用かける密度の積分() -> None:
-    # 0 から 100 の一様分布で、効用 √x: (1/100)·∫₀¹⁰⁰ √x dx = 20/3
-    density = functools.partial(uniform_density, low=0, high=100)
-    expected_utility = continuous_expectation(math.sqrt, density, 0, 100)
-    assert expected_utility == pytest.approx(20 / 3, rel=1e-6)
-    # 確実性等価は (20/3)² ≈ 44.4。0 か 100 の賭け（第 10 章）の 25 より大きい
-    certainty_equivalent = expected_utility**2
-    assert certainty_equivalent == pytest.approx(400 / 9, rel=1e-5)
-    coin = {0: Fraction(1, 2), 100: Fraction(1, 2)}
-    assert certainty_equivalent > certainty_equivalent_of_lottery(coin, math.sqrt)
-    assert continuous_expected_value(density, 0, 100) == pytest.approx(50)
 ```
 
 ```python
@@ -500,7 +475,7 @@ def discretized_uniform_distribution(points: int) -> dict[Fraction, Fraction]:
     return {Fraction(k, points): Fraction(1, points) for k in range(1, points + 1)}
 ```
 
-離散の期待値は、分数で**厳密に** (n + 1) ÷ (2n) です。1/2 とのずれ 1 ÷ (2n) は、右端の高さで長方形を作った近似の誤差です。期待効用のテストでは、0 から 100 の一様分布の確実性等価（約 44.4）が、0 か 100 かの賭け（第 10 章）の 25 より大きいことも確かめます。期待値は同じ 50 でも、一様分布のほうが、端の値になりにくく、リスクが小さいからです。
+離散の期待値は、分数で**厳密に** (n + 1) ÷ (2n) です。1/2 とのずれ 1 ÷ (2n) は、右端の高さで長方形を作った近似の誤差です。期待効用のテスト（「境界と補足のテスト」の折りたたみ）では、0 から 100 の一様分布の確実性等価（約 44.4）が、0 か 100 かの賭け（第 10 章）の 25 より大きいことも確かめます。期待値は同じ 50 でも、一様分布のほうが、端の値になりにくく、リスクが小さいからです。
 
 ### 消費者余剰と、連続時間の割引現在価値
 
@@ -543,16 +518,6 @@ def test_曲線の需要の消費者余剰は三角形では求まらない() ->
     assert exact - triangle == pytest.approx(32 / 3)
 
 
-def test_価格が上がったときの余剰の減少は価格の区間の積分() -> None:
-    # q = 100/p は、需要が 0 になる価格がない。2 から 4 への値上げの減少は 100·ln 2
-    loss = area_under_demand(lambda p: 100 / p, 2, 4)
-    assert loss == pytest.approx(100 * math.log(2), rel=1e-6)
-    # 上端を 4 倍にするたびに、面積は 100·ln 4 ずつ増え続け、上限がない
-    highs = (8, 32, 128)
-    areas = [area_under_demand(lambda p: 100 / p, 2, high) for high in highs]
-    assert areas == pytest.approx([100 * math.log(h / 2) for h in highs], rel=1e-3)
-
-
 def test_連続時間の割引現在価値は割引かけた流れの積分() -> None:
     # 毎年 10 の流れを 20 年、割引率 5%: 10(1 − e^(−1)) ÷ 0.05 ≈ 126.42
     value = continuous_present_value(10, 0.05, 20)
@@ -566,14 +531,6 @@ def test_連続時間の割引現在価値は割引かけた流れの積分() ->
     assert continuous_present_value(4, 0.1, 5) == pytest.approx(
         40 * (1 - math.exp(-0.5))
     )
-
-
-def test_連続の流れは期末払いの年金より早く受け取るので価値が高く永久なら同じ() -> None:
-    annuity = annuity_present_value(10, 0.05, 20)
-    assert round(annuity, 2) == 124.62
-    assert continuous_present_value(10, 0.05, 20) > annuity
-    long = continuous_present_value(10, 0.05, 1000)
-    assert long == pytest.approx(perpetuity_present_value(10, 0.05))
 ```
 
 `applications.py` の先頭の import です。
@@ -582,7 +539,7 @@ def test_連続の流れは期末払いの年金より早く受け取るので�
 import math
 from collections.abc import Callable
 
-from lib.chapter11.integral import midpoint_rule_integral
+from lib.chapter11.integral import DEFAULT_PIECES, midpoint_rule_integral
 ```
 
 ```python
@@ -590,7 +547,7 @@ def area_under_demand(
     demand: Callable[[float], float],
     low_price: float,
     high_price: float,
-    pieces: int = 1000,
+    pieces: int = DEFAULT_PIECES,
 ) -> float:
     """需要曲線の下、価格 low から high までの面積 ∫ q(p) dp。"""
     if low_price > high_price:
@@ -604,7 +561,8 @@ def continuous_present_value(flow: float, rate: float, horizon: float) -> float:
         raise ValueError("期間は、0 以上でなければなりません")
     if rate == 0:
         return flow * horizon
-    return flow * (1 - math.exp(-rate * horizon)) / rate
+    # 1 − e^(−rT) を expm1 で求める（r が小さいときの桁落ちを防ぐ）
+    return -flow * math.expm1(-rate * horizon) / rate
 ```
 
 - `functools.partial(demand_quantity, a=120, b=2)` は、第 1 章の `demand_quantity(price, a, b)` の a と b を固定し、価格だけを受け取る需要関数を作ります
@@ -638,26 +596,9 @@ from lib.chapter11.distribution import continuous_expected_value
 from lib.chapter11.integral import midpoint_rule_integral
 ```
 
-まず、k 番目に高い評価額の密度と、セカンドプライスの「正直が最適」です。正直のテストは、いろいろな相手の入札に対して、0 から 1 まで 0.05 刻みのどの入札も、評価額どおりの入札より利得が大きくならないことを確かめます。
+まず、セカンドプライスの「正直が最適」です（k 番目に高い評価額の密度のテストは、「境界と補足のテスト」の折りたたみにあります）。テストは、いろいろな相手の入札に対して、0 から 1 まで 0.05 刻みのどの入札も、評価額どおりの入札より利得が大きくならないことを確かめます。
 
 ```python
-def test_最高の評価額と2番目の評価額の密度() -> None:
-    # 3 人なら、最高は 3v²、2 番目は 6v(1 − v)
-    assert order_statistic_density(0.5, 3, 1) == pytest.approx(0.75)
-    assert order_statistic_density(0.5, 3, 2) == pytest.approx(1.5)
-    assert order_statistic_density(0.2, 4, 2) == pytest.approx(12 * 0.2**2 * 0.8)
-    # 1 人なら、最高の評価額は一様分布そのもの
-    assert order_statistic_density(0.3, 1, 1) == 1
-    for bidders, rank in [(2, 1), (2, 2), (5, 1), (5, 2), (5, 4)]:
-        density = functools.partial(order_statistic_density, bidders=bidders, rank=rank)
-        assert midpoint_rule_integral(density, 0, 1, 1000) == pytest.approx(1, rel=1e-5)
-    # 3 人の最高が 0.5 以下になる確率 = 3 人とも 0.5 以下 = (1/2)³
-    below_half = midpoint_rule_integral(
-        lambda v: order_statistic_density(v, 3, 1), 0, 0.5, 1000
-    )
-    assert below_half == pytest.approx(1 / 8, rel=1e-5)
-
-
 def test_セカンドプライスでは評価額どおりの入札がどの入札より悪くない() -> None:
     assert second_price_payoff(0.7, 0.7, [0.4, 0.2]) == pytest.approx(0.3)
     # 高く入札しすぎると、評価額より高く払って損をする
@@ -685,6 +626,7 @@ from typing import Literal
 import numpy as np
 
 from lib.chapter11.distribution import continuous_expectation, continuous_expected_value
+from lib.chapter11.integral import DEFAULT_PIECES
 ```
 
 ```python
@@ -701,6 +643,8 @@ def _require_rank(bidders: int, rank: int) -> None:
 def order_statistic_density(value: float, bidders: int, rank: int) -> float:
     """n 人で rank 番目に高い評価額の密度 n·C(n−1, k−1)·v^(n−k)·(1 − v)^(k−1)。"""
     _require_rank(bidders, rank)
+    if not 0 <= value <= 1:
+        return 0
     ways = bidders * math.comb(bidders - 1, rank - 1)
     return float(ways * value ** (bidders - rank) * (1 - value) ** (rank - 1))
 
@@ -748,7 +692,7 @@ def expected_auction_revenue_formula(bidders: int) -> Fraction:
     return Fraction(bidders - 1, bidders + 1)
 
 
-def second_price_expected_revenue(bidders: int, pieces: int = 1000) -> float:
+def second_price_expected_revenue(bidders: int, pieces: int = DEFAULT_PIECES) -> float:
     """セカンドプライスの期待収入 = 2 番目に高い評価額の期待値 ∫ v·f₍₂₎(v) dv。"""
     _require_bidders(bidders)
     second = functools.partial(order_statistic_density, bidders=bidders, rank=2)
@@ -761,7 +705,7 @@ def first_price_equilibrium_bid(value: float, bidders: int) -> float:
     return (bidders - 1) / bidders * value
 
 
-def first_price_expected_revenue(bidders: int, pieces: int = 1000) -> float:
+def first_price_expected_revenue(bidders: int, pieces: int = DEFAULT_PIECES) -> float:
     """ファーストプライスの期待収入 = 最高の評価額の人の入札 ∫ b(v)·f₍₁₎(v) dv。"""
     _require_bidders(bidders)
     bid = functools.partial(first_price_equilibrium_bid, bidders=bidders)
@@ -784,17 +728,6 @@ def test_シミュレーションの平均収入は公式に近い() -> None:
             assert len(revenues) == 20_000
             # 標準誤差は 0.002 以下。その 5 倍ほどの幅で比べる
             assert statistics.fmean(revenues) == pytest.approx(formula, abs=0.01)
-
-
-def test_平均は同じでもセカンドプライスの収入のほうがばらつく() -> None:
-    first = simulate_auction_revenues(2, 20_000, seed=2, rule="first")
-    second = simulate_auction_revenues(2, 20_000, seed=2, rule="second")
-    # 2 人なら、分散はファーストが 1/72、セカンドが 1/18
-    assert statistics.pvariance(first) == pytest.approx(1 / 72, abs=0.002)
-    assert statistics.pvariance(second) == pytest.approx(1 / 18, abs=0.004)
-    # 2 人なら、ファーストの収入は最高の評価額の半分で 0.5 を超えない。セカンドは超える
-    assert all(f <= 0.5 for f in first)
-    assert max(second) > 0.9
 ```
 
 ```python
@@ -805,6 +738,8 @@ def simulate_auction_revenues(
     _require_bidders(bidders)
     if rounds < 1:
         raise ValueError("回数は、1 以上でなければなりません")
+    if rule not in ("first", "second"):
+        raise ValueError("方式は、first か second です")
     rng = np.random.default_rng(seed)
     values = np.sort(rng.random((rounds, bidders)), axis=1)
     if rule == "second":
@@ -820,7 +755,7 @@ def simulate_auction_revenues(
 | `np.sort(表, axis=1)` | 各行の中を、小さい順に並べ替える |
 | `表[:, -2]` | すべての行の、右から 2 番目の列（各回の 2 番目に高い評価額） |
 
-`statistics.fmean`・`statistics.pvariance` は、標準ライブラリの平均・分散です。2 人なら、セカンドプライスの収入（2 人のうち低いほうの評価額）の分散は 1/18、ファーストプライスの収入（高いほうの評価額の半分）の分散は 1/72 で、平均が同じでも、ばらつきは 4 倍違います。
+`statistics.fmean`・`statistics.pvariance` は、標準ライブラリの平均・分散です。2 人なら、セカンドプライスの収入（2 人のうち低いほうの評価額）の分散は 1/18、ファーストプライスの収入（高いほうの評価額の半分）の分散は 1/72 で、平均が同じでも、ばらつきは 4 倍違います（それを確かめるテストは、「境界と補足のテスト」の折りたたみにあります）。
 
 ### 発展: 順序統計量と、ファーストプライスの均衡
 
@@ -851,6 +786,12 @@ def simulate_auction_revenues(
         assert first_price_expected_payoff(0.8, 0.3, 2) == pytest.approx(0.5 * 0.6)
         # 入札が高すぎて、相手の入札の上限を超えると、必ず勝つ
         assert first_price_expected_payoff(0.8, 0.6, 2) == pytest.approx(0.2)
+        # 入札は 0 以上で、相手が 1 人以上必要
+        with pytest.raises(ValueError):
+            first_price_expected_payoff(0.5, -0.1, 3)
+        with pytest.raises(ValueError):
+            first_price_expected_payoff(0.5, 0.2, 1)
+        assert first_price_expected_payoff(0.5, 0, 3) == 0
         for value, bidders in [(0.8, 2), (0.6, 3), (0.9, 5)]:
             payoff = functools.partial(first_price_expected_payoff, value, bidders=bidders)
             best = argmax_on_grid(payoff, 0, value, 10_001)
@@ -867,6 +808,9 @@ def simulate_auction_revenues(
 
     def first_price_expected_payoff(value: float, bid: float, bidders: int) -> float:
         """相手が全員 b(v) で入札するとき、bid で入札する人の期待利得 (v − b)·P(勝つ)。"""
+        _require_bidders(bidders)
+        if bid < 0:
+            raise ValueError("入札額は、0 以上でなければなりません")
         rival_below = min(bid * bidders / (bidders - 1), 1)
         return (value - bid) * rival_below ** (bidders - 1)
     ```
@@ -915,7 +859,7 @@ print(round(annuity_present_value(10, 0.05, 20), 2))
 400.0
 400.0
 138.6667 128.0
-1/3 0.333334
+1/3 0.333333
 0.4 0.333333
 second 0.333
 first 0.333
@@ -926,22 +870,31 @@ first 0.333
 - **1 つ目の問い**: 正しい面積は、x² の不定積分 x³/3 から、1/3 − 0 = **1/3**（約 0.3333）です。中点法の 4 等分は (0.125² + 0.375² + 0.625² + 0.875²) × 0.25 = **0.328125** で、正しい値より**小さい**です。中点の長方形の面積は、中点での接線の下の（台形の）面積と同じです。下に凸（谷形）の曲線は、接線より上にあるので、長方形は正しい面積より小さくなります
 - **2 つ目の問い**: 誤差は 5.208 × 10⁻³ から 5.208 × 10⁻⁵ へ、**約 1/100** です。分割数を 10 倍にすると、誤差は 10² 分の 1 です（誤差の次数 2）。下の図は、e^x の積分で、分割数と誤差を両対数で描いたものです。2 つの方法の線が、傾き −2 の灰色の点線と平行です
 - **3 つ目の問い**: 積分は **400** で、第 1 章の三角形の面積と同じです。曲線 q = 100 − p² の余剰は、不定積分 100p − p³/3 から **416/3 ≈ 138.67** で、三角形の 128 より**大きい**です。需要曲線が上に膨らんでいる（凹）ので、2 点を結んだ直線より、曲線の下の面積が大きくなります
-- **4 つ目の問い**: セカンドプライスの期待収入は、2 人のうち低いほうの評価額の期待値で、(2 − 1) ÷ (2 + 1) = **1/3** です。ファーストプライスは、高いほうの評価額（期待値 2/3）の半分を払うので、期待収入は**同じ 1/3** です（収入同値）。積分の値の末尾のずれ（0.333334）は、中点法（1000 等分）の誤差です。シミュレーションでも、どちらも約 0.333 です。ただし、下の図のように、収入の**ばらつき**は違います。ファーストプライスの収入は 0.5 を超えず、真ん中に集まります
+- **4 つ目の問い**: セカンドプライスの期待収入は、2 人のうち低いほうの評価額の期待値で、(2 − 1) ÷ (2 + 1) = **1/3** です。ファーストプライスは、高いほうの評価額（期待値 2/3）の半分を払うので、期待収入は**同じ 1/3** です（収入同値）。シミュレーションでも、どちらも約 0.333 です。ただし、下の図のように、収入の**ばらつき**は違います。ファーストプライスの収入は 0.5 を超えず、真ん中に集まります
 - **5 つ目の問い**: 流れの現在価値は **126.42** で、年金の 124.62 より**大きい**です。年金は、各年の受け取りが年末まで待たされますが、流れは年の途中から少しずつ受け取るので、早く受け取る分だけ、割り引かれ方が小さいのです
 
 ![e^x の 0 から 1 までの積分の、分割数と誤差（両対数）。中点法（青）の誤差は、台形法（橙）の約半分。どちらも、傾き −2 の点線と平行](images/ch11-integration-errors.png)
 
 ![評価額が一様分布の 2 人のオークションを 2 万回。ファーストプライス（青）の収入は 0.5 以下に集まり、セカンドプライス（橙）は 0 から 1 に広がる。平均は、どちらも点線の 1/3](images/ch11-auction-revenues.png)
 
-### 境界のテスト
+### 境界と補足のテスト
 
-完成形には、ほかに**境界**を確かめるテストがあります。上端と下端の入れ替え・同じ点、分割数が 0 以下、区間の下端と上端が同じか逆の一様分布、点の数が 0、割引率 0・期間 0・期間が負、価格の区間が逆、種の再現性、参加者が 1 人以下、順位が 0 や人数を超える、競争相手がいない、オークションの回数が 0 です。テストの件数を合わせるため、ここに載せます。
+完成形には、ほかに**境界**を確かめるテストと、本文の説明を補うテスト（一様分布と k 番目に高い評価額の密度、公式と数値の定積分の一致、連続の期待効用、値上げによる余剰の減少、年金との比較、収入のばらつき）があります。境界は、上端と下端の入れ替え・同じ点、分割数が 0 以下、区間の下端と上端が同じか逆の一様分布、点の数が 0、割引率 0・期間 0・期間が負、価格の区間が逆、種の再現性、参加者が 1 人以下、順位が 0 や人数を超える、競争相手がいない、オークションの回数が 0 です。テストの件数を合わせるため、ここに載せます。
 
-??? note "境界のテスト"
+??? note "境界と補足のテスト"
 
     `test_integral.py` に書くテスト:
 
     ```python
+    def test_定積分は不定積分の差で数値積分と一致する() -> None:
+        # F(2) − F(−1) = (2 − 4 + 12) − (−1 − 1 + 0.75) = 11.25
+        assert polynomial_definite_integral(CUBIC, -1, 2) == pytest.approx(11.25)
+        for low, high in [(-1, 2), (0, 0.5), (1.5, 3)]:
+            exact = polynomial_definite_integral(CUBIC, low, high)
+            assert midpoint_rule_integral(CUBIC, low, high, 2000) == pytest.approx(exact)
+            assert trapezoid_rule_integral(CUBIC, low, high, 2000) == pytest.approx(exact)
+
+
     def test_上端と下端を入れ替えると符号が変わり同じ点なら0() -> None:
         for rule in (midpoint_rule_integral, trapezoid_rule_integral):
             assert rule(math.exp, 1, 0, 100) == pytest.approx(-rule(math.exp, 0, 1, 100))
@@ -961,6 +914,27 @@ first 0.333
     `test_distribution.py` に書くテスト:
 
     ```python
+    def test_一様分布の密度は区間の中で一定で外では0() -> None:
+        assert uniform_density(0.3) == 1
+        assert [TWO_TO_SIX(x) for x in (2, 3, 5.5, 6)] == [0.25] * 4
+        assert [TWO_TO_SIX(x) for x in (1.9, 6.1, -4)] == [0, 0, 0]
+        # 密度の下の面積（全体の確率）は 1
+        assert midpoint_rule_integral(TWO_TO_SIX, 2, 6, 100) == pytest.approx(1)
+
+
+    def test_連続の期待効用は効用かける密度の積分() -> None:
+        # 0 から 100 の一様分布で、効用 √x: (1/100)·∫₀¹⁰⁰ √x dx = 20/3
+        density = functools.partial(uniform_density, low=0, high=100)
+        expected_utility = continuous_expectation(math.sqrt, density, 0, 100)
+        assert expected_utility == pytest.approx(20 / 3, rel=1e-6)
+        # 確実性等価は (20/3)² ≈ 44.4。0 か 100 の賭け（第 10 章）の 25 より大きい
+        certainty_equivalent = expected_utility**2
+        assert certainty_equivalent == pytest.approx(400 / 9, rel=1e-5)
+        coin = {0: Fraction(1, 2), 100: Fraction(1, 2)}
+        assert certainty_equivalent > certainty_equivalent_of_lottery(coin, math.sqrt)
+        assert continuous_expected_value(density, 0, 100) == pytest.approx(50)
+
+
     def test_一様分布の区間は下端より上端が大きい() -> None:
         for low, high in [(1, 1), (3, 2)]:
             with pytest.raises(ValueError):
@@ -975,9 +949,30 @@ first 0.333
     `test_applications.py` に書くテスト:
 
     ```python
+    def test_価格が上がったときの余剰の減少は価格の区間の積分() -> None:
+        # q = 100/p は、需要が 0 になる価格がない。2 から 4 への値上げの減少は 100·ln 2
+        loss = area_under_demand(lambda p: 100 / p, 2, 4)
+        assert loss == pytest.approx(100 * math.log(2), rel=1e-6)
+        # 上端を 4 倍にするたびに、面積は 100·ln 4 ずつ増え続け、上限がない
+        highs = (8, 32, 128)
+        areas = [area_under_demand(lambda p: 100 / p, 2, high) for high in highs]
+        assert areas == pytest.approx([100 * math.log(h / 2) for h in highs], rel=1e-3)
+
+
+    def test_連続の流れは期末払いの年金より早く受け取るので価値が高く永久なら同じ() -> None:
+        annuity = annuity_present_value(10, 0.05, 20)
+        assert round(annuity, 2) == 124.62
+        assert continuous_present_value(10, 0.05, 20) > annuity
+        long = continuous_present_value(10, 0.05, 1000)
+        assert long == pytest.approx(perpetuity_present_value(10, 0.05))
+
+
     def test_割引率0なら流れの合計で期間は0以上で価格の区間は下から上() -> None:
         assert continuous_present_value(10, 0, 20) == 200
         assert continuous_present_value(10, 0.05, 0) == 0
+        # 割引率がごく小さくても、桁落ちせず、流れの合計に近い
+        for rate in (1e-13, 1e-17):
+            assert continuous_present_value(100, rate, 10) == pytest.approx(1000, rel=1e-9)
         with pytest.raises(ValueError):
             continuous_present_value(10, 0.05, -1)
         with pytest.raises(ValueError):
@@ -988,6 +983,34 @@ first 0.333
     `test_auction.py` に書くテスト:
 
     ```python
+    def test_最高の評価額と2番目の評価額の密度() -> None:
+        # 3 人なら、最高は 3v²、2 番目は 6v(1 − v)
+        assert order_statistic_density(0.5, 3, 1) == pytest.approx(0.75)
+        assert order_statistic_density(0.5, 3, 2) == pytest.approx(1.5)
+        assert order_statistic_density(0.2, 4, 2) == pytest.approx(12 * 0.2**2 * 0.8)
+        # 1 人なら、最高の評価額は一様分布そのもの
+        assert order_statistic_density(0.3, 1, 1) == 1
+        for bidders, rank in [(2, 1), (2, 2), (5, 1), (5, 2), (5, 4)]:
+            density = functools.partial(order_statistic_density, bidders=bidders, rank=rank)
+            assert midpoint_rule_integral(density, 0, 1, 1000) == pytest.approx(1, rel=1e-5)
+        # 3 人の最高が 0.5 以下になる確率 = 3 人とも 0.5 以下 = (1/2)³
+        below_half = midpoint_rule_integral(
+            lambda v: order_statistic_density(v, 3, 1), 0, 0.5, 1000
+        )
+        assert below_half == pytest.approx(1 / 8, rel=1e-5)
+
+
+    def test_平均は同じでもセカンドプライスの収入のほうがばらつく() -> None:
+        first = simulate_auction_revenues(2, 20_000, seed=2, rule="first")
+        second = simulate_auction_revenues(2, 20_000, seed=2, rule="second")
+        # 2 人なら、分散はファーストが 1/72、セカンドが 1/18
+        assert statistics.pvariance(first) == pytest.approx(1 / 72, abs=0.002)
+        assert statistics.pvariance(second) == pytest.approx(1 / 18, abs=0.004)
+        # 2 人なら、ファーストの収入は最高の評価額の半分で 0.5 を超えない。セカンドは超える
+        assert all(f <= 0.5 for f in first)
+        assert max(second) > 0.9
+
+
     def test_種が同じなら結果も同じ() -> None:
         first = simulate_auction_revenues(3, 50, seed=7, rule="second")
         assert first == simulate_auction_revenues(3, 50, seed=7, rule="second")
@@ -1012,6 +1035,15 @@ first 0.333
                 order_statistic_density(0.5, bidders, rank)
         with pytest.raises(ValueError):
             second_price_payoff(0.5, 0.5, [])
+        # 評価額は 0 から 1 の間。その外の密度は 0（一様分布と同じ）
+        assert [order_statistic_density(v, 3, 2) for v in (-1, 1.5)] == [0, 0]
+        assert (order_statistic_density(1, 3, 1), order_statistic_density(0, 3, 3)) == (
+            3,
+            3,
+        )
+        for rule in ("Second", "third"):
+            with pytest.raises(ValueError):
+                simulate_auction_revenues(2, 10, seed=1, rule=rule)  # type: ignore[arg-type]
     ```
 
 ### 図
@@ -1220,15 +1252,15 @@ from lib.chapter11.integral import (
     ) -> Figure:
         """分割数と誤差を両対数で描く。傾き −2 の直線（誤差 ∝ 1/n²）と比べる。"""
         pieces = list(pieces)
+        midpoint = quadrature_errors(midpoint_rule_integral, func, exact, low, high, pieces)
+        trapezoid = quadrature_errors(
+            trapezoid_rule_integral, func, exact, low, high, pieces
+        )
+        # 台形法の最初の点を通る、傾き −2 の直線
+        reference = [trapezoid[0] * (pieces[0] / n) ** 2 for n in pieces]
         fig, ax = plt.subplots()
-        for label, rule in [
-            ("Midpoint rule", midpoint_rule_integral),
-            ("Trapezoid rule", trapezoid_rule_integral),
-        ]:
-            errors = quadrature_errors(rule, func, exact, low, high, pieces)
-            ax.plot(pieces, errors, "o-", label=label)
-        # 台形法（最後に描いた線）の、最初の点を通る、傾き −2 の直線
-        reference = [errors[0] * (pieces[0] / n) ** 2 for n in pieces]
+        ax.plot(pieces, midpoint, "o-", label="Midpoint rule")
+        ax.plot(pieces, trapezoid, "o-", label="Trapezoid rule")
         ax.plot(pieces, reference, "--", color="gray", label="Slope of 1/n^2")
         ax.set_xscale("log")
         ax.set_yscale("log")
@@ -1286,7 +1318,7 @@ uv run pytest test/chapter11
 | :--- | :--- |
 | 想起 | 本文を閉じて、2x + 1 の 1 から 4 までの面積が、中点法でも台形法でも 18 になるテストと、第 1 章の需要 q = 120 − 2p の価格 40 の消費者余剰が、`area_under_demand` で 400 になるテストを書いてください |
 | 生成 | 解説を見る前に、中点法の 2 倍と台形法を足して 3 で割る `simpson_rule_integral(func, low, high, pieces)` を、テストから書いてください（シンプソン法）。x³ の 0 から 2 までの面積が 1 等分でも正確に 4 になること、e^x の積分で、分割数を 2 倍にすると誤差がおよそ何分の 1 になるかも、確かめてください |
-| 多様 | 第 1 章の供給 q = −20 + 2p（`supply_quantity(price, c=-20, d=2)`）で、価格 40 の**生産者余剰**を、積分で求めてください。供給が 0 になる価格から、価格 40 までの、供給曲線の下の面積です。第 1 章の `producer_surplus` と一致しますか |
+| 多様 | 第 1 章の `supply_quantity` で表す供給 q = −20 + 2p（`supply_quantity(price, c=-20, d=2)`）で、価格 40 の**生産者余剰**を、積分で求めてください。供給が 0 になる価格から、価格 40 までの、供給曲線の下の面積です。第 1 章の `producer_surplus` と一致しますか |
 | 交互 | [第 4 章](04-sequences-and-saving.md) の `annuity_present_value` で、毎年 10 を、1 年を m 回に分けて（1 回 10/m、利子率 0.05/m、20m 回）受け取る年金の現在価値を、m = 1, 12, 365 で求めてください。前の章を写していなければ、`lib.chapter04...` のままでかまいません（写したなら、`practice.chapter04...` に書き換えます）。m を増やすと、`continuous_present_value(10, 0.05, 20)` に近づきますか |
 
 ??? note "解答（先に自分で取り組んでから、開いてください）"

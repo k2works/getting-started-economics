@@ -15,7 +15,7 @@ generated: { by: claude-code/claude-opus-5-5, at: 2026-11-22T00:00:00Z }
 
 経済学で 2 次関数が出てくる代表が、**独占企業の利潤**です。数量を増やすと、売上は増えますが、価格は下がります。その結果、利潤は数量の 2 次関数になり、**放物線の頂点が、利潤を最大にする数量**です。
 
-![独占企業の利潤の放物線。数量 0 と 80 で利潤 0、頂点（数量 40・利潤 1600）が利潤最大](images/ch02-monopoly-profit.png)
+![独占企業の利潤の放物線（逆需要 P = 120 − Q・費用 30 の例）。数量を増やすと、利潤は増えてから減り、頂点の黒い点で最大になる](images/ch02-monopoly-profit.png)
 
 | 項目 | 内容 |
 | :--- | :--- |
@@ -43,7 +43,7 @@ generated: { by: claude-code/claude-opus-5-5, at: 2026-11-22T00:00:00Z }
 | クールノーの最適反応 | q = (a − c − b·q相手) ÷ (2b) | `cournot_best_response(rival_quantity, a, b, cost)` |
 | n 社の対称均衡 | 1 社 q = (a − c) ÷ ((n + 1)·b) | `cournot_outcome(firms, a, b, cost)` |
 
-> **記号について**: 第 1 章の需要は q = a − b·p で、**価格から数量**を求める式でした。この章では、向きを逆にした **逆需要** P = a − b·Q（**数量から価格**）を使います。独占企業は「何個作るか」を決め、価格は需要が決めるからです。同じ文字 a・b でも、意味が違います。第 1 章の需要 q = 100 − p は、逆需要 P = 100 − Q と同じ直線ですが、逆需要 P = 100 − 2Q は、第 1 章の形では q = 50 − 0.5p です。また、2 次関数の係数（a・b・c）と、市場の係数（a・b・費用 c）が、同じ文字なので、コードでは費用を `cost` と書いて区別します。
+> **記号について**: 第 1 章の需要は q = a − b·p で、**価格から数量**を求める式でした。この章では、向きを逆にした **逆需要** P = a − b·Q（**数量から価格**）を使います。独占企業は「何個作るか」を決め、価格は需要が決めるからです。同じ文字 a・b でも、意味が違います。第 1 章の需要 q = 100 − p は、逆需要 P = 100 − Q と同じ直線ですが、逆需要 P = 100 − 2Q は、第 1 章の形では q = 50 − 0.5p です。また、2 次関数の係数（a・b・c）と、市場の係数（a・b・費用 c）が、同じ文字なので、コードでは費用を `cost` と書いて区別します。図の軸と凡例は、Matplotlib で日本語のフォントを避けるため、英語にしています。
 
 ### 前提とする章
 
@@ -59,10 +59,10 @@ uv run pytest test/chapter02
 ```
 
 ```text
-45 passed
+46 passed
 ```
 
-自分でコードを書くときは、第 1 章と同じく、`practice/chapter02/` に、完成形と同じ名前のファイル（`quadratic.py`・`monopoly.py`・`plot.py`・`test_quadratic.py`・`test_monopoly.py`・`test_plot.py`）を作り、テストの import を `from practice.chapter02...` に書き換えます（図の節を後回しにするなら、`plot.py` と `test_plot.py` は要らず、テストは 39 件になります）。`plot.py` と、下の check スクリプトの import も、`from practice.chapter02...` に書き換えます（書き換えないと、完成形を動かすことになります）。テストの import の一覧は、完成形の**全関数**です。まだ書いていない関数を import すると、`ImportError` になり、Green になりません。関数を 1 つ書くたびに、その名前を、import に足していってください（最初のテストの 1 つ、`quadratic_roots` を使うものも、その関数を書くまで、後回しにします）。「予想の答え合わせ」のスクリプトは、`practice/chapter02/check.py` に保存し、`uv run python -m practice.chapter02.check` で実行します。
+自分でコードを書くときは、第 1 章と同じく、`practice/chapter02/` に、完成形と同じ名前のファイル（`quadratic.py`・`monopoly.py`・`plot.py`・`test_quadratic.py`・`test_monopoly.py`・`test_plot.py`）を作り、テストの import を `from practice.chapter02...` に書き換えます（図の節を後回しにするなら、`plot.py` と `test_plot.py` は要らず、テストは 40 件になります）。`plot.py` と、下の check スクリプトの import も、`from practice.chapter02...` に書き換えます（書き換えないと、完成形を動かすことになります）。テストの import の一覧は、完成形の**全関数**です。まだ書いていない関数を import すると、`ImportError` になり、Green になりません。関数を 1 つ書くたびに、その名前を、import に足していってください（最初のテストの 1 つ、`quadratic_roots` を使うものも、その関数を書くまで、後回しにします）。「予想の答え合わせ」のスクリプトは、`practice/chapter02/check.py` に保存し、`uv run python -m practice.chapter02.check` で実行します。
 
 ## 2.3 予想する
 
@@ -92,6 +92,8 @@ uv run pytest test/chapter02
 > x = (−b ± √D) ÷ (2a)、D = b² − 4ac（**判別式**）
 
 √D は、D が負だと実数になりません。そこで、D の符号で、**実数解の個数**がわかります。D > 0 なら 2 つ、D = 0 なら 1 つ（重解。頂点が x 軸に接する）、D < 0 なら、実数解はありません（放物線が x 軸と交わらない）。
+
+2 つの解の積は c ÷ a です（**解と係数の関係**）。コンピュータで解の公式をそのまま計算すると、b が大きいとき、−b と √D がほぼ同じ大きさになり、引き算で有効桁が消えます（**桁落ち**）。そこで、符号の同じものどうしを足して 1 つ目の解を求め、2 つ目は積 c ÷ a から求めます。
 
 ### 独占の利潤は 2 次関数
 
@@ -210,6 +212,14 @@ def test_実数解の個数は判別式の符号で決まる() -> None:
     assert quadratic_roots(1, 2, 5) == ()  # D < 0: なし
 
 
+def test_bが大きくても小さいほうの解が桁落ちしない() -> None:
+    # x² + 10⁸x + 1 = 0 の解は、およそ −10⁸ と −10⁻⁸（2 つの解の積は c ÷ a = 1）
+    lower, upper = quadratic_roots(1, 1e8, 1)
+    assert lower == pytest.approx(-1e8, rel=1e-12)
+    assert upper == pytest.approx(-1e-8, rel=1e-12)
+    assert quadratic_roots(1, -1e8, 1)[0] == pytest.approx(1e-8, rel=1e-12)
+
+
 def test_解を代入すると0になる() -> None:
     for x in quadratic_roots(3, -5, -7):
         assert 3 * x**2 - 5 * x - 7 == pytest.approx(0)
@@ -222,18 +232,22 @@ def quadratic_discriminant(a: float, b: float, c: float) -> float:
 
 
 def quadratic_roots(a: float, b: float, c: float) -> tuple[float, ...]:
-    """解の公式で、a·x² + b·x + c = 0 の実数解を、小さい順に返す。"""
+    """解の公式で、a·x² + b·x + c = 0 の実数解を、小さい順に返す。
+
+    −b と √D を、同じ符号どうしで足して 1 つ目の解を求め、もう 1 つは
+    解の積 c ÷ a から求める（近い数の引き算で、桁が落ちるのを避ける）。
+    """
     _require_quadratic(a)
     d = quadratic_discriminant(a, b, c)
     if d < 0:
         return ()
     if d == 0:
         return (-b / (2 * a),)
-    root = math.sqrt(d)
-    return tuple(sorted([(-b - root) / (2 * a), (-b + root) / (2 * a)]))
+    q = -(b + math.copysign(math.sqrt(d), b)) / 2
+    return tuple(sorted([q / a, c / q]))
 ```
 
-a < 0 のときは、(−b − √D) ÷ (2a) のほうが大きくなります。`sorted` で、小さい順にそろえます。
+x² + 10⁸x + 1 = 0 の小さいほうの解（約 −10⁻⁸）は、公式をそのまま計算すると、約 −0.745 × 10⁻⁸ になり、25% もずれます。2 つ目の解を c ÷ q で求めると、正しい値になります。2 つの解の大小は、a と b の符号で入れ替わるので、`sorted` で、小さい順にそろえます。
 
 ### 格子探索: 頂点を数値で確かめる
 
@@ -743,7 +757,7 @@ uv run pytest test/chapter02
 ```
 
 ```text
-45 passed
+46 passed
 ```
 
 ## 2.6 規則で言うと
@@ -764,7 +778,7 @@ uv run pytest test/chapter02
 
 ### このモデルが成り立たない場面
 
-- **費用が一定とは、限りません。** 作るほど 1 単位あたりの費用が上がると、利潤は 2 次関数でなくなります（第 5 章で、微分を使って、一般の費用で最適を求めます）
+- **費用が一定とは、限りません。** 作るほど 1 単位あたりの費用が上がると、利潤は 2 次関数でなくなります（第 5 章で、微分を使って、2 次関数に限らない費用での利潤最大化を学びます。独占の限界収入 ＝ 限界費用は、第 5 章の練習問題で確かめます）
 - **独占企業が、需要曲線を正確に知っているとは、限りません。** 実際の企業は、価格を試しながら探ります。この章は、需要の式を仮定しています
 - **価格で競争すると、結論が変わります。** 同じ財を作る 2 社が、数量でなく**価格**を選ぶ（ベルトラン競争）なら、2 社でも価格は費用まで下がります。クールノーの結論は「数量で競争する」という仮定に依存します
 - **企業の数は、決まっているとは限りません。** 利潤があれば新しい企業が参入し、n は変わります。この章は n を所与としています

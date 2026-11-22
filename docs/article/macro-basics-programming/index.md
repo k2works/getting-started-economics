@@ -90,3 +90,4 @@ uv run pytest test/chapter01
 - [経済学・経済政策 トピック別マインドマップ](<../経済学・経済政策 トピック別マインドマップ.md>)・[全体マインドマップ](<../経済学・経済政策 全体マインドマップ.md>) — 章立てと、式・数値の出典です
 - [経済学のためのプログラミング入門](../economics-programming/index.md) — 前提とする、第 1 シリーズです
 - [マクロ経済学のためのプログラミング（中級＋）](../macro-programming/index.md) — この記事の次に読む、データ分析と動学モデルの連載です
+- [経済学で出る数学プログラミング](../math-for-economics-programming/index.md) — 数学の復習は、こちらへ。複利・割引現在価値（[第 3 章](../math-for-economics-programming/03-exponents-logarithms-and-interest.md)）、等比数列・無限級数（乗数の土台。[第 4 章](../math-for-economics-programming/04-sequences-and-saving.md)）、漸化式（[第 12 章](../math-for-economics-programming/12-recurrence-and-economic-growth.md)）

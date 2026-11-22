@@ -61,10 +61,10 @@ uv run pytest test/chapter08
 ```
 
 ```text
-54 passed
+57 passed
 ```
 
-自分でコードを書くときは、`practice/chapter08/` に、完成形と同じ名前のファイル（`partial.py`・`utility.py`・`plot.py`・`test_partial.py`・`test_utility.py`・`test_plot.py`）を作ります。図を後回しにするなら、`plot.py` と `test_plot.py` は要らず、テストは 45 件になります。
+自分でコードを書くときは、`practice/chapter08/` に、完成形と同じ名前のファイル（`partial.py`・`utility.py`・`plot.py`・`test_partial.py`・`test_utility.py`・`test_plot.py`）を作ります。図を後回しにするなら、`plot.py` と `test_plot.py` は要らず、テストは 48 件になります。
 
 - テスト・`utility.py`・`plot.py`・check スクリプトの import を、`from practice.chapter08...` に書き換えます（`utility.py` は `partial` を、`plot.py` は `utility` を import します。書き換えないと、完成形を動かします）
 - 第 5 章の `numerical_derivative` と、第 7 章の `budget_intercepts` などは、自分で写した `practice.chapter05`・`practice.chapter07` から import します。写していなければ、`lib.chapter05`・`lib.chapter07` のままでかまいません。この章では、それらの実装を再掲しません
@@ -113,7 +113,7 @@ uv run pytest test/chapter08
 | 正 | 負 | 極大 |
 | 正 | 正 | 極小 |
 | 負 | — | 鞍点（ある方向には最大、別の方向には最小） |
-| 0 | — | この方法では判定できない |
+| 0（数値では、ほぼ 0） | — | この方法では判定できない |
 
 f_xx と f_yy が両方負でも、f_xy が大きいと D < 0 で鞍点です。対角だけでは決まりません。
 
@@ -294,13 +294,19 @@ def numerical_hessian_2d(
     return fxx, fxy, fyy
 
 
-def classify_critical_point_2d(fxx: float, fxy: float, fyy: float) -> str:
-    """ヘッセ行列の行列式 D = f_xx·f_yy − f_xy² と f_xx の符号で、停留点を分ける。"""
+def classify_critical_point_2d(
+    fxx: float, fxy: float, fyy: float, tolerance: float = 1e-9
+) -> str:
+    """ヘッセ行列の行列式 D = f_xx·f_yy − f_xy² と f_xx の符号で、停留点を分ける。
+
+    数値のヘッセ行列では D がちょうど 0 にならないので、成分の大きさに比べて
+    |D| が tolerance 倍以下なら、0 とみなす（判定できない）。
+    """
     determinant = fxx * fyy - fxy**2
+    if abs(determinant) <= tolerance * (fxx**2 + fxy**2 + fyy**2):
+        return "undetermined"
     if determinant < 0:
         return "saddle"
-    if determinant == 0:
-        return "undetermined"
     return "maximum" if fxx < 0 else "minimum"
 
 
@@ -317,6 +323,7 @@ def quadratic_2d_critical_point(
 ```
 
 - 2 階の偏微分は、f_xx ≈ (f(x + h) − 2f(x) + f(x − h)) ÷ h² です。f_xy は、4 隅の値の組み合わせで近似します。刻み幅 h を 10⁻⁵ にすると、h² = 10⁻¹⁰ で割るので、丸めの誤差が大きくなります。既定は 10⁻³ にしました（2 次関数なら、打ち切りの誤差は 0）
+- 数値のヘッセ行列では、行列式がちょうど 0 にならず、10⁻¹⁵ ほどの丸め誤差が残ります（−(x + y)² の (1, −1) など）。そこで、成分の 2 乗和の `tolerance` 倍（既定 10⁻⁹）以下の |D| を、0 とみなします（境界のテストを参照）
 - 停留点は、2 つの 1 次方程式を、**クラメルの公式**で解きます。係数が対称でない例（f = 2x² + xy + 3y² − 9x − 13y）もテストにして、x と y の式の取り違えを防ぎます（境界のテストを参照）
 
 ### Red: 効用関数のテスト
@@ -444,8 +451,8 @@ def test_無差別曲線はxが正のときだけ描ける() -> None:
 def cobb_douglas_indifference_y(level: float, x: float, share: float) -> float:
     """無差別曲線 x^a·y^(1−a) = U の上で、x のときの y = (U ÷ x^a)^(1 ÷ (1 − a))。"""
     _check_share(share)
-    if x <= 0:
-        raise ValueError("x が 0 以下では、無差別曲線の y が決まりません")
+    if x <= 0 or level < 0:
+        raise ValueError("x が 0 以下か、効用水準が負では、無差別曲線が決まりません")
     return float((level / x**share) ** (1 / (1 - share)))
 ```
 
@@ -603,6 +610,8 @@ def quasilinear_demand(
     prices: Sequence[float], income: float, weight: float
 ) -> tuple[float, float]:
     """MRS = b ÷ (2√x) = p_x ÷ p_y の x。所得で買えなければ、y = 0 の端点解。"""
+    if weight <= 0:
+        raise ValueError("重み b は、正でなければなりません")
     x_max, y_max = _two_good_intercepts(prices, income)
     x = (weight * prices[1] / (2 * prices[0])) ** 2
     if x >= x_max:
@@ -798,7 +807,7 @@ maximum
 
 ### 境界のテスト
 
-完成形には、本文に載せなかったテストがあります。係数が対称でない 2 次関数、2 階の偏微分が 0 < |f_xx| < 1、行列式が 0（判定できない・停留点が決まらない）、a = 0.3 の需要、数量 0、a が 0〜1 の外、負の数量、所得 0・負の所得・2 財でない予算・正でない価格、所得がちょうど足りる端点、2 点だけの格子です。テストの件数を合わせるため、ここに全件載せます。
+完成形には、本文に載せなかったテストがあります。係数が対称でない 2 次関数、2 階の偏微分が 0 < |f_xx| < 1、行列式が 0 か、数値でほぼ 0（判定できない・停留点が決まらない）、a = 0.3 の需要、数量 0、a が 0〜1 の外、負の数量、所得 0・負の所得・2 財でない予算・正でない価格、所得がちょうど足りる端点、2 点だけの格子、負の効用水準、正でない重みです。テストの件数を合わせるため、ここに全件載せます。
 
 ??? note "境界のテスト"
 
@@ -820,6 +829,18 @@ maximum
     def test_ヘッセ行列の行列式が0なら判定できない() -> None:
         assert classify_critical_point_2d(1, 1, 1) == "undetermined"
         assert classify_critical_point_2d(2, -2, 2) == "undetermined"
+
+
+    def _negative_square_of_sum(x: float, y: float) -> float:
+        """f = −(x + y)²。ヘッセ行列は (−2, −2, −2) で、行列式は 0。"""
+        return -((x + y) ** 2)
+
+
+    def test_数値のヘッセ行列で行列式がほぼ0なら判定できない() -> None:
+        # 差分の丸め誤差で、行列式は ちょうど 0 にならない（1e-15 ほど）
+        hessian = numerical_hessian_2d(_negative_square_of_sum, 1, -1)
+        assert classify_critical_point_2d(*hessian) == "undetermined"
+        assert classify_critical_point_2d(-2, -2 + 1e-12, -2) == "undetermined"
 
 
     def test_行列式が0の2次関数には停留点が1つに決まらない() -> None:
@@ -892,6 +913,18 @@ maximum
         assert budget_line_bundles([2, 5], 100, 2) == [(0, 20), (50, 0)]
         with pytest.raises(ValueError):
             budget_line_bundles([2, 5], 100, 1)
+
+
+    def test_負の効用水準の無差別曲線は決まらない() -> None:
+        assert cobb_douglas_indifference_y(0, 4, 0.5) == 0
+        with pytest.raises(ValueError):
+            cobb_douglas_indifference_y(-1, 4, 0.5)
+
+
+    def test_準線形効用の重みが正でなければ需要は決まらない() -> None:
+        for weight in [0, -4]:
+            with pytest.raises(ValueError):
+                quasilinear_demand([1, 2], 10, weight)
     ```
 
 ### 図
@@ -1147,7 +1180,7 @@ uv run pytest test/chapter08
 ```
 
 ```text
-54 passed
+57 passed
 ```
 
 ## 8.6 規則で言うと
@@ -1186,7 +1219,7 @@ uv run pytest test/chapter08
 
 | 課題 | 目安の時間 |
 | :--- | :--- |
-| 費用 C(q) = q² + 4q + 25 の企業が、価格 24 で売るときの、利潤を最大にする数量と利潤。平均費用が最小になる数量と、その平均費用（第 5 章の関数を使う。ヒント: 費用は `Polynomial` に**次数の低い順**（定数項、1 次、2 次）で係数を渡す。`profit_maximizing_quantity(price, cost)`・`competitive_profit(price, cost, quantity)`・`minimum_average_cost(cost)`（数量と平均費用の組を返す）・`marginal_cost(cost, quantity)`） | 10 分 |
+| 費用 C(q) = q² + 4q + 25 の企業が、価格 24 で売るときの、利潤を最大にする数量と利潤。平均費用が最小になる数量と、その平均費用（第 5 章の関数を使う。この課題だけ、関数の名前のヒントがあります: `Polynomial`（係数は次数の低い順）・`profit_maximizing_quantity`・`competitive_profit`・`minimum_average_cost`・`marginal_cost`） | 10 分 |
 | 需要 q = 90 − 3p の点弾力性を、数値微分で返す関数と、テスト。価格 10 と 20 で、弾力的か非弾力的か。価格を 1 下げると、収入は増えるか | 15 分 |
 | 価格 (4, 5)・所得 100 の予算線の切片。(10, 12) と (15, 9) は、予算内・予算線上・予算外のどれか。予算線上の 2 点の差が、価格ベクトルと直交すること（第 7 章の関数を使う） | 10 分 |
 | U = x^0.25·y^0.75・価格 (1, 3)・所得 80 の最適点を、解析解で返す関数と、テスト。格子探索（この章の関数）と一致すること、MRS ＝ 価格比 を確かめる | 15 分 |
@@ -1247,7 +1280,7 @@ uv run pytest test/chapter08
         assert cobb_douglas_demand([2, 5], 100, 0.5) == pytest.approx((25, 10))
     ```
 
-    **生成**: 解析解を、効用関数に入れるだけです。置き場所は、どこでもかまいません（例: `practice/chapter08/exercises.py`）。コブ・ダグラス型は 1 次同次なので、所得を 2 倍にすると、x・y がともに 2 倍になり、最大の効用も 2 倍です。
+    **生成**: 解析解を、効用関数に入れるだけです。置き場所は、どこでもかまいません（例: 関数を `practice/chapter08/exercises.py` に、テストを `test_exercises.py` に書き、`from practice.chapter08.exercises import cobb_douglas_max_utility` で import する）。コブ・ダグラス型は 1 次同次なので、所得を 2 倍にすると、x・y がともに 2 倍になり、最大の効用も 2 倍です。
 
     ```python
     def cobb_douglas_max_utility(prices: list[float], income: float, a: float) -> float:
@@ -1281,11 +1314,9 @@ uv run pytest test/chapter08
 
 ??? note "解答: 第 2 部の到達チェック（先に自分で取り組んでから、開いてください）"
 
-    関数（`checkpoint_point_elasticity`・`checkpoint_cobb_douglas_optimum`）は `practice/chapter08/checkpoint.py` に、テストは `practice/chapter08/test_checkpoint.py` に書きます。`checkpoint.py` の先頭には `from collections.abc import Callable` と、第 5 章の `numerical_derivative` の import を書きます。`test_checkpoint.py` の先頭の import は、次のとおりです（写したものを使うなら、`lib` を `practice` に書き換えます）。自分で書いた関数は、`from practice.chapter08.checkpoint import checkpoint_cobb_douglas_optimum, checkpoint_point_elasticity` で import します（この行は、記事の検査では実行しないので、コードブロックの外に書いています）。
+    関数（`checkpoint_point_elasticity`・`checkpoint_cobb_douglas_optimum`）は `practice/chapter08/checkpoint.py` に、テストは `practice/chapter08/test_checkpoint.py` に書きます。`checkpoint.py` の import は、弾力性の解答の直前に置きます。`test_checkpoint.py` の先頭の import は、次のとおりです（写したものを使うなら、`lib` を `practice` に書き換えます）。自分で書いた関数は、`from practice.chapter08.checkpoint import checkpoint_cobb_douglas_optimum, checkpoint_point_elasticity` で import します（この行は、記事の検査では実行しないので、コードブロックの外に書いています）。
 
     ```python
-    from collections.abc import Callable
-
     import pytest
 
     from lib.chapter05.cost import (
@@ -1294,11 +1325,7 @@ uv run pytest test/chapter08
         minimum_average_cost,
         profit_maximizing_quantity,
     )
-    from lib.chapter05.derivative import (
-        Polynomial,
-        classify_stationary_point,
-        numerical_derivative,
-    )
+    from lib.chapter05.derivative import Polynomial
     from lib.chapter07.budget import budget_intercepts, budget_status
     from lib.chapter07.vectors import vector_dot
     from lib.chapter08.utility import best_bundle_on_budget_line, numerical_mrs
@@ -1318,8 +1345,18 @@ uv run pytest test/chapter08
 
     **弾力性**: 点弾力性は −(dq/dp)·(p ÷ q) です。価格 10 では 3 × 10 ÷ 60 = 0.5（非弾力的）、価格 20 では 3 × 20 ÷ 30 = 2（弾力的）です。弾力的な価格 20 で 1 下げると、収入は 600 から 19 × 33 = 627 に増えます。非弾力的な価格 10 で 1 下げると、600 から 9 × 63 = 567 に減ります。
 
+    `checkpoint.py` の import と関数です。
+
     ```python
-    def checkpoint_point_elasticity(demand: Callable[[float], float], price: float) -> float:
+    from collections.abc import Callable
+
+    from lib.chapter05.derivative import numerical_derivative
+    ```
+
+    ```python
+    def checkpoint_point_elasticity(
+        demand: Callable[[float], float], price: float
+    ) -> float:
         return -numerical_derivative(demand, price) * price / demand(price)
     ```
 

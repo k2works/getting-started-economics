@@ -15,6 +15,8 @@ generated: { by: claude-code/claude-opus-5-5, at: 2026-11-22T00:00:00Z }
 
 経済成長の基本モデル（**ソロー・モデル**）は、「今期の資本から、来期の資本が決まる」漸化式です。ただし、1 次式ではありません。それでも、**定常状態**（動かなくなる点）・**収束するか**・**どれだけ速く収束するか**は、この章の 1 次の漸化式の道具で調べられます。この章は、第 3 部（第 9〜12 章）と、連載の最後の章で、**到達チェック**も行います。
 
+![x(t + 1) = a·x(t) + 1、x(0) = 0 を、a = 0.9・1・1.1 で反復した経路。a = 0.9 では増え方が鈍って、ある値に近づき、a = 1 では毎期 1 ずつ増え、a = 1.1 では増え方が加速する。a の大きさで、ふるまいが変わる](images/ch12-recurrence-paths.png)
+
 | 項目 | 内容 |
 | :--- | :--- |
 | 経済学の題材 | 経済成長、ソロー・モデル（資本の蓄積・定常状態）、黄金律の貯蓄率、収束の速さ、人口成長と技術進歩（発展） |
@@ -58,7 +60,7 @@ uv run pytest test/chapter12
 ```
 
 ```text
-61 passed
+62 passed
 ```
 
 自分でコードを書くときは、`practice/chapter12/` に、完成形と同じ名前のファイル（`recurrence.py`・`solow.py`・`plot.py`・`test_recurrence.py`・`test_solow.py`・`test_plot.py`）を作ります。図を後回しにするなら、`plot.py` と `test_plot.py` は要らず、テストは 58 件になります。
@@ -235,7 +237,7 @@ def recurrence_closed_form(a: float, b: float, start: float, t: int) -> float:
     return a**t * (start - fixed) + fixed
 ```
 
-`a**t * (start - fixed) + fixed` が、式 a^t·(x(0) − x*) + x* そのものです。a = 1 を先に分けるのは、`affine_fixed_point` が a = 1 で `ValueError` を出すためです。
+`a**t * (start - fixed) + fixed` が、式 a^t·(x(0) − x*) + x* そのものです。a = 1 を先に分けるのは、`affine_fixed_point` が a = 1 で `ValueError` を出すためです。a が 1 にごく近い（1 + 10⁻¹² など）と、桁落ちで、閉じた解が反復と末尾の桁でずれます（t = 100 で 100.0 と 100.00000000495）。この章では、その場合を扱いません。
 
 ### ふるまいの分類と半減期
 
@@ -710,7 +712,7 @@ converges with oscillation
 
 ### 図
 
-資本の収束（初期値を変えた 4 つの経路と、定常状態）と、貯蓄率と定常状態の消費（黄金律の頂点）を描きます。
+章の冒頭の図（a を変えた 1 次の漸化式の経路。第 4 章の `iterate_map` で反復）と、資本の収束（初期値を変えた 4 つの経路と、定常状態）と、貯蓄率と定常状態の消費（黄金律の頂点）を描きます。
 
 ![s = 0.3・α = 1/3・δ = 0.1 の資本の経路。初期値 1・3（定常状態より小さい）からは増え、8・12（大きい）からは減り、どれも点線の定常状態 k* ≈ 5.196 に近づく。差は、毎期ほぼ同じ割合で小さくなる](images/ch12-solow-convergence.png)
 
@@ -726,7 +728,12 @@ converges with oscillation
     import pytest
     from matplotlib.axes import Axes
 
-    from lib.chapter12.plot import plot_golden_rule, plot_solow_convergence
+    from lib.chapter04.sequence import iterate_map
+    from lib.chapter12.plot import (
+        plot_golden_rule,
+        plot_linear_recurrence_paths,
+        plot_solow_convergence,
+    )
     from lib.chapter12.solow import (
         solow_capital_path,
         solow_steady_state_capital,
@@ -785,6 +792,20 @@ converges with oscillation
             plot_solow_convergence([], 0.3, ALPHA, 0.1, 40)
         with pytest.raises(ValueError):
             plot_golden_rule(ALPHA, 0.1, [])
+
+
+    def test_漸化式の経路の図はaごとの反復の列() -> None:
+        ax = plot_linear_recurrence_paths([0.9, 1, 1.1], 1, 0, 25).axes[0]
+        for a in (0.9, 1, 1.1):
+            xs, ys = _series(ax, f"a = {a:g}")
+            assert xs == list(range(26))
+            assert ys == pytest.approx(iterate_map(a, 1, 0, 25))
+        assert ax.get_xlabel() == "Period t"
+        assert ax.get_ylabel() == "x(t)"
+        assert ax.get_legend() is not None
+        with pytest.raises(ValueError):
+            plot_linear_recurrence_paths([], 1, 0, 25)
+        plt.close("all")
     ```
 
     `plot.py` の import と実装です。
@@ -795,6 +816,7 @@ converges with oscillation
     import matplotlib.pyplot as plt
     from matplotlib.figure import Figure
 
+    from lib.chapter04.sequence import iterate_map
     from lib.chapter12.solow import (
         solow_capital_path,
         solow_steady_state_capital,
@@ -803,6 +825,23 @@ converges with oscillation
     ```
 
     ```python
+    def plot_linear_recurrence_paths(
+        slopes: Sequence[float], b: float, start: float, periods: int
+    ) -> Figure:
+        """x(t + 1) = a·x(t) + b を、a ごとに、x(0) = start から反復した経路を描く。"""
+        if not slopes:
+            raise ValueError("a が 1 つ以上必要です")
+        fig, ax = plt.subplots()
+        for a in slopes:
+            path = iterate_map(a, b, start, periods)
+            ax.plot(range(periods + 1), path, label=f"a = {a:g}")
+        ax.set_xlabel("Period t")
+        ax.set_ylabel("x(t)")
+        ax.legend(fontsize="x-small")
+        plt.close(fig)
+        return fig
+
+
     def plot_solow_convergence(
         starts: Sequence[float],
         saving: float,
@@ -853,7 +892,7 @@ uv run pytest test/chapter12
 ```
 
 ```text
-61 passed
+62 passed
 ```
 
 ## 12.6 規則で言うと
@@ -880,7 +919,7 @@ uv run pytest test/chapter12
 - **技術進歩を、モデルの外から与えています。** 長期の成長率を決める技術進歩率 g が、なぜその値なのかを、このモデルは説明しません（内生的成長理論が扱う）
 - **資本は、国を越えて動きます。** 閉鎖経済では貯蓄 ＝ 投資ですが、開放経済では、外国から借りて投資できます
 - **定常状態への収束は、遅いです。** 半減期が 10 期（10 年）なら、差の 9 割が消えるのに、30 年以上かかります。現実の経済は、その間に、貯蓄率・技術・人口が変わります
-- **生産関数が、k^α とは限りません。** 資本の限界生産物が減らない（α = 1 に近い）なら、定常状態がなく、成長が続きます
+- **生産関数が、k^α とは限りません。** α = 1（資本の限界生産物が一定。AK 型）なら、定常状態がなく、成長が続きます。α < 1 なら k* は有限ですが、α → 1 では k* が大きくなり、収束が遅くなります
 
 ## 12.7 第 3 部の到達チェック
 
@@ -893,9 +932,10 @@ uv run pytest test/chapter12
 | 課題 | 目安の時間 |
 | :--- | :--- |
 | 需要 q = 90 − 2p・供給 q = −6 + p の均衡を、連立方程式 q + 2p = 90、q − p = −6 を**行列**で解いて求める関数 `checkpoint_solve_2x2(matrix, rhs)` と、テスト。第 1 章の `equilibrium(a, b, c, d)` と、`numpy.linalg.solve` と一致すること。行列式が 0 なら `ValueError` | 15 分 |
-| 4 点 (0, 1)・(1, 4)・(2, 5)・(3, 8) に、最小 2 乗法で直線 y = β₀ + β₁x を当てはめる関数 `checkpoint_simple_regression(xs, ys)`（(β₀, β₁) を返す）と、テスト。`numpy.polyfit(xs, ys, 1)` と一致すること。残差の和が 0、残差と x の内積が 0（第 7 章の `vector_dot`）になること | 15 分 |
+| 4 点 (0, 1)・(1, 4)・(2, 5)・(3, 8) に、最小 2 乗法で直線 y = β₀ + β₁x を当てはめる関数 `checkpoint_simple_regression(xs, ys)`（(β₀, β₁) を返す）と、テスト。第 9 章の `np.linalg.lstsq`（1 と x を並べた行列で）と一致すること。残差の和が 0、残差と x の内積が 0（第 7 章の `vector_dot`）になること | 15 分 |
 | 確率 1/4 で 0、3/4 で 64 を受け取る賭けの確実性等価（効用 √x）を、確率を `Fraction` で受け取って返す関数 `checkpoint_certainty_equivalent(outcomes, probabilities)` と、期待値・期待効用・危険プレミアムも確かめるテスト。確率の和が 1 でなければ `ValueError` | 10 分 |
-| x(t + 1) = 0.8·x(t) + 4・x(0) = 0 の x(3) を、閉じた解で返す関数 `checkpoint_closed_form(a, b, start, t)` と、テスト（第 4 章の `iterate_map` と一致）。s = 0.2・α = 0.5・δ = 0.05 のソロー・モデルの定常状態の資本と消費を、手計算で求め、来期も同じ値になること（`solow_next_capital`）、定常状態での傾きが 1 − δ(1 − α) であること（第 5 章の数値微分）、貯蓄率を α に上げると消費が増えることを確かめる | 15 分 |
+| x(t + 1) = 0.8·x(t) + 4・x(0) = 0 の x(3) を、閉じた解で返す関数 `checkpoint_closed_form` と、テスト（第 4 章の `iterate_map` と一致） | 10 分 |
+| s = 0.2・α = 0.5・δ = 0.05 のソロー・モデルの定常状態の資本と消費を、手計算で求めるテスト。来期も同じ値になること（`solow_next_capital`）、定常状態での傾きが 1 − δ(1 − α) であること（第 5 章の数値微分）、貯蓄率を α に上げると消費が増えることを確かめる | 10 分 |
 
 ### できること
 
@@ -904,7 +944,8 @@ uv run pytest test/chapter12
 | 連立 1 次方程式を、行列式と逆行列で解き、特異な行列を見分ける | 均衡の公式と NumPy の答えと一致し、行列式 0 で止まることを確かめる | [第 9 章](09-matrices-and-regression.md)、[第 1 章](01-linear-functions-and-markets.md) |
 | 最小 2 乗法で直線を当てはめ、残差の性質を説明する | NumPy と一致し、残差が x と直交することを確かめる | [第 9 章](09-matrices-and-regression.md)、[第 7 章](07-vectors-and-budget-constraint.md) |
 | 確率を厳密に扱い、期待効用・確実性等価・危険プレミアムを求める | 凹の効用で、確実性等価が期待値より小さいことを確かめる | [第 10 章](10-probability-and-risk.md) |
-| 1 次の漸化式の閉じた解を書き、非線形の漸化式の定常状態と安定性を調べる | 反復と一致し、定常状態での傾きが公式と一致することを確かめる | この章、[第 4 章](04-sequences-and-saving.md)、[第 5 章](05-derivatives-and-profit-maximization.md) |
+| 1 次の漸化式の閉じた解を書く | 閉じた解が、反復と一致することを確かめる | この章、[第 4 章](04-sequences-and-saving.md) |
+| 非線形の漸化式の定常状態と安定性を調べる | 定常状態で来期も同じ値になり、傾きが公式と一致することを確かめる | この章、[第 5 章](05-derivatives-and-profit-maximization.md) |
 
 ### 誤りの原因の分類
 
@@ -1056,14 +1097,15 @@ uv run pytest test/chapter12
         xs, ys = [0, 1, 2, 3], [1, 4, 5, 8]
         b0, b1 = checkpoint_simple_regression(xs, ys)
         assert (b0, b1) == pytest.approx((1.2, 2.2))
-        slope, intercept = np.polyfit(xs, ys, 1)
-        assert (b0, b1) == pytest.approx((intercept, slope))
+        design = np.array([[1, x] for x in xs], dtype=float)
+        expected, *_ = np.linalg.lstsq(design, np.array(ys, dtype=float), rcond=None)
+        assert (b0, b1) == pytest.approx(tuple(expected))
         residuals = [y - (b0 + b1 * x) for x, y in zip(xs, ys, strict=True)]
         assert sum(residuals) == pytest.approx(0, abs=1e-12)
         assert vector_dot(residuals, xs) == pytest.approx(0, abs=1e-12)
     ```
 
-    **期待効用**（第 10 章）: 期待値は 3/4 × 64 = 48、期待効用は 3/4 × √64 = 6 です。確実性等価は、効用が 6 になる確実な金額 6² = 36、危険プレミアムは 48 − 36 = 12 です。確実な 49 の賭けなら、確実性等価は 49、危険プレミアムは 0 です。
+    **期待効用**（第 10 章）: 期待値は 3/4 × 64 = 48、期待効用は 3/4 × √64 = 6 です。確実性等価は、効用が 6 になる確実な金額 6² = 36、危険プレミアムは 48 − 36 = 12 です。確実に 49 を受け取る場合は、確実性等価は 49、危険プレミアムは 0 です。
 
     ```python
     def checkpoint_certainty_equivalent(
@@ -1089,7 +1131,7 @@ uv run pytest test/chapter12
             checkpoint_certainty_equivalent([0, 64], [Fraction(1, 4), Fraction(1, 2)])
     ```
 
-    **漸化式と経済成長**（この章・第 4・5 章）: 不動点は 4 ÷ 0.2 = 20 で、x(3) = 0.8³ × (0 − 20) + 20 = 20 − 10.24 = 9.76 です。ソロー・モデルでは、k* = (0.2 ÷ 0.05)^(1 ÷ 0.5) = 16、c* = 0.8 × √16 = 3.2 です。定常状態での傾きは 1 − 0.05 × 0.5 = 0.975 です。貯蓄率を α = 0.5 に上げると、k* = 10² = 100、c* = 0.5 × 10 = 5 に増えます。
+    **漸化式の閉じた解**（この章・第 4 章）: 不動点は 4 ÷ 0.2 = 20 で、x(3) = 0.8³ × (0 − 20) + 20 = 20 − 10.24 = 9.76 です。
 
     ```python
     def checkpoint_closed_form(a: float, b: float, start: float, t: int) -> float:
@@ -1098,11 +1140,17 @@ uv run pytest test/chapter12
     ```
 
     ```python
-    def test_到達チェックの漸化式と経済成長() -> None:
+    def test_到達チェックの閉じた解() -> None:
         assert checkpoint_closed_form(0.8, 4, 0, 3) == pytest.approx(9.76)
         assert checkpoint_closed_form(0.8, 4, 0, 3) == pytest.approx(
             iterate_map(0.8, 4, 0, 3)[-1]
         )
+    ```
+
+    **ソロー・モデル**（この章・第 5 章）: k* = (0.2 ÷ 0.05)^(1 ÷ 0.5) = 16、c* = 0.8 × √16 = 3.2 です。定常状態での傾きは 1 − 0.05 × 0.5 = 0.975 です。貯蓄率を α = 0.5 に上げると、k* = 10² = 100、c* = 0.5 × 10 = 5 に増えます。
+
+    ```python
+    def test_到達チェックのソローモデル() -> None:
         assert solow_next_capital(16, 0.2, 0.5, 0.05) == pytest.approx(16)
         assert solow_steady_state_consumption(0.2, 0.5, 0.05) == pytest.approx(3.2)
         slope = numerical_derivative(lambda k: solow_next_capital(k, 0.2, 0.5, 0.05), 16)
@@ -1133,6 +1181,6 @@ uv run pytest test/chapter12
 | 次に読む連載 | この連載の、どの章が土台か |
 | :--- | :--- |
 | [ミクロ経済学のためのプログラミング（初級）](../micro-basics-programming/index.md) | 第 1・2 章（市場・独占）、第 5〜8 章（費用・弾力性・効用最大化）、第 10 章（リスク）、第 11 章（余剰の積分・オークション） |
-| [マクロ経済学のためのプログラミング（初級）](../macro-basics-programming/index.md) | 第 1 章（連立方程式）、第 3・4 章（金利・割引現在価値） |
+| [マクロ経済学のためのプログラミング（初級）](../macro-basics-programming/index.md) | 第 1 章（連立方程式）、第 3・4 章（金利・割引現在価値。第 4 章の無限級数は、乗数の土台） |
 | [マクロ経済学のためのプログラミング（中級＋）](../macro-programming/index.md) | 第 4・12 章（漸化式・ソロー・モデル）、第 6 章（成長率） |
 | [計量経済学のためのプログラミング](../econometrics-programming/index.md) | 第 7 章（内積・平均・分散）、第 9 章（行列と回帰）、第 10 章（確率） |
