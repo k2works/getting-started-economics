@@ -99,6 +99,10 @@ RUN (type -p wget >/dev/null || (apt-get update && apt-get install -y wget)) \
 # uv のインストール（連載のサンプル実装の Python 環境の管理。Python 3.12 は uv が用意する）
 RUN curl -LsSf https://astral.sh/uv/install.sh     | env UV_INSTALL_DIR=/usr/local/bin UV_NO_MODIFY_PATH=1 sh
 
+# JupyterLab のインストール（Codespaces の「Open in JupyterLab」が、jupyter-lab コマンドを使う）
+# 連載のカーネルは、npm run setup:* が、連載の .venv を指す形で登録する
+RUN UV_TOOL_DIR=/opt/uv-tools UV_TOOL_BIN_DIR=/usr/local/bin uv tool install jupyterlab
+
 # Gemini CLIのインストール
 RUN npm install -g @google/gemini-cli
 
