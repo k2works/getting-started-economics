@@ -22,7 +22,7 @@ def cells() -> list[NotebookNode]:
 price_x = 2     # 財 x の価格 p_x（正）
 price_y = 5     # 財 y の価格 p_y（正）
 income = 100    # 所得 m（0 以上）
-share = 0.5     # コブ・ダグラス型 U = x^a·y^(1−a) の指数 a（0 < a < 1）
+share = 0.5     # 指数 a（U = x^a·y^(1−a)。0.05〜0.95。1 に近いと図が描けない）
 weight = 4      # 準線形効用 U = b·√x + y の重み b（正）
 """,
             parameters=True,
@@ -44,9 +44,13 @@ prices = [price_x, price_y]
 x, y = cobb_douglas_demand(prices, income, share)
 print(f"最適点（解析解）: x = {x:.3f}、y = {y:.3f}、効用 U = "
       f"{cobb_douglas_utility(x, y, share):.3f}")
-print(f"限界代替率 {cobb_douglas_mrs(x, y, share):.3f}、価格比 {price_x / price_y:.3f}")
-print(f"ラグランジュ乗数（1 円あたりの限界効用）"
-      f"{cobb_douglas_lagrange_multiplier(prices, income, share):.4f}")
+if income > 0:
+    print(f"限界代替率 {cobb_douglas_mrs(x, y, share):.3f}、"
+          f"価格比 {price_x / price_y:.3f}")
+    print(f"ラグランジュ乗数（1 円あたりの限界効用）"
+          f"{cobb_douglas_lagrange_multiplier(prices, income, share):.4f}")
+else:
+    print("所得が 0 では、最適点は (0, 0) で、限界代替率は決まりません")
 grid_x, grid_y = best_bundle_on_budget_line(
     lambda u, v: cobb_douglas_utility(u, v, share), prices, income, 2001
 )
@@ -68,7 +72,8 @@ print(f"x = {qx:.3f}、y = {qy:.3f}（{kind}）、効用 U = "
 from lib.chapter08.plot import plot_income_expansion_paths, plot_utility_maximization
 
 incomes = [income * k / 5 for k in range(1, 6)]
-display(plot_utility_maximization(prices, income, share))
+if income > 0:  # 所得が 0 では、接点の図は描けない（限界効用が決まらない）
+    display(plot_utility_maximization(prices, income, share))
 display(plot_income_expansion_paths(prices, incomes, share, weight))
 """
         ),

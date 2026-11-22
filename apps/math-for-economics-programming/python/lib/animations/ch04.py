@@ -31,7 +31,10 @@ def series_frames(first: float, ratio: float, terms: int) -> list[SeriesFrame]:
 def animate_series_converge(
     first: float = 2.0, ratio: float = 0.6, terms: int = 15
 ) -> FuncAnimation:
-    """部分和の棒が、1 本ずつ増え、無限級数の値（点線）に近づく。"""
+    """部分和の棒が、1 本ずつ増え、無限級数の値（点線）に近づく。
+
+    最新の部分和の棒を、橙色にする。
+    """
     data = series_frames(first, ratio, terms)
     limit = geometric_series_limit(first, ratio)
     fig, ax = plt.subplots()

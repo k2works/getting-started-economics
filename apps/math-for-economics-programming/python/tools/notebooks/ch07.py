@@ -39,9 +39,12 @@ status = budget_status(prices, bundle, income)
 print(f"支出 p·x = {spending:.2f}（所得 {income}）: {status}")
 x1_end, x2_end = budget_intercepts(prices, income)
 print(f"予算線の切片: 財 1 だけなら {x1_end:.2f}、財 2 だけなら {x2_end:.2f}")
-along = [x1_end, -x2_end]  # 予算線に沿った向き（切片から切片へ）
-print(f"価格ベクトルと予算線の向きの内積 {vector_dot(prices, along):.2f}、"
-      f"なす角 {vector_angle_degrees(prices, along):.1f} 度")
+if income > 0:
+    along = [x1_end, -x2_end]  # 予算線に沿った向き（切片から切片へ）
+    print(f"価格ベクトルと予算線の向きの内積 {vector_dot(prices, along):.2f}、"
+          f"なす角 {vector_angle_degrees(prices, along):.1f} 度")
+else:
+    print("所得が 0 では、予算線は点になり、向きは決まりません")
 """
         ),
         markdown("## 労働と余暇"),

@@ -46,7 +46,7 @@ def animate_taylor_order(
     hold: int = 8,
     points: int = 81,
 ) -> FuncAnimation:
-    """e^x（実線）に、次数を 1 つずつ上げたテイラー近似（点線）が近づく。"""
+    """e^x（実線）に、次数を 1 つずつ上げたテイラー近似（破線）が近づく。"""
     data = taylor_order_frames(x_low, x_high, max_order, x_point, points)
     xs = data[0].xs
     fig, ax = plt.subplots()

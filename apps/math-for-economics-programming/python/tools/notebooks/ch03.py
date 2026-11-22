@@ -16,7 +16,7 @@ def cells() -> list[NotebookNode]:
             """
 # --- Parameters: ここの数字を書き換えます ---
 principal = 100      # 元本（正）
-rate = 0.05          # 年利（小数。5% なら 0.05。倍になる年数は、正のときだけ）
+rate = 0.05          # 年利（小数。5% は 0.05。−1 より大。倍になる年数は正のときだけ）
 years = 10           # 年数（1 以上の整数。図の横軸の長さにもなる）
 times_per_year = 12  # 年あたりの複利の回数（1 以上の整数）
 future = 1000        # 割引現在価値を求める、years 年後の額
@@ -47,8 +47,11 @@ print(f"{years} 年後の {future} の割引現在価値: "
       f"{discount_to_present(future, rate, years):.4f}")
 print(f"年 {times_per_year} 回の複利の実効年利: "
       f"{effective_annual_rate(rate, times_per_year):.4%}")
-print(f"倍になる年数: {years_to_multiply(rate, 2):.2f} 年"
-      f"（72 の法則: {rule_of_72_years(rate):.2f} 年）")
+if rate > 0:
+    print(f"倍になる年数: {years_to_multiply(rate, 2):.2f} 年"
+          f"（72 の法則: {rule_of_72_years(rate):.2f} 年）")
+else:
+    print("利子率が正でないので、元本は倍になりません")
 """
         ),
         markdown("## 図（左は線形目盛、右は対数目盛）"),

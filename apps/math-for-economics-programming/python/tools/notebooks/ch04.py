@@ -36,10 +36,14 @@ from lib.chapter04.sequence import (
 )
 
 total = geometric_partial_sum(first, ratio, terms)
-limit = geometric_series_limit(first, ratio)
-print(f"{terms} 項の和: {total:.6f}、無限級数: {limit:.6f}、差: {limit - total:.6f}")
-needed = terms_until_within(first, ratio, tolerance)
-print(f"差が {tolerance} より小さくなる項数: {needed}")
+print(f"{terms} 項の和: {total:.6f}")
+if abs(ratio) < 1:
+    limit = geometric_series_limit(first, ratio)
+    print(f"無限級数: {limit:.6f}、差: {limit - total:.6f}")
+    needed = terms_until_within(first, ratio, tolerance)
+    print(f"差が {tolerance} より小さくなる項数: {needed}")
+else:
+    print("公比の絶対値が 1 以上なので、無限級数は決まりません")
 """
         ),
         markdown("## 年金・永久債・利付債・積立"),
@@ -59,15 +63,27 @@ bond = coupon_bond_price(face, payment, rate, years)
 print(f"{years} 年の年金の現在価値: {annuity:.2f}（永久債の {share:.1%}）")
 print(f"永久債の現在価値: {perpetuity:.2f}")
 print(f"利付債の価格（額面 {face}）: {bond:.2f}")
-print(f"{years} 年の積立の将来価値: {savings_future_value(payment, rate, years):.2f}")
+savings = savings_future_value(payment, rate, years) + 0.0  # + 0.0 で -0.00 を避ける
+print(f"{years} 年の積立の将来価値: {savings:.2f}")
 """
         ),
         markdown("## 図"),
         code(
             """
-from lib.chapter04.plot import plot_bond_prices, plot_partial_sums
+import matplotlib.pyplot as plt
 
-plot_partial_sums(first, ratio, terms)
+from lib.chapter04.plot import plot_bond_prices, plot_partial_sums
+from lib.chapter04.sequence import partial_sums
+
+if abs(ratio) < 1:
+    plot_partial_sums(first, ratio, terms)
+else:  # 無限級数がないので、部分和だけを描く
+    fig, ax = plt.subplots()
+    ax.plot(range(1, terms + 1), partial_sums(first, ratio, terms), "o-",
+            label="Partial sum")
+    ax.set_xlabel("Number of terms")
+    ax.set_ylabel("Sum")
+    ax.legend(fontsize="x-small")
 """
         ),
         code(
@@ -86,7 +102,10 @@ plot_bond_prices(face, payment, years, rates)
   近づきます（図の点が、ジグザグになります）
 - `rate` を 0.1 に上げると、永久債は 50.00、利付債の価格は 69.28 に下がります。
   `rate` を 0.05（クーポンの利回りと同じ）に戻すと、利付債の価格は、ちょうど 100.00 です
-- `years` を 50 にすると、年金の現在価値は 91.28 で、永久債の 91.3% に近づきます
+- `years` を 50 にすると、年金の現在価値は 91.28 で、永久債の 100 の 91.3% まで
+  近づきます
+- `ratio` を 1 や 2 にすると、無限級数は決まらず（その旨を表示します）、部分和だけが
+  描かれます。公比 2 の 10 項の和は 1023 です
 """
         ),
     ]

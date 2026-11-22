@@ -16,10 +16,14 @@ def cells() -> list[NotebookNode]:
             """
 # --- Parameters: ここの数字を書き換えます ---
 demand_intercept = 120       # 需要 q = a − b·p の a（正）
-demand_slope = 2             # 需要の傾き b（正）
-supply_intercept = 0         # 供給 q = c + d·p の c（a より小さく）
-supply_slope = 1             # 供給の傾き d（正）
-supply_intercept_after = 20  # 豊作のあとの供給の切片（c より大きく）
+demand_slope = 2             # 需要の傾き b（正。0 以下は ValueError）
+supply_intercept = 0         # 供給 q = c + d·p の c（範囲は下の注を参照）
+supply_slope = 1             # 供給の傾き d（正。0 以下は ValueError）
+supply_intercept_after = 20  # 豊作のあとの供給の切片（c より大きいと豊作）
+
+# 範囲: 2 つの供給の切片は、どちらも −a·d ÷ b より大きく、a より小さくします
+# （既定値では −60 より大きく 120 未満）。範囲の外では、価格も数量も正になる
+# 均衡がなく、ValueError で止まります。
 """,
             parameters=True,
         ),

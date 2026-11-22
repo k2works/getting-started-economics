@@ -38,15 +38,20 @@ from lib.chapter10.bayes import (
 from lib.chapter10.plot import plot_bayes_update
 
 positive = positive_test_probability(prevalence, sensitivity, false_positive_rate)
-posterior = disease_probability_given_positive(
-    prevalence, sensitivity, false_positive_rate
-)
 print(f"陽性になる確率: {float(positive):.4f}")
-print(f"陽性のとき病気である確率: {posterior}（{float(posterior):.4f}）")
-plot_bayes_update(
-    {"Disease": prevalence, "Healthy": 1 - prevalence},
-    {"Disease": sensitivity, "Healthy": false_positive_rate},
-)
+if positive == 0:
+    print("陽性になる確率が 0 なので、陽性のとき病気である確率は決まりません")
+else:
+    posterior = disease_probability_given_positive(
+        prevalence, sensitivity, false_positive_rate
+    )
+    print(f"陽性のとき病気である確率: {posterior}（{float(posterior):.4f}）")
+    display(
+        plot_bayes_update(
+            {"Disease": prevalence, "Healthy": 1 - prevalence},
+            {"Disease": sensitivity, "Healthy": false_positive_rate},
+        )
+    )
 """
         ),
         markdown("## 期待効用・確実性等価・危険プレミアム（効用 √x）"),
@@ -91,9 +96,12 @@ print(f"相対頻度 {frequencies[7]:.4f}（確率 1/6 ≈ {1 / 6:.4f}）")
   10/21（0.4762）に上がります。まれな病気の検査では、**偽陽性率**が効きます
 - 賭けを `low_prize = 16` にすると、期待値 58・期待効用 7・確実性等価 49・
   危険プレミアム 9 になります（記事の 10.1 節の図）。`low_prize = 0` のときの
-  危険プレミアム 25 より小さくなります。賞金の差（リスク）が小さいからです
-- `trials = 600` にすると、和が 7 は 93 回（相対頻度 0.1550）で、1/6 からのずれが
-  大きくなります。`seed = 2` に変えると 104 回（0.1733）です。`trials = 1_000_000`
+  危険プレミアム 25 より小さくなります。賞金の差が小さくなり、**水準も上がる**からです。
+  差を 100 のまま水準だけ上げた {16, 116}（`high_prize = 116`）でも 11.46 に、
+  平均 50 のまま差を 84 にした {8, 92} でも 11.44 に下がります
+- `trials = 600` にすると、和が 7 は 93 回（相対頻度 0.1550）です。**多くの種で**、
+  1/6 からのずれが大きくなります（種によっては、逆になります）。`seed = 2` では
+  104 回（0.1733）です。`trials = 1_000_000`
   なら 166494 回（0.1665）で、1/6 ≈ 0.1667 に近づきます（大数の法則）
 """
         ),
