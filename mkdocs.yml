@@ -1,8 +1,8 @@
 site_name: 経済学入門
 site_description: Site Description
 site_author: Project Team
-repo_url: https://github.com/k2works/claude-code-booster
-repo_name: claude-code-booster
+repo_url: https://github.com/k2works/getting-started-economics
+repo_name: getting-started-economics
 
 theme:
   name: material
@@ -57,8 +57,8 @@ extra:
   plantuml_url: http://www.plantuml.com/plantuml
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/k2works
-      name: GitHub Repository/claude-code-booster
+      link: https://github.com/k2works/getting-started-economics
+      name: GitHub Repository/getting-started-economics
 
 plugins:
   - search
