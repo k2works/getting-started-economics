@@ -494,4 +494,5 @@ NumPy は、第 1 シリーズの第 9 章で学びますが、この記事は�
 10. **Bolt 6（全体レビューの、承認ゲートの項目）**（2026-11-22）: ユーザーの承認のうえ、[ADR](../../adr/micro-basics-programming/index.md) 3 件を実施した。
     - **章構成の変更**: 第 12・13 章を分割し、全 16 章にした（上の章構成の表の第 12〜14 章は、計画時の案。実際は、第 12 章 利得表とナッシュ均衡、第 13 章 繰り返しゲームと屈折需要曲線、第 14 章 外部効果、第 15 章 公共財と自然独占、第 16 章 情報の非対称性）。第 4 部の到達チェックは、第 16 章。ファイル名: `12-oligopoly-and-game-theory.md`、`13-repeated-games-and-kinked-demand.md`、`14-externality-and-coase.md`、`15-public-goods-and-natural-monopoly.md`、`16-information-asymmetry.md`
     - **実装**: `CostCurve` の限界費用の検証、`cost_minima` の探索の上限の検出、第 7 章に自由参入の長期均衡（`free_entry_price`・`free_entry_output`・`number_of_firms`）。pytest-timeout。図の指紋に線種・軸の範囲。公開名の検査を共通化
+    - **低の指摘（同日）**: `play` の未使用の引数、浮動小数点の同点、`Literal` の戻り値などに対応した。結果の型の不統一・既定引数・冗長なガードは、意図して残した（理由は、全体レビューの報告書）
     - **学び**: 章を分けると、図の登録・画像・指紋・記事・索引・ナビゲーションが連動する。**機械検査（`tox -e all`）が、移行の漏れを全部捕まえた**。移行は、ディレクトリの移動と置換のスクリプトで行い、検査が通るまで、繰り返した

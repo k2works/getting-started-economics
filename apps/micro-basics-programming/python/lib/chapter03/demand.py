@@ -5,6 +5,7 @@
 """
 
 from collections.abc import Callable, Sequence
+from typing import Literal
 
 from lib.chapter01.validation import validate_positive
 from lib.chapter02.budget import optimal_bundle
@@ -69,7 +70,9 @@ def price_elasticity(
     return -slope * price / quantity
 
 
-def elasticity_type(elasticity: float) -> str:
+def elasticity_type(
+    elasticity: float,
+) -> Literal["単位弾力的", "弾力的", "非弾力的"]:
     """弾力性の大きさで、弾力的（> 1）・単位弾力的（= 1）・非弾力的（< 1）に分ける。"""
     size = abs(elasticity)
     if abs(size - 1) <= _TOLERANCE:
@@ -88,7 +91,9 @@ def income_elasticity(
     return slope * income / quantity
 
 
-def classify_by_income_elasticity(elasticity: float) -> str:
+def classify_by_income_elasticity(
+    elasticity: float,
+) -> Literal["下級財", "中立財", "奢侈品", "必需品"]:
     """所得弾力性で財を分ける。1 以上は奢侈品、0〜1 は必需品、負は下級財。"""
     if elasticity < -_TOLERANCE:
         return "下級財"

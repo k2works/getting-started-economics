@@ -6,6 +6,7 @@
 """
 
 from dataclasses import dataclass
+from typing import Literal
 
 from lib.chapter01.validation import validate_non_negative, validate_positive
 
@@ -72,7 +73,9 @@ def under_provision(good: PublicGood) -> float:
     return public_good_optimal_quantity(good) - voluntary_quantity(good)
 
 
-def classify_good(rival: bool, excludable: bool) -> str:
+def classify_good(
+    rival: bool, excludable: bool
+) -> Literal["private", "club", "common", "public"]:
     """競合性・排除性による、財の 4 分類。"""
     if rival:
         return "private" if excludable else "common"

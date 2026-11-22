@@ -63,7 +63,7 @@ uv run pytest test/chapter12
 ```
 
 ```text
-26 passed
+27 passed
 ```
 
 自分でコードを書くときは、`practice/chapter12/` に、`game.py` と、そのテスト（`test_game.py`）を作ります。
@@ -220,6 +220,10 @@ def prisoners_dilemma(
     ```
 
     ```python
+    _TOLERANCE = 1e-9  # 浮動小数点の誤差だけの差は、同点と見なす
+    ```
+
+    ```python
     def _check_strategy(index: int, count: int) -> None:
         if not 0 <= index < count:
             raise ValueError("戦略の番号が、範囲外です")
@@ -228,7 +232,7 @@ def prisoners_dilemma(
     ```python
     def _best(values: list[float]) -> list[int]:
         top = max(values)
-        return [i for i, value in enumerate(values) if value == top]
+        return [i for i, value in enumerate(values) if top - value <= _TOLERANCE]
     ```
 
 ### 最適反応・支配戦略
@@ -283,7 +287,7 @@ def _check_strategy(index: int, count: int) -> None:
 
 def _best(values: list[float]) -> list[int]:
     top = max(values)
-    return [i for i, value in enumerate(values) if value == top]
+    return [i for i, value in enumerate(values) if top - value <= _TOLERANCE]
 
 
 def best_responses_for_row(game: Game, column: int) -> list[int]:
@@ -465,7 +469,7 @@ uv run pytest test/chapter12
 ```
 
 ```text
-26 passed
+27 passed
 ```
 
 ## 12.6 規則で言うと

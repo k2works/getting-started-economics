@@ -54,7 +54,7 @@ uv run pytest test/chapter13
 ```
 
 ```text
-38 passed
+39 passed
 ```
 
 自分でコードを書くときは、`practice/chapter13/` に、`repeated.py`・`kinked.py` と、それぞれのテストをを作ります。
@@ -376,6 +376,8 @@ def play(
     for _ in range(rounds):
         row = row_strategy(row_moves, column_moves)
         column = column_strategy(column_moves, row_moves)
+        if not (0 <= row < game.rows and 0 <= column < game.columns):
+            raise ValueError("戦略が、利得表にない手を返した")
         row_moves.append(row)
         column_moves.append(column)
     return list(zip(row_moves, column_moves, strict=True))
@@ -772,7 +774,7 @@ uv run pytest test/chapter13
 ```
 
 ```text
-38 passed
+39 passed
 ```
 
 ## 13.6 規則で言うと

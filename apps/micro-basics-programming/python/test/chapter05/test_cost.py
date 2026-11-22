@@ -164,7 +164,7 @@ def test_最低点の探索範囲と点の数を変えられる() -> None:
     assert coarse["AC"] == pytest.approx((4, 15), abs=1e-2)
 
 
-def test_探索の点の数が2未満ならエラー() -> None:
+def test_探索の点の数が3未満ならエラー() -> None:
     with pytest.raises(ValueError, match="点の数"):
         cost_minima(CURVE, points=2)
 

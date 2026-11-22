@@ -259,6 +259,7 @@ def slutsky_decomposition(
 
     ```python
     from dataclasses import dataclass
+    from typing import Literal
     ```
 
     ```python
@@ -313,8 +314,6 @@ def test_下級財は所得効果が負で代替効果のほうが大きい() ->
 
 def test_ギッフェン財は所得効果の負が代替効果より大きい() -> None:
     assert classify_by_effects(20, -30) == "ギッフェン財"
-    # 値下げで、需要が減る（価格効果 = 20 − 30 < 0）
-    assert 20 + (-30) < 0
 
 
 def test_代替効果は値下げで必ず正() -> None:
@@ -328,7 +327,9 @@ def test_代替効果は値下げで必ず正() -> None:
 _TOLERANCE = 1e-9
 
 
-def classify_by_effects(substitution_effect: float, income_effect: float) -> str:
+def classify_by_effects(
+    substitution_effect: float, income_effect: float
+) -> Literal["中立財", "上級財", "ギッフェン財", "下級財"]:
     """値下げのときの 2 つの効果から、財の種類を決める。
 
     代替効果は、値下げで必ず正。所得効果が正なら上級財、負なら下級財。
@@ -394,7 +395,9 @@ def demand_perfect_complements(income: float, px: float, py: float) -> float:
     return income / (px + py)
 
 
-def cross_price_relation(change_in_demand: float) -> str:
+def cross_price_relation(
+    change_in_demand: float,
+) -> Literal["代替財", "補完財", "独立財"]:
     """財 y の値上げで財 x の需要が、増えれば代替財、減れば補完財、不変なら独立財。"""
     if change_in_demand > _TOLERANCE:
         return "代替財"

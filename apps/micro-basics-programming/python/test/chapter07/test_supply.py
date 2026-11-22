@@ -83,7 +83,7 @@ def test_操業停止点の探索は格子点の最低点と一致する() -> No
     )
 
 
-def test_価格が操業停止点以下なら作らない() -> None:
+def test_価格が操業停止点未満なら作らない() -> None:
     assert profit_maximizing_output(CURVE, 5.99) == 0
     assert profit_maximizing_output(CURVE, 0) == 0
 

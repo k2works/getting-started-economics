@@ -143,3 +143,10 @@ def test_絶対優位が財ごとに分かれる国の組() -> None:
     assert absolute_advantage(a, b, "agriculture") == "B"
     assert comparative_advantage(a, b, "industry") == "A"
     assert comparative_advantage(a, b, "agriculture") == "B"
+
+
+def test_浮動小数点の誤差だけの差は同じと見なす() -> None:
+    a, b = Country("A", 0.1, 0.3), Country("B", 1, 3)
+    assert comparative_advantage(a, b, "industry") is None
+    c, d = Country("C", 0.1 + 0.2, 1), Country("D", 0.3, 1)
+    assert absolute_advantage(c, d, "industry") is None

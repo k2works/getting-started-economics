@@ -195,3 +195,10 @@ def test_囚人のジレンマの不等式は厳密() -> None:
 def test_報酬と罰が等しければ囚人のジレンマではない() -> None:
     with pytest.raises(ValueError, match="T > R > P > S"):
         prisoners_dilemma(temptation=5, reward=3, punishment=3, sucker=0)
+
+
+def test_最適反応は浮動小数点の誤差を同点と見なす() -> None:
+    rows = Game((((0.1 + 0.2, 0),), ((0.3, 0),)))
+    assert best_responses_for_row(rows, 0) == [0, 1]
+    columns = Game((((0, 0.1 + 0.2), (0, 0.3)),))
+    assert best_responses_for_column(columns, 0) == [0, 1]

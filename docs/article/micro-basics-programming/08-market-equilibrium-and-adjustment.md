@@ -215,6 +215,7 @@ def equilibrium(market: LinearMarket) -> tuple[float, float]:
 
     ```python
     from dataclasses import dataclass, replace
+    from typing import Literal
     ```
 
     ```python
@@ -307,7 +308,9 @@ def excess_demand(market: LinearMarket, price: float) -> float:
     return quantity_demanded(market, price) - quantity_supplied(market, price)
 
 
-def price_state(market: LinearMarket, price: float) -> str:
+def price_state(
+    market: LinearMarket, price: float
+) -> Literal["均衡", "供給超過（価格が下がる）", "需要超過（価格が上がる）"]:
     """価格が、均衡より高いか低いかを、超過需要で判定する。"""
     excess = excess_demand(market, price)
     if abs(excess) <= _TOLERANCE:

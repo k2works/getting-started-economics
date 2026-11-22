@@ -5,10 +5,12 @@
 - 比較優位: 機会費用が、低い国（相対的に得意）。全部の財で、比較優位のある国は、ない
 """
 
+import math
 from dataclasses import dataclass
 
 from lib.chapter01.validation import validate_positive
 
+_TOLERANCE = 1e-9  # 浮動小数点の誤差だけの差は、同じと見なす
 _GOODS = ("industry", "agriculture")
 
 
@@ -54,14 +56,14 @@ def _cost(country: Country, good: str) -> float:
 
 def absolute_advantage(a: Country, b: Country, good: str) -> str | None:
     """財 good の、絶対優位のある国の名前。必要な労働が同じなら、None。"""
-    if _labor(a, good) == _labor(b, good):
+    if math.isclose(_labor(a, good), _labor(b, good), rel_tol=_TOLERANCE):
         return None
     return a.name if _labor(a, good) < _labor(b, good) else b.name
 
 
 def comparative_advantage(a: Country, b: Country, good: str) -> str | None:
     """財 good の、比較優位のある国の名前。機会費用が同じなら、None。"""
-    if _cost(a, good) == _cost(b, good):
+    if math.isclose(_cost(a, good), _cost(b, good), rel_tol=_TOLERANCE):
         return None
     return a.name if _cost(a, good) < _cost(b, good) else b.name
 

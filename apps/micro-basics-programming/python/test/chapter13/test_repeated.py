@@ -1,5 +1,7 @@
 """第 13 章: 繰り返しゲーム（しっぺ返し・トリガー戦略）のテスト。"""
 
+from collections.abc import Sequence
+
 import pytest
 
 from lib.chapter12.game import prisoners_dilemma
@@ -138,3 +140,13 @@ def test_1回だけのゲーム() -> None:
 def test_閾値ちょうどの割引因子は誤差に左右されず協調が続く() -> None:
     assert trigger_sustains_cooperation(1.0, 0.7, 0.1, 1 / 3)
     assert not trigger_sustains_cooperation(1.0, 0.7, 0.1, 0.33)
+
+
+def test_戦略が範囲外の手を返したらエラー() -> None:
+    def broken(own: Sequence[int], opponent: Sequence[int]) -> int:
+        return 2
+
+    with pytest.raises(ValueError, match="手"):
+        play(GAME, broken, tit_for_tat, 3)
+    with pytest.raises(ValueError, match="手"):
+        play(GAME, tit_for_tat, broken, 3)

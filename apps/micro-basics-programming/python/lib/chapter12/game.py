@@ -8,6 +8,7 @@
 
 from dataclasses import dataclass
 
+_TOLERANCE = 1e-9  # 浮動小数点の誤差だけの差は、同点と見なす
 Payoffs = tuple[tuple[tuple[float, float], ...], ...]
 
 
@@ -56,7 +57,7 @@ def _check_strategy(index: int, count: int) -> None:
 
 def _best(values: list[float]) -> list[int]:
     top = max(values)
-    return [i for i, value in enumerate(values) if value == top]
+    return [i for i, value in enumerate(values) if top - value <= _TOLERANCE]
 
 
 def best_responses_for_row(game: Game, column: int) -> list[int]:

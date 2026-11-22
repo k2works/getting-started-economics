@@ -84,6 +84,8 @@ def play(
     for _ in range(rounds):
         row = row_strategy(row_moves, column_moves)
         column = column_strategy(column_moves, row_moves)
+        if not (0 <= row < game.rows and 0 <= column < game.columns):
+            raise ValueError("戦略が、利得表にない手を返した")
         row_moves.append(row)
         column_moves.append(column)
     return list(zip(row_moves, column_moves, strict=True))

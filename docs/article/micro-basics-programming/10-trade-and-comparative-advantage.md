@@ -58,7 +58,7 @@ uv run pytest test/chapter10
 ```
 
 ```text
-55 passed
+56 passed
 ```
 
 自分でコードを書くときは、`practice/chapter10/` に、`trade.py`・`comparative.py` と、それぞれのテストを作ります。第 8・9 章の関数は、完成形の `lib/` から import してかまいません（[この記事の読み方](how-to-read.md)を参照）。
@@ -234,6 +234,7 @@ def gains_from_trade(market: LinearMarket, world_price: float) -> float:
     **lib/chapter10/comparative.py**
 
     ```python
+    import math
     from dataclasses import dataclass
     ```
 
@@ -242,6 +243,7 @@ def gains_from_trade(market: LinearMarket, world_price: float) -> float:
     ```
 
     ```python
+    _TOLERANCE = 1e-9  # 浮動小数点の誤差だけの差は、同じと見なす
     _GOODS = ("industry", "agriculture")
     ```
 
@@ -540,14 +542,14 @@ def _cost(country: Country, good: str) -> float:
 
 def absolute_advantage(a: Country, b: Country, good: str) -> str | None:
     """財 good の、絶対優位のある国の名前。必要な労働が同じなら、None。"""
-    if _labor(a, good) == _labor(b, good):
+    if math.isclose(_labor(a, good), _labor(b, good), rel_tol=_TOLERANCE):
         return None
     return a.name if _labor(a, good) < _labor(b, good) else b.name
 
 
 def comparative_advantage(a: Country, b: Country, good: str) -> str | None:
     """財 good の、比較優位のある国の名前。機会費用が同じなら、None。"""
-    if _cost(a, good) == _cost(b, good):
+    if math.isclose(_cost(a, good), _cost(b, good), rel_tol=_TOLERANCE):
         return None
     return a.name if _cost(a, good) < _cost(b, good) else b.name
 ```
@@ -836,7 +838,7 @@ uv run pytest test/chapter10
 ```
 
 ```text
-55 passed
+56 passed
 ```
 
 ## 10.6 規則で言うと
