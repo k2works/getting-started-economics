@@ -8038,6 +8038,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>記事の抜粋には、import と、先頭が <code>_</code> の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。</p>
 <p><strong>lib/chapter03/demand.py</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_positive</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter02.budget</span><span class="w"> </span><span class="kn">import</span> <span class="n">optimal_bundle</span>
@@ -8144,7 +8145,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="o">-</span><span class="n">slope</span> <span class="o">*</span> <span class="n">price</span> <span class="o">/</span> <span class="n">quantity</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">elasticity_type</span><span class="p">(</span><span class="n">elasticity</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">elasticity_type</span><span class="p">(</span>
+    <span class="n">elasticity</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"単位弾力的"</span><span class="p">,</span> <span class="s2">"弾力的"</span><span class="p">,</span> <span class="s2">"非弾力的"</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""弾力性の大きさで、弾力的（&gt; 1）・単位弾力的（= 1）・非弾力的（&lt; 1）に分ける。"""</span>
     <span class="n">size</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">elasticity</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">_TOLERANCE</span><span class="p">:</span>
@@ -8187,7 +8190,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="n">slope</span> <span class="o">*</span> <span class="n">income</span> <span class="o">/</span> <span class="n">quantity</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">classify_by_income_elasticity</span><span class="p">(</span><span class="n">elasticity</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">classify_by_income_elasticity</span><span class="p">(</span>
+    <span class="n">elasticity</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"下級財"</span><span class="p">,</span> <span class="s2">"中立財"</span><span class="p">,</span> <span class="s2">"奢侈品"</span><span class="p">,</span> <span class="s2">"必需品"</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""所得弾力性で財を分ける。1 以上は奢侈品、0〜1 は必需品、負は下級財。"""</span>
     <span class="k">if</span> <span class="n">elasticity</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">_TOLERANCE</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">"下級財"</span>

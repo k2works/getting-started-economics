@@ -7974,7 +7974,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter10
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>55 passed
+<div class="highlight"><pre><span></span><code>56 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter10/</code> に、<code>trade.py</code>・<code>comparative.py</code> と、それぞれのテストを作ります。第 8・9 章の関数は、完成形の <code>lib/</code> から import してかまいません（<a href="../how-to-read/">この記事の読み方</a>を参照）。</p>
 <h2 id="103">10.3 予想する<a class="headerlink" href="#103" title="Permanent link">&para;</a></h2>
@@ -8147,11 +8147,13 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <summary>import と補助関数（写すときに足す）</summary>
 <p>記事の抜粋には、import と、先頭が <code>_</code> の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。</p>
 <p><strong>lib/chapter10/comparative.py</strong></p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_positive</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="n">_GOODS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"industry"</span><span class="p">,</span> <span class="s2">"agriculture"</span><span class="p">)</span>
+<div class="highlight"><pre><span></span><code><span class="n">_TOLERANCE</span> <span class="o">=</span> <span class="mf">1e-9</span>  <span class="c1"># 浮動小数点の誤差だけの差は、同じと見なす</span>
+<span class="n">_GOODS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"industry"</span><span class="p">,</span> <span class="s2">"agriculture"</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_check_good</span><span class="p">(</span><span class="n">good</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">good</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">_GOODS</span><span class="p">:</span>
@@ -8406,14 +8408,14 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 
 <span class="k">def</span><span class="w"> </span><span class="nf">absolute_advantage</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">Country</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Country</span><span class="p">,</span> <span class="n">good</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""財 good の、絶対優位のある国の名前。必要な労働が同じなら、None。"""</span>
-    <span class="k">if</span> <span class="n">_labor</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">good</span><span class="p">)</span> <span class="o">==</span> <span class="n">_labor</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">good</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">_labor</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">good</span><span class="p">),</span> <span class="n">_labor</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">good</span><span class="p">),</span> <span class="n">rel_tol</span><span class="o">=</span><span class="n">_TOLERANCE</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">_labor</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">good</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">_labor</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">good</span><span class="p">)</span> <span class="k">else</span> <span class="n">b</span><span class="o">.</span><span class="n">name</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">comparative_advantage</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="n">Country</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Country</span><span class="p">,</span> <span class="n">good</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""財 good の、比較優位のある国の名前。機会費用が同じなら、None。"""</span>
-    <span class="k">if</span> <span class="n">_cost</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">good</span><span class="p">)</span> <span class="o">==</span> <span class="n">_cost</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">good</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">math</span><span class="o">.</span><span class="n">isclose</span><span class="p">(</span><span class="n">_cost</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">good</span><span class="p">),</span> <span class="n">_cost</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">good</span><span class="p">),</span> <span class="n">rel_tol</span><span class="o">=</span><span class="n">_TOLERANCE</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">None</span>
     <span class="k">return</span> <span class="n">a</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">_cost</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">good</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">_cost</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">good</span><span class="p">)</span> <span class="k">else</span> <span class="n">b</span><span class="o">.</span><span class="n">name</span>
 </code></pre></div>
@@ -8675,7 +8677,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter10
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>55 passed
+<div class="highlight"><pre><span></span><code>56 passed
 </code></pre></div>
 <h2 id="106">10.6 規則で言うと<a class="headerlink" href="#106" title="Permanent link">&para;</a></h2>
 <ol>

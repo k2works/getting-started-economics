@@ -8091,6 +8091,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>記事の抜粋には、import と、先頭が <code>_</code> の補助関数・定数を、省いています。完成形のファイルの先頭にある、次の部分を、写してください。</p>
 <p><strong>lib/chapter08/market.py</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span><span class="p">,</span> <span class="n">replace</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_non_negative</span><span class="p">,</span> <span class="n">validate_positive</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter03.demand</span><span class="w"> </span><span class="kn">import</span> <span class="n">linear_demand_quantity</span>
@@ -8158,7 +8159,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="n">quantity_demanded</span><span class="p">(</span><span class="n">market</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span> <span class="o">-</span> <span class="n">quantity_supplied</span><span class="p">(</span><span class="n">market</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">price_state</span><span class="p">(</span><span class="n">market</span><span class="p">:</span> <span class="n">LinearMarket</span><span class="p">,</span> <span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">price_state</span><span class="p">(</span>
+    <span class="n">market</span><span class="p">:</span> <span class="n">LinearMarket</span><span class="p">,</span> <span class="n">price</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"均衡"</span><span class="p">,</span> <span class="s2">"供給超過（価格が下がる）"</span><span class="p">,</span> <span class="s2">"需要超過（価格が上がる）"</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""価格が、均衡より高いか低いかを、超過需要で判定する。"""</span>
     <span class="n">excess</span> <span class="o">=</span> <span class="n">excess_demand</span><span class="p">(</span><span class="n">market</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">excess</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">_TOLERANCE</span><span class="p">:</span>

@@ -7877,7 +7877,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter13
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>38 passed
+<div class="highlight"><pre><span></span><code>39 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter13/</code> に、<code>repeated.py</code>・<code>kinked.py</code> と、それぞれのテストをを作ります。</p>
 <h2 id="133">13.3 予想する<a class="headerlink" href="#133" title="Permanent link">&para;</a></h2>
@@ -8149,6 +8149,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rounds</span><span class="p">):</span>
         <span class="n">row</span> <span class="o">=</span> <span class="n">row_strategy</span><span class="p">(</span><span class="n">row_moves</span><span class="p">,</span> <span class="n">column_moves</span><span class="p">)</span>
         <span class="n">column</span> <span class="o">=</span> <span class="n">column_strategy</span><span class="p">(</span><span class="n">column_moves</span><span class="p">,</span> <span class="n">row_moves</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">row</span> <span class="o">&lt;</span> <span class="n">game</span><span class="o">.</span><span class="n">rows</span> <span class="ow">and</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">column</span> <span class="o">&lt;</span> <span class="n">game</span><span class="o">.</span><span class="n">columns</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"戦略が、利得表にない手を返した"</span><span class="p">)</span>
         <span class="n">row_moves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
         <span class="n">column_moves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">row_moves</span><span class="p">,</span> <span class="n">column_moves</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
@@ -8518,7 +8520,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter13
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>38 passed
+<div class="highlight"><pre><span></span><code>39 passed
 </code></pre></div>
 <h2 id="136">13.6 規則で言うと<a class="headerlink" href="#136" title="Permanent link">&para;</a></h2>
 <ol>

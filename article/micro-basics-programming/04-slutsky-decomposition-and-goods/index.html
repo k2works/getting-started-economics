@@ -8167,6 +8167,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <p><strong>lib/chapter04/slutsky.py</strong></p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Literal</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">cobb_douglas_utility</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_non_negative</span><span class="p">,</span> <span class="n">validate_positive</span>
@@ -8204,8 +8205,6 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_ギッフェン財は所得効果の負が代替効果より大きい</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">classify_by_effects</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="o">-</span><span class="mi">30</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"ギッフェン財"</span>
-    <span class="c1"># 値下げで、需要が減る（価格効果 = 20 − 30 &lt; 0）</span>
-    <span class="k">assert</span> <span class="mi">20</span> <span class="o">+</span> <span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_代替効果は値下げで必ず正</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -8217,7 +8216,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <div class="highlight"><pre><span></span><code><span class="n">_TOLERANCE</span> <span class="o">=</span> <span class="mf">1e-9</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">classify_by_effects</span><span class="p">(</span><span class="n">substitution_effect</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">income_effect</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">classify_by_effects</span><span class="p">(</span>
+    <span class="n">substitution_effect</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">income_effect</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"中立財"</span><span class="p">,</span> <span class="s2">"上級財"</span><span class="p">,</span> <span class="s2">"ギッフェン財"</span><span class="p">,</span> <span class="s2">"下級財"</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""値下げのときの 2 つの効果から、財の種類を決める。</span>
 
 <span class="sd">    代替効果は、値下げで必ず正。所得効果が正なら上級財、負なら下級財。</span>
@@ -8277,7 +8278,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="n">income</span> <span class="o">/</span> <span class="p">(</span><span class="n">px</span> <span class="o">+</span> <span class="n">py</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">cross_price_relation</span><span class="p">(</span><span class="n">change_in_demand</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">cross_price_relation</span><span class="p">(</span>
+    <span class="n">change_in_demand</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"代替財"</span><span class="p">,</span> <span class="s2">"補完財"</span><span class="p">,</span> <span class="s2">"独立財"</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""財 y の値上げで財 x の需要が、増えれば代替財、減れば補完財、不変なら独立財。"""</span>
     <span class="k">if</span> <span class="n">change_in_demand</span> <span class="o">&gt;</span> <span class="n">_TOLERANCE</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">"代替財"</span>
