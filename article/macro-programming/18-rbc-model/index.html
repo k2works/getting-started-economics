@@ -4542,7 +4542,7 @@
   <a href="#_16" class="md-nav__link">
     <span class="md-ellipsis">
       
-        動かして見る
+        ノートブックで試す
       
     </span>
   </a>
@@ -4551,6 +4551,17 @@
         
           <li class="md-nav__item">
   <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -4589,7 +4600,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_18" class="md-nav__link">
+  <a href="#_19" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -4617,7 +4628,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_19" class="md-nav__link">
+  <a href="#_20" class="md-nav__link">
     <span class="md-ellipsis">
       
         できること
@@ -4628,7 +4639,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_20" class="md-nav__link">
+  <a href="#_21" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -4639,7 +4650,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_21" class="md-nav__link">
+  <a href="#_22" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -4689,7 +4700,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_22" class="md-nav__link">
+  <a href="#_23" class="md-nav__link">
     <span class="md-ellipsis">
       
         この記事のまとめ
@@ -8808,11 +8819,13 @@ investment: basic 3.65 %, endogenous labour 6.05 %
 <li>2 つ目の問い: ショックの期に、産出量は <strong>+1.00%</strong>、消費は <strong>+0.09%</strong>、投資は <strong>+3.65%</strong> 動きます。<strong>投資が最も大きく</strong>、<strong>消費が最も小さく</strong>動きます。消費は、ほとんど動かず（消費の平滑化）、投資が、大きく動きます。</li>
 <li>3 つ目の問い: 労働を内生的にすると、産出量は <strong>+1.65%</strong> と、<strong>大きく</strong>なります（基本モデルは +1.00%）。消費は +0.13%、投資は +6.05% です。</li>
 </ul>
-<h3 id="_16">動かして見る<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_16">ノートブックで試す<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-programming/python/notebooks/ch18_rbc_model.ipynb</code> を開き、「Parameters」のセルの数字（資本分配率、割引因子、減耗率、TFP のショックの持続性、ショックの大きさ、労働を内生的にするか）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_17">動かして見る<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <p>TFP のショックの持続性 ρ を、0.1 から 0.95 へ上げ、1% のショックへの反応を見ます。ρ が大きいほど、反応は<strong>長く続き</strong>、資本のピークは<strong>遅く</strong>、大きくなります。ρ が小さいと、投資だけが、一瞬大きく動いて、すぐに戻ります。</p>
 <p><img alt="ショックの持続性を上げると、反応が長く続く（アニメーション）" src="../images/ch18-irf-persistence.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
-<h3 id="_17">実行結果<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<h3 id="_18">実行結果<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter18
 </code></pre></div>
@@ -8953,7 +8966,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_18">このモデルが成り立たない場面<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
+<h3 id="_19">このモデルが成り立たない場面<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>完全競争・価格が柔軟です。</strong> 市場の失敗がなく、景気循環は、TFP のショックへの最適な反応です。<strong>貨幣は中立</strong>で、金融政策は、景気循環に影響しません。このモデルには、貨幣が入っていません（第 12 章の長期の中立性と整合的です。短期に金融政策が効く、という考え方は、第 15 章の IS-MP-PC で扱いました）。短期の価格の硬直性は、ニューケインジアン・モデルが扱います（この記事の範囲外）</li>
 <li><strong>代表的な個人です。</strong> 失業や、家計の違い（異質性）は、扱いません</li>
@@ -8962,7 +8975,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </ul>
 <h2 id="187-4">18.7 第 4 部の到達チェック<a class="headerlink" href="#187-4" title="Permanent link">&para;</a></h2>
 <p>第 4 部（第 15〜18 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。</p>
-<h3 id="_19">できること<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<h3 id="_20">できること<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -9014,7 +9027,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_20">時間を決めて書く課題<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<h3 id="_21">時間を決めて書く課題<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、関数とテストを書きます。</p>
 <table>
 <thead>
@@ -9046,7 +9059,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_21">誤りの原因の分類<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
+<h3 id="_22">誤りの原因の分類<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
 <p>できなかったときは、原因を分類して、戻る章に戻ります。</p>
 <table>
 <thead>
@@ -9157,7 +9170,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <li>日本の四半期データ（実際の統計）と比べて、投資の変動と、産出量の変動の定性的な特徴は再現できるが、消費の平滑化が強すぎ、持続性が足りないことを確かめた</li>
 <li>第 4 部の到達チェックで、IS-MP-PC・確率的ソロー・対数線形近似・RBC を、自分でできるかを確かめた</li>
 </ul>
-<h3 id="_22">この記事のまとめ<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
+<h3 id="_23">この記事のまとめ<a class="headerlink" href="#_23" title="Permanent link">&para;</a></h3>
 <p>この記事（全 18 章）で、マクロ経済学の中級レベルの内容を、<strong>Python で動かし、テストで確かめる</strong>方法を、4 つの部で学びました。</p>
 <table>
 <thead>

@@ -3144,6 +3144,17 @@
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -3169,7 +3180,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -3197,7 +3208,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -3208,7 +3219,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_14" class="md-nav__link">
+  <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
         値の確かめ
@@ -3219,7 +3230,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_15" class="md-nav__link">
+  <a href="#_16" class="md-nav__link">
     <span class="md-ellipsis">
       
         できること
@@ -3230,7 +3241,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_16" class="md-nav__link">
+  <a href="#_17" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -3280,7 +3291,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_17" class="md-nav__link">
+  <a href="#_18" class="md-nav__link">
     <span class="md-ellipsis">
       
         連載の終わりに
@@ -8494,7 +8505,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 </details>
-<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_11">ノートブックで試す<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/micro-basics-programming/python/notebooks/ch16_information_asymmetry.ipynb</code> を開き、「Parameters」のセルの数字（品質の割合、賃金と教育の費用、成果報酬）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter16
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>37 passed
@@ -8532,7 +8545,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>離散的な、小さな例です。</strong> 教科書や論文により、数値や前提が違います。この章は、前提を、明示しました（売り手の最低価格が質に等しい、など）</li>
 <li><strong>能力や質の種類を、少数にしました。</strong> 連続的な質の分布では、式が変わります</li>
@@ -8542,7 +8555,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </ul>
 <h2 id="167-4">16.7 第 4 部の到達チェック<a class="headerlink" href="#167-4" title="Permanent link">&para;</a></h2>
 <p>第 4 部（第 11〜16 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。<strong>先に、次の「時間を決めて書く課題」を、何も見ずに試してください。</strong> そのあとで、「値の確かめ」と「できること」で、答えを見ます。</p>
-<h3 id="_13">時間を決めて書く課題<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">時間を決めて書く課題<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、関数とテストを書きます。課題 1 の市場は、逆需要 P = 100 − Q、限界費用 10 です。課題 3 の市場は、逆需要 P = 100 − Q、<strong>私的限界費用 MC = 10 + Q</strong>（外部費用は 1 単位あたり 10）です。</p>
 <table>
 <thead>
@@ -8570,7 +8583,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_14">値の確かめ<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_15">値の確かめ<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <p>到達チェックの値を、プログラムで確かめます。各章の関数を、そのまま呼びます。</p>
 <p>「値の確かめ」のスクリプトは、<code>practice/chapter16/reach.py</code> に保存し、<code>uv run python -m practice.chapter16.reach</code> で実行します。このスクリプトは、<strong>完成形</strong>（<code>lib/</code>）を読みます。<strong>自分のコードで確かめる</strong>ときは、import を、<code>from practice.chapterNN...</code> に書き換えてください。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter11.monopoly</span><span class="w"> </span><span class="kn">import</span> <span class="n">Monopoly</span><span class="p">,</span> <span class="n">competitive_outcome</span><span class="p">,</span> <span class="n">monopoly_outcome</span>
@@ -8605,7 +8618,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 最低の成果報酬: 25.0
 </code></pre></div>
 <p>出力の読み方: <code>ナッシュ均衡: [(1, 1)]</code> は、戦略の番号（1 = 裏切り）で、（裏切り、裏切り）です。利得の (1, 1) と見た目が同じなので、注意してください。また、囚人のジレンマの P（罰）は、逆需要 P = 100 − Q の P（価格）とは、別の意味です。</p>
-<h3 id="_15">できること<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<h3 id="_16">できること<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -8648,7 +8661,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tbody>
 </table>
 <p>自然独占（第 15 章）と成果報酬（この章）は、時間の都合で、課題に入れていません。値の確かめの出力を見て、自分で、関数とテストを書いてみてください。</p>
-<h3 id="_16">誤りの原因の分類<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_17">誤りの原因の分類<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <p>できなかった課題は、原因を、次の 4 つに分けて、記録します。</p>
 <table>
 <thead>
@@ -8743,7 +8756,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <li>シグナルは、高い能力の人に安い費用の行動（教育）で、能力を区別する。区別できる年数の範囲は、賃金の差を、費用で割った 2 つの値で決まる</li>
 <li>モラルハザードでは、成果報酬で努力させる。最低の報酬は、努力の費用 ÷ 成功確率の差。努力させる価値があるかは、依頼人の期待利潤で決まる</li>
 </ul>
-<h3 id="_17">連載の終わりに<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<h3 id="_18">連載の終わりに<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
 <p>16 章で、ミクロ経済学の基礎（消費者・企業・市場・不完全競争・市場の失敗・情報）を、<strong>テストを書き、動かして確かめる</strong>形で、一通り扱いました。次に進む道は、3 つあります。</p>
 <ul>
 <li><strong>同じ道具で、実データを扱う</strong>: <a href="../../econometrics-programming/">計量経済学のためのプログラミング</a>で、回帰・仮説検定・因果推論に進みます</li>

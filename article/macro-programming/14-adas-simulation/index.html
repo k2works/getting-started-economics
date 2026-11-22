@@ -4347,7 +4347,7 @@
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
-        動かして見る
+        ノートブックで試す
       
     </span>
   </a>
@@ -4356,6 +4356,17 @@
         
           <li class="md-nav__item">
   <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -4394,7 +4405,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -4422,7 +4433,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_14" class="md-nav__link">
+  <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
         できること
@@ -4433,7 +4444,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_15" class="md-nav__link">
+  <a href="#_16" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -4444,7 +4455,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_16" class="md-nav__link">
+  <a href="#_17" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -8322,11 +8333,13 @@ sum of y responses is zero: True
 <li>3 つ目の問い: 半減期は、ln 0.5 ÷ ln h = ln 0.5 ÷ ln 0.8065 = <strong>3.22 四半期</strong>です。</li>
 <li>4 つ目の問い: 産出量の反応を、足し合わせると、<strong>0</strong>（誤差の範囲）です。ショックの期のプラスと、その後のマイナスが、打ち消し合います。</li>
 </ul>
-<h3 id="_11">動かして見る<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_11">ノートブックで試す<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-programming/python/notebooks/ch14_adas_simulation.ipynb</code> を開き、「Parameters」のセルの数字（AS・AD 曲線の傾き、ショックの標準偏差、需要・供給ショックの大きさ、乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_12">動かして見る<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p>AS 曲線の傾き a を、0.5 から 4 へ動かして、需要ショックへの反応を見ます。a が大きいほど、物価の持続性 h は小さくなり、<strong>物価の乖離は、速く元に戻ります</strong>（そのかわり、ショックの期の物価の上昇は大きくなります）。</p>
 <p><img alt="AS 曲線の傾きを動かすと、物価の戻る速さが変わる（アニメーション）" src="../images/ch14-impulse-slope.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
-<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">実行結果<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter14
 </code></pre></div>
@@ -8452,7 +8465,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">このモデルが成り立たない場面<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>ショックが、独立とは限りません。</strong> ショックに持続性があれば（14.8 節の練習問題）、GDP の持続性は、再現できます。ただし、物価の持続性が、高くなりすぎます</li>
 <li><strong>供給ショックには、一時的なものと、トレンドを変えるものがあります。</strong> この章のショックは、トレンドに影響しない、一時的なものです</li>
@@ -8461,7 +8474,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </ul>
 <h2 id="147-3">14.7 第 3 部の到達チェック<a class="headerlink" href="#147-3" title="Permanent link">&para;</a></h2>
 <p>第 3 部（第 13・14 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。</p>
-<h3 id="_14">できること<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_15">できること<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -8508,7 +8521,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_15">時間を決めて書く課題<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<h3 id="_16">時間を決めて書く課題<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、関数とテストを書きます。</p>
 <table>
 <thead>
@@ -8536,7 +8549,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_16">誤りの原因の分類<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_17">誤りの原因の分類<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <p>できなかったときは、原因を分類して、戻る章に戻ります。</p>
 <table>
 <thead>

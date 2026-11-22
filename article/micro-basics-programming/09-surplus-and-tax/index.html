@@ -2899,7 +2899,7 @@
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
-        動かして見る
+        ノートブックで試す
       
     </span>
   </a>
@@ -2908,6 +2908,17 @@
         
           <li class="md-nav__item">
   <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -2935,7 +2946,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8369,11 +8380,13 @@ Q = 30・60 の死荷重: [225.0, 225.0]
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 </details>
-<h3 id="_11">動かして見る<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_11">ノートブックで試す<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/micro-basics-programming/python/notebooks/ch09_surplus_and_tax.ipynb</code> を開き、「Parameters」のセルの数字（需要・供給の切片と傾き、税額）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_12">動かして見る<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p>税額を 0 から 20 へ上げます。供給曲線が上へ動き、税収（紫）と<strong>死荷重（赤）</strong>が現れます。死荷重は、税額の 2 乗に比例して、増えます。</p>
 <p><img alt="税額を上げると、税収と死荷重が現れる（アニメーション）" src="../images/ch09-tax.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
-<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">実行結果<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter09
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>38 passed
@@ -8411,7 +8424,7 @@ Q = 30・60 の死荷重: [225.0, 225.0]
 </tr>
 </tbody>
 </table>
-<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">このモデルが成り立たない場面<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>完全競争・直線の曲線を仮定しています。</strong> 実際の需要・供給は、曲がっていて、余剰は、面積の積分で、求めます</li>
 <li><strong>余剰は、お金で測った、得です。</strong> 所得が高い人の 1 円と、低い人の 1 円を、同じ重さで、足しています</li>

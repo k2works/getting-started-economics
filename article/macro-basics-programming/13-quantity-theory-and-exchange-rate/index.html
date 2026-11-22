@@ -3738,6 +3738,17 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -3763,7 +3774,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8273,7 +8284,9 @@ X = 30 で整合: False
 </details>
 <p>線の座標と、軸の名前は、<code>test/chapter13/test_plot.py</code> で、手計算の値と比べています。</p>
 <p><img alt="為替レートと純輸出。基準の点（125 円、20）から、10 円の円安で、純輸出が 4 増える" src="../images/ch13-net-exports.png" /></p>
-<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_9">ノートブックで試す<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-basics-programming/python/notebooks/ch13_quantity_theory_and_exchange_rate.ipynb</code> を開き、「Parameters」のセルの数字（貨幣量、流通速度、生産量、為替レートと純輸出の傾き、物価上昇率）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter13
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>39 passed
@@ -8307,7 +8320,7 @@ X = 30 で整合: False
 </tr>
 </tbody>
 </table>
-<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>V と Y を一定とみなすのは、仮定です。</strong> 短期には、流通速度も、生産量も、変わります。インフレ率の近似は、変化率が大きいと、ずれます（予想の答え合わせで、7.84% と 8% の差を見ました）</li>
 <li><strong>為替と純輸出の線形の式は、近似です。</strong> 傾き 0.4 は、この章の例の値です。実際の傾きは、輸出入の価格弾力性などで、決まります。購買力平価も、貿易できない財や、輸送費が、あると、成り立ちません</li>

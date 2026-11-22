@@ -3017,7 +3017,7 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
-        動かして見る
+        ノートブックで試す
       
     </span>
   </a>
@@ -3026,6 +3026,17 @@
         
           <li class="md-nav__item">
   <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -3053,7 +3064,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8528,11 +8539,13 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 </details>
-<h3 id="_9">動かして見る<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_9">ノートブックで試す<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/micro-basics-programming/python/notebooks/ch13_repeated_games_and_kinked_demand.ipynb</code> を開き、「Parameters」のセルの数字（利得、割引因子、繰り返す回数、屈折需要の傾き）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_10">動かして見る<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p>割引因子を 0 から 0.95 へ上げます。閾値 0.5 を超えると、協調を続ける価値が、一度裏切る価値を<strong>上回り</strong>、協調が続きます。</p>
 <p><img alt="割引因子を上げると、閾値で協調が続くようになる（アニメーション）" src="../images/ch13-trigger-threshold.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
-<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter13
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>39 passed
@@ -8565,7 +8578,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>無限に繰り返すことを、閉じた式で近似しました。</strong> 実際の取引は、有限回です。終わりが分かっていれば、最後の期から順に協調が崩れ、全期で崩れることがあります（後ろ向き帰納法）</li>
 <li><strong>屈折需要曲線は、価格の硬直性を、仮定として置くだけで、説明しません。</strong> 実証的にも、支持は限定的です</li>

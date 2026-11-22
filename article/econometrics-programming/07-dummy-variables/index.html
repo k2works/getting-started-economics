@@ -4915,6 +4915,17 @@
   <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -4940,7 +4951,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_14" class="md-nav__link">
+  <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
         この方法が成り立たない場面
@@ -8289,7 +8300,9 @@ region_west   0.1594  0.0052
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
-<h3 id="_13">実行結果<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_13">ノートブックで試す<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/econometrics-programming/python/notebooks/ch07_dummy_variables.ipynb</code> を開き、「Parameters」のセルの数字（標本の大きさ・交差項を入れるか・乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_14">実行結果<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter07
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>22 passed
@@ -8323,7 +8336,7 @@ region_west   0.1594  0.0052
 </tr>
 </tbody>
 </table>
-<h3 id="_14">この方法が成り立たない場面<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_15">この方法が成り立たない場面<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>x = 0 が、データにないとき、ダミー変数の係数は、読みにくくなります。</strong> 教育年数が 8〜18 年のデータで、「教育 0 年での男女差」は、データの外です。x から平均を引くと、「平均的な教育年数での差」に読み替えられます</li>
 <li><strong>ダミー変数は、群の違いを表すだけで、理由を教えません。</strong> 女性ダミーが負でも、差別・職種・労働時間のどれによるものかは、わかりません</li>

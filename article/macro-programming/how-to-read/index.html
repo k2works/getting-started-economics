@@ -3723,7 +3723,7 @@
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
-        到達チェック
+        ノートブック
       
     </span>
   </a>
@@ -3732,6 +3732,17 @@
       
         <li class="md-nav__item">
   <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        到達チェック
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         架空のデータについて
@@ -3754,7 +3765,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         全章に共通する記号
@@ -3765,7 +3776,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         章によって意味が変わる記号
@@ -3781,7 +3792,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         完成形の使い方
@@ -3792,7 +3803,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         参考にした資料
@@ -7723,13 +7734,15 @@
 <p>解答（コードと手計算の答え）は、各章の練習問題の下に、折りたたんであります。<strong>先に自分で取り組んでから、開いてください。</strong></p>
 <h2 id="_4">アニメーション<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <p>第 4・5・8・14・15・17・18 章には、図を動かした<strong>アニメーション（GIF）</strong>が、小節「動かして見る」にあります。係数・貯蓄率・ショックの持続性・金融政策の反応などを動かしたとき、経路や反応がどう変わるかを、目で確かめられます。アニメーションの実装は、<code>lib/animations/</code> にあり、<code>uv run python -m tools.render_animations</code> で GIF を書き出します（<strong>写経は不要</strong>です。読んで、動かして、式と図の対応を確かめてください）。</p>
-<h2 id="_5">到達チェック<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h2 id="_5">ノートブック<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>各章には、数字を書き換えて、結果と図を確かめる <strong>Jupyter Notebook</strong> があります（<code>notebooks/</code>。小節「ノートブックで試す」で案内しています）。「Parameters」のセルの数字を変えて、上から順に実行すると、各章の関数（<code>lib/</code>）が呼ばれ、結果と図が変わります。各ノートブックの最後の「試してみよう」に、数字を変えると何が起きるかを書きました。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です（jupyterlab は、プロジェクトの依存には入れていません）。ノートブックは、<code>uv run python -m tools.build_notebooks</code> で書き出します（実行結果は、保存しません）。<strong>写経は不要</strong>です。</p>
+<h2 id="_6">到達チェック<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
 <p>第 1 部（第 7 章）、第 2 部（第 12 章）、第 3 部（第 14 章）、第 4 部（第 18 章）の終わりに、「到達チェック」があります（第 1 部は、第 7 章に掲載済みです）。何も見ずに、できるかどうかを、自分で確かめるものです（第 1 シリーズと同じ使い方です）。</p>
-<h2 id="_6">架空のデータについて<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<h2 id="_7">架空のデータについて<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
 <p>この記事のデータ（<code>data/</code> の CSV）は、<strong>架空</strong>です。実在の国や年の統計ではありません。構造だけを、実際の統計（Penn World Table、内閣府の国民経済計算など）にそろえてあります。実際の統計で試す手順は、各部の終わりにあります。</p>
 <h2 id="symbols">記号について<a class="headerlink" href="#symbols" title="Permanent link">&para;</a></h2>
 <p>経済学の記号は、分野によって、同じ文字が別の意味になります。章を読むときは、<strong>その章の「式とコードの対応」の表</strong>を、基準にしてください。意味が変わる章には、表の下に、注記があります。この表は、章を足すたびに更新します。</p>
-<h3 id="_7">全章に共通する記号<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h3 id="_8">全章に共通する記号<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -7780,7 +7793,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="_8">章によって意味が変わる記号<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_9">章によって意味が変わる記号<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -7879,9 +7892,9 @@
 </tr>
 </tbody>
 </table>
-<h2 id="_9">完成形の使い方<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
+<h2 id="_10">完成形の使い方<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h2>
 <p>サンプルコードには、各章の完成形が入っています（<code>lib/</code> と <code>test/</code>）。<strong>答え合わせ用</strong>です。自分のコードを、<code>practice/</code> に書いてから、見比べてください。</p>
-<h2 id="_10">参考にした資料<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h2>
+<h2 id="_11">参考にした資料<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h2>
 <p>この記事の章立ての順序は、春山鉄源氏の「Pythonで学ぶマクロ経済学（中級＋レベル）」（<a href="https://py4macro.github.io/">https://py4macro.github.io/</a>）を参考にしました。本文・コード・図・データは、この記事で新たに書いています。</p>
 
 

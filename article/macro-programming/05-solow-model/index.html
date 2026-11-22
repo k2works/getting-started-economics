@@ -4010,7 +4010,7 @@
   <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
-        動かして見る
+        ノートブックで試す
       
     </span>
   </a>
@@ -4019,6 +4019,17 @@
         
           <li class="md-nav__item">
   <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -4046,7 +4057,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8200,11 +8211,13 @@
 <li>2 つ目の問い（次の期）: 4.2 です。0.2·√4 + 0.95·4 = 0.4 + 3.8 = 4.2 です</li>
 <li>3 つ目の問い（近づき方）: 資本 4 の国も、資本 25 の国も、200 期後には 15.8981 と 16.0505 で、どちらも 16 に近づきます。1 期当たりの変化は、資本 4 の国で 0.2（1 期目）、0.1902（10 期目）、0.0308（100 期目）と、定常状態に近づくにつれて小さくなります。資本 25 の国も、−0.25（1 期目）から −0.0162（100 期目）へ、小さくなります。同じ国の中では、定常状態から遠いほど速く、近づくにつれて遅くなります</li>
 </ul>
-<h3 id="_8">動かして見る<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_8">ノートブックで試す<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-programming/python/notebooks/ch05_solow_model.ipynb</code> を開き、「Parameters」のセルの数字（貯蓄率、減耗率、資本分配率、技術水準、2 つの国の初期の資本）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_9">動かして見る<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>貯蓄率 s を、0.1 から 0.4 へ上げます。定常状態の資本 k<em>（点線）が上がり、資本の経路も、より高い水準へ向かいます。k</em> は、s の 2 乗に比例して（α = 0.5 の場合）、大きく増えます。</p>
 <p><img alt="貯蓄率を上げると、定常状態の資本が高くなる（アニメーション）" src="../images/ch05-solow-saving.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
-<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter05
 </code></pre></div>
@@ -8239,7 +8252,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>人口の増加と技術進歩を、考えていません。</strong> 現実の経済は、定常状態でも、成長します。人口と技術を加えると、収束の速さの式は、λ = (1 − α)·(n + g + δ) になります</li>
 <li><strong>貯蓄率は、一定という仮定です。</strong> 実際は、所得や利子率で、変わります</li>

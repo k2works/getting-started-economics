@@ -4474,7 +4474,7 @@
   <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
-        動かして見る
+        ノートブックで試す
       
     </span>
   </a>
@@ -4483,6 +4483,17 @@
         
           <li class="md-nav__item">
   <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -4510,7 +4521,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_14" class="md-nav__link">
+  <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8308,11 +8319,13 @@ initial 50%: max error 1.4332 %, ratio 0.02866
 <li>2 つ目の問い: 1% の乖離のほうが、誤差が<strong>ずっと小さく</strong>、線形近似の精度は<strong>良い</strong>です（最大の誤差は 0.0006%。50% の乖離では 1.4332%）。</li>
 <li>3 つ目の問い: 誤差の<strong>割合</strong>は、1% で 0.00058、10% で 0.00581、50% で 0.02866 です。乖離の<strong>大きさにほぼ比例して</strong>増えます（1% から 10% で、約 10 倍）。</li>
 </ul>
-<h3 id="_12">動かして見る<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_12">ノートブックで試す<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-programming/python/notebooks/ch17_log_linearization.ipynb</code> を開き、「Parameters」のセルの数字（資本分配率、貯蓄率、減耗率、最初の資本の乖離）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_13">動かして見る<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <p>資本の初期の乖離を、約 5% から 100% へ大きくします。乖離が小さいうちは、厳密な経路と線形近似の経路は、ほぼ重なります。<strong>乖離が大きくなるほど、2 本の経路は、離れていきます</strong>。</p>
 <p><img alt="初期の乖離が大きいほど、線形近似の誤差が大きくなる（アニメーション）" src="../images/ch17-approximation-error.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
-<h3 id="_13">実行結果<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">実行結果<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter17
 </code></pre></div>
@@ -8352,7 +8365,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_14">このモデルが成り立たない場面<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_15">このモデルが成り立たない場面<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>定常状態から遠いショックでは、近似が悪くなります。</strong> 大きなショック（リーマン・ショックなど）の分析には、2 次の近似などが必要です</li>
 <li><strong>確実性等価です。</strong> 線形の解は、ショックの分散を、変数の平均に反映しません（リスクの効果が出ない）</li>

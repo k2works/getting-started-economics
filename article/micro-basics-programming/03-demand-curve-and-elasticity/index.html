@@ -2689,7 +2689,7 @@
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
-        動かして見る
+        ノートブックで試す
       
     </span>
   </a>
@@ -2698,6 +2698,17 @@
         
           <li class="md-nav__item">
   <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -2725,7 +2736,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8364,11 +8375,13 @@ Q = 100 − P の P = 75 の価格弾力性: 3.0
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 </details>
-<h3 id="_11">動かして見る<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_11">ノートブックで試す<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/micro-basics-programming/python/notebooks/ch03_demand_curve_and_elasticity.ipynb</code> を開き、「Parameters」のセルの数字（所得、価格、直線の需要の切片と傾き）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_12">動かして見る<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p>価格が 4 から 1 へ下がります。左: 予算線の x 切片が右へ伸び、最適点が動きます。右: 最適点の x と価格をつなぐと、<strong>需要曲線</strong>ができます。</p>
 <p><img alt="価格が下がると、予算線が回り、最適点が動いて、需要曲線ができる（アニメーション）" src="../images/ch03-price-change.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
-<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">実行結果<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter03
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>38 passed
@@ -8406,7 +8419,7 @@ Q = 100 − P の P = 75 の価格弾力性: 3.0
 </tr>
 </tbody>
 </table>
-<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">このモデルが成り立たない場面<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>コブ・ダグラス型は、弾力性が、いつも 1 です。</strong> 実際の財では、価格弾力性は、財によって、大きく違います</li>
 <li><strong>需要曲線は、他の条件を一定にした、仮想の関係です。</strong> 実際の価格と数量のデータは、需要と供給が、同時に動いた結果で、需要曲線を直接、見せてくれません</li>

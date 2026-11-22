@@ -3714,6 +3714,17 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -3739,7 +3750,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8359,7 +8370,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 </details>
 <p><img alt="加速度原理。上は所得、下は投資。所得の増え方が小さくなると、投資は減り、増加が止まると 0 になる" src="../images/ch12-accelerator.png" /></p>
-<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">ノートブックで試す<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-basics-programming/python/notebooks/ch12_consumption_and_investment.ipynb</code> を開き、「Parameters」のセルの数字（所得の系列、限界消費性向、調整係数、資本係数、市場価値と再取得価格）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter12
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>49 passed
@@ -8389,7 +8402,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>恒常所得は、仮定した平均です。</strong> 調整係数 λ は、この章の例の値で、人によって違います。恒常所得を、直接測ることは、できません</li>
 <li><strong>加速度原理は、資本係数 V が一定で、設備に余裕がない、と仮定します。</strong> 設備に余裕があれば、所得が増えても、投資は増えません</li>

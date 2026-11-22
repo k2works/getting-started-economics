@@ -2014,6 +2014,17 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2039,7 +2050,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8067,7 +8078,9 @@
 <li>平均費用と平均可変費用: AC(2) = 24 ÷ 2 = 12、AVC(2) = 4 − 12 + 15 = 7 です。</li>
 </ul>
 <p>MC(2) = 3 は AC(2) = 12 より小さく、MC が AC より小さいときは AC が下がっている、というマインドマップの関係も、ここで確かめられます。</p>
-<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">ノートブックで試す<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/economics-programming/python/notebooks/ch04_functions_and_methods.ipynb</code> を開き、「Parameters」のセルの数字（生産量、固定費用、財の消費量、効用の指数）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter04
 </code></pre></div>
@@ -8102,7 +8115,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p>この費用関数は、生産量が連続的に変えられる前提です。実際には、機械の台数や人数のように、不連続に増える費用があります。また、限界費用の式は、総費用の式を微分して手で導いたものです。総費用の式を変えたら、限界費用の式も変えないと、2 つが食い違います。第 10 章（SciPy による最適化）で、式を微分せずに、費用や利潤の最小値・最大値を数値で探す方法を学びます。</p>
 <h2 id="46">4.6 練習問題<a class="headerlink" href="#46" title="Permanent link">&para;</a></h2>
 <table>

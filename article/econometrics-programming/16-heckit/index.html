@@ -5241,6 +5241,17 @@
   <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -5266,7 +5277,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         データを取得する
@@ -5277,7 +5288,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_14" class="md-nav__link">
+  <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
         ファイルの形（実物で確かめたこと）
@@ -5288,7 +5299,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_15" class="md-nav__link">
+  <a href="#_16" class="md-nav__link">
     <span class="md-ellipsis">
       
         自分の関数を、実際のデータに使う
@@ -5299,7 +5310,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_16" class="md-nav__link">
+  <a href="#_17" class="md-nav__link">
     <span class="md-ellipsis">
       
         外部のソフトウェアの結果との照合
@@ -5327,7 +5338,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_17" class="md-nav__link">
+  <a href="#_18" class="md-nav__link">
     <span class="md-ellipsis">
       
         この方法が成り立たない場面
@@ -5355,7 +5366,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_18" class="md-nav__link">
+  <a href="#_19" class="md-nav__link">
     <span class="md-ellipsis">
       
         できること
@@ -5366,7 +5377,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_19" class="md-nav__link">
+  <a href="#_20" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -5377,7 +5388,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_20" class="md-nav__link">
+  <a href="#_21" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -5427,7 +5438,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_21" class="md-nav__link">
+  <a href="#_22" class="md-nav__link">
     <span class="md-ellipsis">
       
         この連載で扱わなかったこと、次に学ぶこと
@@ -8583,18 +8594,20 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
-<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_12">ノートブックで試す<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/econometrics-programming/python/notebooks/ch16_heckit.ipynb</code> を開き、「Parameters」のセルの数字（標本の大きさ・選択と結果の誤差の相関・繰り返しの回数・乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_13">実行結果<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter16
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>26 passed
 </code></pre></div>
 <h2 id="166">16.6 実際のデータで試す（既婚女性の労働参加・労働時間・賃金）<a class="headerlink" href="#166" title="Permanent link">&para;</a></h2>
 <p>第 4 部の仕上げに、<strong>実際のデータ</strong>で、第 14〜16 章の関数を使います。問いは、「既婚女性の、労働参加・労働時間・賃金は、何に影響されるか」です。</p>
-<h3 id="_13">データを取得する<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">データを取得する<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <p>第 13 章と同じ、<code>wooldridge</code> パッケージ（MIT ライセンス）の <code>mroz</code> を使います。出典は、T.A. Mroz (1987), Econometrica 55, 765-799 です（第 13 章 13.6 節）。<strong>データの利用条件は、確認していません</strong>。各自で確認し、使うときは、出典を明記してください。</p>
-<h3 id="_14">ファイルの形（実物で確かめたこと）<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_15">ファイルの形（実物で確かめたこと）<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <p><strong>753 行、22 列</strong>の、1975 年の既婚女性のデータです。<code>inlf</code>（労働力に入っているか）が 1 の人は <strong>428 人</strong>、<code>hours</code>（労働時間）が 0 の人は <strong>325 人</strong>です。<code>wage</code>・<code>lwage</code> は、働いている 428 人だけで観測され、残りの 325 行は欠損です。説明変数は、<code>nwifeinc</code>（パッケージの説明では (世帯所得 − 本人の賃金 × 労働時間) ÷ 1000。本人の稼ぎ以外の所得）、<code>educ</code>、<code>exper</code>、<code>expersq</code>、<code>age</code>、<code>kidslt6</code>（6 歳未満の子の数）、<code>kidsge6</code>（6〜18 歳の子の数）です。</p>
-<h3 id="_15">自分の関数を、実際のデータに使う<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<h3 id="_16">自分の関数を、実際のデータに使う<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <p>次のスクリプトを <code>practice/chapter16/mroz.py</code> として保存し、アプリの根で、<code>uv run --group realdata python -m practice.chapter16.mroz</code> で実行します。</p>
 <p>このスクリプトは、完成形（<code>lib/</code>）の関数を使います。自分で書いた関数で試すときは、<code>from lib.chapterNN.</code> を <code>from practice.chapterNN.</code> に書き換えます（ファイル名と関数名を、完成形と同じにしてあれば、そのまま動きます）。書き換えた結果が、完成形と同じ出力になれば、自作の関数が、実際のデータでも動いたことになります。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -8693,7 +8706,7 @@ heckit bootstrap se {'const': 0.2869, 'educ': 0.0137, 'exper': 0.0154, 'expersq'
 <blockquote>
 <p><strong>ここで言えること、言えないこと。</strong> トービットは、「働くか」と「何時間か」が、同じ式で決まると仮定します。6 歳未満の子の限界効果（−526 時間）は、働くかどうか（確率が 26 ポイント下がる）と、働く場合の時間の、両方の合計です。この 2 つを、分けて知りたいときは、選択の式と、時間の式を分ける（ヘックマンのような）モデルを使います。また、ヘックマンの結果は、除外変数（<code>nwifeinc</code>・<code>age</code>・<code>kidslt6</code>・<code>kidsge6</code>）が、賃金の式に影響しない、という仮定に依存します。トービットとヘックマンの結果は、外部のソフトウェアの結果と照合しました（次の節）。</p>
 </blockquote>
-<h3 id="_16">外部のソフトウェアの結果との照合<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_17">外部のソフトウェアの結果との照合<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <p>自作のトービットとヘックマンが、実績のあるソフトウェアと同じ結果になるかを、同じ <code>mroz</code> のデータで確かめます。比べる相手は、公開されている次の 2 つの結果です。</p>
 <ul>
 <li><strong>トービット</strong>: Stata の <code>tobit hours nwifeinc educ exper expersq age kidslt6 kidsge6, ll(0)</code> の出力（<a href="https://rowesamuel.github.io/rowesamuel/bookdown_statamarkdown/Week10/book/corner-solution---tobit-model.html">Corner Solution - Tobit Model</a>。係数・標準誤差・σ・対数尤度 −3819.0946）</li>
@@ -8785,7 +8798,7 @@ heckit corrected standard errors agree (2e-4): True
 </tr>
 </tbody>
 </table>
-<h3 id="_17">この方法が成り立たない場面<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<h3 id="_18">この方法が成り立たない場面<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>誤差項の、同時正規分布を仮定します。</strong> 正規でないと、ヘックマンは、一致性を失います（OLS より悪くなることもある）</li>
 <li><strong>除外変数が、結果の式に影響しない、という仮定は、検定できません。</strong> 選択の式と結果の式に、同じ変数しかないと、逆ミルズ比の非線形性だけに頼ることになり、不安定です</li>
@@ -8793,7 +8806,7 @@ heckit corrected standard errors agree (2e-4): True
 </ul>
 <h2 id="168-4">16.8 第 4 部の到達チェック<a class="headerlink" href="#168-4" title="Permanent link">&para;</a></h2>
 <p>第 4 部（第 14〜16 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。</p>
-<h3 id="_18">できること<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
+<h3 id="_19">できること<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -8840,7 +8853,7 @@ heckit corrected standard errors agree (2e-4): True
 </tr>
 </tbody>
 </table>
-<h3 id="_19">時間を決めて書く課題<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<h3 id="_20">時間を決めて書く課題<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、関数とテストを書きます。</p>
 <table>
 <thead>
@@ -8864,7 +8877,7 @@ heckit corrected standard errors agree (2e-4): True
 </tr>
 </tbody>
 </table>
-<h3 id="_20">誤りの原因の分類<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<h3 id="_21">誤りの原因の分類<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
 <p>できなかったときは、原因を分類して、戻る章に戻ります。</p>
 <table>
 <thead>
@@ -8964,7 +8977,7 @@ heckit corrected standard errors agree (2e-4): True
 <li>値の大きい実際のデータでは、数値微分による最適化が、収束不足と標準誤差の誤りを起こしやすい。解析的な勾配と、単位を変えても結果が同じ、というテストで防ぐ（第 15 章）</li>
 <li>第 4 部の到達チェックを行った。これで、全 16 章が完成した。ここまでの章で、推定量を自分で書き、真の値を知るデータと、恒等式で確かめる方法を、学んだ</li>
 </ul>
-<h3 id="_21">この連載で扱わなかったこと、次に学ぶこと<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
+<h3 id="_22">この連載で扱わなかったこと、次に学ぶこと<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
 <p>この連載は、クロスセクションとパネルのデータで、推定量と検定を、自分のコードで確かめる所までです。自分のデータで論文の表を作るには、次のことが、さらに要ります。</p>
 <ul>
 <li><strong>時系列</strong>: 系列相関、単位根、HAC 標準誤差（Newey-West）、ARIMA・VAR。第 2 シリーズ（マクロ）の、時系列の扱いも参照してください</li>

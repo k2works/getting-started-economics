@@ -3412,7 +3412,7 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
-        動かして見る
+        ノートブックで試す
       
     </span>
   </a>
@@ -3421,6 +3421,17 @@
         
           <li class="md-nav__item">
   <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -3448,7 +3459,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8326,11 +8337,13 @@ c = 0.8: 政府支出乗数 5.0、租税乗数 -4.0
 </code></pre></div>
 </details>
 <p><img alt="c = 0.6 と c = 0.8 の総需要。c が大きいと、傾きが急で、交点（均衡）が右へ動く" src="../images/ch04-multiplier-slopes.png" /></p>
-<h3 id="_10">動かして見る<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">ノートブックで試す<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-basics-programming/python/notebooks/ch04_45_degree_line_and_multiplier.ipynb</code> を開き、「Parameters」のセルの数字（限界消費性向、基礎消費、投資、政府支出、租税）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_11">動かして見る<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>限界消費性向 c を 0.3 から 0.9 へ上げます。総需要の線が 45 度線に近づいて急になり、均衡国民所得が右へ大きく動きます。乗数 1 ÷ (1 − c) が、c とともに大きくなる様子です。</p>
 <p><img alt="限界消費性向を上げると、総需要の線が急になり、均衡所得が大きく動く（アニメーション）" src="../images/ch04-mpc-change.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
-<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter04
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>29 passed
@@ -8364,7 +8377,7 @@ c = 0.8: 政府支出乗数 5.0、租税乗数 -4.0
 </tr>
 </tbody>
 </table>
-<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>投資・純輸出は、所得と無関係と仮定しています。</strong> 実際には、所得が増えると、輸入も増えます。輸入が増えると、乗数は、小さくなります</li>
 <li><strong>物価は、変わらないと仮定しています。</strong> 完全雇用に近づくと、需要の増加は、物価の上昇になります（第 5 章のインフレギャップ）</li>

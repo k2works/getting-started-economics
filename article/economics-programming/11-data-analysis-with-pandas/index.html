@@ -2364,6 +2364,17 @@
   <a href="#_16" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2389,7 +2400,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_17" class="md-nav__link">
+  <a href="#_18" class="md-nav__link">
     <span class="md-ellipsis">
       
         このデータと実際の統計の違い
@@ -8371,7 +8382,9 @@ year
 <li>3 つ目の問い: 支出面の GDP も 480.0 です（264 + 110 + 96 + (82 − 72)）。2010 年は、3 つの面が一致します</li>
 <li>年によっては、一致しません。生産面から支出面を引いた差（統計上の不突合）は、2011 年が 1、2012 年が −1、2014 年が 2、2015 年が −1、2018 年が −3、2020 年が 1、2021 年が −1 で、大きさは 1 から 3 です。それ以外の年は 0 です</li>
 </ul>
-<h3 id="_16">実行結果<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_16">ノートブックで試す<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/economics-programming/python/notebooks/ch11_data_analysis_with_pandas.ipynb</code> を開き、「Parameters」のセルの数字（見る年、物価指数の価格と数量）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_17">実行結果<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter11
 </code></pre></div>
@@ -8410,7 +8423,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_17">このデータと実際の統計の違い<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<h3 id="_18">このデータと実際の統計の違い<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
 <p>この章のデータは、生産面と分配面が全年で一致します。実際の統計は、そうではありません。分配面にも、別の資料の誤差が入ります。また、この章の GDP デフレーターは、1 つの数ですが、実際には、財・サービスの種類ごとに、別々のデフレーターを使って、実質化します。さらに、実際の統計は、後から改訂されます。同じ年の値が、公表のたびに変わることがあるので、分析の日付と、データの取得日を、記録しておく必要があります。</p>
 <h2 id="116">11.6 練習問題<a class="headerlink" href="#116" title="Permanent link">&para;</a></h2>
 <table>

@@ -2934,7 +2934,7 @@
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
-        動かして見る
+        ノートブックで試す
       
     </span>
   </a>
@@ -2943,6 +2943,17 @@
         
           <li class="md-nav__item">
   <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -2970,7 +2981,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -2998,7 +3009,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_14" class="md-nav__link">
+  <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -3009,7 +3020,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_15" class="md-nav__link">
+  <a href="#_16" class="md-nav__link">
     <span class="md-ellipsis">
       
         値の確かめ
@@ -3020,7 +3031,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_16" class="md-nav__link">
+  <a href="#_17" class="md-nav__link">
     <span class="md-ellipsis">
       
         できること
@@ -3031,7 +3042,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_17" class="md-nav__link">
+  <a href="#_18" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -8685,11 +8696,13 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 </details>
-<h3 id="_11">動かして見る<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_11">ノートブックで試す<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/micro-basics-programming/python/notebooks/ch10_trade_and_comparative_advantage.ipynb</code> を開き、「Parameters」のセルの数字（世界価格、関税、各国の労働投入）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_12">動かして見る<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p>関税を 0 から 15 へ上げます。国内価格が上がり、関税収入（紫）と、2 つの死荷重（茶・桃）が現れます。関税が 15 に達すると、国内価格が閉鎖経済の価格（55）に届き、<strong>輸入がなくなります</strong>。</p>
 <p><img alt="関税を上げると、国内価格が上がり、死荷重が広がる（アニメーション）" src="../images/ch10-tariff.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
-<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">実行結果<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter10
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>56 passed
@@ -8727,7 +8740,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">このモデルが成り立たない場面<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>小国の仮定です。</strong> 大国が関税をかけると、世界価格が下がり、<strong>交易条件</strong>が改善して、関税が、得になる場合があります（最適関税）</li>
 <li><strong>労働だけが、生産要素です（リカードのモデル）。</strong> 実際は、資本や技術の違いも、比較優位を決めます</li>
@@ -8736,7 +8749,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </ul>
 <h2 id="107-3">10.7 第 3 部の到達チェック<a class="headerlink" href="#107-3" title="Permanent link">&para;</a></h2>
 <p>第 3 部（第 8〜10 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。<strong>先に、次の「時間を決めて書く課題」を、何も見ずに試してください。</strong> そのあとで、「値の確かめ」と「できること」で、答えを見ます。</p>
-<h3 id="_14">時間を決めて書く課題<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_15">時間を決めて書く課題<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、関数とテストを書きます。課題 1〜4 の市場は、需要 Q = 100 − P、供給 Q = P − 10 です（課税は、売り手にかけます）。</p>
 <table>
 <thead>
@@ -8768,7 +8781,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_15">値の確かめ<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<h3 id="_16">値の確かめ<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <p>到達チェックの値を、プログラムで確かめます。各章の関数を、そのまま呼びます。</p>
 <p>「値の確かめ」のスクリプトは、<code>practice/chapter10/reach.py</code> に保存し（10 は、この章の番号）、<code>uv run python -m practice.chapter10.reach</code> で実行します。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.market</span><span class="w"> </span><span class="kn">import</span> <span class="n">LinearMarket</span><span class="p">,</span> <span class="n">equilibrium</span>
@@ -8795,7 +8808,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 関税 10: 輸入 10 関税収入 100 死荷重 100.0
 比較優位 工業・農業: Large Small
 </code></pre></div>
-<h3 id="_16">できること<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_17">できること<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -8837,7 +8850,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_17">誤りの原因の分類<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<h3 id="_18">誤りの原因の分類<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
 <p>できなかった課題は、原因を、次の 4 つに分けて、記録します。</p>
 <table>
 <thead>

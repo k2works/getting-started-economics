@@ -1729,6 +1729,17 @@
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブック
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         到達チェック
       
     </span>
@@ -1749,7 +1760,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         全章に共通する記号
@@ -1771,7 +1782,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         章によって意味が変わる記号
@@ -1798,7 +1809,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         完成形の使い方
@@ -1809,7 +1820,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         参考にした資料
@@ -7735,7 +7746,9 @@
 <p>解答（コードと手計算の答え）は、各章の練習問題の下に、折りたたんであります。<strong>先に自分で取り組んでから、開いてください。</strong> 開くと、答えが見えてしまうので、取り組む前には、開かないことをお勧めします。</p>
 <h2 id="_4">アニメーション<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h2>
 <p>第 5・7・9・10・13・14・15 章には、図を動かした<strong>アニメーション（GIF）</strong>が、小節「動かして見る」にあります。価格調整・税額・投資・価格・政府支出・限界費用・最適反応を動かしたとき、図がどう変わるかを、目で確かめられます。アニメーションの実装は、<code>lib/animations/</code> にあり、<code>uv run python -m tools.render_animations</code> で GIF を書き出します（<strong>写経は不要</strong>です。読んで、動かして、式と図の対応を確かめてください）。</p>
-<h2 id="_5">到達チェック<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h2 id="_5">ノートブック<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<p>各章（第 1〜15 章と付録 A）には、数字を書き換えて、結果と図を手軽に確かめられる <strong>Jupyter Notebook</strong> が、<code>apps/economics-programming/python/notebooks/</code> にあります。「Parameters」のセルの数字（需要・供給の切片と傾き、税額、乱数の種など）を書き換えて、上から順に実行すると、結果と図が変わります。計算は、各章の <code>lib/</code> の関数を呼んでいるので、記事のコードと同じ結果になります。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です（JupyterLab は、プロジェクトの依存に入っていないので、<code>--with</code> で、そのときだけ使います）。ノートブックは、<code>uv run python -m tools.build_notebooks</code> で書き出します。各章の小節「ノートブックで試す」も、あわせて見てください。</p>
+<h2 id="_6">到達チェック<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
 <p>第 1 部（第 6 章）、第 2 部（第 10 章）、第 3 部（第 12 章）、第 4 部（第 15 章）の終わりに、「到達チェック」があります。何も見ずに、できるかどうかを、自分で確かめるものです。</p>
 <ul>
 <li>「できること」の表で、検証の方法（テストが通る、手計算の値と一致する）で、確かめます</li>
@@ -7744,7 +7757,7 @@
 </ul>
 <h2 id="symbols">記号について<a class="headerlink" href="#symbols" title="Permanent link">&para;</a></h2>
 <p>経済学の記号は、分野によって、同じ文字が別の意味になります。この記事でも、需要・供給の記号（a・b・c・d）と、マクロ経済学の記号（限界消費性向の c など）が、同じ文字を使います。章を読むときは、<strong>その章の「式とコードの対応」の表</strong>を、基準にしてください。意味が変わる章には、表の下に、注記があります。</p>
-<h3 id="_6">全章に共通する記号<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<h3 id="_7">全章に共通する記号<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -7799,7 +7812,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="_7">章によって意味が変わる記号<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h3 id="_8">章によって意味が変わる記号<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -7893,9 +7906,9 @@
 </tr>
 </tbody>
 </table>
-<h2 id="_8">完成形の使い方<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
+<h2 id="_9">完成形の使い方<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
 <p>サンプルコードには、各章の完成形が入っています（<code>lib/</code> と <code>test/</code>）。<strong>答え合わせ用</strong>です。自分のコードを、<code>practice/</code> に書いてから、見比べてください。</p>
-<h2 id="_9">参考にした資料<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
+<h2 id="_10">参考にした資料<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h2>
 <p>この記事の章立ての順序は、神戸大学の春山鉄源氏の「経済学のための Python 入門」（<a href="https://py4basics.github.io/">https://py4basics.github.io/</a>、書籍『経済学のためのPython入門』新世社）を参考にしました。本文とコードは、この記事で新たに書いています。学び終えたあとの、次の学習先として、<a href="https://py4etrics.github.io">Pythonで学ぶ入門計量経済学</a> と <a href="https://py4macro.github.io">Pythonで学ぶマクロ経済学</a> があります。</p>
 
 

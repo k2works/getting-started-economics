@@ -4056,6 +4056,17 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -4081,7 +4092,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8128,7 +8139,9 @@
 <li>1 つ目の問い: 乖離は、20 年間で 0.6703 倍（= e^(−0.4)）になります</li>
 <li>2 つ目の問い: 傾きは β = −(1 − 0.6703) ÷ 20 ≈ −0.0165（成長率を小数で見たとき）です。初期の対数の所得が 1 高い（約 2.7 倍の）国は、年の成長率が、約 1.65 ポイント（出力では 1.6484）低くなります</li>
 </ul>
-<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_9">ノートブックで試す<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-programming/python/notebooks/ch06_income_convergence.ipynb</code> を開き、「Parameters」のセルの数字（成長率を測る期間、初期の資本・人的資本を説明変数に加えるか）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter06
 </code></pre></div>
@@ -8163,7 +8176,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>回帰の傾きが負でも、収斂の証拠とは限りません。</strong> 豊かな国の成長が、たまたま低いだけ（平均への回帰、ゆらぎ）かもしれません。始まりの年の測定誤差でも、負の傾きが出ます</li>
 <li><strong>成長率の分散が、縮んでいるかは、別の問題です。</strong> 傾きが負でも、国ごとの成長のゆらぎが大きいと、所得の分布は、縮まないことがあります（練習問題の「生成」）</li>

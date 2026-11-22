@@ -3329,6 +3329,17 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -3354,7 +3365,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8340,7 +8351,9 @@ NDP: 850
 </code></pre></div>
 </details>
 <p><img alt="成長会計: 成長率 6% の内訳。労働 2.8、資本 2.4、技術進歩 0.8" src="../images/ch01-growth-accounting.png" /></p>
-<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">ノートブックで試す<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-basics-programming/python/notebooks/ch01_gdp_and_value_added.ipynb</code> を開き、「Parameters」のセルの数字（各段階の産出額と中間投入、成長率・労働と資本の増加率・分配率）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter01
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>24 passed
@@ -8378,7 +8391,7 @@ NDP: 850
 </tr>
 </tbody>
 </table>
-<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>成長会計の分配率は、仮定です。</strong> 労働分配率 0.4、資本分配率 0.6 は、この章の例の値です。実際の国で、同じとは限りません。分配率を変えると、技術進歩率が変わります（練習問題の「多様」）</li>
 <li><strong>技術進歩率は、「測定されなかったもの」の集まりです。</strong> 技術だけでなく、制度・資源配分・測定の誤差も含みます</li>

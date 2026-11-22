@@ -3916,6 +3916,17 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -3941,7 +3952,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8129,7 +8140,9 @@ TFP の割合: 0.2
 <blockquote>
 <p><strong>これは、架空のデータの結果です。</strong> 実際の統計で試す手順は、第 7 章にあります。</p>
 </blockquote>
-<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_9">ノートブックで試す<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-programming/python/notebooks/ch02_growth_accounting.ipynb</code> を開き、「Parameters」のセルの数字（資本分配率 α、資本・人的資本・TFP の成長率、成長率を測る期間）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter02
 </code></pre></div>
@@ -8164,7 +8177,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>TFP の成長率は、「残り」です。</strong> 資本や人的資本の測定の誤差は、TFP に入ります。TFP が伸びた、と言っても、技術が進んだとは限りません</li>
 <li><strong>資本分配率 α が、国と時代によらず一定、という仮定です。</strong> α を変えると、結果が変わります（練習問題の「多様」）</li>

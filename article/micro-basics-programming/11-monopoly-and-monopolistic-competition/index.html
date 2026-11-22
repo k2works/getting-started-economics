@@ -3002,7 +3002,7 @@
   <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
-        動かして見る
+        ノートブックで試す
       
     </span>
   </a>
@@ -3011,6 +3011,17 @@
         
           <li class="md-nav__item">
   <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -3038,7 +3049,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_16" class="md-nav__link">
+  <a href="#_17" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8579,11 +8590,13 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 </details>
-<h3 id="_14">動かして見る<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_14">ノートブックで試す<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/micro-basics-programming/python/notebooks/ch11_monopoly_and_monopolistic_competition.ipynb</code> を開き、「Parameters」のセルの数字（需要の切片と傾き、限界費用、固定費用）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_15">動かして見る<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <p>限界費用を 0 から 40 へ上げます。MR = MC の点が動き、独占の価格と数量が変わります。利潤（緑）と死荷重（赤）の大きさも変わります。</p>
 <p><img alt="限界費用が上がると、独占の価格と数量が動く（アニメーション）" src="../images/ch11-monopoly-cost.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
-<h3 id="_15">実行結果<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<h3 id="_16">実行結果<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter11
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>39 passed
@@ -8621,7 +8634,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_16">このモデルが成り立たない場面<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_17">このモデルが成り立たない場面<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>一定の限界費用・線形の需要を仮定しました。</strong> 規模の経済・費用逓減では、結果が変わります（第 15 章の自然独占）</li>
 <li><strong>価格差別を、考えていません。</strong> 買い手ごとに価格を変えられれば（完全価格差別なら）、死荷重はなくなります（利潤は、さらに大きくなります）</li>

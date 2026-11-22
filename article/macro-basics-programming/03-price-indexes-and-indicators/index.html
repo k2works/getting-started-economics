@@ -3410,6 +3410,17 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -3435,7 +3446,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8366,7 +8377,9 @@ DI: [50.0, 66.7, 100.0]
 </details>
 <p>景気動向指数の図 <code>plot_business_indexes</code> は、上の段に CI の線を、下の段に DI の棒と 50％の点線を、描きます（<code>lib/chapter03/plot.py</code>）。</p>
 <p><img alt="架空の月次指標から計算した CI（上）と DI（下）。DI の点線は 50％。DI が 50％を割ったあとも、CI は、しばらく高い" src="../images/ch03-business-indexes.png" /></p>
-<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_9">ノートブックで試す<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-basics-programming/python/notebooks/ch03_price_indexes_and_indicators.ipynb</code> を開き、「Parameters」のセルの数字（価格と数量、基準時、名目 GDP とデフレータ、基準の月）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter03
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>36 passed
@@ -8404,7 +8417,7 @@ DI: [50.0, 66.7, 100.0]
 </tr>
 </tbody>
 </table>
-<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>固定した買い物かごは、現実と、ずれます。</strong> 値上がりした財を、減らす（代替）と、ラスパイレスは、生活費の上昇を、大きく見積もります。新しい商品や、品質の向上も、固定したかごでは、扱えません</li>
 <li><strong>この章の DI・CI は、簡略版です。</strong> 実際の景気動向指数は、系列ごとに、変動の大きさをそろえる処理や、季節調整が、あります。この章のデータは、架空です</li>

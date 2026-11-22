@@ -2371,7 +2371,7 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
-        動かして見る
+        ノートブックで試す
       
     </span>
   </a>
@@ -2380,6 +2380,17 @@
         
           <li class="md-nav__item">
   <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -2407,7 +2418,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -2468,7 +2479,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -2479,7 +2490,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_14" class="md-nav__link">
+  <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -8487,13 +8498,15 @@
 <li>2 つ目の問い: 独占の数量は 40.0、価格は 30.0 です。MR = 50 − Q = 10 から Q = 40 になり、需要曲線で価格を読むと 30 です。完全競争（価格 10、数量 80）より、価格は高く、数量は少なくなります</li>
 <li>3 つ目の問い: 2 社が、お互いの生産量を見ながら決めると、各社 26.6667 で、合計は 53.3333 です。独占の 40 と、完全競争の 80 の間です。ただし、独占と完全競争の中点（60）よりは、独占に近い値です</li>
 </ul>
-<h3 id="_10">動かして見る<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">ノートブックで試す<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/economics-programming/python/notebooks/ch15_imperfect_competition_and_game_theory.ipynb</code> を開き、「Parameters」のセルの数字（需要の切片と傾き、限界費用、企業の数、外部費用、ゲームの利得）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_11">動かして見る<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>限界費用を 0 から 40 へ上げます。MR = MC の点が動き、独占の数量と価格が変わります。利潤（緑）と死荷重（紫）は、ともに小さくなります。</p>
 <p><img alt="限界費用を上げると、独占の結果が変わる（アニメーション）" src="../images/ch15-monopoly-cost.gif" /></p>
 <p>2 社が、交互に最適反応をとります。生産量の組は、階段状に動いて、2 本の反応曲線の交点（クールノー均衡）に着きます。</p>
 <p><img alt="最適反応を繰り返すと、クールノー均衡に着く（アニメーション）" src="../images/ch15-cournot-steps.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
-<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter15
 </code></pre></div>
@@ -8532,7 +8545,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <p>この章のモデルは、1 回きりのゲームで、費用が一定で、需要が直線の場合です。同じゲームを繰り返すと、「相手が裏切ったら次から裏切る」という脅しで、協調が均衡になりえます（繰り返しゲーム、しっぺ返し戦略）。また、企業の数が変わる（参入・退出）と、利潤は 0 に近づきます。外部費用の大きさは、実際には、測るのが難しく、ピグー税の額を、正確に決められません。コースの定理が言うように、交渉の費用がなければ、課税せずに当事者の交渉で解決することもあります。</p>
 <h2 id="156">15.6 練習問題<a class="headerlink" href="#156" title="Permanent link">&para;</a></h2>
 <table>
@@ -8628,13 +8641,13 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_13">時間を決めて書く課題<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">時間を決めて書く課題<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、次を書いてください。</p>
 <ol>
 <li>需要 Q = 120 − 2P、限界費用 20 の独占企業の、数量・価格・利潤を求める（15 分）。手計算では、数量 (120 − 40) ÷ 2 = 40、価格 (120 − 40) ÷ 2 = 40、利潤 (40 − 20) × 40 = 800</li>
 <li>2 つの均衡を持つペイオフ行列を作り、<code>pure_nash_equilibria</code> で確かめる（15 分）</li>
 </ol>
-<h3 id="_14">誤りの原因の分類<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_15">誤りの原因の分類<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>

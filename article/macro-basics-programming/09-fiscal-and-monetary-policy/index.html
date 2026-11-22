@@ -3587,7 +3587,7 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
-        動かして見る
+        ノートブックで試す
       
     </span>
   </a>
@@ -3596,6 +3596,17 @@
         
           <li class="md-nav__item">
   <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -3623,7 +3634,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -3651,7 +3662,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -3662,7 +3673,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_14" class="md-nav__link">
+  <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
         値の確かめ
@@ -3673,7 +3684,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_15" class="md-nav__link">
+  <a href="#_16" class="md-nav__link">
     <span class="md-ellipsis">
       
         できること
@@ -3684,7 +3695,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_16" class="md-nav__link">
+  <a href="#_17" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -8313,11 +8324,13 @@ IS が緩やか（b = 40） 金融: 6.6667
 <p>左のグラフは、財政政策で、IS が右へ動く様子、右のグラフは、金融政策で、LM が右へ動く様子です。均衡の動きが、手計算の値（1020 と 2.6、1004 と 2.42）と一致することを、テストで確かめています（<code>test/chapter09/test_plot.py</code>）。</p>
 <p>流動性のわなは、LM が水平な図で見ます。IS が右へ動くと、均衡は、水平な LM の上を、<strong>25 だけ</strong>右へ動きます。貨幣供給を増やしても、LM は動きません（描画は <code>plot_liquidity_trap</code>、<code>lib/chapter09/plot.py</code>）。</p>
 <p><img alt="流動性のわな。LM が水平（利子率 2.5）なので、IS が右へ動くと、均衡は、1000 から 1025（単純な乗数どおり）へ動く" src="../images/ch09-liquidity-trap.png" /></p>
-<h3 id="_10">動かして見る<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">ノートブックで試す<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-basics-programming/python/notebooks/ch09_fiscal_and_monetary_policy.ipynb</code> を開き、「Parameters」のセルの数字（政府支出の増加、実質貨幣供給の増加、k・h・b、利子率の下限）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_11">動かして見る<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>政府支出を 20 増やしたとき、貨幣需要の利子感応度 h を 20 から 400 へ上げます。LM 曲線が平らになるほど、所得の増加が大きくなり、クラウディングアウトが小さくなります。</p>
 <p><img alt="h が大きいほど、財政政策の効果が大きく、クラウディングアウトが小さい（アニメーション）" src="../images/ch09-crowding-out.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
-<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter09
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>34 passed
@@ -8351,14 +8364,14 @@ IS が緩やか（b = 40） 金融: 6.6667
 </tr>
 </tbody>
 </table>
-<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>物価は一定と置いています。</strong> 完全雇用に近いと、需要の増加は、物価を上げ、実質貨幣供給を減らします（第 10 章の AD-AS 分析）</li>
 <li><strong>b・h・k は、一定と置いています。</strong> 実際の値は、推計しないと、分かりません</li>
 </ul>
 <h2 id="97-2">9.7 第 2 部の到達チェック<a class="headerlink" href="#97-2" title="Permanent link">&para;</a></h2>
 <p>第 2 部（第 6〜9 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。<strong>先に、次の「時間を決めて書く課題」を、何も見ずに試してください。</strong> そのあとで、「値の確かめ」と「できること」で、答えを見ます。</p>
-<h3 id="_13">時間を決めて書く課題<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">時間を決めて書く課題<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、関数とテストを書きます。</p>
 <table>
 <thead>
@@ -8382,7 +8395,7 @@ IS が緩やか（b = 40） 金融: 6.6667
 </tr>
 </tbody>
 </table>
-<h3 id="_14">値の確かめ<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_15">値の確かめ<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <p>到達チェックの値を、プログラムで確かめます。第 6 章の貨幣乗数、第 7 章の LM、第 8 章の IS と均衡、この章の政策の効果です。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter06.money_supply</span><span class="w"> </span><span class="kn">import</span> <span class="n">money_multiplier</span><span class="p">,</span> <span class="n">money_stock</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter07.money_market</span><span class="w"> </span><span class="kn">import</span> <span class="n">lm_interest</span><span class="p">,</span> <span class="n">lm_slope</span>
@@ -8408,7 +8421,7 @@ IS 上の所得: 1000.0
 財政政策: 20.0
 金融政策: 4.0
 </code></pre></div>
-<h3 id="_15">できること<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<h3 id="_16">できること<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -8455,7 +8468,7 @@ IS 上の所得: 1000.0
 </tr>
 </tbody>
 </table>
-<h3 id="_16">誤りの原因の分類<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_17">誤りの原因の分類<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <p>できなかったときは、原因を分類して、戻る章に戻ります。</p>
 <table>
 <thead>

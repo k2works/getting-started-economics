@@ -5250,6 +5250,17 @@
   <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_14" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -5275,7 +5286,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_14" class="md-nav__link">
+  <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
         この方法が成り立たない場面
@@ -8682,7 +8693,9 @@ uncensored only {'const': 2.1632, 'x1': 1.2238}
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
-<h3 id="_13">実行結果<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_13">ノートブックで試す<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/econometrics-programming/python/notebooks/ch15_truncated_tobit.ipynb</code> を開き、「Parameters」のセルの数字（標本の大きさ・乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_14">実行結果<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter15
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>26 passed
@@ -8716,7 +8729,7 @@ uncensored only {'const': 2.1632, 'x1': 1.2238}
 </tr>
 </tbody>
 </table>
-<h3 id="_14">この方法が成り立たない場面<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_15">この方法が成り立たない場面<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>トービットは、誤差項の正規分布と、等分散を仮定します。</strong> 仮定が崩れると、最尤推定量は、一致性を失います（OLS より悪くなることもある）。残差の診断が必要です</li>
 <li><strong>「働くか」と「何時間働くか」が、同じ式で決まるという仮定は、強い。</strong> 同じ変数が、同じ符号・同じ比で、両方に影響することになります。そうでないときは、選択の式と結果の式を、分けるモデル（第 16 章のヘックマン）を使います</li>

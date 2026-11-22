@@ -5114,6 +5114,17 @@
   <a href="#_5" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -5139,7 +5150,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         データを取得する
@@ -5150,7 +5161,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         ファイルの形（実物で確かめたこと）
@@ -5161,7 +5172,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         自分の関数を、実際のデータに使う
@@ -5189,7 +5200,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         この検定が成り立たない場面
@@ -5217,7 +5228,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         できること
@@ -5228,7 +5239,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -5239,7 +5250,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -8385,18 +8396,20 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <div class="highlight"><pre><span></span><code>0.5102 {'const': 1.0071, 'x1': 1.0481} {'const': 0.0204, 'x1': 0.0303}
 </code></pre></div>
 <p>誤差のある x1 での OLS は 0.5102 と、減衰係数 0.5 のとおり、半分に縮みます（第 11 章）。もう 1 回の測定 x2 を操作変数にすると、<strong>1.0481（標準誤差 0.0303）</strong>で、真の値 1 に近づきます。</p>
-<h3 id="_5">実行結果<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<h3 id="_5">ノートブックで試す<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/econometrics-programming/python/notebooks/ch13_iv_tests.ipynb</code> を開き、「Parameters」のセルの数字（操作変数の不備の度合い・内生性・有意水準・標本の大きさ・乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_6">実行結果<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter13
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>18 passed
 </code></pre></div>
 <h2 id="136">13.6 実際のデータで試す（女性の賃金と教育）<a class="headerlink" href="#136" title="Permanent link">&para;</a></h2>
 <p>最後に、<strong>実際のデータ</strong>で、第 11〜13 章の関数を使います。問いは、「教育は、賃金を、どれだけ上げるか」です。OLS には、能力が、教育年数と賃金の両方に影響する、という欠落変数の問題があります。親の教育年数を、操作変数にします。</p>
-<h3 id="_6">データを取得する<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
+<h3 id="_7">データを取得する<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>第 6・10 章と同じ、<code>wooldridge</code> パッケージ（MIT ライセンス）の、<code>mroz</code> を使います。パッケージの説明によると、出典は、T.A. Mroz (1987), "The Sensitivity of an Empirical Model of Married Women's Hours of Work to Economic and Statistical Assumptions," Econometrica 55, 765-799 です。<strong>データの利用条件は、確認していません</strong>。各自で確認し、使うときは、出典を明記してください（導入は、第 6 章 6.6 節と同じ）。</p>
-<h3 id="_7">ファイルの形（実物で確かめたこと）<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h3 id="_8">ファイルの形（実物で確かめたこと）<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p><code>wooldridge.data("mroz")</code> は、<strong>753 行、22 列</strong>です。1975 年の既婚女性のデータで、<code>wage</code> は、働いている 428 人だけが、観測されています（残りの <strong>325 行は欠損</strong>）。<code>inlf</code> は、労働力に入っているなら 1（合計 428）です。この節で使う列は、<code>wage</code>（推定の賃金）、<code>educ</code>（教育年数）、<code>exper</code>・<code>expersq</code>（就業経験と、その 2 乗）、<code>fatheduc</code>・<code>motheduc</code>（父・母の教育年数）です。</p>
-<h3 id="_8">自分の関数を、実際のデータに使う<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_9">自分の関数を、実際のデータに使う<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>次のスクリプトを <code>practice/chapter13/mroz.py</code> として保存し、アプリの根で、<code>uv run --group realdata python -m practice.chapter13.mroz</code> で実行します。</p>
 <p>このスクリプトは、完成形（<code>lib/</code>）の関数を使います。自分で書いた関数で試すときは、<code>from lib.chapterNN.</code> を <code>from practice.chapterNN.</code> に書き換えます（ファイル名と関数名を、完成形と同じにしてあれば、そのまま動きます）。書き換えた結果が、完成形と同じ出力になれば、自作の関数が、実際のデータでも動いたことになります。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
@@ -8475,7 +8488,7 @@ sargan 0.378 0.5386
 </tr>
 </tbody>
 </table>
-<h3 id="_9">この検定が成り立たない場面<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_10">この検定が成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>Sargan 検定は、操作変数のうち、少なくとも 1 つが有効であることを、前提にします。</strong> すべてが無効なら、検出できません</li>
 <li><strong>Wu-Hausman 検定は、操作変数が有効であることを、前提にします。</strong> 操作変数が無効だと、検定の結論も、信用できません</li>
@@ -8483,7 +8496,7 @@ sargan 0.378 0.5386
 </ul>
 <h2 id="138-3">13.8 第 3 部の到達チェック<a class="headerlink" href="#138-3" title="Permanent link">&para;</a></h2>
 <p>第 3 部（第 11〜13 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。</p>
-<h3 id="_10">できること<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">できること<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -8530,7 +8543,7 @@ sargan 0.378 0.5386
 </tr>
 </tbody>
 </table>
-<h3 id="_11">時間を決めて書く課題<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">時間を決めて書く課題<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、関数とテストを書きます。</p>
 <table>
 <thead>
@@ -8554,7 +8567,7 @@ sargan 0.378 0.5386
 </tr>
 </tbody>
 </table>
-<h3 id="_12">誤りの原因の分類<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">誤りの原因の分類<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <p>できなかったときは、原因を分類して、戻る章に戻ります。</p>
 <table>
 <thead>

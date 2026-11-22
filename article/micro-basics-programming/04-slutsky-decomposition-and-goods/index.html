@@ -2713,6 +2713,17 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2738,7 +2749,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -2766,7 +2777,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -2777,7 +2788,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         値の確かめ
@@ -2788,7 +2799,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         できること
@@ -2799,7 +2810,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_14" class="md-nav__link">
+  <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -8480,7 +8491,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 </details>
-<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_9">ノートブックで試す<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/micro-basics-programming/python/notebooks/ch04_slutsky_decomposition_and_goods.ipynb</code> を開き、「Parameters」のセルの数字（所得、元の価格と新しい価格）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter04
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>44 passed
@@ -8518,7 +8531,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>ギッフェン財は、実際には、ほとんど見つかっていません。</strong> 理論上ありうる、という位置づけです</li>
 <li><strong>補償需要は、仮想の点です。</strong> 実際の消費者は、「元の効用を保つ」ように、調整してくれません。観察できるのは、A と C だけです</li>
@@ -8528,7 +8541,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </ul>
 <h2 id="47-1">4.7 第 1 部の到達チェック<a class="headerlink" href="#47-1" title="Permanent link">&para;</a></h2>
 <p>第 1 部（第 1〜4 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。<strong>先に、次の「時間を決めて書く課題」を、何も見ずに試してください。</strong> そのあとで、「値の確かめ」と「できること」で、答えを見ます。</p>
-<h3 id="_11">時間を決めて書く課題<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">時間を決めて書く課題<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、関数とテストを書きます。</p>
 <table>
 <thead>
@@ -8556,7 +8569,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_12">値の確かめ<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">値の確かめ<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <p>到達チェックの値を、プログラムで確かめます。各章の関数を、そのまま呼びます。</p>
 <p>「値の確かめ」のスクリプトは、<code>practice/chapter04/reach.py</code> に保存し（04 は、この章の番号）、<code>uv run python -m practice.chapter04.reach</code> で実行します。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.utility</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -8601,7 +8614,7 @@ U = x·y の価格弾力性: 1.0
 Px = 2 → 0.5 : 20.0 40.0 60.0
 Px = 2 → 0.125 : 60.0 240.0 300.0
 </code></pre></div>
-<h3 id="_13">できること<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">できること<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -8638,7 +8651,7 @@ Px = 2 → 0.125 : 60.0 240.0 300.0
 </tr>
 </tbody>
 </table>
-<h3 id="_14">誤りの原因の分類<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_15">誤りの原因の分類<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <p>できなかった課題は、原因を、次の 4 つに分けて、記録します。</p>
 <table>
 <thead>

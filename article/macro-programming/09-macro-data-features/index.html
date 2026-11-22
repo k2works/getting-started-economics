@@ -4172,6 +4172,17 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -4197,7 +4208,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8208,7 +8219,9 @@ inflation       0.201
 <li>2 つ目の問い: 失業率の循環の、GDP の循環との相関は <strong>−0.963</strong> で、<strong>逆向き</strong>です。GDP が好調なとき、失業率は下がります</li>
 <li>3 つ目の問い: ラグ 1 の自己相関は、GDP が 0.623、消費が 0.501、投資が 0.437 で、<strong>いずれも正</strong>です。1 四半期前の循環と、ある程度似ています（持続性があります）</li>
 </ul>
-<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_9">ノートブックで試す<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-programming/python/notebooks/ch09_macro_data_features.ipynb</code> を開き、「Parameters」のセルの数字（HP フィルターの平滑化の強さ、トレンドを描く系列）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter09
 </code></pre></div>
@@ -8243,7 +8256,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>HP フィルターは、標本の端で、不正確です。</strong> 最初と最後のトレンドは、前後のデータが足りないので、不安定です（最新のデータで、循環が大きく変わることがあります）</li>
 <li><strong>平滑化の強さ λ = 1600 は、慣習です。</strong> 理論的に、正しい値ではありません。練習問題の「多様」で、λ を変えると、循環の大きさと自己相関が変わることを確かめます</li>

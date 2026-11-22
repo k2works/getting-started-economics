@@ -4963,6 +4963,17 @@
   <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -4988,7 +4999,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         この方法が成り立たない場面
@@ -8265,7 +8276,9 @@ treated    10.0   15.0
 1.0 {'pooled': 1.4974, 'first_difference': 0.9998} {'pooled': 0.0328, 'first_difference': 0.0346}
 </code></pre></div>
 <p>列は、推定値の平均と標準偏差です。相関 0 では、どちらも偏らず（0.9992 と 0.9998）、1 階差分のほうが、ばらつきが小さい（0.0346 &lt; 0.053。個人効果が差で消えるぶん）。<strong>相関 1 では、プーリング OLS は 1.4974 と、理論値 1.5 のとおりに偏り、1 階差分は 0.9998 で、偏りません</strong>（予想 3・4）。</p>
-<h3 id="_8">実行結果<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_8">ノートブックで試す<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/econometrics-programming/python/notebooks/ch09_pooling_and_did.ipynb</code> を開き、「Parameters」のセルの数字（処置の効果・個人の数と期間・個人の効果と x の相関・乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter09
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>20 passed
@@ -8299,7 +8312,7 @@ treated    10.0   15.0
 </tr>
 </tbody>
 </table>
-<h3 id="_9">この方法が成り立たない場面<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_10">この方法が成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>平行トレンドが成り立たないと、DiD は偏ります。</strong> 処置群が、もともと成長が速い（政策が、成長しそうな地域に導入された）場合、効果を、過大に見積もります</li>
 <li><strong>1 階差分は、時間とともに変わらない変数の効果を、推定できません。</strong> 性別・生まれた地域のような変数は、差で消えます</li>

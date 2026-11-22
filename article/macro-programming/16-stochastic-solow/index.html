@@ -4461,6 +4461,17 @@
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -4486,7 +4497,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8440,7 +8451,9 @@ std of i / std of y: 1.0
 <li>2 つ目の問い: この章の架空のデータでは、TFP の寄与は約 <strong>58%</strong>（0.583）、労働の寄与は約 <strong>42%</strong>（0.42）、資本の寄与は、ほぼ <strong>0</strong>（−0.003）です。これは、TFP の変動を主役にして作った<strong>架空のデータ</strong>の結果です。RBC 理論が実証された、という意味ではなく、関数が分解できることの確認です。</li>
 <li>3 つ目の問い: 貯蓄率が一定なら、消費も投資も、GDP と<strong>まったく同じ割合</strong>で動きます。標準偏差の比は、どちらも <strong>1.0</strong> です。</li>
 </ul>
-<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_11">ノートブックで試す<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-programming/python/notebooks/ch16_stochastic_solow.ipynb</code> を開き、「Parameters」のセルの数字（資本分配率、貯蓄率、減耗率、TFP のショックの持続性 ρ と標準偏差 σ、乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter16
 </code></pre></div>
@@ -8483,7 +8496,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>貯蓄率が一定です。</strong> 家計は、将来を見据えて貯蓄を決めるはずです。次の章以降で、最適化から、貯蓄を内生的に決めます</li>
 <li><strong>労働が一定です。</strong> 労働時間は、景気循環で、大きく動きます（TFP との相関 0.56）</li>

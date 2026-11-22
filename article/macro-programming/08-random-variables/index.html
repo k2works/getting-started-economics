@@ -4148,7 +4148,7 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
-        動かして見る
+        ノートブックで試す
       
     </span>
   </a>
@@ -4157,6 +4157,17 @@
         
           <li class="md-nav__item">
   <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -4184,7 +4195,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8234,11 +8245,13 @@
 <li>2 つ目の問い: 自己相関は、ラグ 1 が <strong>0.5</strong>、ラグ 2 が <strong>0.25</strong>（ρ^k）です。標本のラグ 1 の自己相関は 0.499 でした</li>
 <li>3 つ目の問い: ρ = 0.95 では、分散が 10.348（ρ = 0.5 の約 8 倍）になり、系列の範囲も、−4.8〜4.9 から、−12.4〜12.1 に広がります。ラグ 1 の自己相関は 0.95 で、ショックの半減期は 13.5 期（ρ = 0.5 では 1.0 期）です。ショックの影響が長く残り、系列は、<strong>ゆっくりと、大きく動きます</strong></li>
 </ul>
-<h3 id="_10">動かして見る<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">ノートブックで試す<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-programming/python/notebooks/ch08_random_variables.ipynb</code> を開き、「Parameters」のセルの数字（AR(1) の係数 ρ、ショックの標準偏差 σ、乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_11">動かして見る<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>同じショックの列（乱数の種を固定）のまま、ρ を 0 から 0.98 へ上げます。ρ が小さいと系列は細かく動き、<strong>ρ が 1 に近いほど、ショックの影響が長く残って、ゆっくり大きく動き</strong>ます。ラグ 1 の標本の自己相関も、ρ に近づきます。</p>
 <p><img alt="ρ を上げると、系列がなめらかになり、ショックが長く残る（アニメーション）" src="../images/ch08-ar1-persistence.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
-<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
@@ -8273,7 +8286,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>実際の景気循環は、AR(1) より、複雑です。</strong> 2 期以上前の値にも依存したり（AR(2)）、ショックが非正規だったり、時期によって性質が変わったりします</li>
 <li><strong>標本の自己相関は、系列が短いと、偏ります。</strong> 実際のマクロ・データは、数十〜百数十個しかなく、ρ の推定は、不確かです</li>

@@ -3574,7 +3574,7 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
-        動かして見る
+        ノートブックで試す
       
     </span>
   </a>
@@ -3583,6 +3583,17 @@
         
           <li class="md-nav__item">
   <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -3610,7 +3621,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8327,11 +8338,13 @@ b = 40 の傾き: -0.01 （b = 20 は -0.02 ）
 </code></pre></div>
 </details>
 <p><img alt="IS-LM の均衡。右下がりの IS 曲線と、右上がりの LM 曲線の交点が、所得 1000、利子率 2.5" src="../images/ch08-is-lm.png" /></p>
-<h3 id="_9">動かして見る<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_9">ノートブックで試す<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-basics-programming/python/notebooks/ch08_is_curve_and_is_lm.ipynb</code> を開き、「Parameters」のセルの数字（限界消費性向、投資の利子感応度、IS 曲線の切片、k と h、実質貨幣供給）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_10">動かして見る<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p>政府支出を 0 から 40 へ増やします。IS 曲線が右へ動き、均衡が LM 曲線に沿って、右上へ動きます（所得も利子率も上がります）。</p>
 <p><img alt="政府支出を増やすと、IS 曲線が右へ動き、均衡が LM 曲線に沿って動く（アニメーション）" src="../images/ch08-fiscal-shift.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
-<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>34 passed
@@ -8365,7 +8378,7 @@ b = 40 の傾き: -0.01 （b = 20 は -0.02 ）
 </tr>
 </tbody>
 </table>
-<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>投資を、利子率だけで説明するのは、単純化です。</strong> 実際の投資は、将来の売上の見込みや、企業の資金繰りにも、左右されます（第 12 章）</li>
 <li><strong>物価は、一定と置いています。</strong> 物価が動くと、実質貨幣供給 M/P が動き、LM が動きます（第 10 章の AD-AS 分析）</li>

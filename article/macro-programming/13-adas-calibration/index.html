@@ -4312,6 +4312,17 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -4348,7 +4359,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8344,7 +8355,9 @@ next-period deviation of 1% (%): 0.8065
 <li>2 つ目の問い: a を 2 倍（1.6）にすると、a·c = 0.48 と大きくなり、h は <strong>0.6757</strong> と<strong>小さく</strong>なります。h は、a と c の<strong>積</strong>だけで決まるので、a = 0.4、c = 0.6（積 0.24）の h は、<strong>0.8065</strong> のまま、変わりません。</li>
 <li>3 つ目の問い: ショックがなければ、乖離は h 倍になるので、1% の乖離は、次の期に <strong>0.8065%</strong> になります。</li>
 </ul>
-<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">ノートブックで試す<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-programming/python/notebooks/ch13_adas_calibration.ipynb</code> を開き、「Parameters」のセルの数字（AS 曲線の傾き a、AD 曲線の傾き c、需要・供給ショックの標準偏差）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter13
 </code></pre></div>
@@ -8479,7 +8492,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>期待は、適応的とは限りません。</strong> 前期の物価で期待を作るのは、後ろ向きの仮定です。合理的期待のモデル（第 18 章の RBC など）とは、前提が違います</li>
 <li><strong>ショックは、独立とは限りません。</strong> 政府の政策・投資・流行は、数期間続くので、ホワイト・ノイズでは、持続性が足りません</li>

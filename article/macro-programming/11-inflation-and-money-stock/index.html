@@ -4242,6 +4242,17 @@
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -4267,7 +4278,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8123,7 +8134,9 @@
 <li>2 つ目の問い: 実質成長率が 3% なら、物価上昇率は <strong>2%</strong> に下がります（5 − 3）。貨幣の伸び率が同じでも、実質成長が高いほど、物価は上がりません</li>
 <li>3 つ目の問い: 貨幣数量説が成り立てば、傾きは <strong>1</strong> になるはずです。20 か国のパネルの回帰の傾きは、全体で <strong>1.029</strong>、ハイパーインフレを除いても <strong>1.005</strong> で、ほぼ 1 です</li>
 </ul>
-<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_11">ノートブックで試す<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-programming/python/notebooks/ch11_inflation_and_money_stock.ipynb</code> を開き、「Parameters」のセルの数字（貨幣の伸び率、実質成長率、流通速度の伸び率、回帰に使う物価上昇率の上限）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter11
 </code></pre></div>
@@ -8158,7 +8171,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>流通速度が、安定とは限りません。</strong> 金融の自由化・決済手段の変化・予想の変化で、流通速度は、大きく動きます。短期には、数量説は、成り立ちにくいです</li>
 <li><strong>貨幣量の定義が、国によって、時期によって違います。</strong> 現金・預金・M1・M2 のどれを使うかで、結果が変わります</li>

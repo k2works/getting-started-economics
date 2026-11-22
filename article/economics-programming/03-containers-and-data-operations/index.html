@@ -1957,6 +1957,17 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -1982,7 +1993,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -7963,7 +7974,9 @@
 <li>1 つ目の問い: 需要量は価格 0・10・20・30 の順に 100・80・60・40、供給量は 0・30・60・90 です。</li>
 <li>2 つ目の問い: 超過需要は 100・50・0・−50 で、0 になるのは価格 20 のときです。<code>market_clearing_prices</code> も <code>[20]</code> を返します。式で 100 − 2P = 3P を解いても、P = 20 になります。</li>
 </ul>
-<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_9">ノートブックで試す<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/economics-programming/python/notebooks/ch03_containers_and_data_operations.ipynb</code> を開き、「Parameters」のセルの数字（価格のリスト、需要・供給の切片と傾き）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter03
 </code></pre></div>
@@ -7994,7 +8007,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>この章の方法は、均衡の価格が、表に載せた価格の中にあるときだけ見つかります。たとえば価格を 0・10・30 の 3 つにすると、均衡の 20 は表にないので、<code>market_clearing_prices</code> は空のリストを返します。実際には、均衡価格が表の価格と一致するとは限りません。第 5 章で、価格を少しずつ動かして均衡を探す方法を学びます。</p>
 <h2 id="36">3.6 練習問題<a class="headerlink" href="#36" title="Permanent link">&para;</a></h2>
 <table>

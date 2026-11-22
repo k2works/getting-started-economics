@@ -2132,6 +2132,17 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2157,7 +2168,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8039,7 +8050,9 @@
 <li>1 つ目の問い: 1 回目の観測値は 89.4172 で、期待値 80 から 10 ほど離れています（標準偏差 10 のばらつきです）。観測値を増やすと、累積平均は 10 個で 76.3804、100 個で 79.1634、1000 個で 80.1785、10000 個で 79.9924 と、80 に近づきます。</li>
 <li>2 つ目の問い: 30 回の平均を 1000 回集めたときの標準偏差は 0.3094 で、サイコロ 1 回の標準偏差 1.7078 より小さくなります。理論値は 1.7078 ÷ √30 = 0.3118 で、ほぼ一致します。1000 個の平均の平均は 3.5102 で、3.5 に近い値です。</li>
 </ul>
-<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">ノートブックで試す<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/economics-programming/python/notebooks/ch08_random_numbers_and_simulation.ipynb</code> を開き、「Parameters」のセルの数字（乱数の種、ばらつき、観測値の個数、サイコロを振る回数）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
@@ -8074,7 +8087,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p>シミュレーションは、観測値が独立で、同じ分布に従う前提です。需要は、前の日の需要に影響されることがあり、その場合、観測値が増えても、平均がこの章の式の速さでは安定しません。また、この章の需要は、<code>max</code> で 0 に切り捨てていません。ばらつきの標準偏差 10 が、期待値 80 に比べて十分小さいので、負になる確率は無視できますが、期待値が小さくなると、無視できなくなります。</p>
 <h2 id="86">8.6 練習問題<a class="headerlink" href="#86" title="Permanent link">&para;</a></h2>
 <table>

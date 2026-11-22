@@ -2283,6 +2283,17 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2308,7 +2319,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -2369,7 +2380,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -2380,7 +2391,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -8024,7 +8035,9 @@
 <li>2 つ目の問い: 2010 年は、実質（499.4797）の方が、名目（480.0）より高くなります。デフレーターが 96.1 と 100 未満なので、名目をデフレーターで割って 100 を掛けると、値が大きくなるからです。2021 年は逆で、名目（596.0）の方が、実質（576.9603）より高くなります</li>
 <li>3 つ目の問い: 景気動向指数は、2013 年も 2020 年も 0.0 です。4 つの支出項目が、どれも前の年より増えなかったからです。この 2 つの年は、第 11 章で、実質成長率がマイナスだった年です</li>
 </ul>
-<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">ノートブックで試す<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/economics-programming/python/notebooks/ch12_plotting_with_pandas.ipynb</code> を開き、「Parameters」のセルの数字（図に描く最初の年、移動平均の窓の幅）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter12
 </code></pre></div>
@@ -8059,7 +8072,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p>DI は、系列の増減の「数」しか見ないので、少し減った系列も、大きく減った系列も、同じ 1 つとして数えます。また、4 つの系列では、0% か 100% になりやすく、景気の強さを区別できません。移動平均は、窓の幅によって、結論が変わります。幅を変えて、結論が変わらないかを確かめる必要があります。</p>
 <h2 id="126">12.6 練習問題<a class="headerlink" href="#126" title="Permanent link">&para;</a></h2>
 <table>
@@ -8189,13 +8202,13 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_12">時間を決めて書く課題<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">時間を決めて書く課題<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、次を書いてください。</p>
 <ol>
 <li>表から、実質 GDP を求めて、成長率がマイナスの年を取り出す（15 分）</li>
 <li>移動平均と DI を、手計算できる小さな表でテストする（15 分）</li>
 </ol>
-<h3 id="_13">誤りの原因の分類<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">誤りの原因の分類<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>

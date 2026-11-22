@@ -4207,6 +4207,17 @@
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -4232,7 +4243,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8163,7 +8174,9 @@ GDP が 1% 好調なときの失業率（%ポイント）: -0.496
 <li>2 つ目の問い: フィリップス曲線の傾き（全期間）は −0.337 なので、失業率が 1%ポイント低いとき、物価上昇率は、平均より約 <strong>0.34%ポイント高い</strong>です</li>
 <li>3 つ目の問い: 2000 年より前の傾きは −0.571、2000 年以降は −0.161 です。傾きの大きさが小さくなり、<strong>0 に近づきました（平らになりました）</strong></li>
 </ul>
-<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_11">ノートブックで試す<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-programming/python/notebooks/ch10_okun_and_phillips.ipynb</code> を開き、「Parameters」のセルの数字（HP フィルターの平滑化の強さ、フィリップス曲線を分ける年、窓の長さ）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter10
 </code></pre></div>
@@ -8198,7 +8211,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>フィリップス曲線の傾きの変化は、「失業率の効果が弱まった」ことの証拠とは限りません。</strong> 期待物価上昇率の安定（金融政策の信認）が、物価を動かなくしたのかもしれません。回帰では、区別できません</li>
 <li><strong>オークンの係数 −0.5 は、国と時期で違います。</strong> この記事の値は、架空のデータです</li>

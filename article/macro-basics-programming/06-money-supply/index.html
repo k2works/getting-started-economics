@@ -3515,7 +3515,7 @@
   <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
-        動かして見る
+        ノートブックで試す
       
     </span>
   </a>
@@ -3524,6 +3524,17 @@
         
           <li class="md-nav__item">
   <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -3551,7 +3562,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_16" class="md-nav__link">
+  <a href="#_17" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8370,11 +8381,13 @@ M1, M3, 広義流動性: 600 920 1020
 </details>
 <p>信用創造の図（<code>plot_credit_creation</code>）は、同じ作りで、ラウンドごとのマネーストックと、上限（乗数 × H）を、1 つの図に描きます。テストと実装は、<code>test/chapter06/test_plot.py</code> と <code>lib/chapter06/plot.py</code> を見てください。</p>
 <p><img alt="信用創造。H = 110、C/D = 0.1、R/D = 0.01 のとき、ラウンドを重ねるごとにマネーストックは、上限 1100（乗数 10 × H）に近づく" src="../images/ch06-credit-creation.png" /></p>
-<h3 id="_14">動かして見る<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_14">ノートブックで試す<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-basics-programming/python/notebooks/ch06_money_supply.ipynb</code> を開き、「Parameters」のセルの数字（ハイパワードマネー、現金預金比率、準備預金比率、公開市場操作の額）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_15">動かして見る<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <p>信用創造を、40 ラウンド追います。ラウンドを重ねるごとに、マネーストックが、貨幣乗数 × ハイパワードマネーという上限（破線）へ、近づきます。</p>
 <p><img alt="信用創造のラウンドを重ねると、マネーストックが上限へ近づく（アニメーション）" src="../images/ch06-credit-creation.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
-<h3 id="_15">実行結果<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<h3 id="_16">実行結果<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter06
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>34 passed
@@ -8412,7 +8425,7 @@ M1, M3, 広義流動性: 600 920 1020
 </tr>
 </tbody>
 </table>
-<h3 id="_16">このモデルが成り立たない場面<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_17">このモデルが成り立たない場面<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>現金預金比率と準備預金比率は、一定とは限りません。</strong> 景気や、金融不安で、家計は現金を多く持ち、銀行は準備を多く置きます。乗数は、<strong>不安定</strong>です</li>
 <li><strong>貸出を、銀行が、自由に増やせるとは限りません。</strong> 貸出先（資金需要）が、なければ、信用創造は、進みません。H を増やしても、マネーストックが、思ったほど増えないことがあります</li>

@@ -4266,6 +4266,17 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -4291,7 +4302,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         データを取得する
@@ -4313,7 +4324,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         読み込む関数
@@ -4352,7 +4363,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -4380,7 +4391,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_14" class="md-nav__link">
+  <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
         できること
@@ -4391,7 +4402,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_15" class="md-nav__link">
+  <a href="#_16" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -4402,7 +4413,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_16" class="md-nav__link">
+  <a href="#_17" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -8197,7 +8208,9 @@ t 値: 0.7
 <li>2 つ目の問い: 固定相場から変動相場に移ると、名目為替レートの変動の大きさは、0.126 から <strong>3.012</strong> に、約 24 倍になります。物価は粘着的に作ってあるので、すぐには動きません</li>
 <li>3 つ目の問い: 変動相場では、実質為替レートの変動の大きさが 3.03 で、名目（3.012）とほぼ等しく、名目と実質の変化率の相関は <strong>0.993</strong> です。名目の動きが、そのまま、実質為替レートの動きになります。固定相場では、相関は 0.24 でした</li>
 </ul>
-<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">ノートブックで試す<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-programming/python/notebooks/ch12_money_neutrality.ipynb</code> を開き、「Parameters」のセルの数字（固定相場から変動相場に切り替わった四半期）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter12
 </code></pre></div>
@@ -8205,7 +8218,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <h2 id="125-gdp">12.5 実際の統計で試す（内閣府の四半期 GDP）<a class="headerlink" href="#125-gdp" title="Permanent link">&para;</a></h2>
 <p>最後に、第 2 部の<strong>実際の統計</strong>で、第 8・9 章の関数を試します。</p>
-<h3 id="_11">データを取得する<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">データを取得する<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <p>内閣府・経済社会総合研究所の「四半期別 GDP 速報」の統計表一覧から、2 つの CSV を保存します（第 1 シリーズの第 11 章の、実際の統計の手順と、同じページです）。</p>
 <table>
 <thead>
@@ -8272,7 +8285,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_12">読み込む関数<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">読み込む関数<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <p>第 1 四半期の行から年を引き継ぎ、続く行に、同じ年を付けて、四半期（<code>PeriodIndex</code>）の系列に直します。</p>
 <div class="highlight"><pre><span></span><code><span class="n">HEADER</span> <span class="o">=</span> <span class="p">[</span>
     <span class="s2">"実質季節調整系列,,,&lt;参考&gt;,,(単位:2020暦年連鎖価格、10億円)"</span><span class="p">,</span>
@@ -8498,7 +8511,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">このモデルが成り立たない場面<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>短期には、貨幣は中立ではありません。</strong> 金融政策は、短期には、実質 GDP や失業率に影響するとされます（第 15 章以降）</li>
 <li><strong>物価は、変動相場でも、為替レートに、少しずつ反応します。</strong> この章のデータは、物価の反応を、ほとんど入れていません</li>
@@ -8507,7 +8520,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </ul>
 <h2 id="127-2">12.7 第 2 部の到達チェック<a class="headerlink" href="#127-2" title="Permanent link">&para;</a></h2>
 <p>第 2 部（第 8〜12 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。</p>
-<h3 id="_14">できること<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_15">できること<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -8554,7 +8567,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_15">時間を決めて書く課題<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<h3 id="_16">時間を決めて書く課題<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、関数とテストを書きます。</p>
 <table>
 <thead>
@@ -8578,7 +8591,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_16">誤りの原因の分類<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_17">誤りの原因の分類<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <p>できなかったときは、原因を分類して、戻る章に戻ります。</p>
 <table>
 <thead>

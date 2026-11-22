@@ -2084,6 +2084,17 @@
   <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2109,7 +2120,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -2159,7 +2170,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_14" class="md-nav__link">
+  <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -2170,7 +2181,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_15" class="md-nav__link">
+  <a href="#_16" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -8136,7 +8147,9 @@
 <li>1 つ目の問い: 超過需要は、価格 0 で +100、価格 100 で −300 と符号が逆なので、間に必ず均衡があります（超過需要は連続だからです）。真ん中の価格 50 の超過需要は −150 で負なので、均衡は [0, 50] にあります。</li>
 <li>2 つ目の問い: 区間の幅は 100 → 50 → 25 → 12.5 → 6.25 → 3.125 → 1.5625 → 0.78125 と縮み、7 回で 1 未満になります。<code>find_equilibrium_price</code> が返す均衡価格は 20.0 です。</li>
 </ul>
-<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_12">ノートブックで試す<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/economics-programming/python/notebooks/ch06_modules_errors_and_algorithms.ipynb</code> を開き、「Parameters」のセルの数字（需要・供給の切片と傾き、探す区間の下限と上限）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_13">実行結果<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter06
 </code></pre></div>
@@ -8167,7 +8180,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">このモデルが成り立たない場面<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <p>二分法は、区間の両端で超過需要の符号が逆のときだけ使えます。均衡が複数あるモデル（需要や供給が複雑な形のとき）では、区間に均衡が 2 つ以上含まれ、どの均衡が見つかるかは、区間の取り方で決まります。また、超過需要が途中でとびとびになる場合は、符号が変わっても 0 になる点がないことがあります。</p>
 <h2 id="66">6.6 練習問題<a class="headerlink" href="#66" title="Permanent link">&para;</a></h2>
 <table>
@@ -8289,14 +8302,14 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_14">時間を決めて書く課題<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_15">時間を決めて書く課題<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、次を書いてください。</p>
 <ol>
 <li>需要曲線 Q = 120 − 2P と供給曲線 Q = 20 + 3P の、超過需要の関数を作る（10 分）</li>
 <li>二分法で均衡価格を求め、20 になることを確かめるテストを書く（15 分）</li>
 </ol>
 <p>詰まった所は、その章に戻ってください。</p>
-<h3 id="_15">誤りの原因の分類<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<h3 id="_16">誤りの原因の分類<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <p>テストが通らなかったときは、原因を次のように分けると、戻る先が分かります。</p>
 <table>
 <thead>

@@ -2027,7 +2027,7 @@
   <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
-        動かして見る
+        ノートブックで試す
       
     </span>
   </a>
@@ -2036,6 +2036,17 @@
         
           <li class="md-nav__item">
   <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -2063,7 +2074,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8041,11 +8052,13 @@
 <li>2 つ目の問い: 価格 10 の超過需要は 50 なので、2 回目の調整の後は 10 + 0.1 × 50 = 15 になります。出力の 1 行目の 3 つ目の値です。</li>
 <li>3 つ目の問い: k = 0.5 では、価格が 0 → 50 → −25 → 87.5 → −81.25 → 171.875 → −207.8125 と動きます。均衡の 20 に近づかず、行き過ぎて、振動が大きくなっていきます。</li>
 </ul>
-<h3 id="_8">動かして見る<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_8">ノートブックで試す<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/economics-programming/python/notebooks/ch05_control_flow.ipynb</code> を開き、「Parameters」のセルの数字（需要・供給の切片と傾き、最初の価格と数量、調整の速さ）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_9">動かして見る<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>価格 40 から、調整の速さ 0.3 で、ワルラス調整を動かします。超過供給（売れ残り）では価格が下がり、下がりすぎて超過需要（品不足）になると上がります。価格は、均衡価格 20 の上下に揺れながら、近づきます。赤い線が、超過需要（需要量と供給量の差）です。</p>
 <p><img alt="価格が、均衡価格へ近づく（アニメーション）" src="../images/ch05-walras.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
-<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter05
 </code></pre></div>
@@ -8077,7 +8090,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>この章の調整は、価格が毎回、均衡に近づく前提です。需要と供給の傾きによっては、均衡のまわりを行き来して近づかない（または遠ざかる）ことがあります。また、現実の市場は、毎回同じ速さで調整するとは限りません。収束するかどうかは、実際に動かして確かめる必要があります。</p>
 <h2 id="56">5.6 練習問題<a class="headerlink" href="#56" title="Permanent link">&para;</a></h2>
 <table>

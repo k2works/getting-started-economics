@@ -2336,7 +2336,7 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
-        動かして見る
+        ノートブックで試す
       
     </span>
   </a>
@@ -2345,6 +2345,17 @@
         
           <li class="md-nav__item">
   <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -2372,7 +2383,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8230,11 +8241,13 @@
 <li>2 つ目の問い: 古典派では、政府支出を 20 増やしても、所得は 1250.0 のままで、物価だけが 1.0 から 1.0825 に上がります</li>
 <li>3 つ目の問い: ケインズの右上がりの部分（完全雇用所得 1300 の総供給）では、政府支出を 20 増やすと、所得は 1277.4943 から 1297.443 に、物価は 0.955 から 0.9949 に上がります。所得も物価も上がります</li>
 </ul>
-<h3 id="_10">動かして見る<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">ノートブックで試す<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/economics-programming/python/notebooks/ch14_ad_as_and_major_theories.ipynb</code> を開き、「Parameters」のセルの数字（政府支出、貨幣供給、完全雇用所得、失業率、フィリップス曲線の傾き）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_11">動かして見る<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>政府支出を 100 から 140 へ増やします。総需要曲線は右へ動きますが、古典派の総供給は垂直なので、所得は 1250 のまま変わらず、物価だけが上がります。</p>
 <p><img alt="政府支出を増やすと、総需要曲線が動き、物価だけが上がる（アニメーション）" src="../images/ch14-adas-fiscal.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
-<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter14
 </code></pre></div>
@@ -8273,7 +8286,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <p>ここで作った総供給曲線は、形を決めて、数値を与えたものです。労働市場から導いたわけではありません（マインドマップの「労働市場から導出」は、この章の範囲外です）。また、フィリップス曲線は、期待物価上昇率を、一定と考えています。人々が、物価上昇を織り込むと、曲線自体が動きます。貨幣数量説は、貨幣の流通速度 V が一定の前提です。金融の仕組みが変わると、V は変わります。</p>
 <h2 id="146">14.6 練習問題<a class="headerlink" href="#146" title="Permanent link">&para;</a></h2>
 <table>

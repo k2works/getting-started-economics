@@ -3995,6 +3995,17 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -4020,7 +4031,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8176,7 +8187,9 @@
 <blockquote>
 <p><strong>回帰の係数を、生産関数の係数と読むと、間違えます。</strong> 発展会計は、α を<strong>外から与えて</strong>、TFP を残りとして求めました。回帰で α を推定しようとすると、TFP が資本と相関している場合、α は過大になります。実際のデータでは、真の値が分からないので、ずれていることにも気づけません。この章のデータが架空で、真の値が分かっているから、確かめられました。</p>
 </blockquote>
-<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_9">ノートブックで試す<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-programming/python/notebooks/ch03_regression.ipynb</code> を開き、「Parameters」のセルの数字（回帰する 3 つの点の座標）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter03
 </code></pre></div>
@@ -8211,7 +8224,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>誤差が、説明変数と無相関、という仮定が、必要です。</strong> 成り立たないと、係数は偏ります（この章の結果）</li>
 <li><strong>観測数が少ないと、標準誤差が大きくなります。</strong> この章は、24 か国で、人的資本の係数の標準誤差が 0.556 と大きい</li>

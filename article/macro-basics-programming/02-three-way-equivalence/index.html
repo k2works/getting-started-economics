@@ -3364,6 +3364,17 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -3389,7 +3400,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8377,7 +8388,9 @@ False True
 </details>
 <p>産業連関表の図 <code>plot_io_output</code> は、<code>output_for_demand</code> で、生産量を求めて、最終需要と並べる棒グラフです（<code>lib/chapter02/plot.py</code>）。</p>
 <p><img alt="産業連関表。最終需要（青）より、それを満たす生産量（オレンジ）のほうが、どの部門も大きい" src="../images/ch02-io-output.png" /></p>
-<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">ノートブックで試す<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/macro-basics-programming/python/notebooks/ch02_three_way_equivalence.ipynb</code> を開き、「Parameters」のセルの数字（産出額と中間投入、分配面・支出面の各項目、投入係数と最終需要）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter02
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>40 passed
@@ -8415,7 +8428,7 @@ False True
 </tr>
 </tbody>
 </table>
-<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>投入係数は、一定という仮定です。</strong> 実際には、価格や技術が変わると、係数も変わります。この章の生産量は、係数が、変わらないときの値です</li>
 <li><strong>供給の制約を、考えていません。</strong> 必要な生産量が、設備や人手の限界を超えると、この計算どおりには、なりません</li>

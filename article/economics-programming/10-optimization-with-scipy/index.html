@@ -2213,7 +2213,7 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
-        動かして見る
+        ノートブックで試す
       
     </span>
   </a>
@@ -2222,6 +2222,17 @@
         
           <li class="md-nav__item">
   <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -2249,7 +2260,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -2310,7 +2321,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -2321,7 +2332,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_14" class="md-nav__link">
+  <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -8175,11 +8186,13 @@
 <li>2 つ目の問い: 価格 15 のとき、利潤を最大にする生産量は 4.0 です。MC = 15 を満たす q は 0 と 4 の 2 つありますが、限界費用が右下がりの側にある q = 0 では、利潤は最大になりません</li>
 <li>3 つ目の問い: 価格 5 のとき、生産量は 0 です。価格 5 は、平均可変費用の最低値 6 を下回るので、生産しません</li>
 </ul>
-<h3 id="_10">動かして見る<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">ノートブックで試す<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/economics-programming/python/notebooks/ch10_optimization_with_scipy.ipynb</code> を開き、「Parameters」のセルの数字（財の価格、所得、効用の指数、財の価格（利潤最大化）、賃金と資本の賃貸料）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_11">動かして見る<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>価格を 4 から 24 へ上げます。価格が AVC（平均可変費用）の最小（6）を下回る間は、生産しません。超えると生産を始め、価格が AC（平均費用）を超えるまでは、損失（赤い長方形）です。それより上がると、利潤（緑の長方形）が増えます。</p>
 <p><img alt="価格を上げると、生産を始め、利潤が増える（アニメーション）" src="../images/ch10-profit-price.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
-<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter10
 </code></pre></div>
@@ -8214,7 +8227,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <p>数値の最適化は、探し始める点によって、違う解（局所的な最適解）に行き着くことがあります。この章の問題は、効用関数が凹で、制約が直線なので、解が 1 つしかありません。しかし、費用関数や効用関数が複雑になると、解が複数あり、探し始める点を変えて確かめる必要があります。また、この章の SLSQP は、関数が滑らかな場合に使えます。折れ線のような関数では、別の方法が必要です。</p>
 <h2 id="106">10.6 練習問題<a class="headerlink" href="#106" title="Permanent link">&para;</a></h2>
 <table>
@@ -8306,13 +8319,13 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_13">時間を決めて書く課題<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_14">時間を決めて書く課題<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、次を書いてください。</p>
 <ol>
 <li>需要 Q = 120 − 2P、供給 Q = 20 + 3P の均衡を、<code>np.linalg.solve</code> で求める（10 分）</li>
 <li>所得 60、価格 (3, 2) の消費者が、U = x^0.5 · y^0.5 を最大にする点を、<code>minimize</code> で求め、手計算の (10, 15) と比べる（15 分）</li>
 </ol>
-<h3 id="_14">誤りの原因の分類<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_15">誤りの原因の分類<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>

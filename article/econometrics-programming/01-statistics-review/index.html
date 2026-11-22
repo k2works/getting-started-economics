@@ -4705,6 +4705,17 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -4730,7 +4741,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         この道具が成り立たない場面
@@ -8261,7 +8272,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
-<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">ノートブックで試す<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/econometrics-programming/python/notebooks/ch01_statistics_review.ipynb</code> を開き、「Parameters」のセルの数字（標本の大きさ・母集団の平均と標準偏差・乱数の種・t 分布の自由度）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter01
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>32 passed
@@ -8299,7 +8312,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_11">この道具が成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">この道具が成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>相関は、直線の関係しか測りません。</strong> x = −2、−1、0、1、2、y = x² は、y が x で完全に決まりますが、相関係数は 0 です。相関が 0 でも、関係がないとは限りません（次の <code>0.0</code> を確かめてください）</li>
 <li><strong>標準誤差の式は、標本が、独立に取り出されたことを、前提にしています。</strong> 同じ人を何度も調べたデータ（パネル・データ）では、独立ではないので、標準誤差が、小さく出すぎます（第 10 章）</li>

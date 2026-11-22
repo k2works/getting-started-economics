@@ -3116,7 +3116,7 @@
   <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
-        到達チェック
+        ノートブック
       
     </span>
   </a>
@@ -3125,6 +3125,17 @@
       
         <li class="md-nav__item">
   <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        到達チェック
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         架空のデータについて
@@ -3147,7 +3158,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         全章に共通する記号
@@ -3158,7 +3169,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         章によって意味が変わる記号
@@ -3174,7 +3185,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         分量と進め方の目安
@@ -3185,7 +3196,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         環境について
@@ -3196,7 +3207,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         完成形の使い方
@@ -3224,7 +3235,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
         参考にした資料
@@ -7775,13 +7786,17 @@
 <p>解答（コードと手計算の答え）は、各章の練習問題の下に、折りたたんであります。<strong>先に自分で取り組んでから、開いてください。</strong></p>
 <h2 id="_5">アニメーション<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
 <p>第 4・6・7・8・9・10・11・14 章には、図を動かした<strong>アニメーション（GIF）</strong>が、小節「動かして見る」にあります。限界消費性向・信用創造のラウンド・実質貨幣供給・政府支出・貨幣需要の利子感応度・失業率の維持を動かしたとき、図がどう変わるかを、目で確かめられます。アニメーションの実装は、<code>lib/animations/</code> にあり、<code>uv run python -m tools.render_animations</code> で GIF を書き出します（<strong>写経は不要</strong>です。読んで、動かして、式と図の対応を確かめてください）。</p>
-<h2 id="_6">到達チェック<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<h2 id="_6">ノートブック<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<p>全 14 章に、数字を書き換えて、結果と図を手軽に確かめる <strong>Jupyter Notebook</strong> があります。<code>apps/macro-basics-programming/python/notebooks/</code> にあり、各章の小節「ノートブックで試す」が、ファイル名を案内します。</p>
+<p>起動は、アプリのディレクトリで、<code>uv run --with jupyterlab jupyter lab notebooks/</code> です（JupyterLab は、プロジェクトの依存に入れていません。起動のときだけ、足します）。ノートブックを開いたら、「Parameters」のセルの数字を書き換えて、メニューの Run → Run All Cells で、上から順に実行します。数字を変えるたびに、各章の関数が呼ばれ、結果と図が変わります。末尾の「試してみよう」に、変えると何が起きるかを、書いてあります。</p>
+<p><strong>写経は、不要</strong>です。ノートブックは、各章の関数を呼ぶだけで、式をノートブックの中で書き直しません。まず、予想してから数字を変えて、予想が合うかを、確かめてください。ノートブックの実体は、<code>tools/build_notebooks.py</code> で、<code>uv run python -m tools.build_notebooks</code> が書き出します（実行結果は、保存しません）。</p>
+<h2 id="_7">到達チェック<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
 <p>第 1 部（第 5 章）、第 2 部（第 9 章）、第 3 部（第 14 章）の終わりに、「到達チェック」があります。何も見ずに、できるかどうかを、自分で確かめる節です。できなかった項目は、戻る章が書いてあります。</p>
-<h2 id="_7">架空のデータについて<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<h2 id="_8">架空のデータについて<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
 <p>この記事は、<strong>実在の統計を使いません。</strong> 手計算できる小さな例と、架空のデータ（<code>data/</code> の CSV）だけを使います。架空のデータは、実在の国や年の統計ではありません。実際の統計を使う分析は、<a href="../../macro-programming/">マクロ経済学のためのプログラミング（中級＋）</a> や、<a href="../../econometrics-programming/">計量経済学のためのプログラミング</a> で扱います。</p>
 <h2 id="symbols">記号について<a class="headerlink" href="#symbols" title="Permanent link">&para;</a></h2>
 <p>経済学の記号は、分野によって、同じ文字が別の意味になります。章を読むときは、<strong>その章の「式とコードの対応」の表</strong>を、基準にしてください。意味が変わる章には、表の下に、注記があります。この表は、章を足すごとに、更新します。</p>
-<h3 id="_8">全章に共通する記号<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_9">全章に共通する記号<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -7808,7 +7823,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="_9">章によって意味が変わる記号<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_10">章によって意味が変わる記号<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -7911,11 +7926,11 @@
 </tr>
 </tbody>
 </table>
-<h2 id="_10">分量と進め方の目安<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h2>
+<h2 id="_11">分量と進め方の目安<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h2>
 <p>1 章は、読むだけなら 1〜2 時間ですが、手を動かすと、章によっては 1 回では終わりません。<strong>第 2・10・14 章は、2 回に分ける</strong>ことをすすめます（第 2 章は、三面等価と、産業連関表。第 10 章は、労働市場と、AD-AS。第 14 章は、固定相場と、変動相場）。各章の「図」の小節（描画のテストと実装）は、後回しにしても、学習は成り立ちます。</p>
-<h2 id="_11">環境について<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h2>
+<h2 id="_12">環境について<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h2>
 <p><code>uv sync</code> は、兄弟のディレクトリ <code>apps/article-tools/</code>（記事の検査ツール）に依存します。<strong>アプリのフォルダだけを取り出さず、リポジトリごと</strong>使ってください。</p>
-<h2 id="_12">完成形の使い方<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h2>
+<h2 id="_13">完成形の使い方<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h2>
 <p>サンプルコードには、各章の完成形が入っています（<code>lib/</code> と <code>test/</code>）。<strong>答え合わせ用</strong>です。自分のコードを、<code>practice/</code> に書いてから、見比べてください。</p>
 <h3 id="import">写経の手順（import と実行）<a class="headerlink" href="#import" title="Permanent link">&para;</a></h3>
 <ul>
@@ -7925,7 +7940,7 @@
 <li><code>practice/</code> には、<code>conftest.py</code>（Matplotlib を、画面を使わない Agg に固定する）が、最初から入っています。消さないでください（消すと、図のテストが、環境によって、<code>TclError</code> で、まれに落ちます）。<code>uv run pytest practice</code> で、章をまたいで、まとめて実行できます</li>
 <li>「予想の答え合わせ」のスクリプトは、<code>practice/chapterNN/check.py</code> に保存し、<code>apps/macro-basics-programming/python</code> で <code>uv run python -m practice.chapterNN.check</code> と実行します（<code>from lib...</code> が通るのは、このディレクトリで実行したときだけです）</li>
 </ul>
-<h2 id="_13">参考にした資料<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h2>
+<h2 id="_14">参考にした資料<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h2>
 <p>この記事の章立てと、式・数値の例は、このリポジトリの <a href="../../%E7%B5%8C%E6%B8%88%E5%AD%A6%E3%83%BB%E7%B5%8C%E6%B8%88%E6%94%BF%E7%AD%96%20%E3%83%88%E3%83%94%E3%83%83%E3%82%AF%E5%88%A5%E3%83%9E%E3%82%A4%E3%83%B3%E3%83%89%E3%83%9E%E3%83%83%E3%83%97/">経済学・経済政策 トピック別マインドマップ</a> と <a href="../../%E7%B5%8C%E6%B8%88%E5%AD%A6%E3%83%BB%E7%B5%8C%E6%B8%88%E6%94%BF%E7%AD%96%20%E5%85%A8%E4%BD%93%E3%83%9E%E3%82%A4%E3%83%B3%E3%83%89%E3%83%9E%E3%83%83%E3%83%97/">全体マインドマップ</a> に基づきます。外部の教材・データは、参照していません。</p>
 
 
