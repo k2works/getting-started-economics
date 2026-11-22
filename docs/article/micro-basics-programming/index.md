@@ -15,7 +15,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-21T00:00:00Z }
 
 各章の構成と、練習問題・到達チェックの使い方は、[この記事の読み方](how-to-read.md) を参照してください。
 
-> 全 14 章（4 部）が公開されています。各部の終わり（第 4・7・10・14 章）に、到達チェックがあります（第 1 部は第 4 章、第 2 部は第 7 章、第 3 部は第 10 章）。
+> 全 16 章（4 部）が公開されています。各部の終わり（第 4・7・10・16 章）に、到達チェックがあります（第 1 部は第 4 章、第 2 部は第 7 章、第 3 部は第 10 章、第 4 部は第 16 章）。
 
 ## この記事の読み方
 
@@ -86,9 +86,11 @@ uv run pytest test/chapter01
 | 章 | テーマ | 状況 |
 | :--- | :--- | :--- |
 | [第 11 章](11-monopoly-and-monopolistic-competition.md) | 独占と独占的競争 | 執筆済み |
-| [第 12 章](12-oligopoly-and-game-theory.md) | 寡占とゲーム理論 | 執筆済み |
-| [第 13 章](13-externality-public-goods-and-natural-monopoly.md) | 外部効果・公共財・費用逓減産業 | 執筆済み |
-| [第 14 章](14-information-asymmetry.md) | 情報の非対称性（第 4 部の到達チェック） | 執筆済み |
+| [第 12 章](12-oligopoly-and-game-theory.md) | 寡占とゲーム理論（1）: 利得表とナッシュ均衡 | 執筆済み |
+| [第 13 章](13-repeated-games-and-kinked-demand.md) | 寡占とゲーム理論（2）: 繰り返しゲームと屈折需要曲線 | 執筆済み |
+| [第 14 章](14-externality-and-coase.md) | 外部効果（ピグー税・コースの定理・排出権取引） | 執筆済み |
+| [第 15 章](15-public-goods-and-natural-monopoly.md) | 公共財と自然独占 | 執筆済み |
+| [第 16 章](16-information-asymmetry.md) | 情報の非対称性（第 4 部の到達チェック） | 執筆済み |
 
 ## 参照
 

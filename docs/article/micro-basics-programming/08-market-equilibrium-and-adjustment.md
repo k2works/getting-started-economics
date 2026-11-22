@@ -40,7 +40,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-21T00:00:00Z }
 | マーシャル的調整 | Q' = Q + 速さ × (需要価格 − 供給価格) | `marshall_adjustment(market, quantity0, speed, steps)` |
 | シフト | 切片が、数量の方向に動く | `shift_demand`、`shift_supply` |
 
-> **記号の注意（第 11・13 章との違い）**: この章の需要は Q = a + s_d·P（数量を価格で表す式。傾きは負）です。第 11・13 章の逆需要は P = a − b·Q（価格を数量で表す式。傾きは正）で、同じ `demand_intercept`・`demand_slope` という名前でも、**軸と符号が違います**。移すときは、式の向きを変えてください。
+> **記号の注意（第 11・14 章との違い）**: この章の需要は Q = a + s_d·P（数量を価格で表す式。傾きは負）です。第 11・14 章の逆需要は P = a − b·Q（価格を数量で表す式。傾きは正）で、同じ `demand_intercept`・`demand_slope` という名前でも、**軸と符号が違います**。移すときは、式の向きを変えてください。
 
 ### 前提とする章
 

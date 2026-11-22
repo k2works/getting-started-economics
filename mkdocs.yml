@@ -92,6 +92,11 @@ nav:
       - 概要: review/index.md
   - ADR:
       - 概要: adr/index.md
+      - ミクロ経済学のためのプログラミング（初級）:
+          - 一覧: adr/micro-basics-programming/index.md
+          - ADR-001 第 12・13 章の分割: adr/micro-basics-programming/001-split-chapters-12-and-13.md
+          - ADR-002 共通ツールの改善: adr/micro-basics-programming/002-shared-tooling-improvements.md
+          - ADR-003 pytest-timeout: adr/micro-basics-programming/003-pytest-timeout.md
   - ジャーナル:
       - 概要: journal/index.md
   - 記事:
@@ -131,9 +136,11 @@ nav:
           - 第 9 章 余剰分析と課税: article/micro-basics-programming/09-surplus-and-tax.md
           - 第 10 章 国際貿易と比較優位: article/micro-basics-programming/10-trade-and-comparative-advantage.md
           - 第 11 章 独占と独占的競争: article/micro-basics-programming/11-monopoly-and-monopolistic-competition.md
-          - 第 12 章 寡占とゲーム理論: article/micro-basics-programming/12-oligopoly-and-game-theory.md
-          - 第 13 章 外部効果・公共財・費用逓減産業: article/micro-basics-programming/13-externality-public-goods-and-natural-monopoly.md
-          - 第 14 章 情報の非対称性: article/micro-basics-programming/14-information-asymmetry.md
+          - 第 12 章 寡占とゲーム理論（1）利得表とナッシュ均衡: article/micro-basics-programming/12-oligopoly-and-game-theory.md
+          - 第 13 章 寡占とゲーム理論（2）繰り返しゲームと屈折需要曲線: article/micro-basics-programming/13-repeated-games-and-kinked-demand.md
+          - 第 14 章 外部効果: article/micro-basics-programming/14-externality-and-coase.md
+          - 第 15 章 公共財と自然独占: article/micro-basics-programming/15-public-goods-and-natural-monopoly.md
+          - 第 16 章 情報の非対称性: article/micro-basics-programming/16-information-asymmetry.md
       - マクロ経済学のためのプログラミング（初級）:
           - 概要: article/macro-basics-programming/index.md
           - この記事の読み方: article/macro-basics-programming/how-to-read.md

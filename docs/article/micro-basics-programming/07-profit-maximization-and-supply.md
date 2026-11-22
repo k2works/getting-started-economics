@@ -26,7 +26,7 @@ generated: { by: claude-code/claude-sonnet-5-5, at: 2026-11-21T00:00:00Z }
 | 経済学の題材 | 利潤最大化（P = MC）、利潤、損益分岐点、操業停止点、供給曲線、市場供給、供給の価格弾力性、従量税・従価税 |
 | 使う Python の機能 | 関数、関数を引数に渡す（`Callable`）、リスト内包表記、NumPy（`linspace`・`argmax`）、テスト（`pytest`） |
 | 新しく導入するライブラリ | なし |
-| 完成形 | `shutdown_price`、`break_even_price`、`profit`、`profit_maximizing_output`、`profit_maximizing_output_by_grid`、`supply_curve`、`market_supply`、`market_supply_curve`、`supply_elasticity`、`supply_price`、`supply_price_unit_tax`、`supply_price_ad_valorem`、`supply_after_unit_tax`、`supply_after_ad_valorem_tax` |
+| 完成形 | `shutdown_price`、`break_even_price`、`profit`、`profit_maximizing_output`、`profit_maximizing_output_by_grid`、`free_entry_price`、`free_entry_output`、`number_of_firms`、`supply_curve`、`market_supply`、`market_supply_curve`、`supply_elasticity`、`supply_price`、`supply_price_unit_tax`、`supply_price_ad_valorem`、`supply_after_unit_tax`、`supply_after_ad_valorem_tax` |
 | ファイル | 実装: `lib/chapter07/supply.py`、`lib/chapter07/plot.py`（図）／テスト: `test/chapter07/test_supply.py`、`test/chapter07/test_plot.py`（自分で書くときは、`practice/chapter07/` に、同じ名前で作ります） |
 | データ | なし（手計算できる小さな例だけ） |
 
@@ -59,7 +59,7 @@ uv run pytest test/chapter07
 ```
 
 ```text
-55 passed
+59 passed
 ```
 
 自分でコードを書くときは、`practice/chapter07/` に、`supply.py` と `test_supply.py` を作ります。第 5 章の `CostCurve` などは、完成形の `lib/chapter05/` から import してかまいません（[この記事の読み方](how-to-read.md)を参照）。
@@ -485,6 +485,56 @@ def supply_after_ad_valorem_tax(curve: CostCurve, price: float, rate: float) -> 
 
 従量税 6 のとき、q = 5 を供給する価格は、30 + 6 = 36 です。従価税 20% のときは、30 ÷ 0.8 = 37.5 です。q = 3 では、上乗せが、従量税で 6、従価税で 1.5 ですが、q = 5 では、従量税で 6、従価税で 7.5 と、**従価税の上乗せは、生産量とともに大きく**なります（傾きが急）。税率は、0 以上 1 未満に限ります。
 
+### 自由参入の長期均衡
+
+短期の供給は、企業の数を一定にした話でした。利潤が正なら、**新規参入**が起き、価格が下がります。利潤が 0 になるまで、参入が続くので、**長期の価格は、平均費用 AC の最低値**になります。このとき、各企業の生産量は、AC が最低になる生産量（**効率的規模**）で、長期の供給曲線は、**その価格で水平**です。企業数は、市場の需要量を、各企業の生産量で割った値です。
+
+```python
+def test_自由参入の長期均衡は平均費用の最低点() -> None:
+    assert free_entry_price(CURVE) == pytest.approx(15)
+    assert free_entry_output(CURVE) == pytest.approx(4)
+    assert profit(
+        CURVE, free_entry_price(CURVE), free_entry_output(CURVE)
+    ) == pytest.approx(0)
+
+
+def test_長期の供給曲線は平均費用の最低価格で水平() -> None:
+    price = free_entry_price(CURVE)
+    assert profit_maximizing_output(CURVE, price) == pytest.approx(
+        free_entry_output(CURVE)
+    )
+    assert free_entry_price(OTHER) == pytest.approx(break_even_price(OTHER))
+
+
+def test_長期の企業数は市場の需要量を企業の生産量で割った値() -> None:
+    assert number_of_firms(CURVE, 100) == pytest.approx(25)
+    assert number_of_firms(CURVE, 200) == pytest.approx(50)
+
+
+def test_企業数の市場の数量は正でなければエラー() -> None:
+    with pytest.raises(ValueError, match="数量"):
+        number_of_firms(CURVE, 0)
+```
+
+```python
+def free_entry_price(curve: CostCurve, q_max: float = 10.0) -> float:
+    """自由参入の長期均衡の価格 = AC の最低値。利潤が 0 になるまで、参入が続く。"""
+    return cost_minima(curve, q_max)["AC"][1]
+
+
+def free_entry_output(curve: CostCurve, q_max: float = 10.0) -> float:
+    """自由参入の長期均衡での、各企業の生産量 = AC が最低になる生産量（効率的規模）。"""
+    return cost_minima(curve, q_max)["AC"][0]
+
+
+def number_of_firms(curve: CostCurve, market_quantity: float) -> float:
+    """長期均衡の企業数 = 市場の需要量 ÷ 企業の生産量。長期の供給曲線は水平。"""
+    validate_positive(market_quantity, "市場の数量は、正にする")
+    return market_quantity / free_entry_output(curve)
+```
+
+第 5 章の費用曲線では、AC の最低点は、価格 15、生産量 4 です。そこでは、利潤が 0 になります。市場の需要量が 100 なら、企業は 25 社、200 なら 50 社で、価格は 15 のまま（水平）です。
+
 ### 予想の答え合わせ
 
 予想した答えを、プログラムで確かめます。
@@ -724,7 +774,7 @@ uv run pytest test/chapter07
 ```
 
 ```text
-55 passed
+59 passed
 ```
 
 ## 7.6 規則で言うと
@@ -745,7 +795,7 @@ uv run pytest test/chapter07
 ### このモデルが成り立たない場面
 
 - **完全競争を仮定しています。** 企業が、価格を決められる（市場支配力がある）なら、P = MC になりません（第 11 章）
-- **短期の費用関数です。** 長期には、固定費用がなく、新規参入で、利潤が 0 になります
+- **短期の費用関数と、企業の数が一定の供給を、主に扱いました。** 長期の自由参入（利潤が 0 になる）は、小節「自由参入の長期均衡」で、簡単に触れました。固定費用が、長期には 0 になる（費用曲線が変わる）ことは、扱っていません
 - **企業は、利潤を最大にすると仮定しています。** 現実の企業は、売上や、市場シェアを、重視することもあります
 - **数値微分や格子点の探索は、近似です。** 格子の幅の分だけ、誤差があります
 

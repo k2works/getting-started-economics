@@ -1,6 +1,7 @@
 # Docs Update Log
 
 ## 2026-11-22
+* **Update**: ミクロ経済学のためのプログラミング（初級）の第 12・13 章を分割し、全 16 章にした。[ADR](adr/micro-basics-programming/index.md) を 3 件追加（claude-code/claude-sonnet-5-5）
 * **Creation**: [ミクロ経済学のためのプログラミング（初級） 全体レビュー](/review/micro-basics-programming_review_20261122.md) を作成し、高 3 件と中の多くに対応（claude-code/claude-sonnet-5-5）
 * **Update**: [ミクロ経済学のためのプログラミング（初級）](article/micro-basics-programming/index.md) の第 11〜14 章（第 4 部）を追加し、全 14 章を公開
 

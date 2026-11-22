@@ -57,7 +57,7 @@ uv run pytest test/chapter05
 ```
 
 ```text
-39 passed
+42 passed
 ```
 
 自分でコードを書くときは、`practice/chapter05/` に、`cost.py` と `test_cost.py` を作ります（[この記事の読み方](how-to-read.md)を参照）。
@@ -178,6 +178,11 @@ class CostCurve:
     def __post_init__(self) -> None:
         validate_positive(self.cubic, "3 次の係数は、正にする")
         validate_non_negative(self.fixed, "固定費用は、0 以上にする")
+        a, b, c = self.cubic, self.quadratic, self.linear
+        if c < 0 or (b < 0 and b**2 > 3 * a * c):
+            raise ValueError(
+                "限界費用が負になる係数は、扱わない（c ≥ 0、b ≥ 0 または b² ≤ 3ac）"
+            )
 
 
 def _check_quantity(q: float) -> None:
@@ -279,6 +284,8 @@ def marginal_cost(curve: CostCurve, q: float) -> float:
     )
     from lib.chapter05.plot import plot_cost_curves, plot_total_cost
     ```
+
+作るときに、3 次の係数が正、固定費用が 0 以上であることに加えて、**限界費用が負にならない**こと（c ≥ 0、b ≥ 0 または b² ≤ 3ac）を検査します。限界費用が負になる係数では、可変費用が負になり、経済として成り立たないためです。
 
 固定費用は、**総費用にだけ**入り、限界費用の式には、出てきません（`test_限界費用は固定費用に依らない`）。生産量が負のときは、エラーにします。
 
@@ -393,14 +400,19 @@ def cost_minima(
     validate_positive(points - 2, "点の数は、3 以上にする")
     grid = np.linspace(0.0, q_max, points)
     positive = grid[1:]
-    return {
+    minima = {
         "MC": argmin_of([marginal_cost(curve, float(q)) for q in grid], grid),
         "AVC": argmin_of(
             [average_variable_cost(curve, float(q)) for q in positive], positive
         ),
         "AC": argmin_of([average_cost(curve, float(q)) for q in positive], positive),
     }
+    if any(q >= q_max for q, _ in minima.values()):
+        raise ValueError("最低点が探索の上限に届いた。上限 q_max を大きくする")
+    return minima
 ```
+
+最低点が、探索の上限 `q_max` に届いたときは、**エラー**にします（黙って、端の値を返さないためです）。その場合は、`q_max` を大きくして、探索し直します。
 
 MC・AVC・AC の最低点は、(q, 値) = (2, 3)、(3, 6)、(4, 15) です。限界費用は、AVC の最低点（q = 3）で 6、AC の最低点（q = 4）で 15 となり、**それぞれの最低値と、一致します**（最後のテスト）。平均費用と平均可変費用は、**q = 0 で求められない**ので、0 を除いた格子点で探します。
 
@@ -576,7 +588,7 @@ uv run pytest test/chapter05
 ```
 
 ```text
-39 passed
+42 passed
 ```
 
 ## 5.6 規則で言うと
