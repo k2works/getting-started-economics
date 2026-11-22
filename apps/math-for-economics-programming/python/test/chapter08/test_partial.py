@@ -91,6 +91,20 @@ def test_数値のヘッセ行列で行列式がほぼ0なら判定できない(
     assert classify_critical_point_2d(-2, -2 + 1e-12, -2) == "undetermined"
 
 
+def test_係数が負でも行列式がちょうど0なら判定できない() -> None:
+    for hessian in [(-4, 0, 0), (0, 0, -4), (-1, -1, -1), (-2, 2, -2)]:
+        assert classify_critical_point_2d(*hessian) == "undetermined"
+
+
+def test_行列式を0とみなす幅は係数の大きさに比例する() -> None:
+    # D = 1 でも、係数が 10⁶ と大きければ、0 とみなす
+    assert classify_critical_point_2d(1e6, 0, 1e-6) == "undetermined"
+    assert classify_critical_point_2d(1, 0, 1e-6) == "minimum"
+    # 幅は 10⁻⁹ × (1 + 1 + 1) = 3 × 10⁻⁹。f_xy が負でも、2 乗で足す
+    assert classify_critical_point_2d(1, -1, 1 + 2.5e-9) == "undetermined"
+    assert classify_critical_point_2d(1, -1, 1 + 4e-9) == "minimum"
+
+
 def test_行列式が0の2次関数には停留点が1つに決まらない() -> None:
     with pytest.raises(ValueError):
         quadratic_2d_critical_point(1, 2, 1, -4, -4)

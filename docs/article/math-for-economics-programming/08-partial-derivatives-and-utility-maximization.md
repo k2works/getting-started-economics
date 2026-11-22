@@ -61,10 +61,10 @@ uv run pytest test/chapter08
 ```
 
 ```text
-57 passed
+59 passed
 ```
 
-自分でコードを書くときは、`practice/chapter08/` に、完成形と同じ名前のファイル（`partial.py`・`utility.py`・`plot.py`・`test_partial.py`・`test_utility.py`・`test_plot.py`）を作ります。図を後回しにするなら、`plot.py` と `test_plot.py` は要らず、テストは 48 件になります。
+自分でコードを書くときは、`practice/chapter08/` に、完成形と同じ名前のファイル（`partial.py`・`utility.py`・`plot.py`・`test_partial.py`・`test_utility.py`・`test_plot.py`）を作ります。図を後回しにするなら、`plot.py` と `test_plot.py` は要らず、テストは 50 件になります。
 
 - テスト・`utility.py`・`plot.py`・check スクリプトの import を、`from practice.chapter08...` に書き換えます（`utility.py` は `partial` を、`plot.py` は `utility` を import します。書き換えないと、完成形を動かします）
 - 第 5 章の `numerical_derivative` と、第 7 章の `budget_intercepts` などは、自分で写した `practice.chapter05`・`practice.chapter07` から import します。写していなければ、`lib.chapter05`・`lib.chapter07` のままでかまいません。この章では、それらの実装を再掲しません
@@ -807,7 +807,7 @@ maximum
 
 ### 境界のテスト
 
-完成形には、本文に載せなかったテストがあります。係数が対称でない 2 次関数、2 階の偏微分が 0 < |f_xx| < 1、行列式が 0 か、数値でほぼ 0（判定できない・停留点が決まらない）、a = 0.3 の需要、数量 0、a が 0〜1 の外、負の数量、所得 0・負の所得・2 財でない予算・正でない価格、所得がちょうど足りる端点、2 点だけの格子、負の効用水準、正でない重みです。テストの件数を合わせるため、ここに全件載せます。
+完成形には、本文に載せなかったテストがあります。係数が対称でない 2 次関数、2 階の偏微分が 0 < |f_xx| < 1、行列式が 0 か、数値でほぼ 0（係数が負の場合・0 とみなす幅が係数の大きさに比例すること。判定できない・停留点が決まらない）、a = 0.3 の需要、数量 0、a が 0〜1 の外、負の数量、所得 0・負の所得・2 財でない予算・正でない価格、所得がちょうど足りる端点、2 点だけの格子、負の効用水準、正でない重みです。テストの件数を合わせるため、ここに全件載せます。
 
 ??? note "境界のテスト"
 
@@ -841,6 +841,20 @@ maximum
         hessian = numerical_hessian_2d(_negative_square_of_sum, 1, -1)
         assert classify_critical_point_2d(*hessian) == "undetermined"
         assert classify_critical_point_2d(-2, -2 + 1e-12, -2) == "undetermined"
+
+
+    def test_係数が負でも行列式がちょうど0なら判定できない() -> None:
+        for hessian in [(-4, 0, 0), (0, 0, -4), (-1, -1, -1), (-2, 2, -2)]:
+            assert classify_critical_point_2d(*hessian) == "undetermined"
+
+
+    def test_行列式を0とみなす幅は係数の大きさに比例する() -> None:
+        # D = 1 でも、係数が 10⁶ と大きければ、0 とみなす
+        assert classify_critical_point_2d(1e6, 0, 1e-6) == "undetermined"
+        assert classify_critical_point_2d(1, 0, 1e-6) == "minimum"
+        # 幅は 10⁻⁹ × (1 + 1 + 1) = 3 × 10⁻⁹。f_xy が負でも、2 乗で足す
+        assert classify_critical_point_2d(1, -1, 1 + 2.5e-9) == "undetermined"
+        assert classify_critical_point_2d(1, -1, 1 + 4e-9) == "minimum"
 
 
     def test_行列式が0の2次関数には停留点が1つに決まらない() -> None:
@@ -1180,7 +1194,7 @@ uv run pytest test/chapter08
 ```
 
 ```text
-57 passed
+59 passed
 ```
 
 ## 8.6 規則で言うと
