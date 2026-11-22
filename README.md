@@ -6,6 +6,7 @@
 ![Python](https://img.shields.io/badge/python-3.12%2B-blue?logo=python&logoColor=white)
 ![Node.js](https://img.shields.io/badge/node-22.x-339933?logo=node.js&logoColor=white)
 [![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue)](https://k2works.github.io/getting-started-economics/)
+[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/k2works/getting-started-economics)
 
 ## 概要
 
