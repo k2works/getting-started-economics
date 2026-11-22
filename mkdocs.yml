@@ -112,6 +112,10 @@ nav:
           - 第 2 章 2 次関数と独占・寡占市場: article/math-for-economics-programming/02-quadratics-monopoly-and-oligopoly.md
           - 第 3 章 指数・対数と金利: article/math-for-economics-programming/03-exponents-logarithms-and-interest.md
           - 第 4 章 数列と貯蓄: article/math-for-economics-programming/04-sequences-and-saving.md
+          - 第 5 章 1 変数の微分と利潤最大化: article/math-for-economics-programming/05-derivatives-and-profit-maximization.md
+          - 第 6 章 指数・対数の微分と弾力性: article/math-for-economics-programming/06-elasticity-and-growth-rates.md
+          - 第 7 章 ベクトルと予算制約: article/math-for-economics-programming/07-vectors-and-budget-constraint.md
+          - 第 8 章 多変数の微分と効用最大化: article/math-for-economics-programming/08-partial-derivatives-and-utility-maximization.md
       - 経済学のためのプログラミング入門:
           - 概要: article/economics-programming/index.md
           - この記事の読み方: article/economics-programming/how-to-read.md
