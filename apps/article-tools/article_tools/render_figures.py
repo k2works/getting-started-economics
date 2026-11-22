@@ -7,7 +7,7 @@
 
 図は `docs/article/<シリーズ名>/images/` に作る。PNG のピクセルは、
 OS やライブラリの版で、わずかに変わるので比べない。代わりに、図に描いたデータ
-（線の座標・棒の高さ・軸の名前）から「指紋」（ハッシュ）を作り、
+（線の座標・棒の高さ・塗り・矢印・文字・軸の名前・タイトル）から「指紋」（ハッシュ）を作り、
 `tools/figure_fingerprints.json` に保存した値と比べる。モデルの係数や、
 `lib/` の関数を変えて、図のデータが変わると、指紋が変わって、検査が失敗する。
 """
@@ -27,8 +27,10 @@ import matplotlib
 matplotlib.use("Agg")
 
 import numpy as np  # noqa: E402
+from matplotlib.axes import Axes  # noqa: E402
 from matplotlib.figure import Figure  # noqa: E402
 from matplotlib.patches import Polygon, Rectangle  # noqa: E402
+from matplotlib.text import Annotation  # noqa: E402
 
 # 対象のシリーズ（apps/<名前>/python/）。実行する場所か、環境変数で決める
 APP_DIR = Path(os.environ.get("ARTICLE_APP_DIR", Path.cwd())).resolve()
@@ -43,41 +45,152 @@ FINGERPRINTS_FILE = TOOLS_DIR / "figure_fingerprints.json"
 
 # 図の数値を丸める桁数（OS や数値計算の版による、ごく小さな誤差を無視する）
 _DIGITS = 4
+# 絶対値がこれより小さい値は、小数の桁でなく、有効数字で丸める
+_SMALL = 1e-3
+_SIGNIFICANT = 4
 _IMAGE_REFERENCE = re.compile(r"!\[[^\]]*\]\(images/([^)]+?)\.png\)")
 
 
+def _round_small(value: float) -> float:
+    return float(f"{value:.{_SIGNIFICANT}g}")
+
+
+def _round_array(values: Any, log: Any = False) -> Any:
+    """座標などの数値の並びを丸めて、JSON にできるリストにする。
+
+    ふつうの値は、これまでどおり小数 `_DIGITS` 桁に丸める。対数目盛の軸の座標
+    （`log` が真の列）で、絶対値が `_SMALL` 未満の値（0 と、無限大・NaN を除く）
+    だけ、有効数字 `_SIGNIFICANT` 桁に丸める。`log` は、値の最後の次元に合わせて
+    広げる（点の並びなら `(x 軸が対数か, y 軸が対数か)`、軸の範囲なら 1 つの真偽値）。
+
+    なぜ、すべての値を有効数字にしないか。規則は 1 つで済むが、ふつうの値
+    （例: 123.456789 は、小数 4 桁なら 123.4568、有効数字 4 桁なら 123.5）も
+    丸め方が変わり、すべての図の指紋を作り直すことになる。
+
+    なぜ、小さい値をすべてでなく、対数目盛の軸に限るか。線形目盛の小さい値は、
+    0 になるはずの値の計算誤差（10⁻¹⁵ 程度。OS や BLAS の版で変わる）であることが
+    多い。有効数字で丸めると、その誤差が指紋に入り、指紋が環境で揺れる。線形目盛
+    では、10⁻⁵ と 10⁻⁷ の差は、図の上で見分けられないので、小数 4 桁で足りる。
+    対数目盛では、10⁻⁵ と 10⁻⁷ は 2 目盛も離れて見えるのに、小数 4 桁ではどちらも
+    0 に潰れる。そこで、対数目盛の小さい値だけ、有効数字で丸める。
+    """
+    array = np.asarray(values, dtype=float)
+    rounded = np.round(array, _DIGITS)
+    small = (
+        np.asarray(log, dtype=bool)
+        & np.isfinite(array)
+        & (array != 0)
+        & (np.abs(array) < _SMALL)
+    )
+    if small.any():
+        rounded[small] = [_round_small(float(v)) for v in array[small]]
+    return rounded.tolist()
+
+
+def _round_number(value: float, log: bool) -> float:
+    """1 つの数値を丸める。丸め方は `_round_array` と同じ。"""
+    if log and np.isfinite(value) and value != 0 and abs(value) < _SMALL:
+        return _round_small(value)
+    return round(value, _DIGITS)
+
+
+def _log_axes(ax: Axes) -> tuple[bool, bool]:
+    """x 軸・y 軸が対数目盛か（点の並びを丸めるときの `log`）。"""
+    return ax.get_xscale() == "log", ax.get_yscale() == "log"
+
+
+def _texts(ax: Axes) -> list[dict[str, Any]]:
+    return [
+        {"text": t.get_text(), "xy": _round_array(t.get_position(), _log_axes(ax))}
+        for t in ax.texts
+        if not isinstance(t, Annotation)
+    ]
+
+
+def _annotations(ax: Axes) -> list[dict[str, Any]]:
+    """矢印の向き（`xy` が矢の先、`xytext` が矢の根元）と、文字・矢の形。"""
+    log = _log_axes(ax)
+    annotations = []
+    for a in ax.texts:
+        if not isinstance(a, Annotation):
+            continue
+        props = a.arrowprops
+        arrow = None if props is None else str(props.get("arrowstyle"))
+        annotations.append(
+            {
+                "text": a.get_text(),
+                "xy": _round_array(a.xy, log),
+                "xytext": _round_array(a.xyann, log),
+                "arrow": arrow,
+            }
+        )
+    return annotations
+
+
+def _collections(ax: Axes) -> list[dict[str, Any]]:
+    """`fill_between` の塗り・散布図の点など（頂点と、点を置いた位置）。"""
+    log = _log_axes(ax)
+    return [
+        {
+            "paths": [_round_array(path.vertices, log) for path in c.get_paths()],
+            "offsets": _round_array(c.get_offsets(), log),
+        }
+        for c in ax.collections
+    ]
+
+
+def _titles(ax: Axes) -> dict[str, str]:
+    titles = {loc: ax.get_title(loc) for loc in ("left", "center", "right")}
+    return {loc: title for loc, title in titles.items() if title}
+
+
 def fingerprint(fig: Figure) -> str:
-    """図に描いたデータ（座標・線種・棒の高さ・軸の名前と範囲）から、指紋（ハッシュ）を作る。"""
+    """図に描いたデータから、指紋（ハッシュ）を作る。
+
+    見るのは、線の座標と線種・棒の高さ・多角形・軸の名前と範囲・タイトル・
+    図に書いた文字・矢印（向きを含む）・塗りや散布図の点（collections）。
+    多角形・タイトル・文字・矢印・collections は、図にあるときだけ指紋の入力に
+    足す。これらのない図の指紋は、足す前と同じ値のままにする。
+    """
     axes = []
     for ax in fig.axes:
+        log = x_log, y_log = _log_axes(ax)
         lines = []
         for line in ax.lines:
-            points: Any = line.get_xydata()
-            xy = np.round(points, _DIGITS).tolist()
+            xy = _round_array(line.get_xydata(), log)
             style = line.get_linestyle()
             lines.append({"label": line.get_label(), "style": style, "xy": xy})
         bars = [
-            round(float(p.get_height()), _DIGITS)
+            _round_number(float(p.get_height()), y_log)
             for p in ax.patches
             if isinstance(p, Rectangle)
         ]
         entry: dict[str, Any] = {
             "xlabel": ax.get_xlabel(),
             "ylabel": ax.get_ylabel(),
-            "xlim": np.round(ax.get_xlim(), _DIGITS).tolist(),
-            "ylim": np.round(ax.get_ylim(), _DIGITS).tolist(),
+            "xlim": _round_array(ax.get_xlim(), x_log),
+            "ylim": _round_array(ax.get_ylim(), y_log),
             "lines": lines,
             "bars": bars,
         }
-        polygons = [
-            np.round(p.get_xy(), _DIGITS).tolist()
-            for p in ax.patches
-            if isinstance(p, Polygon)
-        ]
-        if polygons:  # 多角形のない図の指紋は、これまでと同じ値のままにする
-            entry["polygons"] = polygons
+        optional = {
+            "polygons": [
+                _round_array(p.get_xy(), log)
+                for p in ax.patches
+                if isinstance(p, Polygon)
+            ],
+            "titles": _titles(ax),
+            "texts": _texts(ax),
+            "annotations": _annotations(ax),
+            "collections": _collections(ax),
+        }
+        # 図にない要素は足さない（これまでの図の指紋を、同じ値のままにする）
+        entry |= {key: value for key, value in optional.items() if value}
         axes.append(entry)
-    text = json.dumps(axes, ensure_ascii=False, sort_keys=True)
+    payload: Any = axes
+    if fig.get_suptitle():  # 図全体のタイトルのない図は、これまでと同じ値のまま
+        payload = {"axes": axes, "suptitle": fig.get_suptitle()}
+    text = json.dumps(payload, ensure_ascii=False, sort_keys=True)
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
