@@ -80,7 +80,7 @@ uv run pytest test/chapter01
 
 自分でコードを書くときは、`practice/chapter01/` を作って、完成形と同じ名前（`market.py`・`test_market.py`）のファイルに書きます。テストは、`uv run pytest practice/chapter01` で動かします。テストの import は、`from lib.chapter01.market import ...` を、**`from practice.chapter01.market import ...` に書き換えて**ください（書き換えないと、完成形を読み込んで、最初から通ってしまい、Red になりません）。**完成形（`lib/` と `test/`）は、答え合わせ用です。** 自分で書き終えてから、開いてください。
 
-「予想の答え合わせ」のスクリプトは、`practice/chapter01/check.py` に保存し、アプリのディレクトリ（`apps/math-for-economics-programming/python`）で `uv run python -m practice.chapter01.check` と実行します（`python practice/...` と、ファイルのパスで実行すると、`lib` が見つからず、`ModuleNotFoundError` になります。**`-m` で、モジュールとして実行**してください。自分のコードを確かめるときは、スクリプトの import を `from practice.chapter01...` に書き換えます。Windows のシェルで、日本語が文字化けするときは、`PYTHONUTF8=1` を付けます）。
+「予想の答え合わせ」のスクリプトは、`practice/chapter01/check.py` に保存し、アプリのディレクトリ（`apps/math-for-economics-programming/python`）で `uv run python -m practice.chapter01.check` と実行します（`python practice/...` と、ファイルのパスで実行すると、`lib`（import を書き換えたあとは `practice`）が見つからず、`ModuleNotFoundError` になります。**`-m` で、モジュールとして実行**してください。自分のコードを確かめるときは、スクリプトの import を `from practice.chapter01...` に書き換えます。Windows のシェルで、日本語が文字化けするときは、`PYTHONUTF8=1` を付けます）。
 
 ## 1.3 予想する
 
@@ -121,7 +121,7 @@ x₁ = x₂ のときは、傾きが 0 で割れません。**縦の直線は、
 
 > a − b·p = c + d·p　→　p* = (a − c) ÷ (b + d)　→　q* = a − b·p*
 
-2 つの式を同時に満たす点を求めるので、**連立方程式**です。需要の傾きと供給の傾きが、どちらも「価格が上がると…」の向き（需要は減る、供給は増える）になっているので、b + d > 0 で、必ず、1 つの交点が決まります。均衡の価格と数量は、**どちらも正**でなければなりません（負の価格では、取引になりません）。
+2 つの式を同時に満たす点を求めるので、**連立方程式**です。需要の傾き b と供給の傾き d が、どちらも正（需要は減る、供給は増える）なら、b + d > 0 で、必ず、1 つの交点が決まります。コードも、b > 0 と d > 0 を、別々に検査します。均衡の価格と数量は、**どちらも正**でなければなりません（負の価格では、取引になりません）。
 
 ### グラフと余剰分析
 
@@ -174,11 +174,18 @@ def test_同じxの2点では直線が決まらない() -> None:
         line_through((10, 5), (10, 15))
 ```
 
-`line_through` がまだないので、テストは失敗します（**Red**）。
+`line_through` がまだないので、テストは失敗します（**Red**）。import できない、というエラーで、テストの収集の時点で止まりますが、これが Red です。
 
 テストの import の一覧は、完成形の**全関数**です。自分で書くときは、関数を 1 つ書くたびに、その名前を、import に足していってかまいません（まだ書いていない関数を import すると、`ImportError` になり、Green になりません）。
 
 ### Green: 直線を実装する
+
+`market.py` の先頭に、次の import を書きます。
+
+```python
+from collections.abc import Sequence
+from dataclasses import dataclass
+```
 
 ```python
 def line_through(
@@ -298,7 +305,7 @@ def equilibrium(a: float, b: float, c: float, d: float) -> Equilibrium:
 
 ### 余剰
 
-三角形の面積は、数学の「底辺 × 高さ ÷ 2」です。生産者余剰は、**供給が、価格 0 のときから正の量**（切片 c が 0 以上）の場合も、数えられるように、「供給量を、価格の下限から価格まで足す」形にします（供給曲線が、数量軸の正の値から始まるとき、その分の面積も、余剰に入ります）。
+三角形の面積は、数学の「底辺 × 高さ ÷ 2」です。生産者余剰は、**供給が、価格 0 のときから正の量**（切片 c が正）の場合も、数えられるように、「供給量を、価格の下限から価格まで足す」形にします（供給曲線が、数量軸の正の値から始まるとき、その分の面積も、余剰に入ります）。
 
 ```python
 def test_消費者余剰と生産者余剰と総余剰() -> None:
@@ -457,11 +464,82 @@ print(after.price, after.quantity, after.revenue)
 - **3 つ目の問い**: 価格 30 では、A が 30、B が 10 で、合計 40。価格 50 では、A が 10、B は 0 で、合計 10 です。B の需要は、価格 40 で 0 になる（それ以上は、負にならず 0）ので、そこから先は A だけになり、市場の需要曲線の傾きが、2 から 1 に変わります
 - **4 つ目の問い**: 供給が増える前は、価格 60・数量 70・収入 4200。増えたあとは、価格 40・数量 80・収入 3200 です。数量は 10 増えますが、価格が 3 分の 2 に下がり、**収入は、1000 減ります**（豊作貧乏）。需要が、価格の変化に対して、あまり増えない（非弾力的）からです
 
+### 境界のテスト
+
+ここまでのテストに加えて、完成形には、**境界**を確かめるテストがあります。価格が 0 や数量が 0 の均衡、1 未満の小さな値、供給の傾きが 0・1 でないとき、費用が 0 のときです。「d = 1 の例ばかり」「0 や 1 の近くを試していない」と、式の誤りを、テストが見逃します。完成形の「テストの件数」を合わせるため、ここに載せます（読むだけで、かまいません）。
+
+??? note "境界のテスト"
+
+    ```python
+    def test_供給の傾きが0なら均衡を求めない() -> None:
+        with pytest.raises(ValueError):
+            equilibrium(120, 2, 10, 0)
+
+
+    def test_均衡の価格が0なら成り立たない() -> None:
+        with pytest.raises(ValueError):
+            equilibrium(10, 1, 10, 1)
+
+
+    def test_均衡の数量が0なら成り立たない() -> None:
+        with pytest.raises(ValueError):
+            equilibrium(10, 1, -10, 1)
+
+
+    def test_価格も数量も1未満の均衡を求める() -> None:
+        result = equilibrium(1, 2, 0.25, 1)
+        assert result.price == pytest.approx(0.25)
+        assert result.quantity == pytest.approx(0.5)
+
+
+    def test_傾きが等しくない需要と供給の均衡() -> None:
+        result = equilibrium(100, 2, 10, 3)
+        assert (result.price, result.quantity) == (18, 64)
+
+
+    def test_傾きが1でない供給の生産者余剰() -> None:
+        assert producer_surplus(30, 10, 2) == pytest.approx(1200)
+        assert producer_surplus(30, -10, 2) == pytest.approx(625)
+
+
+    def test_費用が0なら均衡がない() -> None:
+        with pytest.raises(ValueError):
+            constant_cost_equilibrium(120, 2, 0)
+
+
+    def test_費用も数量も1未満の均衡を求める() -> None:
+        result = constant_cost_equilibrium(1, 1, 0.5)
+        assert result == Equilibrium(price=0.5, quantity=0.5)
+    ```
+
 ### 図
+
+図には、次の import が要ります。
+
+```python
+import matplotlib.pyplot as plt
+from matplotlib.axes import Axes
+from matplotlib.figure import Figure
+
+from lib.chapter01.market import equilibrium
+```
 
 均衡と余剰の図を描く関数と、座標のテストです。需要曲線の両端、供給曲線の始まり、均衡の点、塗った領域の**面積が、余剰の値と等しい**ことを、確かめます（図が、式と食い違っていないことの確認です）。
 
 ??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
+
+    テストの import:
+
+    ```python
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import pytest
+    from matplotlib.axes import Axes
+    from matplotlib.patches import Polygon
+
+    from lib.chapter01.market import consumer_surplus, equilibrium, producer_surplus
+    from lib.chapter01.plot import plot_harvest_paradox, plot_market
+    ```
 
     ```python
     def _line(ax: Axes, label: str) -> tuple[list[float], list[float]]:
@@ -536,6 +614,28 @@ print(after.price, after.quantity, after.revenue)
         assert ax.get_ylabel() == "Price"
         assert ax.get_legend() is not None
         plt.close("all")
+
+
+    def test_供給曲線の終点は数量の上限での価格() -> None:
+        ax = plot_market(100, 2, -10, 2).axes[0]
+        xs, ys = _line(ax, "Supply")
+        assert (xs[0], ys[0]) == (0, 5)
+        assert (xs[-1], ys[-1]) == (100, 55)
+
+
+    def test_軸は数量も価格も0から始まる() -> None:
+        ax = plot_market(120, 2, 0, 1).axes[0]
+        assert ax.get_xlim()[0] == 0
+        assert ax.get_ylim()[0] == 0
+
+
+    def test_消費者余剰の領域は価格軸の上限から始まり透けて見える() -> None:
+        ax = plot_market(120, 2, 0, 1).axes[0]
+        patch = next(x for x in ax.patches if x.get_label() == "Consumer surplus")
+        assert isinstance(patch, Polygon)
+        assert tuple(patch.get_xy()[0]) == (0, 60)
+        alpha = patch.get_alpha()
+        assert alpha is not None and 0 < alpha < 1
     ```
 
     ```python
@@ -588,7 +688,7 @@ print(after.price, after.quantity, after.revenue)
 
 供給が増える前後を、並べて描きます。
 
-![豊作貧乏。供給曲線が右下に動く（点線）と、均衡が、黒い点から赤い点へ動く。価格が下がり、数量は増える](images/ch01-harvest-paradox.png)
+![豊作貧乏。供給曲線が右に動く（点線）と、均衡が、黒い点から赤い点へ動く。価格が下がり、数量は増える](images/ch01-harvest-paradox.png)
 
 ??? note "描画のテストと実装（後回しにしても、学習は成り立ちます）"
 
@@ -690,10 +790,10 @@ uv run pytest test/chapter01
         assert result.quantity == 40
     ```
 
-    **生成**: 供給が増える前後の均衡を、それぞれ求めて、収入の差を返します。
+    **生成**: 供給が増える前後の均衡を、それぞれ求めて、収入の差を返します。置き場所は、どこでもかまいません（例: `practice/chapter01/exercises.py`）。
 
     ```python
-    def revenue_change(a, b, c, d, c_after):
+    def revenue_change(a: float, b: float, c: float, d: float, c_after: float) -> float:
         return equilibrium(a, b, c_after, d).revenue - equilibrium(a, b, c, d).revenue
     ```
 
