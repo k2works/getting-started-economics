@@ -214,7 +214,7 @@ def test_不動点から始めると動かない() -> None:
     assert recurrence_closed_form(0.9, 1, fixed, 25) == pytest.approx(fixed)
 ```
 
-`lib.chapter12.recurrence` がないので、収集の時点で失敗します（**Red**）。
+自分の `recurrence.py`（`practice.chapter12.recurrence`）がまだないので、収集の時点で `ModuleNotFoundError` で失敗します（**Red**）。
 
 ### Green: 閉じた解
 
@@ -919,7 +919,7 @@ uv run pytest test/chapter12
 - **技術進歩を、モデルの外から与えています。** 長期の成長率を決める技術進歩率 g が、なぜその値なのかを、このモデルは説明しません（内生的成長理論が扱う）
 - **資本は、国を越えて動きます。** 閉鎖経済では貯蓄 ＝ 投資ですが、開放経済では、外国から借りて投資できます
 - **定常状態への収束は、遅いです。** 半減期が 10 期（10 年）なら、差の 9 割が消えるのに、30 年以上かかります。現実の経済は、その間に、貯蓄率・技術・人口が変わります
-- **生産関数が、k^α とは限りません。** α = 1（資本の限界生産物が一定。AK 型）なら、定常状態がなく、成長が続きます。α < 1 なら k* は有限ですが、α → 1 では k* が大きくなり、収束が遅くなります
+- **生産関数が、k^α とは限りません。** α = 1（資本の限界生産物が一定。AK 型）なら、s > δ のとき、定常状態がなく、成長が続きます（s < δ なら縮み続け、s = δ ならどこでも止まる）。α < 1 なら k* は有限です。α → 1 では、収束が遅くなり、k* は s > δ なら大きく、s < δ なら 0 に近づきます
 
 ## 12.7 第 3 部の到達チェック
 
@@ -1035,9 +1035,21 @@ uv run pytest test/chapter12
 
 ??? note "解答: 第 3 部の到達チェック（先に自分で取り組んでから、開いてください）"
 
-    関数（`checkpoint_solve_2x2`・`checkpoint_simple_regression`・`checkpoint_certainty_equivalent`・`checkpoint_closed_form`）は `practice/chapter12/checkpoint.py` に、テストは `practice/chapter12/test_checkpoint.py` に書きます。`checkpoint.py` の先頭には、`import math` と `from fractions import Fraction` を書きます。`test_checkpoint.py` の先頭の import は、次のとおりです。前の章を写していなければ、`lib.chapterNN...` のままでかまいません（写したなら、`practice.chapterNN...` に書き換えます）。自分で書いた関数は、`from practice.chapter12.checkpoint import checkpoint_certainty_equivalent, checkpoint_closed_form, checkpoint_simple_regression, checkpoint_solve_2x2` で import します（この行は、記事の検査では実行しないので、コードブロックの外に書いています）。
+    関数（`checkpoint_solve_2x2`・`checkpoint_simple_regression`・`checkpoint_certainty_equivalent`・`checkpoint_closed_form`）は `practice/chapter12/checkpoint.py` に、テストは `practice/chapter12/test_checkpoint.py` に書きます。`checkpoint.py` の先頭には、`import math` と `from fractions import Fraction` を書きます。`test_checkpoint.py` の先頭の import は、次のとおりです。前の章を写していなければ、`lib.chapterNN...` のままでかまいません（写したなら、`practice.chapterNN...` に書き換えます）。自分で書いた関数は、次の import で読み込みます（この import は、記事の検査では実行しないので、Python のコードブロックの外に書いています）。
+
+    ```text
+    from practice.chapter12.checkpoint import (
+        checkpoint_certainty_equivalent,
+        checkpoint_closed_form,
+        checkpoint_simple_regression,
+        checkpoint_solve_2x2,
+    )
+    ```
+
+    テストの先頭の import は、次のとおりです。
 
     ```python
+    import math
     from fractions import Fraction
 
     import numpy as np
@@ -1123,6 +1135,9 @@ uv run pytest test/chapter12
         probabilities = [Fraction(1, 4), Fraction(3, 4)]
         mean = sum(p * x for x, p in zip([0, 64], probabilities, strict=True))
         assert mean == 48
+        pairs = zip([0, 64], probabilities, strict=True)
+        expected_utility = sum(p * math.sqrt(x) for x, p in pairs)
+        assert expected_utility == pytest.approx(6)
         certain = checkpoint_certainty_equivalent([0, 64], probabilities)
         assert certain == pytest.approx(36)
         assert mean - certain == pytest.approx(12)

@@ -133,4 +133,5 @@ def test_価格が上がると最適な数量が増える() -> None:
     assert quantities == pytest.approx([(p - 10) / 2 for p in prices])
     for cost in [COST_HALF, COST_CUBIC]:
         supply = [profit_maximizing_quantity(p, cost) for p in prices]
+        # 隣どうしを比べる。supply[1:] は 1 つ短いので、strict=False（長さが違っても可）
         assert all(q1 < q2 for q1, q2 in zip(supply, supply[1:], strict=False))

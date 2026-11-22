@@ -34,7 +34,7 @@ def plot_cost_curves(cost: Polynomial, price: float, q_max: float) -> Figure:
         ax.plot(quantities, [curve(cost, q) for q in quantities], label=label)
     ax.plot([0, q_max], [price, price], "--", label="Price")
     ax.plot([best], [price], "ko", label="Profit maximum (P = MC)")
-    ax.plot([low_q], [low_ac], "s", label="Minimum AC (MC = AC)")
+    ax.plot([low_q], [low_ac], "s", label="Minimum AC")
     ax.set_xlabel("Quantity")
     ax.set_ylabel("Cost / Price")
     ax.set_xlim(left=0)

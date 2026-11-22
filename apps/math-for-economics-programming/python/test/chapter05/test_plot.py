@@ -34,7 +34,7 @@ def test_利潤最大の点と利潤の長方形() -> None:
     ax = plot_cost_curves(Polynomial((100, 10, 1)), 50, 30).axes[0]
     assert _line(ax, "Price") == ([0, 30], [50, 50])
     assert _line(ax, "Profit maximum (P = MC)") == ([20], [50])
-    assert _line(ax, "Minimum AC (MC = AC)") == ([10], [30])
+    assert _line(ax, "Minimum AC") == ([10], [30])
     # 長方形の高さは P − AC(20) = 50 − 35、幅は 20。面積は利潤 300
     box = ax.collections[0].get_paths()[0].get_extents()
     assert (box.x0, box.x1, box.y0, box.y1) == pytest.approx((0, 20, 35, 50))

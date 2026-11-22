@@ -40,7 +40,7 @@ generated: { by: claude-code/claude-opus-5-5, at: 2026-11-22T00:00:00Z }
 | 平均費用・平均可変費用 | AC = C(q) ÷ q、AVC = (C(q) − C(0)) ÷ q | `average_cost(cost, q)`、`average_variable_cost(cost, q)` |
 | 利潤最大化 | P = MC（MC が右上がり） | `profit_maximizing_quantity(price, cost)` |
 
-> **記号について**: 多項式の係数は、**次数の低い順**に並べます。C(q) = q² + 10q + 100 は `Polynomial((100, 10, 1))` です（定数項が先頭）。第 2 章の `quadratic_roots(a, b, c)` は、a·x² + b·x + c と**次数の高い順**なので、向きが逆です。
+> **記号について**: 多項式の係数は、**次数の低い順**に並べます。C(q) = q² + 10q + 100 は `Polynomial((100, 10, 1))` です（定数項が先頭）。第 2 章の `quadratic_roots(a, b, c)` は、a·x² + b·x + c と**次数の高い順**なので、向きが逆です。指数関数は、この章では eˣ、第 6 章では e^x と書きます（同じものです）。
 
 ### 前提とする章
 
@@ -90,18 +90,23 @@ uv run pytest test/chapter05
 
 ### 微分の公式
 
-多項式の導関数は、3 つの公式で求まります。
+多項式の導関数は、次の 3 つの公式で求まります。
 
 | 公式 | 式 | 例 |
 | :--- | :--- | :--- |
 | 冪の公式 | (x^n)' = n·x^(n−1)（定数の微分は 0） | (x³)' = 3x² |
 | 定数倍 | (k·f)' = k·f' | (5x²)' = 10x |
 | 和 | (f + g)' = f' + g' | (x² + 4x + 7)' = 2x + 4 |
-| 積 | (f·g)' = f'·g + f·g' | (x²·eˣ)' = 2x·eˣ + x²·eˣ |
-| 商 | (f ÷ g)' = (f'·g − f·g') ÷ g² | (1 ÷ x)' = −1 ÷ x² |
-| 合成 | (f(g(x)))' = f'(g(x))·g'(x) | ((x² + 1)³)' = 3(x² + 1)²·2x |
 
-係数を次数の低い順に並べると、導関数は、「各係数に次数を掛けて、1 つ左にずらす」操作です。(7, 4, 1) は (4, 2) になります。積・商・合成の公式は、多項式以外（eˣ や分数の関数）にも使います（第 6 章の弾力性で使います）。この章のコードは多項式の公式だけを実装し、積・商・合成は、数値微分との一致をテストで確かめます。
+係数を次数の低い順に並べると、導関数は、「各係数に次数を掛けて、1 つ左にずらす」操作です。(7, 4, 1) は (4, 2) になります。
+
+多項式以外（分数の関数や、第 6 章の指数・対数の関数）には、次の 3 つの公式も使います。この章のコードは多項式の公式だけを実装し、この 3 つは、数値微分との一致をテストで確かめます。
+
+| 公式 | 式 | 例 |
+| :--- | :--- | :--- |
+| 積 | (f·g)' = f'·g + f·g' | (x²·(x + 1))' = 2x·(x + 1) + x² |
+| 商 | (f ÷ g)' = (f'·g − f·g') ÷ g² | (1 ÷ x)' = (0·x − 1·1) ÷ x² = −1 ÷ x² |
+| 合成 | (f(g(x)))' = f'(g(x))·g'(x) | ((x² + 1)³)' = 3(x² + 1)²·2x |
 
 ### 数値微分と刻み幅
 
@@ -264,6 +269,7 @@ class Polynomial:
 def test_数値微分は中心差分で傾きを近似する() -> None:
     # x² の x = 3 での傾きは 6。中心差分は 2 次関数なら（丸めを除き）正確
     assert numerical_derivative(lambda x: x**2, 3) == pytest.approx(6)
+    # eˣ・ln x の微分（eˣ と 1 ÷ x）は、第 6 章で説明する
     assert numerical_derivative(math.exp, 0) == pytest.approx(1)
     assert numerical_derivative(math.log, 0.5) == pytest.approx(2)
 
@@ -288,16 +294,18 @@ def numerical_derivative(
     return (func(x + step) - func(x - step)) / (2 * step)
 ```
 
-??? note "積・商・合成の公式を、数値微分で確かめる"
+数値微分の最初のテストの eˣ・ln x の傾き（x = 0 で 1、x = 0.5 で 2）は、第 6 章で説明します。ここでは、数値微分が、そうした関数にも使えることだけを見ます。
+
+??? note "積・商・合成の公式を、数値微分で確かめる（`test_derivative.py` に書く。件数を合わせるため、ここに載せます）"
 
     5.4 節の表の 3 つの例を、負・0 < x < 1・正の点で、数値微分と比べます。公式を書き間違えると（積の片方の項を落とすなど）、一致しません。
 
     ```python
     def test_積と商と合成関数の公式は数値微分と一致する() -> None:
         for x in [-1.5, 0.3, 2]:
-            # 積: (f·g)' = f'·g + f·g'。(x²·eˣ)' = 2x·eˣ + x²·eˣ
-            product = numerical_derivative(lambda t: t**2 * math.exp(t), x)
-            assert product == pytest.approx((2 * x + x**2) * math.exp(x))
+            # 積: (f·g)' = f'·g + f·g'。(x²·(x + 1))' = 2x·(x + 1) + x²
+            product = numerical_derivative(lambda t: t**2 * (t + 1), x)
+            assert product == pytest.approx(2 * x * (x + 1) + x**2)
             # 商: (f ÷ g)' = (f'·g − f·g') ÷ g²。(1 ÷ x)' = −1 ÷ x²
             quotient = numerical_derivative(lambda t: 1 / t, x)
             assert quotient == pytest.approx(-1 / x**2)
@@ -571,6 +579,7 @@ def test_価格が上がると最適な数量が増える() -> None:
     assert quantities == pytest.approx([(p - 10) / 2 for p in prices])
     for cost in [COST_HALF, COST_CUBIC]:
         supply = [profit_maximizing_quantity(p, cost) for p in prices]
+        # 隣どうしを比べる。supply[1:] は 1 つ短いので、strict=False（長さが違っても可）
         assert all(q1 < q2 for q1, q2 in zip(supply, supply[1:], strict=False))
 ```
 
@@ -628,9 +637,9 @@ def minimum_average_variable_cost(cost: Polynomial) -> tuple[float, float]:
 
 ### 発展: 凹関数の判定
 
-??? note "凹関数の判定のテストと実装（発展。後回しにしても、学習は成り立ちます）"
+??? note "凹関数の判定のテストと実装（発展。後回しにすると、テストは 45 件、図も外すと 42 件）"
 
-    区間を格子に区切り、どの点でも 2 階の導関数が 0 以下かを調べます。凸の判定は、−f が凹かどうかで代用します。
+    後回しにするなら、テストの import から `is_concave_on` を外します。区間を格子に区切り、どの点でも 2 階の導関数が 0 以下かを調べます。凸の判定は、−f が凹かどうかで代用します。
 
     ```python
     def test_2階の導関数が0以下の区間で関数は凹() -> None:
@@ -851,7 +860,7 @@ from lib.chapter05.derivative import Polynomial, difference_quotient_errors
         ax = plot_cost_curves(Polynomial((100, 10, 1)), 50, 30).axes[0]
         assert _line(ax, "Price") == ([0, 30], [50, 50])
         assert _line(ax, "Profit maximum (P = MC)") == ([20], [50])
-        assert _line(ax, "Minimum AC (MC = AC)") == ([10], [30])
+        assert _line(ax, "Minimum AC") == ([10], [30])
         # 長方形の高さは P − AC(20) = 50 − 35、幅は 20。面積は利潤 300
         box = ax.collections[0].get_paths()[0].get_extents()
         assert (box.x0, box.x1, box.y0, box.y1) == pytest.approx((0, 20, 35, 50))
@@ -889,7 +898,7 @@ from lib.chapter05.derivative import Polynomial, difference_quotient_errors
             ax.plot(quantities, [curve(cost, q) for q in quantities], label=label)
         ax.plot([0, q_max], [price, price], "--", label="Price")
         ax.plot([best], [price], "ko", label="Profit maximum (P = MC)")
-        ax.plot([low_q], [low_ac], "s", label="Minimum AC (MC = AC)")
+        ax.plot([low_q], [low_ac], "s", label="Minimum AC")
         ax.set_xlabel("Quantity")
         ax.set_ylabel("Cost / Price")
         ax.set_xlim(left=0)

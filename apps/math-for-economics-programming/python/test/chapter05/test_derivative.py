@@ -31,6 +31,7 @@ def test_導関数は冪の公式で係数をずらす() -> None:
 def test_数値微分は中心差分で傾きを近似する() -> None:
     # x² の x = 3 での傾きは 6。中心差分は 2 次関数なら（丸めを除き）正確
     assert numerical_derivative(lambda x: x**2, 3) == pytest.approx(6)
+    # eˣ・ln x の微分（eˣ と 1 ÷ x）は、第 6 章で説明する
     assert numerical_derivative(math.exp, 0) == pytest.approx(1)
     assert numerical_derivative(math.log, 0.5) == pytest.approx(2)
 
@@ -155,9 +156,9 @@ def test_凹の判定は区間と点の数が正しくなければ行わない()
 
 def test_積と商と合成関数の公式は数値微分と一致する() -> None:
     for x in [-1.5, 0.3, 2]:
-        # 積: (f·g)' = f'·g + f·g'。(x²·eˣ)' = 2x·eˣ + x²·eˣ
-        product = numerical_derivative(lambda t: t**2 * math.exp(t), x)
-        assert product == pytest.approx((2 * x + x**2) * math.exp(x))
+        # 積: (f·g)' = f'·g + f·g'。(x²·(x + 1))' = 2x·(x + 1) + x²
+        product = numerical_derivative(lambda t: t**2 * (t + 1), x)
+        assert product == pytest.approx(2 * x * (x + 1) + x**2)
         # 商: (f ÷ g)' = (f'·g − f·g') ÷ g²。(1 ÷ x)' = −1 ÷ x²
         quotient = numerical_derivative(lambda t: 1 / t, x)
         assert quotient == pytest.approx(-1 / x**2)
