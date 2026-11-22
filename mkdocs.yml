@@ -98,6 +98,10 @@ nav:
           - ADR-001 第 12・13 章の分割: adr/micro-basics-programming/001-split-chapters-12-and-13.md
           - ADR-002 共通ツールの改善: adr/micro-basics-programming/002-shared-tooling-improvements.md
           - ADR-003 pytest-timeout: adr/micro-basics-programming/003-pytest-timeout.md
+      - 記事検査の共通ツール:
+          - 一覧: adr/article-tools/index.md
+          - ADR-001 記事検査の厳格化: adr/article-tools/001-strict-article-checks.md
+          - ADR-002 指紋の拡張と変異確認ツール: adr/article-tools/002-fingerprint-and-mutation-tool.md
   - ジャーナル:
       - 概要: journal/index.md
   - 記事:
