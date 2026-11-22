@@ -9294,7 +9294,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h3 id="_19">ノートブックで試す<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
 <p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/math-for-economics-programming/python/notebooks/ch03_exponents_logarithms_and_interest.ipynb</code> を開き、「Parameters」のセルの数字（元本・年利・年数・年あたりの複利の回数・将来の額）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
 <h3 id="_20">動かして見る<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
-<p>年利を 1% から 12% へ上げます。複利の曲線（青）が反り上がり、単利の直線（点線）との差が開きます。倍になる年数（赤の縦線）は短くなり、72 の法則（紫の破線）は、年利 8% の近くで、赤の線に重なります（年利が低いうちは、縦線は 30 年より右にあり、図の上の文字だけで示します）。</p>
+<p>年利を 1% から 12% へ上げます。複利の曲線（青）が反り上がり、単利の直線（点線）との差が開きます。倍になる年数（赤の縦線）は短くなります。72 の法則（紫の破線）は、年利 6% 以上では、赤の線とほぼ重なり、4% 以下では、離れて見えます（年利 2% 以下では、縦線は 30 年より右にあり、図の上の文字だけで示します）。</p>
 <p><img alt="年利を上げると、複利の曲線が反り上がり、倍になる年数が短くなる（アニメーション）" src="../images/ch03-compound-rate.gif" /></p>
 <p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
 <h3 id="_21">実行結果<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
