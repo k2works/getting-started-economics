@@ -2875,6 +2875,17 @@
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2900,7 +2911,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8447,7 +8458,11 @@ P = 30 の超過需要: 50 需要超過（価格が上がる）
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 </details>
-<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_11">動かして見る<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>価格 80 から、ワルラス的調整を始めます。需要量と供給量の差（超過）に応じて、価格が動き、<strong>均衡（価格 55）</strong>へ近づきます。</p>
+<p><img alt="ワルラス的調整。価格が均衡へ近づく（アニメーション）" src="../images/ch08-adjustment.gif" /></p>
+<p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
+<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>52 passed
@@ -8485,7 +8500,7 @@ P = 30 の超過需要: 50 需要超過（価格が上がる）
 </tr>
 </tbody>
 </table>
-<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>完全競争を仮定しています。</strong> 売り手や買い手が、価格を左右できる市場では、価格は、需給の交点で決まりません（第 11 章）</li>
 <li><strong>直線の曲線を仮定しています。</strong> 実際の需要・供給は、曲がっていて、調整の速さも、市場により違います</li>

@@ -2873,6 +2873,17 @@
   <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2898,7 +2909,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_16" class="md-nav__link">
+  <a href="#_17" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -2926,7 +2937,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_17" class="md-nav__link">
+  <a href="#_18" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -2937,7 +2948,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_18" class="md-nav__link">
+  <a href="#_19" class="md-nav__link">
     <span class="md-ellipsis">
       
         値の確かめ
@@ -2948,7 +2959,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_19" class="md-nav__link">
+  <a href="#_20" class="md-nav__link">
     <span class="md-ellipsis">
       
         できること
@@ -2959,7 +2970,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_20" class="md-nav__link">
+  <a href="#_21" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -8646,7 +8657,11 @@ P = 5 の生産量: 0.0
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 </details>
-<h3 id="_15">実行結果<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<h3 id="_15">動かして見る<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<p>価格を 0 から 40 へ上げます。P = MC の点が MC 曲線の上を動き、利潤の長方形（緑）の大きさが変わります。操業停止点（6）を超えると、<strong>供給曲線</strong>ができ始めます。</p>
+<p><img alt="価格を上げると、P = MC の点が動き、供給曲線ができる（アニメーション）" src="../images/ch07-supply.gif" /></p>
+<p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
+<h3 id="_16">実行結果<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter07
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>59 passed
@@ -8684,7 +8699,7 @@ P = 5 の生産量: 0.0
 </tr>
 </tbody>
 </table>
-<h3 id="_16">このモデルが成り立たない場面<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_17">このモデルが成り立たない場面<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>完全競争を仮定しています。</strong> 企業が、価格を決められる（市場支配力がある）なら、P = MC になりません（第 11 章）</li>
 <li><strong>短期の費用関数と、企業の数が一定の供給を、主に扱いました。</strong> 長期の自由参入（利潤が 0 になる）は、小節「自由参入の長期均衡」で、簡単に触れました。固定費用が、長期には 0 になる（費用曲線が変わる）ことは、扱っていません</li>
@@ -8693,7 +8708,7 @@ P = 5 の生産量: 0.0
 </ul>
 <h2 id="77-2">7.7 第 2 部の到達チェック<a class="headerlink" href="#77-2" title="Permanent link">&para;</a></h2>
 <p>第 2 部（第 5〜7 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。<strong>先に、次の「時間を決めて書く課題」を、何も見ずに試してください。</strong> そのあとで、「値の確かめ」と「できること」で、答えを見ます。</p>
-<h3 id="_17">時間を決めて書く課題<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<h3 id="_18">時間を決めて書く課題<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、関数とテストを書きます。</p>
 <table>
 <thead>
@@ -8721,7 +8736,7 @@ P = 5 の生産量: 0.0
 </tr>
 </tbody>
 </table>
-<h3 id="_18">値の確かめ<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
+<h3 id="_19">値の確かめ<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
 <p>到達チェックの値を、プログラムで確かめます。各章の関数を、そのまま呼びます。</p>
 <p>「値の確かめ」のスクリプトは、<code>practice/chapter07/reach.py</code> に保存し（07 は、この章の番号）、<code>uv run python -m practice.chapter07.reach</code> で実行します。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter05.cost</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
@@ -8764,7 +8779,7 @@ P = 15 のとき q = 4.0 利潤 0.0
 P = 10 のとき q = 3.5275 利潤 -18.8715
 P = 5 のとき q = 0.0 利潤 -32.0
 </code></pre></div>
-<h3 id="_19">できること<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<h3 id="_20">できること<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -8801,7 +8816,7 @@ P = 5 のとき q = 0.0 利潤 -32.0
 </tr>
 </tbody>
 </table>
-<h3 id="_20">誤りの原因の分類<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<h3 id="_21">誤りの原因の分類<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
 <p>できなかった課題は、原因を、次の 4 つに分けて、記録します。</p>
 <table>
 <thead>
