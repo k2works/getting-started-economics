@@ -612,6 +612,14 @@ print("一律規制の削減量", [round(x, 4) for x in uniform], "費用", roun
         return fig
     ```
 
+### 動かして見る
+
+外部費用を 0 から 40 へ上げます。社会的限界費用が上へ動き、最適な数量が減って、**死荷重**が広がります。
+
+![外部費用が増えると、最適な数量が減り、死荷重が広がる（アニメーション）](images/ch14-externality-cost.gif)
+
+このアニメーションは、`lib/animations/` の関数で作っています（`uv run python -m tools.render_animations` で、GIF を書き出します）。**写経は、不要**です。動きを見て、式と図の対応を、確かめてください。
+
 ### 実行結果
 
 ```bash

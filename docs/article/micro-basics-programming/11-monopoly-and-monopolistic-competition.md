@@ -764,6 +764,14 @@ print("長期: 数量", round(r.quantity, 4), "価格", round(r.price, 4), "需�
         return fig
     ```
 
+### 動かして見る
+
+限界費用を 0 から 40 へ上げます。MR = MC の点が動き、独占の価格と数量が変わります。利潤（緑）と死荷重（赤）の大きさも変わります。
+
+![限界費用が上がると、独占の価格と数量が動く（アニメーション）](images/ch11-monopoly-cost.gif)
+
+このアニメーションは、`lib/animations/` の関数で作っています（`uv run python -m tools.render_animations` で、GIF を書き出します）。**写経は、不要**です。動きを見て、式と図の対応を、確かめてください。
+
 ### 実行結果
 
 ```bash
