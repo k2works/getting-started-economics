@@ -96,6 +96,9 @@ RUN (type -p wget >/dev/null || (apt-get update && apt-get install -y wget)) \
     && apt-get install -y gh \
     && rm -rf /var/lib/apt/lists/*
 
+# uv のインストール（連載のサンプル実装の Python 環境の管理。Python 3.12 は uv が用意する）
+RUN curl -LsSf https://astral.sh/uv/install.sh     | env UV_INSTALL_DIR=/usr/local/bin UV_NO_MODIFY_PATH=1 sh
+
 # Gemini CLIのインストール
 RUN npm install -g @google/gemini-cli
 
