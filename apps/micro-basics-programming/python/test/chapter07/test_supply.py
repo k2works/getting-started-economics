@@ -5,8 +5,11 @@ import pytest
 from lib.chapter05.cost import CostCurve, marginal_cost, total_cost
 from lib.chapter07.supply import (
     break_even_price,
+    free_entry_output,
+    free_entry_price,
     market_supply,
     market_supply_curve,
+    number_of_firms,
     profit,
     profit_maximizing_output,
     profit_maximizing_output_by_grid,
@@ -273,3 +276,29 @@ def test_供給の弾力性は傾きと価格を供給量で割る() -> None:
     # 供給 Q = 2P（傾き 2）の P = 10 で、e = 2 × 10 ÷ 20 = 1
     assert supply_elasticity(lambda p: 2 * p, 10) == pytest.approx(1)
     assert supply_elasticity(lambda p: 5 + 2 * p, 10) == pytest.approx(2 * 10 / 25)
+
+
+def test_自由参入の長期均衡は平均費用の最低点() -> None:
+    assert free_entry_price(CURVE) == pytest.approx(15)
+    assert free_entry_output(CURVE) == pytest.approx(4)
+    assert profit(
+        CURVE, free_entry_price(CURVE), free_entry_output(CURVE)
+    ) == pytest.approx(0)
+
+
+def test_長期の供給曲線は平均費用の最低価格で水平() -> None:
+    price = free_entry_price(CURVE)
+    assert profit_maximizing_output(CURVE, price) == pytest.approx(
+        free_entry_output(CURVE)
+    )
+    assert free_entry_price(OTHER) == pytest.approx(break_even_price(OTHER))
+
+
+def test_長期の企業数は市場の需要量を企業の生産量で割った値() -> None:
+    assert number_of_firms(CURVE, 100) == pytest.approx(25)
+    assert number_of_firms(CURVE, 200) == pytest.approx(50)
+
+
+def test_企業数の市場の数量は正でなければエラー() -> None:
+    with pytest.raises(ValueError, match="数量"):
+        number_of_firms(CURVE, 0)

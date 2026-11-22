@@ -123,3 +123,19 @@ def supply_after_ad_valorem_tax(curve: CostCurve, price: float, rate: float) -> 
     """従価税のもとの供給量。企業の手取りは、価格 × (1 − rate)。"""
     _check_rate(rate)
     return profit_maximizing_output(curve, price * (1 - rate))
+
+
+def free_entry_price(curve: CostCurve, q_max: float = 10.0) -> float:
+    """自由参入の長期均衡の価格 = AC の最低値。利潤が 0 になるまで、参入が続く。"""
+    return cost_minima(curve, q_max)["AC"][1]
+
+
+def free_entry_output(curve: CostCurve, q_max: float = 10.0) -> float:
+    """自由参入の長期均衡での、各企業の生産量 = AC が最低になる生産量（効率的規模）。"""
+    return cost_minima(curve, q_max)["AC"][0]
+
+
+def number_of_firms(curve: CostCurve, market_quantity: float) -> float:
+    """長期均衡の企業数 = 市場の需要量 ÷ 企業の生産量。長期の供給曲線は水平。"""
+    validate_positive(market_quantity, "市場の数量は、正にする")
+    return market_quantity / free_entry_output(curve)

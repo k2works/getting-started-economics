@@ -196,3 +196,21 @@ def test_平均可変費用が右上がりなら最低点は最初の正の格�
     q, value = cost_minima(rising)["AVC"]
     assert q == pytest.approx(10 / 10000)
     assert value == pytest.approx(rising.cubic * q**2 + rising.quadratic * q + 15)
+
+
+def test_限界費用が負になる係数は扱わない() -> None:
+    with pytest.raises(ValueError, match="限界費用"):
+        CostCurve(1, -10, 1, 0)
+    with pytest.raises(ValueError, match="限界費用"):
+        CostCurve(1, 0, -1, 0)
+
+
+def test_限界費用の最低値がちょうど0の係数は作れる() -> None:
+    assert marginal_cost(CostCurve(1, -6, 12, 0), 2) == 0
+
+
+def test_最低点が探索の上限に届かないときは黙って端の値を返さない() -> None:
+    far = CostCurve(0.001, 0, 1, 1000)
+    with pytest.raises(ValueError, match="上限"):
+        cost_minima(far)
+    assert cost_minima(far, q_max=200)["AC"][0] == pytest.approx(79.4, abs=0.1)

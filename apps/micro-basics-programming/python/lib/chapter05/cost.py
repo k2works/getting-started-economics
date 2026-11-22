@@ -26,6 +26,11 @@ class CostCurve:
     def __post_init__(self) -> None:
         validate_positive(self.cubic, "3 次の係数は、正にする")
         validate_non_negative(self.fixed, "固定費用は、0 以上にする")
+        a, b, c = self.cubic, self.quadratic, self.linear
+        if c < 0 or (b < 0 and b**2 > 3 * a * c):
+            raise ValueError(
+                "限界費用が負になる係数は、扱わない（c ≥ 0、b ≥ 0 または b² ≤ 3ac）"
+            )
 
 
 def _check_quantity(q: float) -> None:
@@ -88,10 +93,13 @@ def cost_minima(
     validate_positive(points - 2, "点の数は、3 以上にする")
     grid = np.linspace(0.0, q_max, points)
     positive = grid[1:]
-    return {
+    minima = {
         "MC": argmin_of([marginal_cost(curve, float(q)) for q in grid], grid),
         "AVC": argmin_of(
             [average_variable_cost(curve, float(q)) for q in positive], positive
         ),
         "AC": argmin_of([average_cost(curve, float(q)) for q in positive], positive),
     }
+    if any(q >= q_max for q, _ in minima.values()):
+        raise ValueError("最低点が探索の上限に届いた。上限 q_max を大きくする")
+    return minima
