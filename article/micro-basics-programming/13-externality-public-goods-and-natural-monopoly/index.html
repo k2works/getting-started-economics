@@ -7669,7 +7669,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter13
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>56 passed
+<div class="highlight"><pre><span></span><code>58 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter13/</code> に、<code>externality.py</code>・<code>public.py</code>・<code>natural.py</code> と、それぞれのテストを作ります。</p>
 <h2 id="133">13.3 予想する<a class="headerlink" href="#133" title="Permanent link">&para;</a></h2>
@@ -8055,6 +8055,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="k">def</span><span class="w"> </span><span class="nf">uniform_reduction</span><span class="p">(</span><span class="n">slopes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">total_reduction</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""一律規制。全社が、同じ量を、削減する。"""</span>
     <span class="n">_check_firms</span><span class="p">(</span><span class="n">slopes</span><span class="p">)</span>
+    <span class="n">validate_non_negative</span><span class="p">(</span><span class="n">total_reduction</span><span class="p">,</span> <span class="s2">"総削減量は、0 以上にする"</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">total_reduction</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">slopes</span><span class="p">)]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">slopes</span><span class="p">)</span>
 
 
@@ -8632,7 +8633,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h3 id="_13">実行結果<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter13
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>56 passed
+<div class="highlight"><pre><span></span><code>58 passed
 </code></pre></div>
 <h2 id="136">13.6 規則で言うと<a class="headerlink" href="#136" title="Permanent link">&para;</a></h2>
 <ol>

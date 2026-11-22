@@ -7686,7 +7686,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>61 passed
 </code></pre></div>
-<p>自分でコードを書くときは、<code>practice/chapter01/</code> を作って、完成形と同じ名前（<code>utility.py</code>・<code>test_utility.py</code>）のファイルに書きます。テストは、<code>uv run pytest practice/chapter01</code> で動かします。テストの import は、<code>from lib.chapter01.utility import ...</code> を、<strong><code>from practice.chapter01.utility import ...</code> に書き換えて</strong>ください（書き換えないと、完成形を読み込んで、最初から通ってしまい、Red になりません）。<strong>完成形（<code>lib/</code> と <code>test/</code>）は、答え合わせ用です。</strong> 自分で書き終えてから、開いてください。入力の検証の共通関数（<code>validate_positive</code>・<code>validate_non_negative</code>）は、<code>lib/chapter01/validation.py</code> から import してかまいません。import と補助関数（先頭が <code>_</code> の関数）は、記事の抜粋に出ないことがあります。そのときは、完成形のファイルの先頭を見て、写してください。「予想の答え合わせ」のスクリプトは、<code>practice/chapter01/check.py</code> に保存し、アプリのディレクトリ（<code>apps/micro-basics-programming/python</code>）で <code>uv run python -m practice.chapter01.check</code> と実行します（<code>python practice/...</code> と、ファイルのパスで実行すると、<code>lib</code> が見つからず、<code>ModuleNotFoundError</code> になります。<strong><code>-m</code> で、モジュールとして実行</strong>してください。自分のコードを確かめるときは、スクリプトの import を <code>from practice.chapterNN...</code> に書き換えます。Windows のシェルで、日本語が文字化けするときは、<code>PYTHONIOENCODING=utf-8</code> を付けます）。</p>
+<p>自分でコードを書くときは、<code>practice/chapter01/</code> を作って、完成形と同じ名前（<code>utility.py</code>・<code>test_utility.py</code>）のファイルに書きます。テストは、<code>uv run pytest practice/chapter01</code> で動かします。テストの import は、<code>from lib.chapter01.utility import ...</code> を、<strong><code>from practice.chapter01.utility import ...</code> に書き換えて</strong>ください（書き換えないと、完成形を読み込んで、最初から通ってしまい、Red になりません）。<strong>完成形（<code>lib/</code> と <code>test/</code>）は、答え合わせ用です。</strong> 自分で書き終えてから、開いてください。入力の検証の共通関数（<code>validate_positive</code>・<code>validate_non_negative</code>）は、<code>lib/chapter01/validation.py</code> から import してかまいません。import と補助関数（先頭が <code>_</code> の関数）は、記事の抜粋に出ません。各章の折りたたみ「import と補助関数」に、写す内容があります（完成形は、見なくてかまいません）。「予想の答え合わせ」のスクリプトは、<code>practice/chapter01/check.py</code> に保存し、アプリのディレクトリ（<code>apps/micro-basics-programming/python</code>）で <code>uv run python -m practice.chapter01.check</code> と実行します（<code>python practice/...</code> と、ファイルのパスで実行すると、<code>lib</code> が見つからず、<code>ModuleNotFoundError</code> になります。<strong><code>-m</code> で、モジュールとして実行</strong>してください。自分のコードを確かめるときは、スクリプトの import を <code>from practice.chapterNN...</code> に書き換えます。Windows のシェルで、日本語が文字化けするときは、<code>PYTHONUTF8=1</code> を付けます）。</p>
 <h2 id="13">1.3 予想する<a class="headerlink" href="#13" title="Permanent link">&para;</a></h2>
 <p>効用が U = x·y で表される消費者がいます（x・y は、2 つの財の量）。<strong>紙で、手計算で</strong>答えてください。答えは、この節には書いてありません。「プログラミング」の節の「予想の答え合わせ」で、プログラムを動かして確かめます。</p>
 <ul>
@@ -7731,8 +7731,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 <tr>
 <td style="text-align: left;">原点に凸（下に凸）</td>
-<td style="text-align: left;"><strong>一緒に消費したい</strong></td>
-<td style="text-align: left;">パンとジャム</td>
+<td style="text-align: left;"><strong>偏らずに、組み合わせたい</strong>（混ぜる方が、偏るより好き）</td>
+<td style="text-align: left;">主食とおかずを、バランスよく</td>
 </tr>
 <tr>
 <td style="text-align: left;">原点に凹（上に凸）</td>
@@ -7889,8 +7889,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="nb">print</span><span class="p">(</span><span class="n">cobb_douglas_utility</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">cobb_douglas_utility</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>800
-800
+<div class="highlight"><pre><span></span><code>800.0
+800.0
 </code></pre></div>
 <p>(20, 40) と (40, 20) の効用は、どちらも 800 で、<strong>同じ無差別曲線の上</strong>にあります。</p>
 <h3 id="_5">無差別曲線を求める<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
@@ -8102,9 +8102,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="nb">print</span><span class="p">(</span><span class="s2">"U = 40 で x = 5 のとき y:"</span><span class="p">,</span> <span class="n">perfect_substitutes_curve_y</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"完全補完財 (3, 5) の効用:"</span><span class="p">,</span> <span class="n">perfect_complements_utility</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>効用 (20, 40) 800
-効用 (40, 20) 800
-効用 (10, 80) 800
+<div class="highlight"><pre><span></span><code>効用 (20, 40) 800.0
+効用 (40, 20) 800.0
+効用 (10, 80) 800.0
 U = 800 で x = 10 のとき y: 80.0
 U = 800 で x = 80 のとき y: 10.0
 MRS (20, 40): 2.0

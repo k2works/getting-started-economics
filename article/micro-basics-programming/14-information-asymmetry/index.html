@@ -7631,7 +7631,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">使う Python の機能</td>
-<td style="text-align: left;">繰り返し（<code>while</code>）、リスト内包表記、条件、<code>dataclass</code>は使わず関数だけ、テスト（<code>pytest</code>）</td>
+<td style="text-align: left;">繰り返し（<code>while</code>）、リスト内包表記、条件、<code>dataclass</code> は使わず関数だけ、テスト（<code>pytest</code>）</td>
 </tr>
 <tr>
 <td style="text-align: left;">新しく導入するライブラリ</td>
@@ -7715,7 +7715,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter14
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>34 passed
+<div class="highlight"><pre><span></span><code>37 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter14/</code> に、<code>information.py</code> とそのテストを作ります。</p>
 <h2 id="143">14.3 予想する<a class="headerlink" href="#143" title="Permanent link">&para;</a></h2>
@@ -7806,10 +7806,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">seller_reservation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""良い品が、市場に出るか。期待値が、良い品の売り手の最低価格以上のとき。"""</span>
-    <span class="k">return</span> <span class="p">(</span>
-        <span class="n">expected_value_of_unknown_quality</span><span class="p">(</span><span class="n">good_share</span><span class="p">,</span> <span class="n">value_good</span><span class="p">,</span> <span class="n">value_bad</span><span class="p">)</span>
-        <span class="o">&gt;=</span> <span class="n">seller_reservation</span>
-    <span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="n">expected_value_of_unknown_quality</span><span class="p">(</span><span class="n">good_share</span><span class="p">,</span> <span class="n">value_good</span><span class="p">,</span> <span class="n">value_bad</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">expected</span> <span class="o">&gt;=</span> <span class="n">seller_reservation</span> <span class="o">-</span> <span class="n">_TOLERANCE</span>
 </code></pre></div>
 <details class="note">
 <summary>import と補助関数（写すときに足す）</summary>
@@ -7818,6 +7816,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_non_negative</span><span class="p">,</span> <span class="n">validate_positive</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">_TOLERANCE</span> <span class="o">=</span> <span class="mf">1e-9</span>  <span class="c1"># 境界ちょうどの判定を、浮動小数点の誤差に左右させない</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_check_share</span><span class="p">(</span><span class="n">share</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">share</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
@@ -7968,7 +7968,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""教育年数 e で、高い能力の人だけが、教育を選ぶか。"""</span>
     <span class="n">low</span><span class="p">,</span> <span class="n">high</span> <span class="o">=</span> <span class="n">separating_education_range</span><span class="p">(</span><span class="n">wage_high</span><span class="p">,</span> <span class="n">wage_low</span><span class="p">,</span> <span class="n">cost_high</span><span class="p">,</span> <span class="n">cost_low</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">low</span> <span class="o">&lt;=</span> <span class="n">education</span> <span class="o">&lt;=</span> <span class="n">high</span>
+    <span class="k">return</span> <span class="n">low</span> <span class="o">-</span> <span class="n">_TOLERANCE</span> <span class="o">&lt;=</span> <span class="n">education</span> <span class="o">&lt;=</span> <span class="n">high</span> <span class="o">+</span> <span class="n">_TOLERANCE</span>
 </code></pre></div>
 <p>賃金の差 40 を、1 年あたりの費用で割ると、低い能力の人は 40 ÷ 20 = 2 年、高い能力の人は 40 ÷ 10 = 4 年が、境目で、<strong>2 年〜4 年</strong>が区別できる範囲です。下の端（2 年）は、<strong>低い能力の人</strong>が、教育しても、しなくても、同じになる年数。上の端（4 年）は、<strong>高い能力の人</strong>が、同じになる年数です。両端を範囲に含めるのは、無差別のとき、望ましい側（低い能力の人はまねしない、高い能力の人は選ぶ）に倒す、という約束です。</p>
 <h3 id="_8">モラルハザード<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
@@ -8023,7 +8023,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="k">def</span><span class="w"> </span><span class="nf">agent_works</span><span class="p">(</span><span class="n">bonus</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_high</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_low</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">effort_cost</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""努力すると、期待報酬 p_high·b − 費用 が、努力しない p_low·b 以上になるか。"""</span>
     <span class="n">_check_probabilities</span><span class="p">(</span><span class="n">p_high</span><span class="p">,</span> <span class="n">p_low</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">bonus</span> <span class="o">&gt;=</span> <span class="n">minimum_bonus</span><span class="p">(</span><span class="n">p_high</span><span class="p">,</span> <span class="n">p_low</span><span class="p">,</span> <span class="n">effort_cost</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">bonus</span> <span class="o">&gt;=</span> <span class="n">minimum_bonus</span><span class="p">(</span><span class="n">p_high</span><span class="p">,</span> <span class="n">p_low</span><span class="p">,</span> <span class="n">effort_cost</span><span class="p">)</span> <span class="o">-</span> <span class="n">_TOLERANCE</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">principal_profit_with_bonus</span><span class="p">(</span>
@@ -8038,9 +8038,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">value</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_high</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">p_low</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">effort_cost</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""努力させる利潤が、努力しない場合の期待利潤 p_low·V を、上回るか。"""</span>
-    <span class="k">return</span> <span class="p">(</span>
-        <span class="n">principal_profit_with_bonus</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">p_high</span><span class="p">,</span> <span class="n">p_low</span><span class="p">,</span> <span class="n">effort_cost</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">p_low</span> <span class="o">*</span> <span class="n">value</span>
-    <span class="p">)</span>
+    <span class="n">profit</span> <span class="o">=</span> <span class="n">principal_profit_with_bonus</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">p_high</span><span class="p">,</span> <span class="n">p_low</span><span class="p">,</span> <span class="n">effort_cost</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">profit</span> <span class="o">&gt;</span> <span class="n">p_low</span> <span class="o">*</span> <span class="n">value</span> <span class="o">+</span> <span class="n">_TOLERANCE</span>
 </code></pre></div>
 <h3 id="_9">予想の答え合わせ<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>予想した答えを、プログラムで確かめます。</p>
@@ -8230,7 +8229,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter14
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>34 passed
+<div class="highlight"><pre><span></span><code>37 passed
 </code></pre></div>
 <h2 id="146">14.6 規則で言うと<a class="headerlink" href="#146" title="Permanent link">&para;</a></h2>
 <ol>
@@ -8270,7 +8269,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <li><strong>離散的な、小さな例です。</strong> 教科書や論文により、数値や前提が違います。この章は、前提を、明示しました（売り手の最低価格が質に等しい、など）</li>
 <li><strong>能力や質の種類を、少数にしました。</strong> 連続的な質の分布では、式が変わります</li>
 <li><strong>シグナルは、生産性を上げないと仮定しました。</strong> 教育が、生産性も上げるなら、社会的な評価が変わります</li>
-<li><strong>成果報酬は、リスク中立の代理人を仮定しました。</strong> リスク回避的なら、保険と誘因の間の、トレードオフが生じます</li>
+<li><strong>成果報酬は、リスク中立で、有限責任（固定給を負にできない）の代理人を仮定しました。</strong> 有限責任がなければ、依頼人は、努力の費用だけで努力させられ、期待利潤は 70 になります（60 ではありません）。 リスク回避的なら、保険と誘因の間の、トレードオフが生じます</li>
 <li><strong>保証・ブランド・評判・規制で、逆選択は、緩和されます。</strong> 中古車の保証は、質のシグナルです</li>
 </ul>
 <h2 id="147-4">14.7 第 4 部の到達チェック<a class="headerlink" href="#147-4" title="Permanent link">&para;</a></h2>
@@ -8337,6 +8336,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 逆選択 (倍率 1.5): 市場に残る質 [20, 40, 60]
 最低の成果報酬: 25.0
 </code></pre></div>
+<p>出力の読み方: <code>ナッシュ均衡: [(1, 1)]</code> は、戦略の番号（1 = 裏切り）で、（裏切り、裏切り）です。利得の (1, 1) と見た目が同じなので、注意してください。また、囚人のジレンマの P（罰）は、逆需要 P = 100 − Q の P（価格）とは、別の意味です。</p>
 <h3 id="_15">できること<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <table>
 <thead>

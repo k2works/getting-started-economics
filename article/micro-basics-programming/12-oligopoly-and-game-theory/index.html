@@ -7702,7 +7702,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter12
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>61 passed
+<div class="highlight"><pre><span></span><code>64 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter12/</code> に、<code>game.py</code>・<code>repeated.py</code>・<code>kinked.py</code> と、それぞれのテストを作ります。</p>
 <h2 id="123">12.3 予想する<a class="headerlink" href="#123" title="Permanent link">&para;</a></h2>
@@ -7895,6 +7895,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.game</span><span class="w"> </span><span class="kn">import</span> <span class="n">Game</span>
 </code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">_TOLERANCE</span> <span class="o">=</span> <span class="mf">1e-9</span>  <span class="c1"># 閾値ちょうどの判定を、浮動小数点の誤差に左右させない</span>
+</code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_check_delta</span><span class="p">(</span><span class="n">delta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"割引因子は、0 以上 1 未満にする"</span><span class="p">)</span>
@@ -8084,7 +8086,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">row_ok</span> <span class="ow">and</span> <span class="n">column_ok</span>
 </code></pre></div>
-<p>協調ゲーム（同じ戦略をそろえると得）では、均衡が 2 つあり、一致ゲーム（相手と違う手を出したい）では、<strong>純粋戦略の均衡がありません</strong>（混合戦略が必要ですが、この章は扱いません）。</p>
+<p>協調ゲーム（同じ戦略をそろえると得）では、均衡が 2 つあり、一致ゲーム（行は手をそろえたく、列は違う手を出したい）では、<strong>純粋戦略の均衡がありません</strong>（混合戦略が必要ですが、この章は扱いません）。</p>
 <h3 id="_10">繰り返しゲーム<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p>ここまでが、1 回限りのゲーム（<code>game.py</code>）です。ここで一度、休んでかまいません。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
@@ -8199,7 +8201,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">temptation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">reward</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">punishment</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""割引因子が閾値以上なら、トリガー戦略で、協調を保てる。"""</span>
-    <span class="k">return</span> <span class="n">delta</span> <span class="o">&gt;=</span> <span class="n">cooperation_threshold</span><span class="p">(</span><span class="n">temptation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">punishment</span><span class="p">)</span>
+    <span class="n">threshold</span> <span class="o">=</span> <span class="n">cooperation_threshold</span><span class="p">(</span><span class="n">temptation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">punishment</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">delta</span> <span class="o">&gt;=</span> <span class="n">threshold</span> <span class="o">-</span> <span class="n">_TOLERANCE</span>
 </code></pre></div>
 <p>最後に <code>test_有限回で近似した価値は閾値の判定と同じ向き</code> が、無限の閉じた式を、<strong>200 回の合計で近似</strong>した値と、比べます（近似であることを、テストが示します）。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_有限回で近似した価値は閾値の判定と同じ向き</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -8682,7 +8685,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h3 id="_15">実行結果<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter12
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>61 passed
+<div class="highlight"><pre><span></span><code>64 passed
 </code></pre></div>
 <h2 id="126">12.6 規則で言うと<a class="headerlink" href="#126" title="Permanent link">&para;</a></h2>
 <ol>
@@ -8725,7 +8728,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <ul>
 <li><strong>純粋戦略だけを扱いました。</strong> 混合戦略（確率的に選ぶ）の均衡は、扱っていません</li>
 <li><strong>2 人・同時手番だけです。</strong> 順番に選ぶゲーム（先手・後手）や、3 人以上は、扱っていません</li>
-<li><strong>無限に繰り返すことを、閉じた式で近似しました。</strong> 実際の取引は、有限回で、最後の期に、協調が崩れることがあります（後ろ向き帰納法）</li>
+<li><strong>無限に繰り返すことを、閉じた式で近似しました。</strong> 実際の取引は、有限回で、終わりが分かっていれば、最後の期から順に協調が崩れ、全期で崩れることがあります（後ろ向き帰納法）</li>
 <li><strong>屈折需要曲線は、価格の硬直性を、仮定として置くだけで、説明しません。</strong> 実証的にも、支持は限定的です</li>
 </ul>
 <h2 id="127">12.7 練習問題<a class="headerlink" href="#127" title="Permanent link">&para;</a></h2>
