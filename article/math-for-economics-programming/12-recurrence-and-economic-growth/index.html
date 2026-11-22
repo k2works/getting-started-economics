@@ -2443,6 +2443,28 @@
   <a href="#_16" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2468,7 +2490,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_17" class="md-nav__link">
+  <a href="#_19" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -2496,7 +2518,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_18" class="md-nav__link">
+  <a href="#_20" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -2507,7 +2529,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_19" class="md-nav__link">
+  <a href="#_21" class="md-nav__link">
     <span class="md-ellipsis">
       
         できること
@@ -2518,7 +2540,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_20" class="md-nav__link">
+  <a href="#_22" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -2568,7 +2590,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_21" class="md-nav__link">
+  <a href="#_23" class="md-nav__link">
     <span class="md-ellipsis">
       
         連載のまとめ
@@ -9448,7 +9470,13 @@ converges with oscillation
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 </details>
-<h3 id="_16">実行結果<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_16">ノートブックで試す<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/math-for-economics-programming/python/notebooks/ch12_recurrence_and_economic_growth.ipynb</code> を開き、「Parameters」のセルの数字（漸化式の a・b・x(0)、ソロー・モデルの s・α・δ・k(0)）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_17">動かして見る<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<p>ソロー・モデルの<strong>蜘蛛の巣図</strong>です。横軸が今期の資本 k(t)、縦軸が来期の資本 k(t + 1) です。45 度線から曲線へ縦に進むと来期の資本が決まり、45 度線へ横に戻ると、それが次の期の出発点になります。s = 0.5・α = 1/3・δ = 0.5（定常状態 k* = 1）で、初期値 0.1 と 2.5 から、資本が階段状に、曲線と 45 度線の交点（定常状態）へ近づきます。交点での曲線の傾きが 1 より小さいので、収束します。</p>
+<p><img alt="ソロー・モデルの蜘蛛の巣図。資本が、定常状態へ階段状に近づく（アニメーション）" src="../images/ch12-solow-cobweb.gif" /></p>
+<p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
+<h3 id="_18">実行結果<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter12
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>62 passed
@@ -9492,7 +9520,7 @@ converges with oscillation
 </tr>
 </tbody>
 </table>
-<h3 id="_17">このモデルが成り立たない場面<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<h3 id="_19">このモデルが成り立たない場面<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>貯蓄率は、一定とは限りません。</strong> 人は、将来の消費と今の消費を比べて、貯蓄を選びます（ラムゼイ・モデル）。所得や利子率で、貯蓄率は変わります</li>
 <li><strong>技術進歩を、モデルの外から与えています。</strong> 長期の成長率を決める技術進歩率 g が、なぜその値なのかを、このモデルは説明しません（内生的成長理論が扱う）</li>
@@ -9502,7 +9530,7 @@ converges with oscillation
 </ul>
 <h2 id="127-3">12.7 第 3 部の到達チェック<a class="headerlink" href="#127-3" title="Permanent link">&para;</a></h2>
 <p>第 3 部（第 9〜12 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。<strong>先に、次の「時間を決めて書く課題」を、何も見ずに試してください。</strong> 課題の解答（実行できるテスト）は、12.8 節の練習問題の解答のあとに、折りたたんで置きます。自分のコードは、関数を <code>practice/chapter12/checkpoint.py</code> に、テストを <code>practice/chapter12/test_checkpoint.py</code> に書きます。第 1・4・5・7・12 章の関数は、前の章を写していなければ、<code>lib.chapterNN...</code> のままでかまいません（写したなら、<code>practice.chapterNN...</code> に書き換えます）。行列・回帰・期待効用の関数は、<strong>第 9・10 章の関数を使わずに</strong>、自分で書きます（何も見ずに書けるかを確かめるため）。積分（<a href="../11-integrals-and-auctions/">第 11 章</a>）は、課題に含めていません。台形法・中点法と消費者余剰の積分を、何も見ずに書けるかは、第 11 章の練習問題で確かめてください。</p>
-<h3 id="_18">時間を決めて書く課題<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
+<h3 id="_20">時間を決めて書く課題<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、関数とテストを書きます。どの課題も、<strong>期待値を、先に手計算で書いてから</strong>、関数を書きます。</p>
 <table>
 <thead>
@@ -9534,7 +9562,7 @@ converges with oscillation
 </tr>
 </tbody>
 </table>
-<h3 id="_19">できること<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<h3 id="_21">できること<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -9571,7 +9599,7 @@ converges with oscillation
 </tr>
 </tbody>
 </table>
-<h3 id="_20">誤りの原因の分類<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<h3 id="_22">誤りの原因の分類<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
 <p>できなかった課題は、原因を、次の 4 つに分けて、記録します。</p>
 <table>
 <thead>
@@ -9807,7 +9835,7 @@ converges with oscillation
 <li>定常状態の近くでは、傾き 1 − δ(1 − α) の 1 次の漸化式で近似できる。数値微分（第 5 章）で、傾きを確かめた</li>
 <li>定常状態の消費は、貯蓄率 s = α（資本の限界生産物 ＝ 減耗率）で最大になる（黄金律）。格子探索（第 2 章）で確かめた</li>
 </ul>
-<h3 id="_21">連載のまとめ<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
+<h3 id="_23">連載のまとめ<a class="headerlink" href="#_23" title="Permanent link">&para;</a></h3>
 <p>これで、この連載は終わりです。第 1 部（第 1〜4 章）では 1 次・2 次関数と指数・対数・数列で市場と金利を、第 2 部（第 5〜8 章）では微分と偏微分で最適化を、第 3 部（第 9〜12 章）では行列（<a href="../09-matrices-and-regression/">第 9 章</a>）・確率（<a href="../10-probability-and-risk/">第 10 章</a>）・積分（<a href="../11-integrals-and-auctions/">第 11 章</a>）・漸化式（この章）で、データ・リスク・オークション・成長を扱いました。どの章でも、<strong>式を関数にして、公式と数値の 2 つの答えを、テストで突き合わせる</strong>、という同じ方法を使いました。</p>
 <p>次は、この連載の数学を使う、経済学の連載へ進んでください。</p>
 <table>

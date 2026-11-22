@@ -1779,6 +1779,28 @@
   <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
+        アニメーション
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ノートブック
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         データについて
       
     </span>
@@ -1799,7 +1821,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         全章に共通する記号
@@ -1821,7 +1843,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         章で意味が変わる文字
@@ -1837,7 +1859,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         この連載の約束（実装の方針）
@@ -8320,11 +8342,23 @@
 <p>解答（コードと手計算の答え）は、各章の練習問題の下に、折りたたんであります。<strong>先に自分で取り組んでから、開いてください。</strong></p>
 <h2 id="_5">到達チェック<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
 <p>第 1 部（第 4 章）・第 2 部（第 8 章）・第 3 部（第 12 章）の終わりに、「到達チェック」があります。何も見ずに、できるかどうかを、自分で確かめる節です。</p>
-<h2 id="_6">データについて<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<h2 id="_6">アニメーション<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<p>第 2・3・4・5・6・8・11・12 章には、図を動かした<strong>アニメーション（GIF）</strong>が、小節「動かして見る」にあります。企業の数・利子率・項数・刻み幅・次数・所得・分割数を動かしたとき、図がどう変わるかを、目で確かめられます。アニメーションの実装は、<code>lib/animations/</code> にあり、<code>uv run python -m tools.render_animations</code> で GIF を書き出します（<strong>写経は不要</strong>です。読んで、動かして、式と図の対応を確かめてください）。</p>
+<h2 id="_7">ノートブック<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<p>全 12 章に、<strong>Jupyter Notebook</strong>（数字を書き換えて、結果と図を、手軽に確かめるもの）があります。<code>apps/math-for-economics-programming/python/notebooks/</code> にあり、ファイル名は、<code>ch05_derivatives_and_profit_maximization.ipynb</code> のように、章の番号と記事の名前に対応します。各章の小節「ノートブックで試す」から、案内しています。</p>
+<ul>
+<li>起動: アプリのディレクトリで、<code>uv run --with jupyterlab jupyter lab notebooks/</code> を実行します（jupyterlab は、プロジェクトの依存には、入れていません）</li>
+<li>使い方: 最初のコードのセル「Parameters」の数字を書き換えて、上から順に実行します（メニューの Run → Run All Cells）。数字を変えるたびに、結果の表示と図が、変わります</li>
+<li>計算は、各章の <code>lib/</code> の関数を呼びます。式を、ノートブックの中で、書き直してはいません。<strong>写経は不要</strong>です。読んで、動かして、「試してみよう」の数字を、確かめてください</li>
+<li>乱数を使う章（第 9・10・11 章）は、種（<code>seed</code>）を Parameters に置いています。種を変えると、結果が変わります</li>
+<li>実行結果は、ノートブックに保存していません。開くたびに、実行して確かめます</li>
+<li>ノートブックは、<code>tools/notebooks/</code> のセルの並びから、<code>uv run python -m tools.build_notebooks</code> で作ります（手で直さず、そちらを直します）</li>
+</ul>
+<h2 id="_8">データについて<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
 <p>この記事は、<strong>実在の統計を使いません。</strong> 手計算できる小さな例と、乱数の種を固定した架空の数値だけを使います（利用条件の問題と、取得の手間を避けるため）。</p>
 <h2 id="symbols">記号について<a class="headerlink" href="#symbols" title="Permanent link">&para;</a></h2>
 <p>数学の記号は、章によって、同じ文字が別の意味になります。章を読むときは、<strong>その章の「数学の式とコードの対応」の表</strong>を、基準にしてください。意味が変わる章には、表の下に、注記があります。</p>
-<h3 id="_7">全章に共通する記号<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
+<h3 id="_9">全章に共通する記号<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -8366,7 +8400,7 @@
 </tr>
 </tbody>
 </table>
-<h3 id="_8">章で意味が変わる文字<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_10">章で意味が変わる文字<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <p>同じ文字でも、章によって意味が違います。<strong>必ず、その章の「数学の式とコードの対応」の表を、基準にしてください。</strong></p>
 <table>
 <thead>
@@ -8415,7 +8449,7 @@
 </tbody>
 </table>
 <p>章が進むと、記号が増えます。新しい記号は、その章の表で、定義します。</p>
-<h2 id="_9">この連載の約束（実装の方針）<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
+<h2 id="_11">この連載の約束（実装の方針）<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h2>
 <ul>
 <li><strong>NaN・無限大は、扱いません。</strong> 教材なので、全関数に検証は入れません。入力の検証は、「その章の式が意味を持つ条件」（傾きが正、確率が 0〜1 など）に、絞ります</li>
 <li><strong>許容誤差</strong>: 数値計算の結果（微分・積分・シミュレーション）を比べるときは、<strong>相対的な誤差</strong>（値の大きさに対する割合）を使います。数え上げ・分数（<code>Fraction</code>）の結果は、<strong>厳密に</strong>比べます。許容誤差の値は、章ごとに、根拠をコメントに書きます</li>

@@ -2290,6 +2290,17 @@
   <a href="#_19" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2315,7 +2326,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_20" class="md-nav__link">
+  <a href="#_21" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -9517,7 +9528,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 </details>
-<h3 id="_19">実行結果<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<h3 id="_19">ノートブックで試す<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/math-for-economics-programming/python/notebooks/ch07_vectors_and_budget_constraint.ipynb</code> を開き、「Parameters」のセルの数字（価格・所得・財の組合せ、時給・非労働所得・余暇）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_20">実行結果<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter07
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>59 passed
@@ -9560,7 +9573,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_20">このモデルが成り立たない場面<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<h3 id="_21">このモデルが成り立たない場面<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>価格が、買う量によらず一定とは限りません。</strong> まとめ買いの割引や、使用量で単価が変わる電気料金では、支出が数量の 1 次式にならず、予算線が折れ曲がります</li>
 <li><strong>借りる利子率と、貯める利子率は、ふつう違います。</strong> 借入の利子率が高いと、2 期間の予算線は、今期の所得の点で折れます。この章の式は、同じ r で貸し借りできると仮定しています</li>

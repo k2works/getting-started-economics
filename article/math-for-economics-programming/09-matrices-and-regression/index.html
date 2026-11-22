@@ -2371,6 +2371,17 @@
   <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2396,7 +2407,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_16" class="md-nav__link">
+  <a href="#_17" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -9674,7 +9685,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 </details>
-<h3 id="_15">実行結果<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<h3 id="_15">ノートブックで試す<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/math-for-economics-programming/python/notebooks/ch09_matrices_and_regression.ipynb</code> を開き、「Parameters」のセルの数字（逆行列を調べる行列、データを作る真の切片と傾き、誤差の標準偏差、乱数の種、価格）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_16">実行結果<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter09
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>59 passed
@@ -9718,7 +9731,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_16">このモデルが成り立たない場面<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_17">このモデルが成り立たない場面<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>関係が直線とは限りません。</strong> 需要が q = 100 ÷ p のような曲線なら、直線を当てはめても、残差に曲がりが残ります。両辺の対数をとれば（第 6 章の弾力性一定の需要）、直線の回帰になることがあります</li>
 <li><strong>価格と数量は、需要と供給の両方で決まります。</strong> 観測された点は、需要曲線と供給曲線の交点です。需要と供給が同時に動くと、回帰直線は、需要曲線でも供給曲線でもありません（<strong>同時性</strong>）。これを扱うのが、<a href="../../econometrics-programming/11-endogeneity/">計量経済学のためのプログラミングの第 11 章</a>（内生性）と<a href="../../econometrics-programming/12-instrumental-variables/">第 12 章</a>（操作変数法）です</li>

@@ -2325,6 +2325,28 @@
   <a href="#_20" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2350,7 +2372,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_21" class="md-nav__link">
+  <a href="#_23" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -2378,7 +2400,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_22" class="md-nav__link">
+  <a href="#_24" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -2389,7 +2411,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_23" class="md-nav__link">
+  <a href="#_25" class="md-nav__link">
     <span class="md-ellipsis">
       
         できること
@@ -2400,7 +2422,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_24" class="md-nav__link">
+  <a href="#_26" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -9728,7 +9750,13 @@ maximum
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 </details>
-<h3 id="_20">実行結果<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<h3 id="_20">ノートブックで試す<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/math-for-economics-programming/python/notebooks/ch08_partial_derivatives_and_utility_maximization.ipynb</code> を開き、「Parameters」のセルの数字（2 つの価格、所得、コブ・ダグラス型の指数 a、準線形効用の重み b）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_21">動かして見る<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
+<p>価格 (1, 2)・a = 0.5 で、所得を 8 から 40 へ増やします。予算線（青）が外へ平行に動き、最適点（赤）は、無差別曲線（緑）との接点として、原点を通る直線（所得拡張経路）の上を動きます。</p>
+<p><img alt="所得を増やすと、予算線が平行に動き、最適点が所得拡張経路の上を動く（アニメーション）" src="../images/ch08-budget-moves.gif" /></p>
+<p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
+<h3 id="_22">実行結果<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>59 passed
@@ -9772,7 +9800,7 @@ maximum
 </tr>
 </tbody>
 </table>
-<h3 id="_21">このモデルが成り立たない場面<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
+<h3 id="_23">このモデルが成り立たない場面<a class="headerlink" href="#_23" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>効用は、数で測れません。</strong> 効用の値の大きさは、順序を表すだけです。λ の値（「1 円で効用が 0.158 増える」）も、効用の目盛りの取り方で変わります</li>
 <li><strong>好みは、ほかの人や過去に左右されます。</strong> 流行・見せびらかし・習慣は、U(x, y) が自分の消費量だけで決まるという仮定を破ります</li>
@@ -9782,7 +9810,7 @@ maximum
 </ul>
 <h2 id="87-2">8.7 第 2 部の到達チェック<a class="headerlink" href="#87-2" title="Permanent link">&para;</a></h2>
 <p>第 2 部（第 5〜8 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。<strong>先に、次の「時間を決めて書く課題」を、何も見ずに試してください。</strong> 課題の解答（実行できるテスト）は、8.8 節の練習問題の解答のあとに、折りたたんで置きます。自分のコードは、関数を <code>practice/chapter08/checkpoint.py</code> に、テストを <code>practice/chapter08/test_checkpoint.py</code> に書きます。第 5・7 章の関数は、自分で写した <code>practice.chapter05</code>・<code>practice.chapter07</code> から import します（写していなければ、<code>lib</code> の完成形でかまいません）。</p>
-<h3 id="_22">時間を決めて書く課題<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
+<h3 id="_24">時間を決めて書く課題<a class="headerlink" href="#_24" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、関数とテストを書きます。どの課題も、<strong>期待値を、先に手計算で書いてから</strong>、関数を書きます。</p>
 <table>
 <thead>
@@ -9810,7 +9838,7 @@ maximum
 </tr>
 </tbody>
 </table>
-<h3 id="_23">できること<a class="headerlink" href="#_23" title="Permanent link">&para;</a></h3>
+<h3 id="_25">できること<a class="headerlink" href="#_25" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -9842,7 +9870,7 @@ maximum
 </tr>
 </tbody>
 </table>
-<h3 id="_24">誤りの原因の分類<a class="headerlink" href="#_24" title="Permanent link">&para;</a></h3>
+<h3 id="_26">誤りの原因の分類<a class="headerlink" href="#_26" title="Permanent link">&para;</a></h3>
 <p>できなかった課題は、原因を、次の 4 つに分けて、記録します。</p>
 <table>
 <thead>

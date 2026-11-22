@@ -2384,6 +2384,17 @@
   <a href="#_21" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_22" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2409,7 +2420,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_22" class="md-nav__link">
+  <a href="#_23" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -9744,7 +9755,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <p><code>ax.bar(位置, 高さ, width=...)</code> は棒グラフを描き、棒の集まりを返します（<code>ax.containers</code> に、描いた順に入ります）。<code>ax.bar_label</code> は、棒の上に値を書きます。2 組の棒を、仮説の位置から左右に 0.2 ずつずらして並べています。</p>
 </details>
-<h3 id="_21">実行結果<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
+<h3 id="_21">ノートブックで試す<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/math-for-economics-programming/python/notebooks/ch10_probability_and_risk.ipynb</code> を開き、「Parameters」のセルの数字（有病率・感度・偽陽性率、賭けの賞金と確率、サイコロを投げる回数と乱数の種）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_22">実行結果<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter10
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>47 passed
@@ -9790,7 +9803,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_22">このモデルが成り立たない場面<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
+<h3 id="_23">このモデルが成り立たない場面<a class="headerlink" href="#_23" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>均等確率は、「同じ確からしさ」が言えるときだけです。</strong> 現実の事故・病気・景気は、サイコロのように数え上げられません。過去のデータや判断で、確率を置くことになります</li>
 <li><strong>有病率は、集団で違います。</strong> 症状があって受診した人の中では、病気の人の割合は 1% よりずっと高く、同じ検査の陽性の意味が変わります。ベイズの定理は、事前確率を何に置くかで答えが変わります</li>

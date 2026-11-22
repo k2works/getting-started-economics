@@ -2266,6 +2266,28 @@
   <a href="#_22" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_23" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_24" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2291,7 +2313,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_23" class="md-nav__link">
+  <a href="#_25" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -9379,7 +9401,13 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 </details>
-<h3 id="_22">実行結果<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
+<h3 id="_22">ノートブックで試す<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/math-for-economics-programming/python/notebooks/ch06_elasticity_and_growth_rates.ipynb</code> を開き、「Parameters」のセルの数字（需要の切片と傾き、価格、テイラー展開の x と次数、企業の数）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_23">動かして見る<a class="headerlink" href="#_23" title="Permanent link">&para;</a></h3>
+<p>テイラー展開の次数を、0 から 6 へ 1 つずつ上げます。近似（赤の点線）が、0 の近くから順に e^x（青の実線）に重なっていき、x = 1 での誤差が小さくなります。</p>
+<p><img alt="テイラー近似の次数を上げると、e^x に近づく（アニメーション）" src="../images/ch06-taylor-order.gif" /></p>
+<p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
+<h3 id="_24">実行結果<a class="headerlink" href="#_24" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter06
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>51 passed
@@ -9425,7 +9453,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_23">このモデルが成り立たない場面<a class="headerlink" href="#_23" title="Permanent link">&para;</a></h3>
+<h3 id="_25">このモデルが成り立たない場面<a class="headerlink" href="#_25" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>弾力性は、ほかの条件を一定にした値です。</strong> 所得やほかの財の価格が同時に変わると、需要曲線そのものが動きます。2 時点の価格と数量のデータから計算した弧弾力性は、需要曲線の上の動きとは限りません</li>
 <li><strong>短期と長期で、弾力性は違います。</strong> ガソリンの値上がりに、すぐには車を替えられません。長い時間がたつと、燃費のよい車や公共交通に移り、需要の反応が大きくなります</li>

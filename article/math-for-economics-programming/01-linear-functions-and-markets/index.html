@@ -2003,6 +2003,17 @@
   <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2028,7 +2039,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_15" class="md-nav__link">
+  <a href="#_16" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -9178,7 +9189,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 </details>
-<h3 id="_14">実行結果<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_14">ノートブックで試す<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/math-for-economics-programming/python/notebooks/ch01_linear_functions_and_markets.ipynb</code> を開き、「Parameters」のセルの数字（需要・供給の切片と傾き、豊作のあとの供給の切片）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_15">実行結果<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter01
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>46 passed
@@ -9216,7 +9229,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_15">このモデルが成り立たない場面<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<h3 id="_16">このモデルが成り立たない場面<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>需要・供給が、直線であるとは、限りません。</strong> 実際の曲線は、曲がっています。直線は、均衡の近くでの、<strong>近似</strong>です（第 5 章で、微分して、局所的に直線で近似する考えを学びます）</li>
 <li><strong>需要曲線・供給曲線は、観察できません。</strong> 観察できるのは、取引された価格と数量（均衡の点）だけです。この章の曲線は、<strong>式を仮定して</strong>描いています</li>

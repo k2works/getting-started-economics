@@ -2119,6 +2119,28 @@
   <a href="#_16" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_17" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2144,7 +2166,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_17" class="md-nav__link">
+  <a href="#_19" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -2172,7 +2194,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_18" class="md-nav__link">
+  <a href="#_20" class="md-nav__link">
     <span class="md-ellipsis">
       
         時間を決めて書く課題
@@ -2183,7 +2205,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_19" class="md-nav__link">
+  <a href="#_21" class="md-nav__link">
     <span class="md-ellipsis">
       
         できること
@@ -2194,7 +2216,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_20" class="md-nav__link">
+  <a href="#_22" class="md-nav__link">
     <span class="md-ellipsis">
       
         誤りの原因の分類
@@ -9214,7 +9236,13 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 </details>
-<h3 id="_16">実行結果<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_16">ノートブックで試す<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/math-for-economics-programming/python/notebooks/ch04_sequences_and_saving.ipynb</code> を開き、「Parameters」のセルの数字（初項・公比・項数、毎年の受け取り・利子率・年数・額面）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_17">動かして見る<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<p>初項 2・公比 0.6 の等比数列の項を、1 つずつ足します。部分和の棒が 1 本ずつ増え（いま足した項は、橙色）、無限級数の値（点線）に近づきます。左上に、部分和と、点線との差が出ます。差は、毎回 0.6 倍に縮みます。</p>
+<p><img alt="等比数列の項を 1 つずつ足すと、部分和の棒が、無限級数の値（点線）に近づく（アニメーション）" src="../images/ch04-series-converge.gif" /></p>
+<p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
+<h3 id="_18">実行結果<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter04
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>62 passed
@@ -9254,7 +9282,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tbody>
 </table>
 <p>経済学の別の場面でも、同じ等比数列の和が出てきます。マクロ経済学の<strong>乗数</strong> 1 ÷ (1 − 限界消費性向) は、「所得が増える → 消費が増える → 所得が増える → …」の波及を、無限に足した、無限級数です（<a href="../../macro-basics-programming/04-45-degree-line-and-multiplier/">マクロ経済学のためのプログラミング（初級）の第 4 章</a>）。</p>
-<h3 id="_17">このモデルが成り立たない場面<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<h3 id="_19">このモデルが成り立たない場面<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>利子率が、毎年同じとは、限りません。</strong> 実際の債券の価格は、満期ごとに違う利子率（利回り曲線）で割り引きます。この章の公式は、すべての年で同じ r を仮定しています</li>
 <li><strong>約束が守られるとは、限りません。</strong> 発行した会社や国が、払えなくなる（デフォルト）おそれがあれば、価格は、この章の値より低くなります</li>
@@ -9263,7 +9291,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </ul>
 <h2 id="47-1">4.7 第 1 部の到達チェック<a class="headerlink" href="#47-1" title="Permanent link">&para;</a></h2>
 <p>第 1 部（第 1〜4 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。<strong>先に、次の「時間を決めて書く課題」を、何も見ずに試してください。</strong> 課題の解答（実行できるテスト）は、4.8 節の練習問題の解答のあとに、折りたたんで置きます。自分のコードは、関数を <code>practice/chapter04/checkpoint.py</code> に、テストを <code>practice/chapter04/test_checkpoint.py</code> に書きます。第 1・4 章の関数は、前の章を写していなければ、<code>lib.chapterNN...</code> のままでかまいません（写したなら、<code>practice.chapterNN...</code> に書き換えます）。頂点・複利・割引の関数は、何も見ずに書けるかを確かめるため、第 2・3 章の関数を使わずに、自分で書きます。</p>
-<h3 id="_18">時間を決めて書く課題<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
+<h3 id="_20">時間を決めて書く課題<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、関数とテストを書きます。どの課題も、<strong>期待値を、先に手計算で書いてから</strong>、関数を書きます。</p>
 <table>
 <thead>
@@ -9291,7 +9319,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_19">できること<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<h3 id="_21">できること<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
 <tr>
@@ -9323,7 +9351,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_20">誤りの原因の分類<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<h3 id="_22">誤りの原因の分類<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
 <p>できなかった課題は、原因を、次の 4 つに分けて、記録します。</p>
 <table>
 <thead>

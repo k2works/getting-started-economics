@@ -2060,6 +2060,28 @@
   <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_15" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_16" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2085,7 +2107,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_15" class="md-nav__link">
+  <a href="#_17" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -9150,7 +9172,13 @@ MarketOutcome(quantity=20.0, price=60.0, profit=800.0) 400.0
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 </details>
-<h3 id="_14">実行結果<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_14">ノートブックで試す<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/math-for-economics-programming/python/notebooks/ch02_quadratics_monopoly_and_oligopoly.ipynb</code> を開き、「Parameters」のセルの数字（逆需要の切片と傾き、費用、企業の数）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_15">動かして見る<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<p>企業の数を 1 から 10 へ増やします。クールノー均衡の点（赤）が、需要曲線の上を、独占の点（黒）から完全競争の点（緑）へ向かって動き、市場全体の利潤（橙の長方形。高さが価格 − 費用）が、薄くなっていきます。</p>
+<p><img alt="企業の数を増やすと、クールノー均衡が独占から完全競争へ近づく（アニメーション）" src="../images/ch02-cournot-n.gif" /></p>
+<p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
+<h3 id="_16">実行結果<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter02
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>46 passed
@@ -9189,7 +9217,7 @@ MarketOutcome(quantity=20.0, price=60.0, profit=800.0) 400.0
 </tr>
 </tbody>
 </table>
-<h3 id="_15">このモデルが成り立たない場面<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<h3 id="_17">このモデルが成り立たない場面<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>費用が一定とは、限りません。</strong> 作るほど 1 単位あたりの費用が上がると、利潤は 2 次関数でなくなります（第 5 章で、微分を使って、2 次関数に限らない費用での利潤最大化を学びます。独占の限界収入 ＝ 限界費用は、第 5 章の練習問題で確かめます）</li>
 <li><strong>独占企業が、需要曲線を正確に知っているとは、限りません。</strong> 実際の企業は、価格を試しながら探ります。この章は、需要の式を仮定しています</li>

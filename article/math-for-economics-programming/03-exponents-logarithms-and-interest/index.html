@@ -2150,6 +2150,28 @@
   <a href="#_19" class="md-nav__link">
     <span class="md-ellipsis">
       
+        ノートブックで試す
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_20" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_21" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2175,7 +2197,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_20" class="md-nav__link">
+  <a href="#_22" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -9269,7 +9291,13 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <p>最初の版は、単利を両端の 2 点だけで描いていました。線形目盛では直線で正しいのですが、対数目盛でも直線に見えてしまい、「単利は、対数目盛では鈍る」ことが、図に出ませんでした。図を目で見て気づき、毎年の点で描くテストを、先に足してから直しました。</p>
 </details>
-<h3 id="_19">実行結果<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<h3 id="_19">ノートブックで試す<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<p>数字を書き換えて、結果と図が変わるのを、手軽に確かめられます。<code>apps/math-for-economics-programming/python/notebooks/ch03_exponents_logarithms_and_interest.ipynb</code> を開き、「Parameters」のセルの数字（元本・年利・年数・年あたりの複利の回数・将来の額）を書き換えて、上から順に実行します。起動は、アプリのディレクトリで <code>uv run --with jupyterlab jupyter lab notebooks/</code> です。</p>
+<h3 id="_20">動かして見る<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<p>年利を 1% から 12% へ上げます。複利の曲線（青）が反り上がり、単利の直線（点線）との差が開きます。倍になる年数（赤の縦線）は短くなり、72 の法則（紫の破線）は、年利 8% の近くで、赤の線に重なります（年利が低いうちは、縦線は 30 年より右にあり、図の上の文字だけで示します）。</p>
+<p><img alt="年利を上げると、複利の曲線が反り上がり、倍になる年数が短くなる（アニメーション）" src="../images/ch03-compound-rate.gif" /></p>
+<p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
+<h3 id="_21">実行結果<a class="headerlink" href="#_21" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter03
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>65 passed
@@ -9315,7 +9343,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_20">このモデルが成り立たない場面<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
+<h3 id="_22">このモデルが成り立たない場面<a class="headerlink" href="#_22" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>利子率は、一定とは限りません。</strong> 変動金利や、期間によって違う利回り（1 年物と 10 年物で利子率が違う）では、(1 + r)ⁿ の r を、年ごとに変える必要があります（掛け算の (1 + r₁)(1 + r₂)…になります）</li>
 <li><strong>実際の口座は、端数を丸めます。</strong> 利子を、毎回 1 円未満切り捨てにすると、式の値と、少しずつずれます。お金の計算に、浮動小数点をそのまま使わない理由の 1 つです</li>
