@@ -71,6 +71,7 @@ exclude_docs: |
   article/econometrics-programming/outline.md
   article/macro-basics-programming/outline.md
   article/micro-basics-programming/outline.md
+  article/math-for-economics-programming/outline.md
   # 参照用に取得した外部資料（.gitignore の対象。サイトには含めない）
   article/py4basics.github.io/
   article/py4etrics.github.io/
@@ -103,6 +104,11 @@ nav:
       - 概要: article/index.md
       - 経済学・経済政策 全体マインドマップ: article/経済学・経済政策 全体マインドマップ.md
       - 経済学・経済政策 トピック別マインドマップ: article/経済学・経済政策 トピック別マインドマップ.md
+      - 経済学で出る数学 マインドマップ: article/経済学で出る数学 マインドマップ.md
+      - 経済学で出る数学プログラミング:
+          - 概要: article/math-for-economics-programming/index.md
+          - この記事の読み方: article/math-for-economics-programming/how-to-read.md
+          - 第 1 章 1 次関数と市場メカニズム: article/math-for-economics-programming/01-linear-functions-and-markets.md
       - 経済学のためのプログラミング入門:
           - 概要: article/economics-programming/index.md
           - この記事の読み方: article/economics-programming/how-to-read.md
