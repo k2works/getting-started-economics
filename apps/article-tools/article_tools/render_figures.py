@@ -47,14 +47,15 @@ _IMAGE_REFERENCE = re.compile(r"!\[[^\]]*\]\(images/([^)]+?)\.png\)")
 
 
 def fingerprint(fig: Figure) -> str:
-    """図に描いたデータ（座標・棒の高さ・軸の名前）から、指紋（ハッシュ）を作る。"""
+    """図に描いたデータ（座標・線種・棒の高さ・軸の名前と範囲）から、指紋（ハッシュ）を作る。"""
     axes = []
     for ax in fig.axes:
         lines = []
         for line in ax.lines:
             points: Any = line.get_xydata()
             xy = np.round(points, _DIGITS).tolist()
-            lines.append({"label": line.get_label(), "xy": xy})
+            style = line.get_linestyle()
+            lines.append({"label": line.get_label(), "style": style, "xy": xy})
         bars = [
             round(float(p.get_height()), _DIGITS)
             for p in ax.patches
@@ -63,6 +64,8 @@ def fingerprint(fig: Figure) -> str:
         entry: dict[str, Any] = {
             "xlabel": ax.get_xlabel(),
             "ylabel": ax.get_ylabel(),
+            "xlim": np.round(ax.get_xlim(), _DIGITS).tolist(),
+            "ylim": np.round(ax.get_ylim(), _DIGITS).tolist(),
             "lines": lines,
             "bars": bars,
         }

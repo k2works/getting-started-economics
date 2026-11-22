@@ -142,3 +142,21 @@ def test_塗りつぶした多角形の頂点が変わると指紋も変わる()
 
     assert fingerprint(make(0.5)) == fingerprint(make(0.5))
     assert fingerprint(make(0.5)) != fingerprint(make(0.7))
+
+
+def make_styled_figure(linestyle: str = "-", xlim: float = 1.0) -> Figure:
+    fig, ax = plt.subplots()
+    ax.plot([0.0, 1.0], [1.0, 2.0], linestyle=linestyle, label="A")
+    ax.set_xlim(0, xlim)
+    plt.close(fig)
+    return fig
+
+
+def test_線種が変わると指紋も変わる() -> None:
+    assert fingerprint(make_styled_figure("-")) != fingerprint(make_styled_figure("--"))
+
+
+def test_軸の範囲が変わると指紋も変わる() -> None:
+    assert fingerprint(make_styled_figure(xlim=1.0)) != fingerprint(
+        make_styled_figure(xlim=2.0)
+    )
