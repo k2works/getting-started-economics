@@ -124,3 +124,11 @@ def test_自然独占の図の軸と凡例() -> None:
     assert ax.get_xlim() == (0, 100)
     assert ax.get_ylim() == (0, 100)
     assert ax.get_legend() is not None
+
+
+def test_傾きが2の市場の需要曲線の端点() -> None:
+    market = ExternalityMarket(100, 2, 10, 1, 20)
+    ax = plot_externality(market, 100, 100).axes[0]
+    assert xs(line(ax, "Demand")) == [0, 50]
+    ax = plot_natural_monopoly(Monopoly(100, 2, 10), 400, 100, 100).axes[0]
+    assert xs(line(ax, "Demand")) == [0, 50]

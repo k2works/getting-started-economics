@@ -137,3 +137,12 @@ def test_独占的競争の図の軸と凡例() -> None:
     assert ax.get_xlim() == (0, 100)
     assert ax.get_ylim() == (0, 100)
     assert ax.get_legend() is not None
+
+
+def test_傾きが2の市場の線は傾きで割った端点を持つ() -> None:
+    ax = plot_monopoly(Monopoly(100, 2, 10), 100, 100).axes[0]
+    assert xs(line(ax, "Demand")) == [0, 50]
+    assert xs(line(ax, "Marginal revenue")) == [0, 25]
+    ax = plot_long_run(Monopoly(100, 2, 10), 400, 100, 100).axes[0]
+    assert xs(line(ax, "Demand before entry")) == [0, 50]
+    assert ys(line(ax, "Demand before entry")) == [100, 0]

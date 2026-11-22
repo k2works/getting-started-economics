@@ -201,3 +201,10 @@ def test_補償された消費点は財yの価格でも変わる() -> None:
     assert cobb_douglas_utility(x, y) == pytest.approx(800)
     assert y / x == pytest.approx(1 / 2)
     assert x == pytest.approx(40)
+
+
+def test_補償需要のべき指数は正でなければエラー() -> None:
+    with pytest.raises(ValueError, match="べき指数"):
+        compensated_bundle(10, 1, 1, a=0, b=1)
+    with pytest.raises(ValueError, match="べき指数"):
+        compensated_bundle(10, 1, 1, a=1, b=0)

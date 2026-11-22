@@ -151,3 +151,19 @@ def test_努力しなくても成功確率が0でない端の値() -> None:
 def test_努力させても利潤が同じなら価値はない() -> None:
     assert principal_profit_with_bonus(100, 0.8, 0.4, 20) == pytest.approx(40)
     assert not worth_paying_bonus(100, 0.8, 0.4, 20)
+
+
+def test_最低の成果報酬ちょうどの判定は浮動小数点の誤差に左右されない() -> None:
+    assert minimum_bonus(0.7, 0.3, 10) > 25
+    assert agent_works(25, 0.7, 0.3, 10)
+    assert not agent_works(24.9, 0.7, 0.3, 10)
+
+
+def test_教育年数の範囲の端ちょうどは誤差に左右されない() -> None:
+    assert signal_separates(1.0, 1.0, 0.7, 0.1, 0.3)
+    assert not signal_separates(0.99, 1.0, 0.7, 0.1, 0.3)
+    assert not signal_separates(3.34, 1.0, 0.7, 0.1, 0.3)
+
+
+def test_良い品の判定の端ちょうどは誤差に左右されない() -> None:
+    assert good_quality_sells(0.3, 1.0, 0.7, seller_reservation=0.3 * 1.0 + 0.7 * 0.7)

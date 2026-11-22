@@ -190,3 +190,8 @@ def test_囚人のジレンマの不等式は厳密() -> None:
     assert not is_prisoners_dilemma(_symmetric(3, 3, 1, 0))
     assert not is_prisoners_dilemma(_symmetric(5, 1, 1, 0))
     assert not is_prisoners_dilemma(_symmetric(5, 3, 0, 0))
+
+
+def test_報酬と罰が等しければ囚人のジレンマではない() -> None:
+    with pytest.raises(ValueError, match="T > R > P > S"):
+        prisoners_dilemma(temptation=5, reward=3, punishment=3, sucker=0)

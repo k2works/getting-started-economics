@@ -166,3 +166,8 @@ def test_税の後の数量がちょうど0なら扱わない() -> None:
     with pytest.raises(ValueError, match="税"):
         quantity_with_tax(POLLUTION, 90)
     assert quantity_with_tax(POLLUTION, 89) == 0.5
+
+
+def test_一律規制の総削減量は負にできない() -> None:
+    with pytest.raises(ValueError, match="削減"):
+        uniform_reduction([1, 2], -10)

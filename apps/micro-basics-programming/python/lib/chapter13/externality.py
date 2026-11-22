@@ -113,6 +113,7 @@ def emissions_trading(
 def uniform_reduction(slopes: Sequence[float], total_reduction: float) -> list[float]:
     """一律規制。全社が、同じ量を、削減する。"""
     _check_firms(slopes)
+    validate_non_negative(total_reduction, "総削減量は、0 以上にする")
     return [total_reduction / len(slopes)] * len(slopes)
 
 

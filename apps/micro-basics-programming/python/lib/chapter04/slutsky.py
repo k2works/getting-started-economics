@@ -39,6 +39,8 @@ def compensated_bundle(
     validate_positive(utility_level, "効用の水準は、正にする")
     validate_positive(px, "財 x の価格は、正にする")
     validate_positive(py, "財 y の価格は、正にする")
+    validate_positive(a, "べき指数 a は、正にする")
+    validate_positive(b, "べき指数 b は、正にする")
     ratio = (b / a) * (px / py)
     x = (utility_level / ratio**b) ** (1 / (a + b))
     return x, ratio * x

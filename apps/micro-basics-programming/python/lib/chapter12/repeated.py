@@ -12,6 +12,7 @@ Strategy = Callable[[Sequence[int], Sequence[int]], int]
 
 COOPERATE = 0
 DEFECT = 1
+_TOLERANCE = 1e-9  # 閾値ちょうどの判定を、浮動小数点の誤差に左右させない
 
 
 def _check_delta(delta: float) -> None:
@@ -48,7 +49,8 @@ def trigger_sustains_cooperation(
     temptation: float, reward: float, punishment: float, delta: float
 ) -> bool:
     """割引因子が閾値以上なら、トリガー戦略で、協調を保てる。"""
-    return delta >= cooperation_threshold(temptation, reward, punishment)
+    threshold = cooperation_threshold(temptation, reward, punishment)
+    return delta >= threshold - _TOLERANCE
 
 
 def always_cooperate(own: Sequence[int], opponent: Sequence[int]) -> int:

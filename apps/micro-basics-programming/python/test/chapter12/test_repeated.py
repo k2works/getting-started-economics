@@ -133,3 +133,8 @@ def test_罰が1でない場合の裏切る価値() -> None:
 
 def test_1回だけのゲーム() -> None:
     assert play(GAME, tit_for_tat, always_defect, 1) == [(0, 1)]
+
+
+def test_閾値ちょうどの割引因子は誤差に左右されず協調が続く() -> None:
+    assert trigger_sustains_cooperation(1.0, 0.7, 0.1, 1 / 3)
+    assert not trigger_sustains_cooperation(1.0, 0.7, 0.1, 0.33)
