@@ -23,6 +23,12 @@ pythonpath = ["."]
 addopts = ["--import-mode=importlib"]
 # 無限ループになる変異や不具合で、テストが止まらなくなるのを防ぐ（1 件 60 秒）
 timeout = 60
+# Windows で、Jupyter のカーネルを起動したときの、無害な警告
+filterwarnings = [
+    "ignore:Proactor event loop does not implement add_reader:RuntimeWarning",
+    # テストで、アニメーションを、保存せずに捨てるときの、無害な警告
+    "ignore:Animation was deleted without rendering anything:UserWarning",
+]
 
 [tool.coverage.run]
 source = ["lib"]
@@ -48,5 +54,8 @@ dev = [
     "ruff>=0.8",
     "mypy>=1.13",
     "tox>=4.0",
+    "ipykernel>=7.4.0",
+    "nbclient>=0.11.0",
+    "nbformat>=5.11.1",
     "pytest-timeout>=2.4.0",
 ]

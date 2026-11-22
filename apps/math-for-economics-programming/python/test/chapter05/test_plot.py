@@ -39,6 +39,11 @@ def test_利潤最大の点と利潤の長方形() -> None:
     box = ax.collections[0].get_paths()[0].get_extents()
     assert (box.x0, box.x1, box.y0, box.y1) == pytest.approx((0, 20, 35, 50))
     assert ax.collections[0].get_label() == "Profit"
+    # 操業停止点（AVC の最小 10）より安いと、作らないので、点も長方形も描かない
+    shutdown = plot_cost_curves(Polynomial((100, 10, 1)), 8, 30).axes[0]
+    assert len(shutdown.collections) == 0
+    labels = [x.get_label() for x in shutdown.lines]
+    assert "Profit maximum (P = MC)" not in labels
 
 
 def test_誤差の図は刻み幅ごとの誤差を両対数で描く() -> None:

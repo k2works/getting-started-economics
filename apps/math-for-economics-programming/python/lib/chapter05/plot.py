@@ -22,9 +22,10 @@ def plot_cost_curves(cost: Polynomial, price: float, q_max: float) -> Figure:
     best = profit_maximizing_quantity(price, cost)
     low_q, low_ac = minimum_average_cost(cost)
     fig, ax = plt.subplots()
-    ax.fill_between(
-        [0, best], average_cost(cost, best), price, alpha=0.2, label="Profit"
-    )
+    if best > 0:  # 操業停止点より安ければ作らないので、利潤の長方形はない
+        ax.fill_between(
+            [0, best], average_cost(cost, best), price, alpha=0.2, label="Profit"
+        )
     curves = [
         ("Marginal cost (MC)", marginal_cost),
         ("Average cost (AC)", average_cost),
@@ -33,7 +34,8 @@ def plot_cost_curves(cost: Polynomial, price: float, q_max: float) -> Figure:
     for label, curve in curves:
         ax.plot(quantities, [curve(cost, q) for q in quantities], label=label)
     ax.plot([0, q_max], [price, price], "--", label="Price")
-    ax.plot([best], [price], "ko", label="Profit maximum (P = MC)")
+    if best > 0:
+        ax.plot([best], [price], "ko", label="Profit maximum (P = MC)")
     ax.plot([low_q], [low_ac], "s", label="Minimum AC")
     ax.set_xlabel("Quantity")
     ax.set_ylabel("Cost / Price")
