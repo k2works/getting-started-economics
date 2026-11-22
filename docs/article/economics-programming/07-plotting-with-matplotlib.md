@@ -454,6 +454,14 @@ uv run python -c "from lib.chapter07.plot import draw_market; draw_market(100, 2
 
 ![需要曲線・供給曲線・均衡点](images/ch07-market.png)
 
+### 動かして見る
+
+税額を 0 から 15 へ上げます。破線の供給曲線（供給 + 税）が上へ動き、税収（緑）と**死荷重（赤）**が現れます。税額を 2 倍にすると、死荷重は 4 倍になります（税額の 2 乗に比例します）。
+
+![税額を上げると、税収と死荷重が現れる（アニメーション）](images/ch07-tax-wedge.gif)
+
+このアニメーションは、`lib/animations/` の関数で作っています（`uv run python -m tools.render_animations` で、GIF を書き出します）。**写経は、不要**です。動きを見て、式と図の対応を、確かめてください。
+
 ### 実行結果
 
 ```bash

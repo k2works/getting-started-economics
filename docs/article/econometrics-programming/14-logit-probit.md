@@ -764,6 +764,14 @@ def plot_probability_curves(x: NDArray[np.float64], y: NDArray[np.float64]) -> F
     return fig
 ```
 
+### 動かして見る
+
+ロジットの傾きを、0 から、最尤推定値の 1.8 倍まで動かします。左のロジット曲線が、寝た形から立った形へ変わります。右の対数尤度は、山を登って下ります。**頂上が、最尤推定値**です。
+
+![傾きを動かすと、ロジット曲線が変わり、対数尤度は山を描く（アニメーション）](images/ch14-likelihood.gif)
+
+このアニメーションは、`lib/animations/` の関数で作っています（`uv run python -m tools.render_animations` で、GIF を書き出します）。**写経は、不要**です。動きを見て、式と図の対応を、確かめてください。
+
 ### 実行結果
 
 ```bash

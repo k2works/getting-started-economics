@@ -499,6 +499,14 @@ def plot_market(market: pd.DataFrame) -> Figure:
     return fig
 ```
 
+### 動かして見る
+
+x1 と x2 の相関を、0 から 0.9 へ上げます。x2 を入れた回帰（青）は、真の値のまま動きません。x2 を落とした回帰（赤）は、相関に比例して、真の値から離れます。標本を増やしても、この偏りは、消えません。
+
+![相関を上げると、x2 を落とした回帰だけが偏る（アニメーション）](images/ch11-omitted-variable.gif)
+
+このアニメーションは、`lib/animations/` の関数で作っています（`uv run python -m tools.render_animations` で、GIF を書き出します）。**写経は、不要**です。動きを見て、式と図の対応を、確かめてください。
+
 ### 実行結果
 
 ```bash

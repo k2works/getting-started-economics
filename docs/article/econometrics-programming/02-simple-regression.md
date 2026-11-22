@@ -474,6 +474,14 @@ def plot_slope_distribution(slopes: Sequence[float], true_slope: float) -> Figur
     return fig
 ```
 
+### 動かして見る
+
+x の端にある 1 点を、直線の上から、下へ動かします。最小二乗法の直線（橙）は、この 1 点に引きずられ、傾きが正から負へ変わります。残差の二乗を最小にするので、離れた点ほど、強く効きます。
+
+![1 点を動かすと、回帰直線が引きずられる（アニメーション）](images/ch02-outlier.gif)
+
+このアニメーションは、`lib/animations/` の関数で作っています（`uv run python -m tools.render_animations` で、GIF を書き出します）。**写経は、不要**です。動きを見て、式と図の対応を、確かめてください。
+
 ### 実行結果
 
 ```bash

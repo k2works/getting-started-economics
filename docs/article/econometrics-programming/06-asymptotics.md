@@ -571,6 +571,14 @@ def plot_estimate_distributions(
     return fig
 ```
 
+### 動かして見る
+
+標本の大きさを、20 から 1000 へ増やします。傾きの推定値のヒストグラムが、真の値（赤の線）のまわりに、狭く集まります。これが、一致性です。
+
+![標本を大きくすると、推定値が真の値に集まる（アニメーション）](images/ch06-consistency.gif)
+
+このアニメーションは、`lib/animations/` の関数で作っています（`uv run python -m tools.render_animations` で、GIF を書き出します）。**写経は、不要**です。動きを見て、式と図の対応を、確かめてください。
+
 ### 実行結果
 
 ```bash

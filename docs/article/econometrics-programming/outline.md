@@ -477,3 +477,8 @@ mypy は、`statsmodels.*`・`linearmodels.*`・`wooldridge.*` を、`ignore_mis
 11. 計画の更新: 各 Bolt の終わりに、この節に、結果（テスト件数・変異テストの結果・観測した値・見つけた問題）を記録する
 12. 完成後に、ほかのシリーズから、案内を足す（第 1 シリーズの付録 A の「この先へ」、第 2 シリーズの第 3 章）
 13. **U6（検査ツールの共通パッケージ化）— 完了**（レビュー対応）: 3 シリーズに複製していた `tools/`（`check_articles`・`render_figures`・`check_realdata`）を、共通パッケージ `apps/article-tools/`（`article_tools`）に移した。各シリーズは、dev グループから、uv の path 依存（`editable = true`）で参照する。シリーズ固有のデータ（図の登録 `figure_registry.py`・指紋・抜粋・解答の前置き）は、各シリーズの `tools/` に残し、`ARTICLE_APP_DIR`（既定は、実行したディレクトリ）で対象を決める。ツールのテストは、共通パッケージ側の 1 か所にまとめ（39 件）、CI に専用のジョブ `article-tools`（テスト・lint・型）を足した。複製が同一であることを確かめる `tools-sync` ジョブは、複製がなくなったので、役目を終えた。図の登録の検査（`test_figure_registry.py`）は、シリーズ側に残した
+14. **アニメーション（GIF）の追加**（2026-11-22。ユーザーの依頼）: ミクロ初級と同じ作りで、7 図（第 2・3・5・6・11・12・14 章）に、matplotlib の `FuncAnimation` と Pillow の GIF で、アニメーションを追加した（新しい依存はない）。
+    - 選んだ図: 外れ値で回帰直線が動く（第 2 章）、相関が高いと係数の推定値が散らばる（第 3 章）、信頼区間を 1 本ずつ足す（第 5 章）、標本が大きいと推定値が集まる（第 6 章）、相関を上げると欠落変数の偏りが増える（第 11 章）、弱い操作変数で IV が散らばる（第 12 章）、傾きを動かすと対数尤度が山を描く（第 14 章）。パラメーター（相関・標本の大きさ・強さ・傾き）を動かすと、結論がそのまま見える図を選んだ
+    - 実装は `lib/animations/`（フレームごとのデータを返す関数と、アニメーションを作る関数）。フレームのデータは、各章の関数（`fit_simple`・`multicollinearity_experiment`・`slope_intervals`・`consistency_experiment`・`simulate_omitted`・`weak_instrument_experiment`・`fit_binary` など）を呼んで求め、式を二重に書かない。乱数を使う図は、種を固定し、テストが同じ結果を再現する
+    - 登録は `tools/animation_registry.py`、書き出しは `tools/render_animations.py`。GIF が登録と記事に対応していることを、`test/tools/test_animation_registry.py` が確かめる。静止画の図（PNG・指紋）とは、別の仕組み
+    - 記事には、小節「動かして見る」を足した。**写経は不要**とした。図の中の文字は、GIF のフォントに日本語がないので、英語にした

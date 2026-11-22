@@ -487,6 +487,14 @@ def plot_confidence_intervals(intervals: pd.DataFrame, true_value: float) -> Fig
     return fig
 ```
 
+### 動かして見る
+
+標本を取り直して作った信頼区間を、1 本ずつ足します。多くは、真の値（破線）を含みます（青）。含まない区間（赤）は、95% の水準では、およそ 20 本に 1 本です。
+
+![信頼区間を 1 本ずつ足す。真の値を外した区間は赤（アニメーション）](images/ch05-confidence-intervals.gif)
+
+このアニメーションは、`lib/animations/` の関数で作っています（`uv run python -m tools.render_animations` で、GIF を書き出します）。**写経は、不要**です。動きを見て、式と図の対応を、確かめてください。
+
 ### 実行結果
 
 ```bash

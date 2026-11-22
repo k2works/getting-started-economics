@@ -569,6 +569,14 @@ def plot_collinearity_distributions(
     return fig
 ```
 
+### 動かして見る
+
+x1 と x2 の相関を、0 から 0.97 へ上げます。2 つの係数の推定値の散らばりが、右下がりに伸びます。平均は真の値（星）のまわりのままで、**ばらつき**だけが増えます。多重共線性は、偏りでなく、精度を落とします。
+
+![相関を上げると、2 つの係数の推定値が散らばる（アニメーション）](images/ch03-collinearity.gif)
+
+このアニメーションは、`lib/animations/` の関数で作っています（`uv run python -m tools.render_animations` で、GIF を書き出します）。**写経は、不要**です。動きを見て、式と図の対応を、確かめてください。
+
 ### 実行結果
 
 ```bash
