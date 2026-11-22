@@ -21,6 +21,8 @@ testpaths = ["test"]
 pythonpath = ["."]
 # 同じ名前のテストファイル（test_plot.py など）が、章をまたいで並んでも、衝突しない
 addopts = ["--import-mode=importlib"]
+# 無限ループになる変異や不具合で、テストが止まらなくなるのを防ぐ（1 件 60 秒）
+timeout = 60
 
 [tool.coverage.run]
 source = ["lib"]
@@ -46,4 +48,5 @@ dev = [
     "ruff>=0.8",
     "mypy>=1.13",
     "tox>=4.0",
+    "pytest-timeout>=2.4.0",
 ]
