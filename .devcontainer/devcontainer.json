@@ -20,10 +20,20 @@
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
+	"forwardPorts": [8000],
+	"portsAttributes": {
+		"8000": {
+			"label": "MkDocs",
+			"onAutoForward": "openBrowser"
+		}
+	},
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "docker --version",
+	"postCreateCommand": "npm install",
+
+	// コンテナの起動のたびに、ドキュメントのサーバー（MkDocs + PlantUML）を起動する。
+	// mkdocs は plantuml に依存するので、両方が上がる。http://localhost:8000
+	"postStartCommand": "docker compose up -d mkdocs",
 
 	// Configure tool-specific properties.
   "customizations" : {
