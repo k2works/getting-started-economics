@@ -7,6 +7,7 @@ from article_tools.check_articles import (
     find_mismatches,
     find_unfenced_code,
     read_reported_counts,
+    source_definitions,
     strip_answers,
     top_level_definitions,
 )
@@ -96,7 +97,7 @@ def test_解答の節が最後にあるときも外せる() -> None:
 
 def test_実装に含まれる定義は不一致にならない() -> None:
     source = "def add(a: int, b: int) -> int:\n    return a + b\n"
-    assert find_mismatches(ARTICLE, source, allowed=[]) == [
+    assert find_mismatches(ARTICLE, source_definitions(source), allowed=[]) == [
         "def sub(a: int, b: int) -> int:\n    return a - b",
         "def indented() -> None:\n    pass",
     ]
@@ -108,7 +109,43 @@ def test_許可した抜粋は不一致にならない() -> None:
         "def sub(a: int, b: int) -> int:\n    return a - b",
         "def indented() -> None:\n    pass",
     ]
-    assert find_mismatches(ARTICLE, source, allowed=allowed) == []
+    assert find_mismatches(ARTICLE, source_definitions(source), allowed=allowed) == []
+
+
+def test_末尾の行を欠いた関数は不一致になる() -> None:
+    """部分文字列の一致では、関数の `return` を消しても通ってしまう（全体レビューで実演）。"""
+    source = "def add(a: int, b: int) -> int:\n    return a + b\n"
+    cut = "```python\ndef add(a: int, b: int) -> int:\n```\n"
+    assert find_mismatches(cut, source_definitions(source), allowed=[]) == [
+        "def add(a: int, b: int) -> int:"
+    ]
+
+
+def test_ソースの定義は_デコレータと直前のコメントを含めて取り出す() -> None:
+    source = (
+        "import math\n\n"
+        "# 許容誤差\n"
+        "TOLERANCE = 1e-9\n\n\n"
+        "@decorator\n"
+        "def f() -> None:\n"
+        "    pass\n\n\n"
+        "class C:\n"
+        "    value: int = 1\n"
+    )
+    found = source_definitions(source)
+    assert "TOLERANCE = 1e-9" in found
+    assert "# 許容誤差\nTOLERANCE = 1e-9" in found
+    assert "@decorator\ndef f() -> None:\n    pass" in found
+    assert "class C:\n    value: int = 1" in found
+    assert not any(d.startswith("import") for d in found)
+
+
+def test_一部の行だけの定数は不一致になる() -> None:
+    source = "TABLE = {\n    1: 2,\n    3: 4,\n}\n"
+    shown = "```python\nTABLE = {\n    1: 2,\n}\n```\n"
+    assert find_mismatches(shown, source_definitions(source), allowed=[]) == [
+        "TABLE = {\n    1: 2,\n}"
+    ]
 
 
 def test_フェンスの外のコード行を見つける() -> None:

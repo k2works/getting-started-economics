@@ -2,8 +2,9 @@
 
 次の 3 つを調べる。ずれがあれば、内容を表示して、終了コード 1 で終わる。
 
-1. 記事の完成形のコード例が、`lib/` と `test/` のソースに含まれているか
-   （説明用の抜粋は、シリーズの `tools/article_code_excerpts.json` に登録する）
+1. 記事の完成形のコード例（関数・クラス・定数）が、`lib/` と `test/` のソースの、
+   トップレベルの定義と、**完全に一致**するか（末尾の行を欠いたものは、通さない）。
+   説明用の抜粋は、シリーズの `tools/article_code_excerpts.json` に登録する
 2. 各章の「実行結果」の件数が、その章のテストの件数と一致しているか
 3. 各章の練習問題の「解答」に書いたコードが、実際に実行できるか
 
@@ -12,6 +13,7 @@
     uv run python -m article_tools.check_articles
 """
 
+import ast
 import json
 import os
 import re
@@ -73,13 +75,73 @@ def strip_answers(markdown: str) -> str:
     return markdown[:start] + (markdown[end:] if end != -1 else "")
 
 
-def find_mismatches(markdown: str, source: str, allowed: list[str]) -> list[str]:
-    """ソースに含まれず、許可した抜粋でもない、記事の定義を返す。"""
+_DEFINITION_NODES = (
+    ast.FunctionDef,
+    ast.AsyncFunctionDef,
+    ast.ClassDef,
+    ast.Assign,
+    ast.AnnAssign,
+)
+
+
+def definition_forms(text: str) -> list[tuple[str, ...]] | None:
+    """トップレベルの定義（関数・クラス・代入）ごとに、一語一句の形を取り出す。
+
+    デコレータを含める。直前に続くコメントの行は、含めた形と、含めない形の、両方を返す
+    （1 つの定義につき、1 つか 2 つの形）。構文として読めないときは None。
+    """
+    try:
+        tree = ast.parse(text)
+    except SyntaxError:
+        return None
+    lines = text.split("\n")
+    forms: list[tuple[str, ...]] = []
+    for node in tree.body:
+        if not isinstance(node, _DEFINITION_NODES):
+            continue
+        decorators = getattr(node, "decorator_list", [])
+        start = (decorators[0].lineno if decorators else node.lineno) - 1
+        end = node.end_lineno or node.lineno
+        plain = "\n".join(lines[start:end])
+        first = start
+        while first > 0 and lines[first - 1].lstrip().startswith("#"):
+            first -= 1
+        with_comment = "\n".join(lines[first:end])
+        forms.append((plain,) if first == start else (plain, with_comment))
+    return forms
+
+
+def source_definitions(text: str) -> set[str]:
+    """ソースの、トップレベルの定義の、一語一句の形をすべて集める。"""
+    return {form for forms in definition_forms(text) or [] for form in forms}
+
+
+def find_mismatches(
+    markdown: str, definitions: set[str], allowed: list[str]
+) -> list[str]:
+    """ソースの定義と一致せず、許可した抜粋でもない、記事の定義を返す。
+
+    記事の 1 つの塊に、定数が続けて載っていてもよい。塊の中の定義を、1 つずつ、
+    ソースのトップレベルの定義と、**完全に一致**するかを調べる（末尾の行を欠いたものは通さない）。
+    構文として読めない塊は、塊の全体が、一致するかを調べる。
+    """
     body = strip_answers(markdown)
-    definitions = [
+    shown = [
         d for block in extract_python_blocks(body) for d in top_level_definitions(block)
     ]
-    return [d for d in definitions if d not in source and d not in allowed]
+    mismatches = []
+    for part in shown:
+        if part in definitions or part in allowed:
+            continue
+        forms = definition_forms(part)
+        if forms is None or not forms:
+            mismatches.append(part)
+        elif any(
+            not any(form in definitions or form in allowed for form in alternatives)
+            for alternatives in forms
+        ):
+            mismatches.append(part)
+    return mismatches
 
 
 def read_reported_counts(markdown: str) -> list[tuple[int, int]]:
@@ -101,9 +163,12 @@ def _article_files() -> list[Path]:
     return chapters + sorted(DOCS_DIR.glob("appendix-*.md"))
 
 
-def _source_text() -> str:
+def _source_definitions() -> set[str]:
     files = [*APP_DIR.glob("lib/**/*.py"), *APP_DIR.glob("test/**/*.py")]
-    return "\n".join(_read(f) for f in sorted(files))
+    found: set[str] = set()
+    for file in sorted(files):
+        found |= source_definitions(_read(file))
+    return found
 
 
 def _load_excerpts() -> dict[str, list[str]]:
@@ -136,12 +201,12 @@ def check_fences() -> list[str]:
 
 def check_code_blocks() -> list[str]:
     """記事の完成形のコード例が、実装・テストのソースと一致するかを調べる。"""
-    source = _source_text()
+    definitions = _source_definitions()
     excerpts = _load_excerpts()
     problems = []
     for path in _article_files():
         allowed = excerpts.get(path.name, [])
-        for text in find_mismatches(_read(path), source, allowed):
+        for text in find_mismatches(_read(path), definitions, allowed):
             first = text.split("\n")[0]
             problems.append(f"{path.name}: ソースにないコード: {first}")
     return problems
@@ -231,7 +296,8 @@ def _run_answers(modules: dict[int, str]) -> str | None:
         result = subprocess.run(
             [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider",
              "--continue-on-collection-errors",
-             "--rootdir", str(APP_DIR), "-c", str(APP_DIR / "pyproject.toml"), tmp],
+             "--rootdir", str(APP_DIR), "-c", str(APP_DIR / "pyproject.toml"),
+             "--confcutdir", tmp, tmp],
             cwd=APP_DIR, capture_output=True, text=True, encoding="utf-8",
             errors="replace", check=False,
         )  # fmt: skip
