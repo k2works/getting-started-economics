@@ -8483,7 +8483,7 @@
 <h2 id="41">4.1 この章の地図<a class="headerlink" href="#41" title="Permanent link">&para;</a></h2>
 <p>毎年 5 ずつ、永久に利子を払ってくれる債券があるとします。受け取る合計は、無限大です。それでも、この債券には、<strong>有限の値段</strong>が付きます。将来のお金を、今のお金に<strong>割り引いて</strong>足すと、項がどんどん小さくなり、和が、ある値に<strong>近づく</strong>からです。</p>
 <p>この章の道具は、<strong>等比数列</strong>と、その和（<strong>級数</strong>）です。前の章の「割引現在価値」を、何年分も足すと、等比数列の和になります。年金・債券・株価の値段は、どれも、この和で決まります。この章は、第 1 部（第 1〜4 章）の最後で、<strong>到達チェック</strong>も行います。</p>
-<p><img alt="初項 1・公比 0.5 の部分和（点）は、項を足すほど、無限級数の値（点線）に近づく" src="../images/ch04-partial-sums.png" /></p>
+<p><img alt="初項 2・公比 0.6 の部分和（点）は、項を足すほど、無限級数の値（点線）に近づく" src="../images/ch04-partial-sums.png" /></p>
 <table>
 <thead>
 <tr>
@@ -8605,15 +8605,15 @@
 </tr>
 </tbody>
 </table>
-<p>漸化式の経済学での使い方（所得の調整・資本の蓄積）は、<a href="../../macro-programming/04-difference-equations/">マクロ経済学のためのプログラミングの第 4 章</a>で扱います。この章は、そこで使う数学（等比数列・級数・不動点）を、関数とテストで確かめます。</p>
+<p>漸化式の経済学での使い方（所得の調整・資本の蓄積）は、<a href="../../macro-programming/04-difference-equations/">マクロ経済学のためのプログラミング（中級＋）の第 4 章</a>で扱います。この章は、そこで使う数学（等比数列・級数・不動点）を、関数とテストで確かめます。</p>
 <h2 id="42">4.2 準備<a class="headerlink" href="#42" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/math-for-economics-programming/python
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter04
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>56 passed
+<div class="highlight"><pre><span></span><code>62 passed
 </code></pre></div>
-<p>自分でコードを書くときは、<code>practice/chapter04/</code> に、<code>sequence.py</code> と <code>test_sequence.py</code> を作ります。テストの import は、<code>from practice.chapter04.sequence import ...</code> に書き換えてください（書き換えないと、完成形を読み込んで、最初から通ってしまいます）。「予想の答え合わせ」のスクリプトは、<code>practice/chapter04/check.py</code> に保存し、<code>uv run python -m practice.chapter04.check</code> で実行します。</p>
+<p>自分でコードを書くときは、<code>practice/chapter04/</code> に、完成形と同じ名前のファイル（<code>sequence.py</code>・<code>plot.py</code>・<code>test_sequence.py</code>・<code>test_plot.py</code>）を作ります（図の節を後回しにするなら、<code>plot.py</code> と <code>test_plot.py</code> は要らず、テストは 55 件になります）。テストと <code>plot.py</code> の import は、<code>from practice.chapter04...</code> に書き換えてください（書き換えないと、完成形を読み込んで、最初から通ってしまいます）。「予想の答え合わせ」のスクリプトは、<code>practice/chapter04/check.py</code> に保存し、<code>uv run python -m practice.chapter04.check</code> で実行します。</p>
 <h2 id="43">4.3 予想する<a class="headerlink" href="#43" title="Permanent link">&para;</a></h2>
 <p>次の 5 つの問いに、<strong>紙で、手計算で</strong>答えてください。答えは、この節には書いてありません。「プログラミング」の節の「予想の答え合わせ」で、プログラムを動かして確かめます。</p>
 <ul>
@@ -8637,7 +8637,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </blockquote>
 <p>導き方は、S_n から、r·S_n を引くことです。r·S_n = ar + ar² + … + ar^n なので、引くと、間の項がすべて消えて、S_n − r·S_n = a − ar^n が残ります。両辺を (1 − r) で割れば、公式です。<strong>r = 1 のときは、0 で割ることになる</strong>ので、別に扱います（すべての項が a なので、S_n = a·n）。</p>
 <h3 id="_5">数列の極限<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
-<p>公比 0.5 の部分和は、1、1.5、1.75、1.875、…と、増えていきますが、2 を超えません。項数 n を大きくすると、S_n は、2 に、いくらでも近づきます。これを、「S_n の<strong>極限</strong>は 2」と言い、<strong>S_n は 2 に収束する</strong>と言います。</p>
+<p>初項 2・公比 1/3 の部分和は、2、2.67、2.89、2.96、…と、増えていきますが、3 を超えません。項数 n を大きくすると、S_n は、3 に、いくらでも近づきます。これを、「S_n の<strong>極限</strong>は 3」と言い、<strong>S_n は 3 に収束する</strong>と言います。</p>
 <p>「いくらでも近づく」とは、「どんなに小さな許容誤差を決めても、ある項数から先は、差が、その許容誤差より小さくなる」ということです。この章では、その項数を、実際に数える関数を書きます。</p>
 <h3 id="_6">級数（無限級数）<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <p>数列の項を、<strong>永久に</strong>足したものを、<strong>級数</strong>（無限級数）と言います。等比数列の級数は、|r| &lt; 1 のとき、部分和の公式で n を大きくすると、r^n が 0 に近づくので、次の値に収束します。</p>
@@ -8728,7 +8728,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>性質のテストでは、公比 2（大きくなる）、1 ÷ 1.04（割引）、−0.5（負）と、<strong>種類の違う公比</strong>を試します。公比 0.5 だけでは、<code>ratio**n</code> と <code>ratio*n</code> を取り違えても、たまたま通る値があるからです。</p>
 <h3 id="green">Green: 等比数列を実装する<a class="headerlink" href="#green" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">geometric_term</span><span class="p">(</span><span class="n">first</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">ratio</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""等比数列の第 n 項 = 初項 × 公比^(n − 1)。"""</span>
+<span class="w">    </span><span class="sd">"""等比数列の第 n 項 = 初項 × 公比^(n − 1)。n は 1 から数える。"""</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"第 n 項の n は 1 以上でなければなりません"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">first</span> <span class="o">*</span> <span class="n">ratio</span> <span class="o">**</span> <span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
 
 
@@ -8740,7 +8742,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
         <span class="k">return</span> <span class="n">first</span> <span class="o">*</span> <span class="n">n</span>
     <span class="k">return</span> <span class="n">first</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ratio</span><span class="o">**</span><span class="n">n</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ratio</span><span class="p">)</span>
 </code></pre></div>
-<p>項数 n が負のときは、意味がないので、<code>ValueError</code> にします（境界のテストで確かめます）。</p>
+<p>第 n 項の n は 1 から数えるので、<code>geometric_term</code> は n &lt; 1 を、和の項数は 0 項まで意味があるので、<code>geometric_partial_sum</code> は n &lt; 0 を、<code>ValueError</code> にします（境界のテストで確かめます）。</p>
 <h3 id="_9">数列の極限と無限級数<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>部分和が、無限級数に「近づく」ことを、2 通りでテストにします。1 つは、<strong>差が、毎回小さくなり、最後は 1e-8 より小さい</strong>こと。もう 1 つは、許容誤差を決めて、<strong>差がそれより小さくなる項数</strong>を数えることです。初項 1・公比 0.5 の差は 2 × 0.5^n なので、0.01 より小さくなるのは、n = 8（0.0078125。n = 7 では 0.015625）と、手計算できます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_初項1公比2分の1の無限級数は2</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -8830,10 +8832,16 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">assert</span> <span class="n">savings_future_value</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">expected</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">savings_future_value</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mf">0.03</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">53.0913581</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">annuity_present_value</span><span class="p">(</span><span class="n">payment</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">periods</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""毎期末に payment を periods 期受け取る年金の現在価値 C(1 − (1 + r)^−n) ÷ r。"""</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_require_rate_above_minus_one</span><span class="p">(</span><span class="n">rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">if</span> <span class="n">rate</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"利子率が −100% 以下では、割り引けません"</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"利子率が −100% 以下では、割り引くことも、積み立てることもできません"</span>
+        <span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">annuity_present_value</span><span class="p">(</span><span class="n">payment</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">periods</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""毎期末に payment を periods 期受け取る年金の現在価値 C(1 − (1 + r)^−n) ÷ r。"""</span>
+    <span class="n">_require_rate_above_minus_one</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span>
     <span class="n">discount</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">rate</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">geometric_partial_sum</span><span class="p">(</span><span class="n">payment</span> <span class="o">*</span> <span class="n">discount</span><span class="p">,</span> <span class="n">discount</span><span class="p">,</span> <span class="n">periods</span><span class="p">)</span>
 
@@ -8847,6 +8855,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 
 <span class="k">def</span><span class="w"> </span><span class="nf">savings_future_value</span><span class="p">(</span><span class="n">payment</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">periods</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""毎期末に payment を積み立てたときの、periods 期末の残高 C((1 + r)^n − 1) ÷ r。"""</span>
+    <span class="n">_require_rate_above_minus_one</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">geometric_partial_sum</span><span class="p">(</span><span class="n">payment</span><span class="p">,</span> <span class="mi">1</span> <span class="o">+</span> <span class="n">rate</span><span class="p">,</span> <span class="n">periods</span><span class="p">)</span>
 </code></pre></div>
 <p>3 つとも、新しい公式を書かずに、<code>geometric_partial_sum</code> を、初項と公比を変えて呼ぶだけです。利子率 0 のとき、公式 C(1 − (1 + r)^(−n)) ÷ r は、0 で割ることになりますが、<code>geometric_partial_sum</code> が公比 1 を別に扱うので、正しく C·n になります（境界のテストで確かめます）。</p>
@@ -8873,7 +8882,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>「価格が額面に等しい」性質は、利子率・満期を変えた 3 組で確かめます。1 組だけだと、満期の額面の割引を、たまたま打ち消す誤りを見逃します。</p>
 <h3 id="_12">発展: 漸化式と配当割引モデル<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <details class="note">
-<summary>漸化式・配当割引モデルのテストと実装（発展。後回しにしても、学習は成り立ちます）</summary>
+<summary>漸化式・配当割引モデルのテストと実装（発展。<code>iterate_map</code>・<code>affine_fixed_point</code> は、第 12 章で使います）</summary>
 <p>漸化式は、<strong>反復（数値）と、不動点（公式）の一致</strong>をテストにします。初期値と、a の符号（正・負）を変えて、どれも不動点に近づくこと、|a| &gt; 1 では、差が毎期 2 倍になって離れていくことを、確かめます。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_漸化式を反復すると初期値から順に値が並ぶ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">iterate_map</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mf">17.5</span><span class="p">]</span>
@@ -8980,7 +8989,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <li><strong>5 つ目の問い</strong>（発展）: 株価は 2 ÷ (0.07 − 0.02) = 40 です</li>
 </ul>
 <h3 id="_14">境界のテスト<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
-<p>完成形には、<strong>境界</strong>を確かめるテストがあります。0 項・1 項の和、差が許容誤差と<strong>ちょうど等しい</strong>とき（「小さい」ではないので、もう 1 項足す。<code>&gt;=</code> を <code>&gt;</code> と書き違えると、ここで落ちます）、負の公比（部分和が、級数の上下を行き来する）、公比 0、負の初項、利子率 0・負・−100% 以下、満期 0 年、反復 0 回、不動点の a = 0・a = −1 です。完成形の「テストの件数」を合わせるため、ここに載せます。</p>
+<p>完成形には、<strong>境界</strong>を確かめるテストがあります。0 項・1 項の和、差が許容誤差と<strong>ちょうど等しい</strong>とき（「小さい」ではないので、もう 1 項足す。<code>&gt;=</code> を <code>&gt;</code> と書き違えると、ここで落ちます）、負の公比・負の初項での項数（差の<strong>大きさ</strong>で比べる。<code>abs</code> を忘れると、差が負の項で、すぐ止まります）、負の公比（部分和が、級数の上下を行き来する）、公比 0、負の初項、利子率 0・負・−100% 以下（年金の割引も、積立も）、第 n 項の n が 0 以下、満期 0 年、反復 0 回、不動点の a = 0・a = −1 です。完成形の「テストの件数」を合わせるため、ここに載せます。</p>
 <p>1 項の和のテストは、<code>== 3</code> ではなく、<code>pytest.approx(3)</code> で比べています。公式 3 × (1 − 0.2) ÷ (1 − 0.2) は、浮動小数点では 3.0000000000000004 になるからです（<strong>公式が正しくても、<code>==</code> では落ちます</strong>）。</p>
 <details class="note">
 <summary>境界のテスト</summary>
@@ -9014,6 +9023,15 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="k">def</span><span class="w"> </span><span class="nf">test_差が許容誤差とちょうど等しければもう1項足す</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="c1"># 7 項までの差は 2 × 0.5^7 = 0.015625（等しいので「小さい」ではない）</span>
     <span class="k">assert</span> <span class="n">terms_until_within</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.015625</span><span class="p">)</span> <span class="o">==</span> <span class="mi">8</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_負の公比でも差の大きさで項数を数える</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># 差は 2/3 × 0.5^n。0.01 より小さくなるのは n = 7（0.0052…。n = 6 では 0.0104…）</span>
+    <span class="k">assert</span> <span class="n">terms_until_within</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span> <span class="o">==</span> <span class="mi">7</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_負の初項でも差の大きさで項数を数える</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">terms_until_within</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span> <span class="o">==</span> <span class="mi">8</span>
 
 
 <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">"tolerance"</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">])</span>
@@ -9066,6 +9084,20 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="k">def</span><span class="w"> </span><span class="nf">test_成長率がわずかに利子率より小さいと株価は大きい</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">gordon_stock_price</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.04</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">gordon_stock_price</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">"rate"</span><span class="p">,</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_利子率がマイナス100パーセント以下なら積み立てられない</span><span class="p">(</span><span class="n">rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">savings_future_value</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">rate</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+
+
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">"n"</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_第n項のnは1以上</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">geometric_term</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">geometric_term</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <h3 id="_15">図<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
@@ -9185,7 +9217,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h3 id="_16">実行結果<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter04
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>56 passed
+<div class="highlight"><pre><span></span><code>62 passed
 </code></pre></div>
 <h2 id="46">4.6 規則で言うと<a class="headerlink" href="#46" title="Permanent link">&para;</a></h2>
 <ol>
@@ -9230,7 +9262,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <li><strong>永久債の「永久」は、数学の約束です。</strong> 現実の永久債には、発行者が途中で買い戻す条項が付くことが多く、無限級数で値段を付けると、高すぎることがあります</li>
 </ul>
 <h2 id="47-1">4.7 第 1 部の到達チェック<a class="headerlink" href="#47-1" title="Permanent link">&para;</a></h2>
-<p>第 1 部（第 1〜4 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。<strong>先に、次の「時間を決めて書く課題」を、何も見ずに試してください。</strong> 課題の解答（実行できるテスト）は、4.8 節の練習問題の解答のあとに、折りたたんで置きます。自分のコードは、<code>practice/chapter04/checkpoint.py</code> などに書きます。第 1 章の関数は、<code>from practice.chapter01.market import ...</code>（自分で写したもの）から import します（第 2・3 章は、この連載の <code>lib</code> に、完成形があります。解答では、何も見ずに書く練習として、頂点・複利・割引の関数を、自分で定義しています。第 2・3 章の関数を使ってもかまいません）。</p>
+<p>第 1 部（第 1〜4 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。<strong>先に、次の「時間を決めて書く課題」を、何も見ずに試してください。</strong> 課題の解答（実行できるテスト）は、4.8 節の練習問題の解答のあとに、折りたたんで置きます。自分のコードは、関数を <code>practice/chapter04/checkpoint.py</code> に、テストを <code>practice/chapter04/test_checkpoint.py</code> に書きます。第 1・4 章の関数は、前の章を写していなければ、<code>lib.chapterNN...</code> のままでかまいません（写したなら、<code>practice.chapterNN...</code> に書き換えます）。頂点・複利・割引の関数は、何も見ずに書けるかを確かめるため、第 2・3 章の関数を使わずに、自分で書きます。</p>
 <h3 id="_18">時間を決めて書く課題<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
 <p>何も見ずに、時間を計って、関数とテストを書きます。どの課題も、<strong>期待値を、先に手計算で書いてから</strong>、関数を書きます。</p>
 <table>
@@ -9353,6 +9385,16 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </table>
 <details class="note">
 <summary>解答（先に自分で取り組んでから、開いてください）</summary>
+<p>解答のテストの import です。前の章を写していなければ、<code>lib.chapter04...</code> のままでかまいません（写したなら、<code>practice.chapter04...</code> に書き換えます）。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter04.sequence</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">affine_fixed_point</span><span class="p">,</span>
+    <span class="n">coupon_bond_price</span><span class="p">,</span>
+    <span class="n">geometric_partial_sum</span><span class="p">,</span>
+    <span class="n">iterate_map</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
 <p><strong>想起</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_最初の部分和のテスト</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">geometric_partial_sum</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="mf">1.998046875</span>
@@ -9382,6 +9424,16 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </details>
 <details class="note">
 <summary>解答: 第 1 部の到達チェック（先に自分で取り組んでから、開いてください）</summary>
+<p>関数（<code>parabola_vertex</code>・<code>compound_value</code>・<code>discounted_value</code>）は <code>practice/chapter04/checkpoint.py</code> に、テストは <code>practice/chapter04/test_checkpoint.py</code> に書きます。<code>test_checkpoint.py</code> の先頭の import は、次のとおりです。前の章を写していなければ、<code>lib.chapterNN...</code> のままでかまいません（写したなら、<code>practice.chapterNN...</code> に書き換えます）。自分で書いた関数は、<code>from practice.chapter04.checkpoint import compound_value, discounted_value, parabola_vertex</code> で import します（この行は、記事の検査では実行しないので、コードブロックの外に書いています）。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.market</span><span class="w"> </span><span class="kn">import</span> <span class="n">consumer_surplus</span><span class="p">,</span> <span class="n">equilibrium</span><span class="p">,</span> <span class="n">producer_surplus</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter04.sequence</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">geometric_partial_sum</span><span class="p">,</span>
+    <span class="n">geometric_series_limit</span><span class="p">,</span>
+    <span class="n">perpetuity_present_value</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
 <p><strong>需要・供給と余剰</strong>（第 1 章の関数）:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_到達チェックの均衡と余剰</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">equilibrium</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
@@ -9436,7 +9488,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <li>漸化式 x(t + 1) = a·x(t) + b は、|a| &lt; 1 なら、不動点 b ÷ (1 − a) に収束する。不動点との差が、公比 a の等比数列になるから</li>
 <li>公式は、手計算の値だけでなく、<strong>数値との一致</strong>（公式と、項を足した値。公式と、反復の行き着く先）で、テストできる</li>
 </ul>
-<p>これで、第 1 部（関数と金利）は終わりです。次の章から、第 2 部に入り、<strong>微分</strong>を学びます。第 2 章では、利潤を最大にする数量を、2 次関数の頂点として求めました。第 5 章では、微分を使って、2 次関数に限らない費用・利潤の関数で、<strong>利潤最大化</strong>の条件（限界収入 ＝ 限界費用）を求めます。</p>
+<p>これで、第 1 部（関数と金利）は終わりです。次の章から、第 2 部に入り、<strong>微分</strong>を学びます。第 2 章では、利潤を最大にする数量を、2 次関数の頂点として求めました。第 5 章では、微分を使って、2 次関数に限らない費用・利潤の関数で、価格を所与とする企業の<strong>利潤最大化</strong>の条件（価格 ＝ 限界費用）を求め、練習問題で、独占の 限界収入 ＝ 限界費用 も確かめます。</p>
 
 
 

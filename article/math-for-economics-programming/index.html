@@ -1689,12 +1689,12 @@
   <a href="#_2" class="md-nav__link">
     <span class="md-ellipsis">
       
-        この記事の読み方
+        対象読者と進め方
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="この記事の読み方">
+    <nav class="md-nav" aria-label="対象読者と進め方">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1712,6 +1712,17 @@
   <a href="#_4" class="md-nav__link">
     <span class="md-ellipsis">
       
+        時間の目安
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         進め方
       
     </span>
@@ -1725,7 +1736,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_5" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         サンプルコード
@@ -1736,7 +1747,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         章構成
@@ -1786,7 +1797,7 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
+  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         参照
@@ -8215,23 +8226,61 @@
 <blockquote>
 <p>全 12 章（3 部）が公開されています（読者試行・全体レビューを経て、内容は更新されます）。各部の終わり（第 4・8・12 章）に、到達チェックがあります。</p>
 </blockquote>
-<h2 id="_2">この記事の読み方<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
+<h2 id="_2">対象読者と進め方<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h2>
 <h3 id="_3">対象読者と前提<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
 <ul>
 <li><a href="../economics-programming/">経済学のためのプログラミング入門</a>（以下、「第 1 シリーズ」）の第 1〜8 章（関数・pytest・リストと辞書・制御構文・モジュール・Matplotlib・乱数）を終えた方</li>
 <li>高校数学の基礎（1 次関数・2 次関数・指数・対数）を、一度は学んだ方。忘れていても、第 1〜4 章で、思い出せます</li>
 <li>経済学の教科書の数式（微分・偏微分・行列・積分）を、自分で動かして、納得したい方</li>
 </ul>
-<p>NumPy は、前提にしません。必要な章（第 7 章）で、必要な分だけ、導入します（第 1〜6 章は、標準ライブラリだけで書きます）。SymPy・SciPy・pandas は、使いません（微分・積分は、公式と数値計算を、自分で実装して、突き合わせるのが目的です）。準備（uv のインストール）は、<a href="../economics-programming/01-preparation-and-first-test/">第 1 シリーズの第 1 章</a> を参照してください。</p>
+<p>NumPy は、前提にしません。必要な章（第 7 章）で、必要な分だけ、導入します（第 1〜6 章の<strong>本体は、標準ライブラリだけ</strong>で書きます。ただし、図の <code>plot.py</code> と図のテストでは、<code>np.linspace</code> や <code>np.asarray</code> を、説明なしに少し使います。第 7 章で、きちんと説明します。図の節は、写すだけでかまいません）。SymPy・SciPy・pandas は、使いません（微分・積分は、公式と数値計算を、自分で実装して、突き合わせるのが目的です）。準備（uv のインストール）は、<a href="../economics-programming/01-preparation-and-first-test/">第 1 シリーズの第 1 章</a> を参照してください。</p>
 <p>ミクロ・マクロの連載と題材が重なる章がありますが、各章は、<strong>この連載だけで独立して読めます</strong>。経済学としての意味（調整過程・課税の効果など）は、重なる連載の章へ案内します。</p>
-<h3 id="_4">進め方<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<h3 id="_4">時間の目安<a class="headerlink" href="#_4" title="Permanent link">&para;</a></h3>
+<p>コードの行数からの<strong>推定</strong>です（実際に計った時間ではありません。人によって、大きく違います）。本文のコードだけを、写経して動かす時間で、図・境界・発展の折りたたみは含みません。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">章</th>
+<th style="text-align: left;">目安（本文だけ）</th>
+<th style="text-align: left;">進め方の区切り</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">第 1〜4 章</td>
+<td style="text-align: left;">各 2〜3 時間</td>
+<td style="text-align: left;">1 回で 1 章</td>
+</tr>
+<tr>
+<td style="text-align: left;">第 5〜8 章</td>
+<td style="text-align: left;">各 3〜4 時間</td>
+<td style="text-align: left;">1 回で 1 章（第 8 章は、到達チェックを別の回に）</td>
+</tr>
+<tr>
+<td style="text-align: left;">第 9 章</td>
+<td style="text-align: left;">4〜5 時間</td>
+<td style="text-align: left;">行列（9.4 まで）と、回帰（9.5 以降）の 2 回に分ける</td>
+</tr>
+<tr>
+<td style="text-align: left;">第 10・11 章</td>
+<td style="text-align: left;">各 5〜6 時間</td>
+<td style="text-align: left;">前半・後半の 2 回に分ける（第 10 章: 確率・ベイズ／期待値・リスク。第 11 章: 積分の基礎／オークション）</td>
+</tr>
+<tr>
+<td style="text-align: left;">第 12 章</td>
+<td style="text-align: left;">3〜4 時間</td>
+<td style="text-align: left;">到達チェックは、別の回に</td>
+</tr>
+</tbody>
+</table>
+<h3 id="_5">進め方<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <ol>
 <li><strong>予想する</strong>: コードを見る前に、紙で、手計算の答えを予想します。<strong>答えは書いてありません。</strong></li>
 <li><strong>自分で書く</strong>: <code>practice/</code> に、テストを先に書いて、実装を書きます（Red → Green → Refactor）</li>
 <li><strong>答え合わせ</strong>: 「プログラミング」の節の小節「予想の答え合わせ」で、予想の答えを、プログラムを動かして確かめます。完成形（<code>lib/</code> と <code>test/</code>）とも、見比べます</li>
 <li><strong>練習問題・振り返り</strong>: 条件を変えて試します。解答は、各章の練習問題の下に、折りたたんで置いてあります。先に自分で取り組んでから、開いてください</li>
 </ol>
-<h2 id="_5">サンプルコード<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h2>
+<h2 id="_6">サンプルコード<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
 <p>サンプルコードは <code>apps/math-for-economics-programming/python/</code> にあります。</p>
 <table>
 <thead>
@@ -8263,7 +8312,7 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter01
 </code></pre></div>
-<h2 id="_6">章構成<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h2>
+<h2 id="_7">章構成<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
 <h3 id="1">第 1 部: 関数と金利<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
 <table>
 <thead>
@@ -8360,12 +8409,12 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h2 id="_7">参照<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h2>
+<h2 id="_8">参照<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h2>
 <ul>
 <li><a href="../%E7%B5%8C%E6%B8%88%E5%AD%A6%E3%81%A7%E5%87%BA%E3%82%8B%E6%95%B0%E5%AD%A6%20%E3%83%9E%E3%82%A4%E3%83%B3%E3%83%89%E3%83%9E%E3%83%83%E3%83%97/">経済学で出る数学 マインドマップ</a> — 章立ての根拠です</li>
 <li><a href="../%E7%B5%8C%E6%B8%88%E5%AD%A6%E3%83%BB%E7%B5%8C%E6%B8%88%E6%94%BF%E7%AD%96%20%E3%83%88%E3%83%94%E3%83%83%E3%82%AF%E5%88%A5%E3%83%9E%E3%82%A4%E3%83%B3%E3%83%89%E3%83%9E%E3%83%83%E3%83%97/">経済学・経済政策 トピック別マインドマップ</a> — 経済学の題材の確認に使います</li>
 <li><a href="../economics-programming/">経済学のためのプログラミング入門</a> — 前提とする、第 1 シリーズです</li>
-<li><a href="../micro-basics-programming/">ミクロ経済学のためのプログラミング（初級）</a>・<a href="../macro-basics-programming/">マクロ経済学のためのプログラミング（初級）</a>・<a href="../econometrics-programming/">計量経済学のためのプログラミング</a> — この連載の数学を使う、理論・分析の連載です</li>
+<li><a href="../micro-basics-programming/">ミクロ経済学のためのプログラミング（初級）</a>・<a href="../macro-basics-programming/">マクロ経済学のためのプログラミング（初級）</a>・<a href="../macro-programming/">マクロ経済学のためのプログラミング（中級＋）</a>・<a href="../econometrics-programming/">計量経済学のためのプログラミング</a> — この連載の数学を使う、理論・分析の連載です</li>
 </ul>
 
 

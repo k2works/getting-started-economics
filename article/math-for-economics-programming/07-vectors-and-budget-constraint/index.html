@@ -8636,7 +8636,7 @@
 </tr>
 </tbody>
 </table>
-<p>NumPy は、第 1〜6 章の図のテスト（<code>np.asarray(...).tolist()</code>）や、第 2・3 章の <code>plot.py</code>（<code>np.linspace</code>）で、説明なしに使ってきました。この章で、正面から説明します。第 1 シリーズの NumPy の章は、前提にしません。予算制約と最適な消費の<strong>経済学</strong>は、<a href="../../micro-basics-programming/02-budget-and-optimal-choice/">ミクロ経済学のためのプログラミング（初級）の第 2 章</a>で扱います。この章は、そこで使う数学（ベクトルと内積）を、関数とテストで確かめます。</p>
+<p>NumPy は、第 1〜6 章の図のテスト（<code>np.asarray(...).tolist()</code>）や、第 2・3・5・6 章の <code>plot.py</code>（<code>np.linspace</code>）で、説明なしに使ってきました。この章で、正面から説明します。第 1 シリーズの NumPy の章は、前提にしません。予算制約と最適な消費の<strong>経済学</strong>は、<a href="../../micro-basics-programming/02-budget-and-optimal-choice/">ミクロ経済学のためのプログラミング（初級）の第 2 章</a>で扱います。この章は、そこで使う数学（ベクトルと内積）を、関数とテストで確かめます。</p>
 <h2 id="72">7.2 準備<a class="headerlink" href="#72" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/math-for-economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter07
@@ -8839,7 +8839,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <h3 id="numpy">NumPy を導入する<a class="headerlink" href="#numpy" title="Permanent link">&para;</a></h3>
 <p>ここまでの <code>vectors.py</code> は、標準ライブラリ（リストと <code>zip</code>）だけで書き、内積の仕組みを自分で確かめました。仕組みがわかったので、ここから先（<code>budget.py</code>）は、道具の <strong>NumPy</strong> を使います。</p>
-<p>NumPy は、数の並び（<strong>配列</strong>）の計算を、まとめて行うライブラリです。第 1〜6 章の図のテストで、説明なしに <code>import numpy as np</code> と書いてきた <code>np</code> が、これです。<code>pyproject.toml</code> の依存に入っていて、<code>uv sync</code> で入るので、<code>uv add</code> は要りません。この章で使う道具は、次のとおりです。</p>
+<p>NumPy は、数の並び（<strong>配列</strong>）の計算を、まとめて行うライブラリです。第 1〜6 章の図のテストと、第 2・3・5・6 章の <code>plot.py</code> で、説明なしに <code>import numpy as np</code> と書いてきた <code>np</code> が、これです。<code>pyproject.toml</code> の依存に入っていて、<code>uv sync</code> で入るので、<code>uv add</code> は要りません。この章で使う道具は、次のとおりです。</p>
 <table>
 <thead>
 <tr>
@@ -8963,7 +8963,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">_check_prices</span><span class="p">(</span><span class="n">prices</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_require_positive_prices</span><span class="p">(</span><span class="n">prices</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""価格は、すべて正でなければならない。"""</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">_as_vector</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"価格は、すべて正でなければなりません"</span><span class="p">)</span>
@@ -8978,7 +8978,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">prices</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">bundle</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">income</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">"inside"</span><span class="p">,</span> <span class="s2">"on"</span><span class="p">,</span> <span class="s2">"outside"</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""財の組合せが、予算線上（p·x = m）・予算内（&lt;）・予算外（&gt;）のどれか。"""</span>
-    <span class="n">_check_prices</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span>
+    <span class="n">_require_positive_prices</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">_as_vector</span><span class="p">(</span><span class="n">bundle</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"数量は 0 以上でなければなりません"</span><span class="p">)</span>
     <span class="n">spending</span> <span class="o">=</span> <span class="n">budget_expenditure</span><span class="p">(</span><span class="n">prices</span><span class="p">,</span> <span class="n">bundle</span><span class="p">)</span>
@@ -9012,7 +9012,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">budget_intercepts</span><span class="p">(</span><span class="n">prices</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">income</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""所得をすべて 1 つの財に使ったときの数量 m ÷ pᵢ（予算線と各軸の交点）。"""</span>
-    <span class="n">_check_prices</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span>
+    <span class="n">_require_positive_prices</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">q</span><span class="p">)</span> <span class="k">for</span> <span class="n">q</span> <span class="ow">in</span> <span class="n">income</span> <span class="o">/</span> <span class="n">_as_vector</span><span class="p">(</span><span class="n">prices</span><span class="p">)]</span>
 
 
@@ -9022,7 +9022,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="w">    </span><span class="sd">"""2 財の予算線 p₁x₁ + p₂x₂ = m の上で、財 1 が first_quantity のときの財 2。"""</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"予算線の式は、2 財のときだけ使います"</span><span class="p">)</span>
-    <span class="n">_check_prices</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span>
+    <span class="n">_require_positive_prices</span><span class="p">(</span><span class="n">prices</span><span class="p">)</span>
     <span class="n">second_quantity</span> <span class="o">=</span> <span class="p">(</span><span class="n">income</span> <span class="o">-</span> <span class="n">prices</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">first_quantity</span><span class="p">)</span> <span class="o">/</span> <span class="n">prices</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">first_quantity</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">second_quantity</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"予算線上で、数量が負になる点はありません"</span><span class="p">)</span>
@@ -9086,7 +9086,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
             <span class="n">lifetime_income_present_value</span><span class="p">(</span><span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">,</span> <span class="n">rate</span><span class="p">)</span>
         <span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_check_rate</span><span class="p">(</span><span class="n">rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_require_rate</span><span class="p">(</span><span class="n">rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""利子率が −100% 以下では、割り引けない。"""</span>
     <span class="k">if</span> <span class="n">rate</span> <span class="o">&lt;=</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"利子率が −100% 以下では、割り引けません"</span><span class="p">)</span>
@@ -9096,7 +9096,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">first_consumption</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">income1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">income2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""2 期間の予算で、今期 c₁ 消費したときの来期の消費 (y₁ − c₁)(1 + r) + y₂。"""</span>
-    <span class="n">_check_rate</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span>
+    <span class="n">_require_rate</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span>
     <span class="n">second</span> <span class="o">=</span> <span class="p">(</span><span class="n">income1</span> <span class="o">-</span> <span class="n">first_consumption</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">rate</span><span class="p">)</span> <span class="o">+</span> <span class="n">income2</span>
     <span class="k">if</span> <span class="n">second</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"来期に返せないほど、今期に借りることはできません"</span><span class="p">)</span>
@@ -9105,7 +9105,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 
 <span class="k">def</span><span class="w"> </span><span class="nf">lifetime_income_present_value</span><span class="p">(</span><span class="n">income1</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">income2</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">rate</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""2 期間の所得の現在価値 y₁ + y₂ ÷ (1 + r)。"""</span>
-    <span class="n">_check_rate</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span>
+    <span class="n">_require_rate</span><span class="p">(</span><span class="n">rate</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">income1</span> <span class="o">+</span> <span class="n">income2</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">rate</span><span class="p">)</span>
 </code></pre></div>
 <p>来期に返せないほど借りると（c₂ &lt; 0）、エラーにします。境界のテストの利子率は 25% です。10% だと、ちょうど返し切る点が浮動小数点で −7.1e-15 になり、「ちょうど 0」を試せないからです（1.25 は 2 進数で割り切れます）。</p>

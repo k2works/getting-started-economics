@@ -8617,7 +8617,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>65 passed
 </code></pre></div>
-<p>自分でコードを書くときは、<code>practice/chapter03/</code> に、完成形と同じ名前（<code>interest.py</code>・<code>test_interest.py</code>）のファイルを作ります。テストの import は、<code>from practice.chapter03.interest import ...</code> に書き換えます（書き換えないと、完成形を読み込んで、最初から通ってしまいます）。予想の答え合わせのスクリプトは、<code>practice/chapter03/check.py</code> に保存し、<code>uv run python -m practice.chapter03.check</code> で実行します（第 1 章の 1.2 節と同じです）。スクリプトの import も、<code>from practice.chapter03.interest import ...</code> に書き換えます（書き換えないと、完成形を動かすことになります）。</p>
+<p>自分でコードを書くときは、<code>practice/chapter03/</code> に、完成形と同じ名前（<code>interest.py</code>・<code>test_interest.py</code>）のファイルを作ります。テストの import は、<code>from practice.chapter03.interest import ...</code> に書き換えます（書き換えないと、完成形を読み込んで、最初から通ってしまいます）。図の <code>plot.py</code>・<code>test_plot.py</code> も、同じ名前で作り、<code>plot.py</code> の import も <code>from practice.chapter03...</code> に書き換えます。図の節を後回しにするなら、<code>plot.py</code> と <code>test_plot.py</code> は要らず、テストは 59 件になります。予想の答え合わせのスクリプトは、<code>practice/chapter03/check.py</code> に保存し、<code>uv run python -m practice.chapter03.check</code> で実行します（第 1 章の 1.2 節と同じです）。スクリプトの import も、<code>from practice.chapter03.interest import ...</code> に書き換えます（書き換えないと、完成形を動かすことになります）。</p>
 <h2 id="33">3.3 予想する<a class="headerlink" href="#33" title="Permanent link">&para;</a></h2>
 <p>次の 5 つの問いに、<strong>紙で、電卓を使って</strong>答えてください。答えは、この節には書いてありません。「プログラミング」の節の「予想の答え合わせ」で、確かめます。</p>
 <ul>
@@ -8667,7 +8667,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 <tr>
 <td style="text-align: left;">分数の指数</td>
-<td style="text-align: left;">a^(1/n) = aの n 乗根</td>
+<td style="text-align: left;">a^(1/n) = a の n 乗根</td>
 <td style="text-align: left;">1 年の 1/n の期間の倍率</td>
 </tr>
 </tbody>
@@ -8725,7 +8725,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>常用対数（底が 10）は、<strong>桁数</strong>と結びついています。10³ = 1000 なので log₁₀ 1000 = 3 です。1000 以上 10000 未満の数の常用対数は、3 以上 4 未満です。</p>
 <p>2¹⁰⁰ の桁数は、log₁₀ 2¹⁰⁰ = 100 × log₁₀ 2 ≈ 30.10 から、わかります。整数部分が 30 なので、2¹⁰⁰ ≈ 10^0.10 × 10³⁰ で、<strong>31 桁</strong>です。小数部分の 10^0.10 ≈ 1.26 が、先頭の数字（<strong>仮数</strong>）です。このように、累乗を、<strong>仮数 × 10 の累乗</strong>（指数表記）に直すのが、常用対数による近似計算です。</p>
 <details class="note">
-<summary>発展: 自然対数と連続時間での利子率</summary>
+<summary>発展: 自然対数と連続時間での利子率（第 6・11 章で使います）</summary>
 <p>年あたりの複利の回数 m を、限りなく増やすと、(1 + r/m)ᵐ は、<strong>e^r</strong> に近づきます。e ≈ 2.71828 は、(1 + 1/m)ᵐ の、m を大きくしたときの極限です。毎瞬、利子がつく（<strong>連続複利</strong>）とき、t 年後の元利合計は、次のようになります。</p>
 <blockquote>
 <p>A = P·e^(r·t)</p>
@@ -8986,9 +8986,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">assert</span> <span class="n">mantissa</span> <span class="o">*</span> <span class="mi">10</span><span class="o">**</span><span class="n">exponent</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">base</span><span class="o">**</span><span class="n">power</span><span class="p">)</span>
 </code></pre></div>
 <p>2 つ目のテストは、Python の整数（桁数の上限がない）で、ちょうど計算した <code>base**power</code> の桁数と、常用対数で見積もった桁数が、一致することを確かめます。</p>
-<p>最初は、<code>log_base(base, 10)</code>（底の変換）で、常用対数を求めていました。ところが、実行してみると、<code>log_base(1000, 10)</code> は、3 ではなく <code>2.9999999999999996</code> になります。これでは、1000 の指数を 2、仮数を 9.99… と誤ります。この誤りを、先にテストにしてから、直しました。</p>
+<p>最初は、<code>log_base(base, 10)</code>（底の変換）で、常用対数を求めていました。ところが、筆者の環境で実行してみると、<code>log_base(1000, 10)</code> は、3 ではなく <code>2.9999999999999996</code> になりました（最後の桁の丸めは、環境によって違うことがあります。テストは、丸めの結果ではなく、桁を取り違えないことを確かめます）。これでは、1000 の指数を 2、仮数を 9.99… と誤ります。この誤りを、先にテストにしてから、直しました。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_底の変換の誤差で10の累乗の桁を取り違えない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="n">log_base</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span>
     <span class="k">assert</span> <span class="n">power_in_scientific_notation</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">power_in_scientific_notation</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
 </code></pre></div>
@@ -9003,7 +9002,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <p><code>math.log10</code> は、10 の累乗の常用対数を、ちょうど返します。<strong>同じ数学の式でも、計算の順序で、浮動小数点の誤差が変わります。</strong> 境界の値（ちょうど 10 の累乗）を、テストに入れておく理由です。</p>
 <details class="note">
-<summary>発展: 連続複利のテストと実装</summary>
+<summary>発展: 連続複利のテストと実装（第 6・11 章で使います）</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_連続複利と連続複利の実効年利</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">continuous_compound_amount</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">164.872127070</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">continuous_compound_amount</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.0512710964</span><span class="p">)</span>
@@ -9105,7 +9104,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <li><strong>5 つ目の問い</strong>: 100 × 0.3010 = 30.10 なので、31 桁です。0.3010 で見積もると、仮数は 10^0.10 ≈ 1.26 です。プログラムの 1.267651 との差は、log₁₀ 2 = 0.30103… を 0.3010 に切り捨てた分（100 倍されて 0.003）から来ます</li>
 </ul>
 <h3 id="_17">境界のテスト<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
-<p>ここまでのテストに加えて、完成形には、<strong>境界</strong>を確かめるテストがあります。0 年、利子率 0、負の利子率、半年（1 未満の年数）、1 未満の額、倍率 1 と 1 未満、10 の累乗、0 乗です。変異確認（演算子や定数を、わざと書き換えて、テストが落ちるかを見る）で、「0 &lt; 額 ≤ 1 のテストがない」ことが、見つかったため、足したものもあります。完成形の「テストの件数」を合わせるため、ここに載せます（読むだけで、かまいません）。</p>
+<p>ここまでのテストに加えて、完成形には、<strong>境界</strong>を確かめるテストがあります。0 年、利子率 0、負の利子率、半年（1 未満の年数）、1 未満の額、倍率 1 と 1 未満、10 の累乗、0 乗です。変異確認（演算子や定数を、わざと書き換えて、テストが落ちるかを見る）で、「0 &lt; 額 ≤ 1 のテストがない」ことが、見つかったため、足したものもあります。完成形の「テストの件数」を合わせるため、ここに載せます。</p>
 <details class="note">
 <summary>境界のテスト</summary>
 <div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span><span class="s2">"base"</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">])</span>

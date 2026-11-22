@@ -8544,6 +8544,7 @@
 <h2 id="121">12.1 この章の地図<a class="headerlink" href="#121" title="Permanent link">&para;</a></h2>
 <p>第 4 章の発展で、漸化式 x(t + 1) = a·x(t) + b を、<code>iterate_map</code> で反復しました。反復は、t 期の値を知るのに、t 回の計算が要ります。この章では、反復せずに t 期の値を求める<strong>閉じた解</strong>を導き、反復と一致することをテストにします。</p>
 <p>経済成長の基本モデル（<strong>ソロー・モデル</strong>）は、「今期の資本から、来期の資本が決まる」漸化式です。ただし、1 次式ではありません。それでも、<strong>定常状態</strong>（動かなくなる点）・<strong>収束するか</strong>・<strong>どれだけ速く収束するか</strong>は、この章の 1 次の漸化式の道具で調べられます。この章は、第 3 部（第 9〜12 章）と、連載の最後の章で、<strong>到達チェック</strong>も行います。</p>
+<p><img alt="x(t + 1) = a·x(t) + 1、x(0) = 0 を、a = 0.9・1・1.1 で反復した経路。a = 0.9 では増え方が鈍って、ある値に近づき、a = 1 では毎期 1 ずつ増え、a = 1.1 では増え方が加速する。a の大きさで、ふるまいが変わる" src="../images/ch12-recurrence-paths.png" /></p>
 <table>
 <thead>
 <tr>
@@ -8664,7 +8665,7 @@
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/math-for-economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter12
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>61 passed
+<div class="highlight"><pre><span></span><code>62 passed
 </code></pre></div>
 <p>自分でコードを書くときは、<code>practice/chapter12/</code> に、完成形と同じ名前のファイル（<code>recurrence.py</code>・<code>solow.py</code>・<code>plot.py</code>・<code>test_recurrence.py</code>・<code>test_solow.py</code>・<code>test_plot.py</code>）を作ります。図を後回しにするなら、<code>plot.py</code> と <code>test_plot.py</code> は要らず、テストは 58 件になります。</p>
 <ul>
@@ -8864,7 +8865,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">fixed</span> <span class="o">=</span> <span class="n">affine_fixed_point</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">a</span><span class="o">**</span><span class="n">t</span> <span class="o">*</span> <span class="p">(</span><span class="n">start</span> <span class="o">-</span> <span class="n">fixed</span><span class="p">)</span> <span class="o">+</span> <span class="n">fixed</span>
 </code></pre></div>
-<p><code>a**t * (start - fixed) + fixed</code> が、式 a^t·(x(0) − x<em>) + x</em> そのものです。a = 1 を先に分けるのは、<code>affine_fixed_point</code> が a = 1 で <code>ValueError</code> を出すためです。</p>
+<p><code>a**t * (start - fixed) + fixed</code> が、式 a^t·(x(0) − x<em>) + x</em> そのものです。a = 1 を先に分けるのは、<code>affine_fixed_point</code> が a = 1 で <code>ValueError</code> を出すためです。a が 1 にごく近い（1 + 10⁻¹² など）と、桁落ちで、閉じた解が反復と末尾の桁でずれます（t = 100 で 100.0 と 100.00000000495）。この章では、その場合を扱いません。</p>
 <h3 id="_8">ふるまいの分類と半減期<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
     <span class="p">(</span><span class="s2">"a"</span><span class="p">,</span> <span class="s2">"kind"</span><span class="p">),</span>
@@ -9286,7 +9287,7 @@ converges with oscillation
 </ul>
 </details>
 <h3 id="_15">図<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
-<p>資本の収束（初期値を変えた 4 つの経路と、定常状態）と、貯蓄率と定常状態の消費（黄金律の頂点）を描きます。</p>
+<p>章の冒頭の図（a を変えた 1 次の漸化式の経路。第 4 章の <code>iterate_map</code> で反復）と、資本の収束（初期値を変えた 4 つの経路と、定常状態）と、貯蓄率と定常状態の消費（黄金律の頂点）を描きます。</p>
 <p><img alt="s = 0.3・α = 1/3・δ = 0.1 の資本の経路。初期値 1・3（定常状態より小さい）からは増え、8・12（大きい）からは減り、どれも点線の定常状態 k* ≈ 5.196 に近づく。差は、毎期ほぼ同じ割合で小さくなる" src="../images/ch12-solow-convergence.png" /></p>
 <p><img alt="α = 1/3・δ = 0.1 で、貯蓄率（横軸）ごとの定常状態の消費。貯蓄率 0 と 1 の近くでは、消費が 0 に近い。消費は、貯蓄率 α = 1/3（黒い点、黄金律）で最大になる" src="../images/ch12-golden-rule.png" /></p>
 <details class="note">
@@ -9297,7 +9298,12 @@ converges with oscillation
 <span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.axes</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_golden_rule</span><span class="p">,</span> <span class="n">plot_solow_convergence</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter04.sequence</span><span class="w"> </span><span class="kn">import</span> <span class="n">iterate_map</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.plot</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">plot_golden_rule</span><span class="p">,</span>
+    <span class="n">plot_linear_recurrence_paths</span><span class="p">,</span>
+    <span class="n">plot_solow_convergence</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.solow</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">solow_capital_path</span><span class="p">,</span>
     <span class="n">solow_steady_state_capital</span><span class="p">,</span>
@@ -9354,6 +9360,20 @@ converges with oscillation
         <span class="n">plot_solow_convergence</span><span class="p">([],</span> <span class="mf">0.3</span><span class="p">,</span> <span class="n">ALPHA</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
     <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
         <span class="n">plot_golden_rule</span><span class="p">(</span><span class="n">ALPHA</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="p">[])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_漸化式の経路の図はaごとの反復の列</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">ax</span> <span class="o">=</span> <span class="n">plot_linear_recurrence_paths</span><span class="p">([</span><span class="mf">0.9</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.9</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">1.1</span><span class="p">):</span>
+        <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span> <span class="o">=</span> <span class="n">_series</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="sa">f</span><span class="s2">"a = </span><span class="si">{</span><span class="n">a</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">xs</span> <span class="o">==</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">26</span><span class="p">))</span>
+        <span class="k">assert</span> <span class="n">ys</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">iterate_map</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">25</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlabel</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"Period t"</span>
+    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylabel</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"x(t)"</span>
+    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">plot_linear_recurrence_paths</span><span class="p">([],</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="s2">"all"</span><span class="p">)</span>
 </code></pre></div>
 <p><code>plot.py</code> の import と実装です。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
@@ -9361,13 +9381,31 @@ converges with oscillation
 <span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Figure</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter04.sequence</span><span class="w"> </span><span class="kn">import</span> <span class="n">iterate_map</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.solow</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">solow_capital_path</span><span class="p">,</span>
     <span class="n">solow_steady_state_capital</span><span class="p">,</span>
     <span class="n">solow_steady_state_consumption</span><span class="p">,</span>
 <span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_solow_convergence</span><span class="p">(</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_linear_recurrence_paths</span><span class="p">(</span>
+    <span class="n">slopes</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">periods</span><span class="p">:</span> <span class="nb">int</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""x(t + 1) = a·x(t) + b を、a ごとに、x(0) = start から反復した経路を描く。"""</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">slopes</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"a が 1 つ以上必要です"</span><span class="p">)</span>
+    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">slopes</span><span class="p">:</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">iterate_map</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">periods</span><span class="p">)</span>
+        <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">periods</span> <span class="o">+</span> <span class="mi">1</span><span class="p">),</span> <span class="n">path</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">"a = </span><span class="si">{</span><span class="n">a</span><span class="si">:</span><span class="s2">g</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Period t"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"x(t)"</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">"x-small"</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">fig</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">plot_solow_convergence</span><span class="p">(</span>
     <span class="n">starts</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span>
     <span class="n">saving</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
     <span class="n">alpha</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
@@ -9413,7 +9451,7 @@ converges with oscillation
 <h3 id="_16">実行結果<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter12
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>61 passed
+<div class="highlight"><pre><span></span><code>62 passed
 </code></pre></div>
 <h2 id="126">12.6 規則で言うと<a class="headerlink" href="#126" title="Permanent link">&para;</a></h2>
 <ol>
@@ -9460,7 +9498,7 @@ converges with oscillation
 <li><strong>技術進歩を、モデルの外から与えています。</strong> 長期の成長率を決める技術進歩率 g が、なぜその値なのかを、このモデルは説明しません（内生的成長理論が扱う）</li>
 <li><strong>資本は、国を越えて動きます。</strong> 閉鎖経済では貯蓄 ＝ 投資ですが、開放経済では、外国から借りて投資できます</li>
 <li><strong>定常状態への収束は、遅いです。</strong> 半減期が 10 期（10 年）なら、差の 9 割が消えるのに、30 年以上かかります。現実の経済は、その間に、貯蓄率・技術・人口が変わります</li>
-<li><strong>生産関数が、k^α とは限りません。</strong> 資本の限界生産物が減らない（α = 1 に近い）なら、定常状態がなく、成長が続きます</li>
+<li><strong>生産関数が、k^α とは限りません。</strong> α = 1（資本の限界生産物が一定。AK 型）なら、定常状態がなく、成長が続きます。α &lt; 1 なら k* は有限ですが、α → 1 では k* が大きくなり、収束が遅くなります</li>
 </ul>
 <h2 id="127-3">12.7 第 3 部の到達チェック<a class="headerlink" href="#127-3" title="Permanent link">&para;</a></h2>
 <p>第 3 部（第 9〜12 章）の終わりです。何も見ずに、できるかどうかを、自分で確かめます。<strong>先に、次の「時間を決めて書く課題」を、何も見ずに試してください。</strong> 課題の解答（実行できるテスト）は、12.8 節の練習問題の解答のあとに、折りたたんで置きます。自分のコードは、関数を <code>practice/chapter12/checkpoint.py</code> に、テストを <code>practice/chapter12/test_checkpoint.py</code> に書きます。第 1・4・5・7・12 章の関数は、前の章を写していなければ、<code>lib.chapterNN...</code> のままでかまいません（写したなら、<code>practice.chapterNN...</code> に書き換えます）。行列・回帰・期待効用の関数は、<strong>第 9・10 章の関数を使わずに</strong>、自分で書きます（何も見ずに書けるかを確かめるため）。積分（<a href="../11-integrals-and-auctions/">第 11 章</a>）は、課題に含めていません。台形法・中点法と消費者余剰の積分を、何も見ずに書けるかは、第 11 章の練習問題で確かめてください。</p>
@@ -9479,7 +9517,7 @@ converges with oscillation
 <td style="text-align: left;">15 分</td>
 </tr>
 <tr>
-<td style="text-align: left;">4 点 (0, 1)・(1, 4)・(2, 5)・(3, 8) に、最小 2 乗法で直線 y = β₀ + β₁x を当てはめる関数 <code>checkpoint_simple_regression(xs, ys)</code>（(β₀, β₁) を返す）と、テスト。<code>numpy.polyfit(xs, ys, 1)</code> と一致すること。残差の和が 0、残差と x の内積が 0（第 7 章の <code>vector_dot</code>）になること</td>
+<td style="text-align: left;">4 点 (0, 1)・(1, 4)・(2, 5)・(3, 8) に、最小 2 乗法で直線 y = β₀ + β₁x を当てはめる関数 <code>checkpoint_simple_regression(xs, ys)</code>（(β₀, β₁) を返す）と、テスト。第 9 章の <code>np.linalg.lstsq</code>（1 と x を並べた行列で）と一致すること。残差の和が 0、残差と x の内積が 0（第 7 章の <code>vector_dot</code>）になること</td>
 <td style="text-align: left;">15 分</td>
 </tr>
 <tr>
@@ -9487,8 +9525,12 @@ converges with oscillation
 <td style="text-align: left;">10 分</td>
 </tr>
 <tr>
-<td style="text-align: left;">x(t + 1) = 0.8·x(t) + 4・x(0) = 0 の x(3) を、閉じた解で返す関数 <code>checkpoint_closed_form(a, b, start, t)</code> と、テスト（第 4 章の <code>iterate_map</code> と一致）。s = 0.2・α = 0.5・δ = 0.05 のソロー・モデルの定常状態の資本と消費を、手計算で求め、来期も同じ値になること（<code>solow_next_capital</code>）、定常状態での傾きが 1 − δ(1 − α) であること（第 5 章の数値微分）、貯蓄率を α に上げると消費が増えることを確かめる</td>
-<td style="text-align: left;">15 分</td>
+<td style="text-align: left;">x(t + 1) = 0.8·x(t) + 4・x(0) = 0 の x(3) を、閉じた解で返す関数 <code>checkpoint_closed_form</code> と、テスト（第 4 章の <code>iterate_map</code> と一致）</td>
+<td style="text-align: left;">10 分</td>
+</tr>
+<tr>
+<td style="text-align: left;">s = 0.2・α = 0.5・δ = 0.05 のソロー・モデルの定常状態の資本と消費を、手計算で求めるテスト。来期も同じ値になること（<code>solow_next_capital</code>）、定常状態での傾きが 1 − δ(1 − α) であること（第 5 章の数値微分）、貯蓄率を α に上げると消費が増えることを確かめる</td>
+<td style="text-align: left;">10 分</td>
 </tr>
 </tbody>
 </table>
@@ -9518,9 +9560,14 @@ converges with oscillation
 <td style="text-align: left;"><a href="../10-probability-and-risk/">第 10 章</a></td>
 </tr>
 <tr>
-<td style="text-align: left;">1 次の漸化式の閉じた解を書き、非線形の漸化式の定常状態と安定性を調べる</td>
-<td style="text-align: left;">反復と一致し、定常状態での傾きが公式と一致することを確かめる</td>
-<td style="text-align: left;">この章、<a href="../04-sequences-and-saving/">第 4 章</a>、<a href="../05-derivatives-and-profit-maximization/">第 5 章</a></td>
+<td style="text-align: left;">1 次の漸化式の閉じた解を書く</td>
+<td style="text-align: left;">閉じた解が、反復と一致することを確かめる</td>
+<td style="text-align: left;">この章、<a href="../04-sequences-and-saving/">第 4 章</a></td>
+</tr>
+<tr>
+<td style="text-align: left;">非線形の漸化式の定常状態と安定性を調べる</td>
+<td style="text-align: left;">定常状態で来期も同じ値になり、傾きが公式と一致することを確かめる</td>
+<td style="text-align: left;">この章、<a href="../05-derivatives-and-profit-maximization/">第 5 章</a></td>
 </tr>
 </tbody>
 </table>
@@ -9686,13 +9733,14 @@ converges with oscillation
     <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
     <span class="n">b0</span><span class="p">,</span> <span class="n">b1</span> <span class="o">=</span> <span class="n">checkpoint_simple_regression</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">)</span>
     <span class="k">assert</span> <span class="p">(</span><span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">((</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">))</span>
-    <span class="n">slope</span><span class="p">,</span> <span class="n">intercept</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyfit</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="p">(</span><span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">((</span><span class="n">intercept</span><span class="p">,</span> <span class="n">slope</span><span class="p">))</span>
+    <span class="n">design</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="p">]</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">xs</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">expected</span><span class="p">,</span> <span class="o">*</span><span class="n">_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">lstsq</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ys</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">),</span> <span class="n">rcond</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="p">(</span><span class="n">b0</span><span class="p">,</span> <span class="n">b1</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">expected</span><span class="p">))</span>
     <span class="n">residuals</span> <span class="o">=</span> <span class="p">[</span><span class="n">y</span> <span class="o">-</span> <span class="p">(</span><span class="n">b0</span> <span class="o">+</span> <span class="n">b1</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)]</span>
     <span class="k">assert</span> <span class="nb">sum</span><span class="p">(</span><span class="n">residuals</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">vector_dot</span><span class="p">(</span><span class="n">residuals</span><span class="p">,</span> <span class="n">xs</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">abs</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
 </code></pre></div>
-<p><strong>期待効用</strong>（第 10 章）: 期待値は 3/4 × 64 = 48、期待効用は 3/4 × √64 = 6 です。確実性等価は、効用が 6 になる確実な金額 6² = 36、危険プレミアムは 48 − 36 = 12 です。確実な 49 の賭けなら、確実性等価は 49、危険プレミアムは 0 です。</p>
+<p><strong>期待効用</strong>（第 10 章）: 期待値は 3/4 × 64 = 48、期待効用は 3/4 × √64 = 6 です。確実性等価は、効用が 6 になる確実な金額 6² = 36、危険プレミアムは 48 − 36 = 12 です。確実に 49 を受け取る場合は、確実性等価は 49、危険プレミアムは 0 です。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">checkpoint_certainty_equivalent</span><span class="p">(</span>
     <span class="n">outcomes</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">probabilities</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Fraction</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
@@ -9713,16 +9761,19 @@ converges with oscillation
     <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
         <span class="n">checkpoint_certainty_equivalent</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> <span class="p">[</span><span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">Fraction</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)])</span>
 </code></pre></div>
-<p><strong>漸化式と経済成長</strong>（この章・第 4・5 章）: 不動点は 4 ÷ 0.2 = 20 で、x(3) = 0.8³ × (0 − 20) + 20 = 20 − 10.24 = 9.76 です。ソロー・モデルでは、k* = (0.2 ÷ 0.05)^(1 ÷ 0.5) = 16、c* = 0.8 × √16 = 3.2 です。定常状態での傾きは 1 − 0.05 × 0.5 = 0.975 です。貯蓄率を α = 0.5 に上げると、k* = 10² = 100、c* = 0.5 × 10 = 5 に増えます。</p>
+<p><strong>漸化式の閉じた解</strong>（この章・第 4 章）: 不動点は 4 ÷ 0.2 = 20 で、x(3) = 0.8³ × (0 − 20) + 20 = 20 − 10.24 = 9.76 です。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">checkpoint_closed_form</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">start</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="n">fixed</span> <span class="o">=</span> <span class="n">b</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">a</span><span class="o">**</span><span class="n">t</span> <span class="o">*</span> <span class="p">(</span><span class="n">start</span> <span class="o">-</span> <span class="n">fixed</span><span class="p">)</span> <span class="o">+</span> <span class="n">fixed</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_到達チェックの漸化式と経済成長</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_到達チェックの閉じた解</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">checkpoint_closed_form</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">9.76</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">checkpoint_closed_form</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
         <span class="n">iterate_map</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="p">)</span>
+</code></pre></div>
+<p><strong>ソロー・モデル</strong>（この章・第 5 章）: k* = (0.2 ÷ 0.05)^(1 ÷ 0.5) = 16、c* = 0.8 × √16 = 3.2 です。定常状態での傾きは 1 − 0.05 × 0.5 = 0.975 です。貯蓄率を α = 0.5 に上げると、k* = 10² = 100、c* = 0.5 × 10 = 5 に増えます。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_到達チェックのソローモデル</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">solow_next_capital</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">solow_steady_state_consumption</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">3.2</span><span class="p">)</span>
     <span class="n">slope</span> <span class="o">=</span> <span class="n">numerical_derivative</span><span class="p">(</span><span class="k">lambda</span> <span class="n">k</span><span class="p">:</span> <span class="n">solow_next_capital</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">),</span> <span class="mi">16</span><span class="p">)</span>
@@ -9761,7 +9812,7 @@ converges with oscillation
 </tr>
 <tr>
 <td style="text-align: left;"><a href="../../macro-basics-programming/">マクロ経済学のためのプログラミング（初級）</a></td>
-<td style="text-align: left;">第 1 章（連立方程式）、第 3・4 章（金利・割引現在価値）</td>
+<td style="text-align: left;">第 1 章（連立方程式）、第 3・4 章（金利・割引現在価値。第 4 章の無限級数は、乗数の土台）</td>
 </tr>
 <tr>
 <td style="text-align: left;"><a href="../../macro-programming/">マクロ経済学のためのプログラミング（中級＋）</a></td>

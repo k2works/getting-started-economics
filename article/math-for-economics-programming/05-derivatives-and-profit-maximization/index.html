@@ -2143,7 +2143,7 @@
   <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
-        平均費用の最小と操業停止点
+        利潤最大化の解の性質: 価格と数量
       
     </span>
   </a>
@@ -2154,7 +2154,7 @@
   <a href="#_14" class="md-nav__link">
     <span class="md-ellipsis">
       
-        発展: 凹関数の判定
+        平均費用の最小と操業停止点
       
     </span>
   </a>
@@ -2165,7 +2165,7 @@
   <a href="#_15" class="md-nav__link">
     <span class="md-ellipsis">
       
-        予想の答え合わせ
+        発展: 凹関数の判定
       
     </span>
   </a>
@@ -2176,7 +2176,7 @@
   <a href="#_16" class="md-nav__link">
     <span class="md-ellipsis">
       
-        境界のテスト
+        予想の答え合わせ
       
     </span>
   </a>
@@ -2187,7 +2187,7 @@
   <a href="#_17" class="md-nav__link">
     <span class="md-ellipsis">
       
-        図
+        境界のテスト
       
     </span>
   </a>
@@ -2196,6 +2196,17 @@
         
           <li class="md-nav__item">
   <a href="#_18" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        図
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_19" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -2223,7 +2234,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_19" class="md-nav__link">
+  <a href="#_20" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8572,15 +8583,28 @@
 <p><strong>記号について</strong>: 多項式の係数は、<strong>次数の低い順</strong>に並べます。C(q) = q² + 10q + 100 は <code>Polynomial((100, 10, 1))</code> です（定数項が先頭）。第 2 章の <code>quadratic_roots(a, b, c)</code> は、a·x² + b·x + c と<strong>次数の高い順</strong>なので、向きが逆です。</p>
 </blockquote>
 <h3 id="_2">前提とする章<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
-<p><a href="../02-quadratics-monopoly-and-oligopoly/">第 2 章</a> の、2 次関数の頂点・解の公式・格子探索と、関数を引数に渡す書き方（<code>lambda</code>）、<code>dataclass</code> を使います。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">できること</th>
+<th style="text-align: left;">場所</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">2 次関数の頂点・解の公式・格子探索、関数を引数に渡す（<code>lambda</code>）、<code>dataclass</code></td>
+<td style="text-align: left;">この連載の<a href="../02-quadratics-monopoly-and-oligopoly/">第 2 章</a></td>
+</tr>
+</tbody>
+</table>
 <p>費用曲線と供給の<strong>経済学としての意味</strong>は、<a href="../../micro-basics-programming/05-cost-curves/">ミクロ経済学のためのプログラミング（初級）の第 5 章</a> と <a href="../../micro-basics-programming/07-profit-maximization-and-supply/">第 7 章</a> で扱います。この章は、そこで使う数学（微分と最適化）を、関数とテストで確かめます。</p>
 <h2 id="52">5.2 準備<a class="headerlink" href="#52" title="Permanent link">&para;</a></h2>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/math-for-economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter05
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>45 passed
+<div class="highlight"><pre><span></span><code>47 passed
 </code></pre></div>
-<p>自分でコードを書くときは、<code>practice/chapter05/</code> に、完成形と同じ名前のファイル（<code>derivative.py</code>・<code>cost.py</code>・<code>plot.py</code>・<code>test_derivative.py</code>・<code>test_cost.py</code>・<code>test_plot.py</code>）を作ります。図を後回しにするなら、<code>plot.py</code> と <code>test_plot.py</code> は要らず、テストは 42 件になります。</p>
+<p>自分でコードを書くときは、<code>practice/chapter05/</code> に、完成形と同じ名前のファイル（<code>derivative.py</code>・<code>cost.py</code>・<code>plot.py</code>・<code>test_derivative.py</code>・<code>test_cost.py</code>・<code>test_plot.py</code>）を作ります。図を後回しにするなら、<code>plot.py</code> と <code>test_plot.py</code> は要らず、テストは 44 件になります。</p>
 <ul>
 <li>テスト・<code>plot.py</code>・check スクリプトの import を、<code>from practice.chapter05...</code> に書き換えます（書き換えないと、完成形を動かします）</li>
 <li>第 2 章の関数（<code>quadratic_roots</code>・<code>parabola_vertex</code>・<code>argmax_on_grid</code>）は、自分で写した <code>practice.chapter02</code> から import します。写していなければ、<code>lib.chapter02</code> のままでかまいません</li>
@@ -8628,9 +8652,24 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <td style="text-align: left;">(f + g)' = f' + g'</td>
 <td style="text-align: left;">(x² + 4x + 7)' = 2x + 4</td>
 </tr>
+<tr>
+<td style="text-align: left;">積</td>
+<td style="text-align: left;">(f·g)' = f'·g + f·g'</td>
+<td style="text-align: left;">(x²·eˣ)' = 2x·eˣ + x²·eˣ</td>
+</tr>
+<tr>
+<td style="text-align: left;">商</td>
+<td style="text-align: left;">(f ÷ g)' = (f'·g − f·g') ÷ g²</td>
+<td style="text-align: left;">(1 ÷ x)' = −1 ÷ x²</td>
+</tr>
+<tr>
+<td style="text-align: left;">合成</td>
+<td style="text-align: left;">(f(g(x)))' = f'(g(x))·g'(x)</td>
+<td style="text-align: left;">((x² + 1)³)' = 3(x² + 1)²·2x</td>
+</tr>
 </tbody>
 </table>
-<p>係数を次数の低い順に並べると、導関数は、「各係数に次数を掛けて、1 つ左にずらす」操作です。(7, 4, 1) は (4, 2) になります。</p>
+<p>係数を次数の低い順に並べると、導関数は、「各係数に次数を掛けて、1 つ左にずらす」操作です。(7, 4, 1) は (4, 2) になります。積・商・合成の公式は、多項式以外（eˣ や分数の関数）にも使います（第 6 章の弾力性で使います）。この章のコードは多項式の公式だけを実装し、積・商・合成は、数値微分との一致をテストで確かめます。</p>
 <h3 id="_5">数値微分と刻み幅<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>公式を使わずに、傾きを<strong>数値</strong>で求めることもできます。h を小さな正の数にして、x の左右の値の差を使います（<strong>中心差分</strong>）。</p>
 <blockquote>
@@ -8829,6 +8868,22 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"刻み幅 h は、正でなければなりません"</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="n">x</span> <span class="o">+</span> <span class="n">step</span><span class="p">)</span> <span class="o">-</span> <span class="n">func</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">step</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">step</span><span class="p">)</span>
 </code></pre></div>
+<details class="note">
+<summary>積・商・合成の公式を、数値微分で確かめる</summary>
+<p>5.4 節の表の 3 つの例を、負・0 &lt; x &lt; 1・正の点で、数値微分と比べます。公式を書き間違えると（積の片方の項を落とすなど）、一致しません。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_積と商と合成関数の公式は数値微分と一致する</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">[</span><span class="o">-</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mi">2</span><span class="p">]:</span>
+        <span class="c1"># 積: (f·g)' = f'·g + f·g'。(x²·eˣ)' = 2x·eˣ + x²·eˣ</span>
+        <span class="n">product</span> <span class="o">=</span> <span class="n">numerical_derivative</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="n">t</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">t</span><span class="p">),</span> <span class="n">x</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">product</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">((</span><span class="mi">2</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">x</span><span class="p">))</span>
+        <span class="c1"># 商: (f ÷ g)' = (f'·g − f·g') ÷ g²。(1 ÷ x)' = −1 ÷ x²</span>
+        <span class="n">quotient</span> <span class="o">=</span> <span class="n">numerical_derivative</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mi">1</span> <span class="o">/</span> <span class="n">t</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">quotient</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span> <span class="o">/</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="c1"># 合成: (f(g(x)))' = f'(g(x))·g'(x)。((x² + 1)³)' = 3(x² + 1)²·2x</span>
+        <span class="n">chain</span> <span class="o">=</span> <span class="n">numerical_derivative</span><span class="p">(</span><span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="p">(</span><span class="n">t</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">3</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">chain</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">3</span> <span class="o">*</span> <span class="p">(</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">x</span><span class="p">)</span>
+</code></pre></div>
+</details>
 <h3 id="_9">刻み幅と誤差の実験<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <p>x³ の x = 1 での中心差分は、展開すると 3 + h² です。打ち切りの誤差は h² なので、h を 1/10 にすると、誤差は 1/100 になります。逆に、h が小さすぎると、丸めの誤差で悪くなります。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_刻み幅が大きいと打ち切りの誤差が出る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -9048,7 +9103,18 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="n">best</span> <span class="k">if</span> <span class="n">profit</span><span class="p">(</span><span class="n">best</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">profit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="k">else</span> <span class="mf">0.0</span>
 </code></pre></div>
 <p>費用が 1 次関数（C = 100 + 10q）だと、P &gt; 10 なら作るほど利潤が増え、最大がありません。そこで、最高次の係数が正の、2 次か 3 次の費用だけを扱います。</p>
-<h3 id="_13">平均費用の最小と操業停止点<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_13">利潤最大化の解の性質: 価格と数量<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<p>P = MC の解は、<strong>価格が上がると増えます</strong>。MC が右上がりなので、P が上がると、MC が P に追いつく数量も大きくなるからです。価格ごとの最適な数量を並べたものが、企業の<strong>供給曲線</strong>で、MC の右上がりの部分（操業停止点より上）に一致します。MC = 2q + 10 なら、q = (P − 10) ÷ 2 です。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_価格が上がると最適な数量が増える</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># 供給曲線は MC の右上がりの部分。MC = 2q + 10 なら q = (P − 10) ÷ 2</span>
+    <span class="n">prices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">12</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">35</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">80</span><span class="p">]</span>
+    <span class="n">quantities</span> <span class="o">=</span> <span class="p">[</span><span class="n">profit_maximizing_quantity</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">COST</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">prices</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">quantities</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([(</span><span class="n">p</span> <span class="o">-</span> <span class="mi">10</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">prices</span><span class="p">])</span>
+    <span class="k">for</span> <span class="n">cost</span> <span class="ow">in</span> <span class="p">[</span><span class="n">COST_HALF</span><span class="p">,</span> <span class="n">COST_CUBIC</span><span class="p">]:</span>
+        <span class="n">supply</span> <span class="o">=</span> <span class="p">[</span><span class="n">profit_maximizing_quantity</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">cost</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">prices</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">q1</span> <span class="o">&lt;</span> <span class="n">q2</span> <span class="k">for</span> <span class="n">q1</span><span class="p">,</span> <span class="n">q2</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">supply</span><span class="p">,</span> <span class="n">supply</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
+</code></pre></div>
+<h3 id="_14">平均費用の最小と操業停止点<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_平均費用は限界費用と交わる点で最小</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">minimum_average_cost</span><span class="p">(</span><span class="n">COST</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">marginal_cost</span><span class="p">(</span><span class="n">COST</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="mi">30</span>
@@ -9094,7 +9160,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">avc</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 </code></pre></div>
 <p>3 次の費用 q³ − 6q² + 15q + 20 の AVC は q² − 6q + 15 で、U 字です。最小は q = 3 で 6 です。価格 6.1 では生産し、5.9 では生産しません（P = MC の極大はあるが、利潤が −固定費用より低い）。2 次の費用の AVC は c₁ + c₂q で右上がりなので、最小は q → 0 の極限 c₁ です。</p>
-<h3 id="_14">発展: 凹関数の判定<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
+<h3 id="_15">発展: 凹関数の判定<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <details class="note">
 <summary>凹関数の判定のテストと実装（発展。後回しにしても、学習は成り立ちます）</summary>
 <p>区間を格子に区切り、どの点でも 2 階の導関数が 0 以下かを調べます。凸の判定は、−f が凹かどうかで代用します。</p>
@@ -9129,7 +9195,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="nb">all</span><span class="p">(</span><span class="n">curvature</span><span class="p">(</span><span class="n">low</span> <span class="o">+</span> <span class="n">i</span> <span class="o">*</span> <span class="n">step</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">points</span><span class="p">))</span>
 </code></pre></div>
 </details>
-<h3 id="_15">予想の答え合わせ<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<h3 id="_16">予想の答え合わせ<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter05.cost</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">competitive_profit</span><span class="p">,</span>
     <span class="n">marginal_cost</span><span class="p">,</span>
@@ -9172,7 +9238,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <li><strong>3 つ目の問い</strong>: AC = 100 ÷ q + 10 + q は、q = √(100 ÷ 1) = 10 で最小 30 です。そこで MC = 2 × 10 + 10 = 30 で、<strong>MC = AC</strong> です。価格 25 では、q = 7.5 で利潤 −43.75 と<strong>赤字</strong>ですが、作らないとき（−100）より損が小さいので、<strong>生産を続けます</strong>（25 は AVC の最小値 10 より高い）</li>
 <li><strong>4 つ目の問い</strong>: h = 0.1 では (1.331 − 0.729) ÷ 0.2 = 3.01 で、誤差は h² = 0.01 です。h = 10⁻⁵ ではほぼ 3 ですが、10⁻¹³ では 2.999268 と、<strong>かえって悪く</strong>なります（丸めの誤差）</li>
 </ul>
-<h3 id="_16">境界のテスト<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_17">境界のテスト<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
 <p>完成形には、ほかに<strong>境界</strong>を確かめるテストがあります。刻み幅が 0・負、末尾の 0 の係数と空の係数、1 次関数（極値なし）・定数関数・4 次以上、数量が 0・負、価格が MC の切片以下、AVC の頂点が負、扱えない費用の形です。テストの件数を合わせるため、ここに載せます。</p>
 <details class="note">
 <summary>境界のテスト</summary>
@@ -9240,7 +9306,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
             <span class="n">minimum_average_cost</span><span class="p">(</span><span class="n">cost</span><span class="p">)</span>
 </code></pre></div>
 </details>
-<h3 id="_17">図<a class="headerlink" href="#_17" title="Permanent link">&para;</a></h3>
+<h3 id="_18">図<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
 <p>図の実装の import です。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
 
@@ -9358,17 +9424,17 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
 </details>
-<h3 id="_18">実行結果<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
+<h3 id="_19">実行結果<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter05
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>45 passed
+<div class="highlight"><pre><span></span><code>47 passed
 </code></pre></div>
 <h2 id="56">5.6 規則で言うと<a class="headerlink" href="#56" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>導関数は、傾きの関数である。</strong> 多項式なら、冪・定数倍・和の公式で求まる。数値微分（中心差分）と一致する</li>
 <li><strong>数値微分の刻み幅は、大きすぎても小さすぎても悪い。</strong> 大きいと打ち切りの誤差、小さいと丸めの誤差。中心差分では 10⁻⁵ 前後がよい</li>
 <li><strong>極値の候補は f'(x) = 0 の点。</strong> f'' が負なら極大、正なら極小、0 なら判定できない</li>
-<li><strong>価格を所与とする企業は、P = MC で利潤を最大にする。</strong> MC が右上がりの部分で。P が AVC の最小値より低ければ、生産しない</li>
+<li><strong>価格を所与とする企業は、P = MC で利潤を最大にする。</strong> MC が右上がりの部分で。P が AVC の最小値より低ければ、生産しない。価格が上がると、最適な数量は増える（供給曲線は MC の右上がりの部分）</li>
 <li><strong>AC は、MC と交わる点で最小。</strong> 2 次の費用なら q = √(c₀ ÷ c₂)</li>
 </ol>
 <p>混同しやすい点を、表にまとめます。</p>
@@ -9398,7 +9464,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_19">このモデルが成り立たない場面<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
+<h3 id="_20">このモデルが成り立たない場面<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>数量は、連続とは限りません。</strong> 車や家は、0.5 台作れません。微分は、q を連続に動かせると仮定しています。整数の数量では、P = MC の前後の整数を比べます</li>
 <li><strong>価格を所与とするのは、完全競争の企業だけです。</strong> 独占企業は、数量を増やすと価格が下がるので、条件は P = MC ではなく、<strong>限界収入 ＝ 限界費用</strong>になります（練習問題の交互で確かめます）</li>

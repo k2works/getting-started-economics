@@ -1809,8 +1809,41 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        第 1 章の記号（ほかの章では、別の意味になることがあります）
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        章で意味が変わる文字
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        この連載の約束（実装の方針）
+      
+    </span>
+  </a>
   
 </li>
       
@@ -8309,6 +8342,21 @@
 <td style="text-align: left;">数量。グラフでは、横軸</td>
 </tr>
 <tr>
+<td style="text-align: left;">p*・q*</td>
+<td style="text-align: left;">均衡の価格・数量</td>
+</tr>
+</tbody>
+</table>
+<h3 id="1">第 1 章の記号（ほかの章では、別の意味になることがあります）<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">記号</th>
+<th style="text-align: left;">第 1 章での意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
 <td style="text-align: left;">a・b</td>
 <td style="text-align: left;">需要 q = a − b·p の係数（a: 価格 0 のときの需要量、b: 価格が 1 上がったときの需要量の減少）</td>
 </tr>
@@ -8316,13 +8364,64 @@
 <td style="text-align: left;">c・d</td>
 <td style="text-align: left;">供給 q = c + d·p の係数</td>
 </tr>
+</tbody>
+</table>
+<h3 id="_8">章で意味が変わる文字<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<p>同じ文字でも、章によって意味が違います。<strong>必ず、その章の「数学の式とコードの対応」の表を、基準にしてください。</strong></p>
+<table>
+<thead>
 <tr>
-<td style="text-align: left;">p*・q*</td>
-<td style="text-align: left;">均衡の価格・数量</td>
+<th style="text-align: left;">文字</th>
+<th style="text-align: left;">意味と、使う章</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">a・b</td>
+<td style="text-align: left;">第 1 章: 需要の係数。第 2 章: 逆需要 P = a − b·Q と、2 次関数の係数。第 4 章: 初項（a）。第 8 章: コブ・ダグラスの分配率（a）。第 12 章: 漸化式の係数</td>
+</tr>
+<tr>
+<td style="text-align: left;">c・d</td>
+<td style="text-align: left;">第 1 章: 供給の係数。第 12 章: 消費（c*）</td>
+</tr>
+<tr>
+<td style="text-align: left;">n</td>
+<td style="text-align: left;">第 2 章: 企業の数。第 3 章: 年数。第 11 章: 入札者の数。第 12 章: 人口成長率（発展）</td>
+</tr>
+<tr>
+<td style="text-align: left;">k</td>
+<td style="text-align: left;">第 3 章: 倍率。第 8 章: 同次の次数。第 11 章: 順位。第 12 章: 資本</td>
+</tr>
+<tr>
+<td style="text-align: left;">g</td>
+<td style="text-align: left;">第 6 章: 成長率。第 12 章: 技術進歩（発展）</td>
+</tr>
+<tr>
+<td style="text-align: left;">p</td>
+<td style="text-align: left;">価格。第 10 章: 確率 P(A)</td>
+</tr>
+<tr>
+<td style="text-align: left;">q</td>
+<td style="text-align: left;">数量。第 7 章: 状態価格（証券の価格）</td>
+</tr>
+<tr>
+<td style="text-align: left;">m</td>
+<td style="text-align: left;">第 3 章: 年に複利を計算する回数。第 7・9 章: 所得</td>
+</tr>
+<tr>
+<td style="text-align: left;">r</td>
+<td style="text-align: left;">利子率・割引率（第 3・4・11 章など）</td>
 </tr>
 </tbody>
 </table>
 <p>章が進むと、記号が増えます。新しい記号は、その章の表で、定義します。</p>
+<h2 id="_9">この連載の約束（実装の方針）<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong>NaN・無限大は、扱いません。</strong> 教材なので、全関数に検証は入れません。入力の検証は、「その章の式が意味を持つ条件」（傾きが正、確率が 0〜1 など）に、絞ります</li>
+<li><strong>許容誤差</strong>: 数値計算の結果（微分・積分・シミュレーション）を比べるときは、<strong>相対的な誤差</strong>（値の大きさに対する割合）を使います。数え上げ・分数（<code>Fraction</code>）の結果は、<strong>厳密に</strong>比べます。許容誤差の値は、章ごとに、根拠をコメントに書きます</li>
+<li><strong>図は、英語のラベルで描きます</strong>（Matplotlib の日本語フォントの設定を避けるため）。本文と alt は、日本語です</li>
+<li><strong>「何も見ずに」書く課題（到達チェック）には、ヒントとして、関数の名前を、示すことがあります</strong>（引数や係数の並びは、示さないか、必要最小限）</li>
+</ul>
 
 
 

@@ -8444,7 +8444,7 @@
 <h2 id="21">2.1 この章の地図<a class="headerlink" href="#21" title="Permanent link">&para;</a></h2>
 <p>第 1 章では、需要と供給を<strong>直線</strong>（1 次関数）で表しました。この章の道具は、<strong>2 次関数</strong>です。グラフは<strong>放物線</strong>で、山（または谷）の頂上が 1 つあります。</p>
 <p>経済学で 2 次関数が出てくる代表が、<strong>独占企業の利潤</strong>です。数量を増やすと、売上は増えますが、価格は下がります。その結果、利潤は数量の 2 次関数になり、<strong>放物線の頂点が、利潤を最大にする数量</strong>です。</p>
-<p><img alt="独占企業の利潤の放物線。数量 0 と 80 で利潤 0、頂点（数量 40・利潤 1600）が利潤最大" src="../images/ch02-monopoly-profit.png" /></p>
+<p><img alt="独占企業の利潤の放物線（逆需要 P = 120 − Q・費用 30 の例）。数量を増やすと、利潤は増えてから減り、頂点の黒い点で最大になる" src="../images/ch02-monopoly-profit.png" /></p>
 <table>
 <thead>
 <tr>
@@ -8551,7 +8551,7 @@
 </tbody>
 </table>
 <blockquote>
-<p><strong>記号について</strong>: 第 1 章の需要は q = a − b·p で、<strong>価格から数量</strong>を求める式でした。この章では、向きを逆にした <strong>逆需要</strong> P = a − b·Q（<strong>数量から価格</strong>）を使います。独占企業は「何個作るか」を決め、価格は需要が決めるからです。同じ文字 a・b でも、意味が違います。第 1 章の需要 q = 100 − p は、逆需要 P = 100 − Q と同じ直線ですが、逆需要 P = 100 − 2Q は、第 1 章の形では q = 50 − 0.5p です。また、2 次関数の係数（a・b・c）と、市場の係数（a・b・費用 c）が、同じ文字なので、コードでは費用を <code>cost</code> と書いて区別します。</p>
+<p><strong>記号について</strong>: 第 1 章の需要は q = a − b·p で、<strong>価格から数量</strong>を求める式でした。この章では、向きを逆にした <strong>逆需要</strong> P = a − b·Q（<strong>数量から価格</strong>）を使います。独占企業は「何個作るか」を決め、価格は需要が決めるからです。同じ文字 a・b でも、意味が違います。第 1 章の需要 q = 100 − p は、逆需要 P = 100 − Q と同じ直線ですが、逆需要 P = 100 − 2Q は、第 1 章の形では q = 50 − 0.5p です。また、2 次関数の係数（a・b・c）と、市場の係数（a・b・費用 c）が、同じ文字なので、コードでは費用を <code>cost</code> と書いて区別します。図の軸と凡例は、Matplotlib で日本語のフォントを避けるため、英語にしています。</p>
 </blockquote>
 <h3 id="_2">前提とする章<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <p><a href="../01-linear-functions-and-markets/">第 1 章</a> の、直線の式・連立方程式・三角形の面積を使います。高校数学の 2 次関数（平方完成・解の公式）を、一度は学んだ方を想定しています。忘れていても、2.4 節で思い出せます。</p>
@@ -8560,9 +8560,9 @@
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/math-for-economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter02
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>45 passed
+<div class="highlight"><pre><span></span><code>46 passed
 </code></pre></div>
-<p>自分でコードを書くときは、第 1 章と同じく、<code>practice/chapter02/</code> に、完成形と同じ名前のファイル（<code>quadratic.py</code>・<code>monopoly.py</code>・<code>plot.py</code>・<code>test_quadratic.py</code>・<code>test_monopoly.py</code>・<code>test_plot.py</code>）を作り、テストの import を <code>from practice.chapter02...</code> に書き換えます（図の節を後回しにするなら、<code>plot.py</code> と <code>test_plot.py</code> は要らず、テストは 39 件になります）。<code>plot.py</code> と、下の check スクリプトの import も、<code>from practice.chapter02...</code> に書き換えます（書き換えないと、完成形を動かすことになります）。テストの import の一覧は、完成形の<strong>全関数</strong>です。まだ書いていない関数を import すると、<code>ImportError</code> になり、Green になりません。関数を 1 つ書くたびに、その名前を、import に足していってください（最初のテストの 1 つ、<code>quadratic_roots</code> を使うものも、その関数を書くまで、後回しにします）。「予想の答え合わせ」のスクリプトは、<code>practice/chapter02/check.py</code> に保存し、<code>uv run python -m practice.chapter02.check</code> で実行します。</p>
+<p>自分でコードを書くときは、第 1 章と同じく、<code>practice/chapter02/</code> に、完成形と同じ名前のファイル（<code>quadratic.py</code>・<code>monopoly.py</code>・<code>plot.py</code>・<code>test_quadratic.py</code>・<code>test_monopoly.py</code>・<code>test_plot.py</code>）を作り、テストの import を <code>from practice.chapter02...</code> に書き換えます（図の節を後回しにするなら、<code>plot.py</code> と <code>test_plot.py</code> は要らず、テストは 40 件になります）。<code>plot.py</code> と、下の check スクリプトの import も、<code>from practice.chapter02...</code> に書き換えます（書き換えないと、完成形を動かすことになります）。テストの import の一覧は、完成形の<strong>全関数</strong>です。まだ書いていない関数を import すると、<code>ImportError</code> になり、Green になりません。関数を 1 つ書くたびに、その名前を、import に足していってください（最初のテストの 1 つ、<code>quadratic_roots</code> を使うものも、その関数を書くまで、後回しにします）。「予想の答え合わせ」のスクリプトは、<code>practice/chapter02/check.py</code> に保存し、<code>uv run python -m practice.chapter02.check</code> で実行します。</p>
 <h2 id="23">2.3 予想する<a class="headerlink" href="#23" title="Permanent link">&para;</a></h2>
 <p>次の 4 つの問いに、<strong>紙で、手計算で</strong>答えてください。答えは、この節には書いてありません。「プログラミング」の節の「予想の答え合わせ」で確かめます。</p>
 <ul>
@@ -8585,6 +8585,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <p>x = (−b ± √D) ÷ (2a)、D = b² − 4ac（<strong>判別式</strong>）</p>
 </blockquote>
 <p>√D は、D が負だと実数になりません。そこで、D の符号で、<strong>実数解の個数</strong>がわかります。D &gt; 0 なら 2 つ、D = 0 なら 1 つ（重解。頂点が x 軸に接する）、D &lt; 0 なら、実数解はありません（放物線が x 軸と交わらない）。</p>
+<p>2 つの解の積は c ÷ a です（<strong>解と係数の関係</strong>）。コンピュータで解の公式をそのまま計算すると、b が大きいとき、−b と √D がほぼ同じ大きさになり、引き算で有効桁が消えます（<strong>桁落ち</strong>）。そこで、符号の同じものどうしを足して 1 つ目の解を求め、2 つ目は積 c ÷ a から求めます。</p>
 <h3 id="2_1">独占の利潤は 2 次関数<a class="headerlink" href="#2_1" title="Permanent link">&para;</a></h3>
 <p>独占企業が Q 作ると、価格は逆需要 P = a − b·Q で決まります。1 単位あたりの費用 c が一定なら、利潤は、</p>
 <blockquote>
@@ -8677,6 +8678,14 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">assert</span> <span class="n">quadratic_roots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="p">()</span>  <span class="c1"># D &lt; 0: なし</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">test_bが大きくても小さいほうの解が桁落ちしない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># x² + 10⁸x + 1 = 0 の解は、およそ −10⁸ と −10⁻⁸（2 つの解の積は c ÷ a = 1）</span>
+    <span class="n">lower</span><span class="p">,</span> <span class="n">upper</span> <span class="o">=</span> <span class="n">quadratic_roots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mf">1e8</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">lower</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="o">-</span><span class="mf">1e8</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">upper</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="o">-</span><span class="mf">1e-8</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">quadratic_roots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">1e8</span><span class="p">,</span> <span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">1e-8</span><span class="p">,</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-12</span><span class="p">)</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">test_解を代入すると0になる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">quadratic_roots</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">7</span><span class="p">):</span>
         <span class="k">assert</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">x</span> <span class="o">-</span> <span class="mi">7</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -8687,17 +8696,21 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">quadratic_roots</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""解の公式で、a·x² + b·x + c = 0 の実数解を、小さい順に返す。"""</span>
+<span class="w">    </span><span class="sd">"""解の公式で、a·x² + b·x + c = 0 の実数解を、小さい順に返す。</span>
+
+<span class="sd">    −b と √D を、同じ符号どうしで足して 1 つ目の解を求め、もう 1 つは</span>
+<span class="sd">    解の積 c ÷ a から求める（近い数の引き算で、桁が落ちるのを避ける）。</span>
+<span class="sd">    """</span>
     <span class="n">_require_quadratic</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
     <span class="n">d</span> <span class="o">=</span> <span class="n">quadratic_discriminant</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">d</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">()</span>
     <span class="k">if</span> <span class="n">d</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">a</span><span class="p">),)</span>
-    <span class="n">root</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([(</span><span class="o">-</span><span class="n">b</span> <span class="o">-</span> <span class="n">root</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">a</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="n">b</span> <span class="o">+</span> <span class="n">root</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">a</span><span class="p">)]))</span>
+    <span class="n">q</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">b</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">copysign</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="n">b</span><span class="p">))</span> <span class="o">/</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">sorted</span><span class="p">([</span><span class="n">q</span> <span class="o">/</span> <span class="n">a</span><span class="p">,</span> <span class="n">c</span> <span class="o">/</span> <span class="n">q</span><span class="p">]))</span>
 </code></pre></div>
-<p>a &lt; 0 のときは、(−b − √D) ÷ (2a) のほうが大きくなります。<code>sorted</code> で、小さい順にそろえます。</p>
+<p>x² + 10⁸x + 1 = 0 の小さいほうの解（約 −10⁻⁸）は、公式をそのまま計算すると、約 −0.745 × 10⁻⁸ になり、25% もずれます。2 つ目の解を c ÷ q で求めると、正しい値になります。2 つの解の大小は、a と b の符号で入れ替わるので、<code>sorted</code> で、小さい順にそろえます。</p>
 <h3 id="_7">格子探索: 頂点を数値で確かめる<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <p>頂点の式が正しいかを、<strong>式を使わずに</strong>確かめる方法があります。範囲を細かい格子に区切り、すべての点で関数の値を計算して、最大の点を探す<strong>格子探索</strong>です。答えは格子の間隔の分だけずれますが、式の誤りを見つけるには十分です。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_格子の上で最大値をとる点を探す</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -9140,7 +9153,7 @@ MarketOutcome(quantity=20.0, price=60.0, profit=800.0) 400.0
 <h3 id="_14">実行結果<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter02
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>45 passed
+<div class="highlight"><pre><span></span><code>46 passed
 </code></pre></div>
 <h2 id="26">2.6 規則で言うと<a class="headerlink" href="#26" title="Permanent link">&para;</a></h2>
 <ol>
@@ -9178,7 +9191,7 @@ MarketOutcome(quantity=20.0, price=60.0, profit=800.0) 400.0
 </table>
 <h3 id="_15">このモデルが成り立たない場面<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>費用が一定とは、限りません。</strong> 作るほど 1 単位あたりの費用が上がると、利潤は 2 次関数でなくなります（第 5 章で、微分を使って、一般の費用で最適を求めます）</li>
+<li><strong>費用が一定とは、限りません。</strong> 作るほど 1 単位あたりの費用が上がると、利潤は 2 次関数でなくなります（第 5 章で、微分を使って、2 次関数に限らない費用での利潤最大化を学びます。独占の限界収入 ＝ 限界費用は、第 5 章の練習問題で確かめます）</li>
 <li><strong>独占企業が、需要曲線を正確に知っているとは、限りません。</strong> 実際の企業は、価格を試しながら探ります。この章は、需要の式を仮定しています</li>
 <li><strong>価格で競争すると、結論が変わります。</strong> 同じ財を作る 2 社が、数量でなく<strong>価格</strong>を選ぶ（ベルトラン競争）なら、2 社でも価格は費用まで下がります。クールノーの結論は「数量で競争する」という仮定に依存します</li>
 <li><strong>企業の数は、決まっているとは限りません。</strong> 利潤があれば新しい企業が参入し、n は変わります。この章は n を所与としています</li>

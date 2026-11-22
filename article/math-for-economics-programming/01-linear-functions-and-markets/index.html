@@ -8472,7 +8472,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">新しく導入するライブラリ</td>
-<td style="text-align: left;">Matplotlib（図。<a href="../../economics-programming/">第 1 シリーズ</a> の第 7 章で学習済み）</td>
+<td style="text-align: left;">Matplotlib（図。<a href="../../economics-programming/">第 1 シリーズ</a> の第 7 章で学習済み）。図のテストでは、NumPy（<code>np.asarray</code> など）も、説明なしに少し使います（第 7 章で、きちんと説明します。ここでは、写すだけでかまいません）</td>
 </tr>
 <tr>
 <td style="text-align: left;">完成形</td>
@@ -8541,7 +8541,7 @@
 </tbody>
 </table>
 <blockquote>
-<p><strong>記号について</strong>: a・b は需要、c・d は供給の係数です。この章では、<strong>価格 p を、グラフの縦軸</strong>に、<strong>数量 q を、横軸</strong>に描きます。式は q = a − b·p（数量を価格で表す）と書き、グラフは p を縦軸にします。向きが逆に見えますが、同じ直線です（第 1 部の全章で、この約束を使います）。</p>
+<p><strong>記号について</strong>: a・b は需要、c・d は供給の係数です。この章では、<strong>価格 p を、グラフの縦軸</strong>に、<strong>数量 q を、横軸</strong>に描きます。式は q = a − b·p（数量を価格で表す）と書き、グラフは p を縦軸にします。向きが逆に見えますが、同じ直線です（第 2 章では、独占の分析のために、価格を数量の式（逆需要 P = a − b·Q）で書きます。切り替えは、第 2 章で、注記します）。</p>
 </blockquote>
 <h3 id="1">前提とする第 1 シリーズの章<a class="headerlink" href="#1" title="Permanent link">&para;</a></h3>
 <p>この連載は、Python の基礎を繰り返しません。次ができれば、読み進められます。</p>
@@ -8568,16 +8568,16 @@
 </tbody>
 </table>
 <p>高校数学の 1 次関数（傾きと切片）と、連立方程式を、一度は学んだ方を想定しています。忘れていても、1.4 節で思い出せます。</p>
-<p>需要・供給・余剰の<strong>経済学としての意味</strong>（調整過程・課税の効果など）は、<a href="../../micro-basics-programming/08-market-equilibrium-and-adjustment/">ミクロ経済学のためのプログラミング（初級）の第 8 章</a> と <a href="../../micro-basics-programming/09-surplus-and-tax/">第 9 章</a> で扱います。この章は、<strong>そこで使う数学</strong>（直線・連立方程式・三角形の面積）を、関数とテストで確かめます。独立して読めるように、この連載は、自分のコードで書き、ほかの連載のコードを import しません。</p>
+<p>需要・供給・余剰の<strong>経済学としての意味</strong>（調整過程・課税の効果など）は、<a href="../../micro-basics-programming/08-market-equilibrium-and-adjustment/">ミクロ経済学のためのプログラミング（初級）の第 8 章</a> と <a href="../../micro-basics-programming/09-surplus-and-tax/">第 9 章</a> で扱います。この章は、<strong>そこで使う数学</strong>（直線・連立方程式・三角形の面積）を、関数とテストで確かめます。<strong>記号の違いに注意</strong>: ミクロ（初級）の連載は、需要を Q = a + s_d·P（傾き s_d は負）と、<strong>符号つきの傾き</strong>で書きます。この連載は、q = a − b·p（b は正）です。式の形は、b = −s_d と読み替えれば、同じです。独立して読めるように、この連載は、自分のコードで書き、ほかの連載のコードを import しません。</p>
 <h2 id="12">1.2 準備<a class="headerlink" href="#12" title="Permanent link">&para;</a></h2>
 <p>サンプルコードは、リポジトリの <code>apps/math-for-economics-programming/python/</code> にあります。uv のインストールは、<a href="../../economics-programming/01-preparation-and-first-test/">第 1 シリーズの第 1 章</a> を参照してください。</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/math-for-economics-programming/python
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter01
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>44 passed
+<div class="highlight"><pre><span></span><code>46 passed
 </code></pre></div>
-<p>自分でコードを書くときは、<code>practice/chapter01/</code> を作って、完成形と同じ名前（<code>market.py</code>・<code>test_market.py</code>）のファイルに書きます。テストは、<code>uv run pytest practice/chapter01</code> で動かします。テストの import は、<code>from lib.chapter01.market import ...</code> を、<strong><code>from practice.chapter01.market import ...</code> に書き換えて</strong>ください（書き換えないと、完成形を読み込んで、最初から通ってしまい、Red になりません）。<strong>完成形（<code>lib/</code> と <code>test/</code>）は、答え合わせ用です。</strong> 自分で書き終えてから、開いてください。</p>
+<p>自分でコードを書くときは、<code>practice/chapter01/</code> を作って、完成形と同じ名前（<code>market.py</code>・<code>test_market.py</code>、図の節も書くなら、<code>plot.py</code>・<code>test_plot.py</code>）のファイルに書きます（図の節を後回しにするなら、<code>plot.py</code> と <code>test_plot.py</code> は要らず、テストは 30 件になります）。テストは、<code>uv run pytest practice/chapter01</code> で動かします。テストの import は、<code>from lib.chapter01.market import ...</code> を、<strong><code>from practice.chapter01.market import ...</code> に書き換えて</strong>ください（書き換えないと、完成形を読み込んで、最初から通ってしまい、Red になりません）。<code>plot.py</code> が <code>market.py</code> を import する行と、下の check スクリプトの import も、同じく <code>from practice.chapter01...</code> に書き換えます。<strong>完成形（<code>lib/</code> と <code>test/</code>）は、答え合わせ用です。</strong> 自分で書き終えてから、開いてください。</p>
 <p>「予想の答え合わせ」のスクリプトは、<code>practice/chapter01/check.py</code> に保存し、アプリのディレクトリ（<code>apps/math-for-economics-programming/python</code>）で <code>uv run python -m practice.chapter01.check</code> と実行します（<code>python practice/...</code> と、ファイルのパスで実行すると、<code>lib</code>（import を書き換えたあとは <code>practice</code>）が見つからず、<code>ModuleNotFoundError</code> になります。<strong><code>-m</code> で、モジュールとして実行</strong>してください。自分のコードを確かめるときは、スクリプトの import を <code>from practice.chapter01...</code> に書き換えます。Windows のシェルで、日本語が文字化けするときは、<code>PYTHONUTF8=1</code> を付けます）。</p>
 <h2 id="13">1.3 予想する<a class="headerlink" href="#13" title="Permanent link">&para;</a></h2>
 <p>次の 4 つの問いに、<strong>紙で、手計算で</strong>答えてください。答えは、この節には書いてありません。「プログラミング」の節の「予想の答え合わせ」で、プログラムを動かして確かめます。</p>
@@ -8743,9 +8743,14 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">price</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">quantity</span>
 
 
+<span class="k">def</span><span class="w"> </span><span class="nf">_require_positive_slope</span><span class="p">(</span><span class="n">slope</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">slope</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">は、正でなければなりません"</span><span class="p">)</span>
+
+
 <span class="k">def</span><span class="w"> </span><span class="nf">_validate_slopes</span><span class="p">(</span><span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">b</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">d</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"需要の傾き b と供給の傾き d は、正でなければなりません"</span><span class="p">)</span>
+    <span class="n">_require_positive_slope</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="s2">"需要の傾き b"</span><span class="p">)</span>
+    <span class="n">_require_positive_slope</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="s2">"供給の傾き d"</span><span class="p">)</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">equilibrium</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Equilibrium</span><span class="p">:</span>
@@ -8757,6 +8762,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"価格も数量も正になる均衡がありません"</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">Equilibrium</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="n">price</span><span class="p">,</span> <span class="n">quantity</span><span class="o">=</span><span class="n">quantity</span><span class="p">)</span>
 </code></pre></div>
+<p><code>Equilibrium</code> の中の <code>@property</code> は、<strong>括弧なしで、計算した値を読む</strong>ための書き方です。<code>result.revenue</code> と書くと、<code>result.price * result.quantity</code> が計算されます（<code>result.revenue()</code> とは、書きません）。<code>@dataclass(frozen=True)</code> は、「価格」と「数量」を持つだけの、書き換えられない入れ物を、短く書くための書き方です（第 1 シリーズの第 2〜4 章の、辞書やタプルの代わりです）。</p>
+<p>傾きの検証は、<code>equilibrium</code> だけでなく、余剰の関数や、費用一定の均衡でも、同じ関数（<code>_require_positive_slope</code>）で行います。<strong>同じ入力の誤りは、どの関数でも、同じように弾く</strong>ためです（0 や負の傾きを、黙って受け入れたり、ゼロ除算にしたりしません）。</p>
 <p>均衡が、正の価格・数量にならない設定（需要の上限が低すぎる、など）は、<code>ValueError</code> にします。<strong>エラーにする条件を、先にテストにする</strong>と、「どんな入力で、このモデルが意味を持たなくなるか」を、自分で確かめることになります。</p>
 <h3 id="_8">余剰<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>三角形の面積は、数学の「底辺 × 高さ ÷ 2」です。生産者余剰は、<strong>供給が、価格 0 のときから正の量</strong>（切片 c が正）の場合も、数えられるように、「供給量を、価格の下限から価格まで足す」形にします（供給曲線が、数量軸の正の値から始まるとき、その分の面積も、余剰に入ります）。</p>
@@ -8782,6 +8789,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">consumer_surplus</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""消費者余剰: 需要曲線の下で、価格の上の三角形の面積。"""</span>
+    <span class="n">_require_positive_slope</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="s2">"需要の傾き b"</span><span class="p">)</span>
     <span class="n">top</span> <span class="o">=</span> <span class="n">a</span> <span class="o">/</span> <span class="n">b</span>
     <span class="k">if</span> <span class="n">price</span> <span class="o">&gt;=</span> <span class="n">top</span><span class="p">:</span>
         <span class="k">return</span> <span class="mi">0</span>
@@ -8790,6 +8798,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 
 <span class="k">def</span><span class="w"> </span><span class="nf">producer_surplus</span><span class="p">(</span><span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""生産者余剰: 価格の下で、供給曲線の上の面積（供給量を足す）。"""</span>
+    <span class="n">_require_positive_slope</span><span class="p">(</span><span class="n">d</span><span class="p">,</span> <span class="s2">"供給の傾き d"</span><span class="p">)</span>
     <span class="n">low</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="o">-</span><span class="n">c</span> <span class="o">/</span> <span class="n">d</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">price</span> <span class="o">&lt;=</span> <span class="n">low</span><span class="p">:</span>
         <span class="k">return</span> <span class="mi">0</span>
@@ -8855,6 +8864,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">constant_cost_equilibrium</span><span class="p">(</span><span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">unit_cost</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Equilibrium</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""単位あたり費用が一定のとき、供給は水平で、価格は費用に等しい。"""</span>
+    <span class="n">_require_positive_slope</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="s2">"需要の傾き b"</span><span class="p">)</span>
     <span class="n">quantity</span> <span class="o">=</span> <span class="n">demand_quantity</span><span class="p">(</span><span class="n">unit_cost</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">unit_cost</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">quantity</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"費用が正で、需要の上限より低いときだけ、均衡があります"</span><span class="p">)</span>
@@ -8896,7 +8906,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <li><strong>4 つ目の問い</strong>: 供給が増える前は、価格 60・数量 70・収入 4200。増えたあとは、価格 40・数量 80・収入 3200 です。数量は 10 増えますが、価格が 3 分の 2 に下がり、<strong>収入は、1000 減ります</strong>（豊作貧乏）。需要が、価格の変化に対して、あまり増えない（非弾力的）からです</li>
 </ul>
 <h3 id="_12">境界のテスト<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
-<p>ここまでのテストに加えて、完成形には、<strong>境界</strong>を確かめるテストがあります。価格が 0 や数量が 0 の均衡、1 未満の小さな値、供給の傾きが 0・1 でないとき、費用が 0 のときです。「d = 1 の例ばかり」「0 や 1 の近くを試していない」と、式の誤りを、テストが見逃します。完成形の「テストの件数」を合わせるため、ここに載せます（読むだけで、かまいません）。</p>
+<p>ここまでのテストに加えて、完成形には、<strong>境界</strong>を確かめるテストがあります。価格が 0 や数量が 0 の均衡、1 未満の小さな値、供給の傾きが 0・1 でないとき、費用が 0 のとき、余剰の関数に、傾きが 0 以下の値を渡したときです。「d = 1 の例ばかり」「0 や 1 の近くを試していない」と、式の誤りを、テストが見逃します。完成形の「テストの件数」を合わせるため、ここに載せます。</p>
 <details class="note">
 <summary>境界のテスト</summary>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_供給の傾きが0なら均衡を求めない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -8938,6 +8948,24 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="k">def</span><span class="w"> </span><span class="nf">test_費用も数量も1未満の均衡を求める</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">constant_cost_equilibrium</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">result</span> <span class="o">==</span> <span class="n">Equilibrium</span><span class="p">(</span><span class="n">price</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">quantity</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_余剰の関数も傾きが正でなければエラー</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">consumer_surplus</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">consumer_surplus</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">120</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">producer_surplus</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">producer_surplus</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_費用一定の均衡も需要の傾きが正でなければエラー</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">constant_cost_equilibrium</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">constant_cost_equilibrium</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <h3 id="_13">図<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
@@ -9153,11 +9181,11 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h3 id="_14">実行結果<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter01
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>44 passed
+<div class="highlight"><pre><span></span><code>46 passed
 </code></pre></div>
 <h2 id="16">1.6 規則で言うと<a class="headerlink" href="#16" title="Permanent link">&para;</a></h2>
 <ol>
-<li><strong>均衡は、連立方程式の解である。</strong> 需要量 ＝ 供給量 を、価格について解く。解が、負（価格も数量も）なら、そのモデルでは、取引が成り立たない</li>
+<li><strong>均衡は、連立方程式の解である。</strong> 需要量 ＝ 供給量 を、価格について解く。価格か数量が 0 以下なら、そのモデルでは、取引が成り立たない</li>
 <li><strong>余剰は、面積である。</strong> 消費者余剰は、需要曲線の下・価格の上、生産者余剰は、価格の下・供給曲線の上。直線なら、三角形（または台形）の面積で、式で求まる</li>
 <li><strong>市場の需要は、個人の需要を、横に足す。</strong> 数量を足す（価格を足すのではない）。個人の需要が 0 になる価格で、折れ点ができる</li>
 </ol>
@@ -9224,6 +9252,16 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </table>
 <details class="note">
 <summary>解答（先に自分で取り組んでから、開いてください）</summary>
+<p>解答の先頭に、次の import を書きます（<code>practice/chapter01/exercises.py</code> などに書くときは、<code>lib</code> を <code>practice</code> に書き換えます）。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter01.market</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">consumer_surplus</span><span class="p">,</span>
+    <span class="n">equilibrium</span><span class="p">,</span>
+    <span class="n">market_demand</span><span class="p">,</span>
+    <span class="n">producer_surplus</span><span class="p">,</span>
+<span class="p">)</span>
+</code></pre></div>
 <p><strong>想起</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_最初の均衡のテスト</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">equilibrium</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -9250,7 +9288,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">people</span> <span class="o">=</span> <span class="p">[(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
     <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">market_demand</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">people</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">70</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]</span>
     <span class="k">assert</span> <span class="n">values</span> <span class="o">==</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
-    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">a</span> <span class="o">&gt;</span> <span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">values</span><span class="p">,</span> <span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">))</span>
 </code></pre></div>
 </details>
 <h2 id="18">1.8 振り返り<a class="headerlink" href="#18" title="Permanent link">&para;</a></h2>
@@ -9267,7 +9305,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <li>豊作貧乏は、需要が非弾力的なときに起きる（収入 ＝ 価格 × 数量が減る）。弾力的なら、収入は増える</li>
 <li>式は、手計算の答えだけでなく、<strong>性質</strong>（均衡で需給が等しい、面積が余剰に等しい）でも、テストできる</li>
 </ul>
-<p>次の章では、<strong>2 次関数</strong>を学びます。独占企業の利潤は、数量の 2 次関数で、頂点が、利潤を最大にする数量です。そこでも、第 1 章の需要曲線（価格 ＝ 100 − 数量 の形）が、また登場します。</p>
+<p>次の章では、<strong>2 次関数</strong>を学びます。独占企業の利潤は、数量の 2 次関数で、頂点が、利潤を最大にする数量です。そこでも、第 1 章と同じ形の（直線の）需要が、また登場します（価格を数量の式で書く、逆需要の形で）。</p>
 
 
 

@@ -8676,9 +8676,9 @@
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/math-for-economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>54 passed
+<div class="highlight"><pre><span></span><code>57 passed
 </code></pre></div>
-<p>自分でコードを書くときは、<code>practice/chapter08/</code> に、完成形と同じ名前のファイル（<code>partial.py</code>・<code>utility.py</code>・<code>plot.py</code>・<code>test_partial.py</code>・<code>test_utility.py</code>・<code>test_plot.py</code>）を作ります。図を後回しにするなら、<code>plot.py</code> と <code>test_plot.py</code> は要らず、テストは 45 件になります。</p>
+<p>自分でコードを書くときは、<code>practice/chapter08/</code> に、完成形と同じ名前のファイル（<code>partial.py</code>・<code>utility.py</code>・<code>plot.py</code>・<code>test_partial.py</code>・<code>test_utility.py</code>・<code>test_plot.py</code>）を作ります。図を後回しにするなら、<code>plot.py</code> と <code>test_plot.py</code> は要らず、テストは 48 件になります。</p>
 <ul>
 <li>テスト・<code>utility.py</code>・<code>plot.py</code>・check スクリプトの import を、<code>from practice.chapter08...</code> に書き換えます（<code>utility.py</code> は <code>partial</code> を、<code>plot.py</code> は <code>utility</code> を import します。書き換えないと、完成形を動かします）</li>
 <li>第 5 章の <code>numerical_derivative</code> と、第 7 章の <code>budget_intercepts</code> などは、自分で写した <code>practice.chapter05</code>・<code>practice.chapter07</code> から import します。写していなければ、<code>lib.chapter05</code>・<code>lib.chapter07</code> のままでかまいません。この章では、それらの実装を再掲しません</li>
@@ -8738,7 +8738,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <td style="text-align: left;">鞍点（ある方向には最大、別の方向には最小）</td>
 </tr>
 <tr>
-<td style="text-align: left;">0</td>
+<td style="text-align: left;">0（数値では、ほぼ 0）</td>
 <td style="text-align: left;">—</td>
 <td style="text-align: left;">この方法では判定できない</td>
 </tr>
@@ -8905,13 +8905,19 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="n">fxx</span><span class="p">,</span> <span class="n">fxy</span><span class="p">,</span> <span class="n">fyy</span>
 
 
-<span class="k">def</span><span class="w"> </span><span class="nf">classify_critical_point_2d</span><span class="p">(</span><span class="n">fxx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fxy</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fyy</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""ヘッセ行列の行列式 D = f_xx·f_yy − f_xy² と f_xx の符号で、停留点を分ける。"""</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">classify_critical_point_2d</span><span class="p">(</span>
+    <span class="n">fxx</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fxy</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">fyy</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">tolerance</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1e-9</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""ヘッセ行列の行列式 D = f_xx·f_yy − f_xy² と f_xx の符号で、停留点を分ける。</span>
+
+<span class="sd">    数値のヘッセ行列では D がちょうど 0 にならないので、成分の大きさに比べて</span>
+<span class="sd">    |D| が tolerance 倍以下なら、0 とみなす（判定できない）。</span>
+<span class="sd">    """</span>
     <span class="n">determinant</span> <span class="o">=</span> <span class="n">fxx</span> <span class="o">*</span> <span class="n">fyy</span> <span class="o">-</span> <span class="n">fxy</span><span class="o">**</span><span class="mi">2</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">determinant</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="n">tolerance</span> <span class="o">*</span> <span class="p">(</span><span class="n">fxx</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">fxy</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">fyy</span><span class="o">**</span><span class="mi">2</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">"undetermined"</span>
     <span class="k">if</span> <span class="n">determinant</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
         <span class="k">return</span> <span class="s2">"saddle"</span>
-    <span class="k">if</span> <span class="n">determinant</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">return</span> <span class="s2">"undetermined"</span>
     <span class="k">return</span> <span class="s2">"maximum"</span> <span class="k">if</span> <span class="n">fxx</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s2">"minimum"</span>
 
 
@@ -8928,6 +8934,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </code></pre></div>
 <ul>
 <li>2 階の偏微分は、f_xx ≈ (f(x + h) − 2f(x) + f(x − h)) ÷ h² です。f_xy は、4 隅の値の組み合わせで近似します。刻み幅 h を 10⁻⁵ にすると、h² = 10⁻¹⁰ で割るので、丸めの誤差が大きくなります。既定は 10⁻³ にしました（2 次関数なら、打ち切りの誤差は 0）</li>
+<li>数値のヘッセ行列では、行列式がちょうど 0 にならず、10⁻¹⁵ ほどの丸め誤差が残ります（−(x + y)² の (1, −1) など）。そこで、成分の 2 乗和の <code>tolerance</code> 倍（既定 10⁻⁹）以下の |D| を、0 とみなします（境界のテストを参照）</li>
 <li>停留点は、2 つの 1 次方程式を、<strong>クラメルの公式</strong>で解きます。係数が対称でない例（f = 2x² + xy + 3y² − 9x − 13y）もテストにして、x と y の式の取り違えを防ぎます（境界のテストを参照）</li>
 </ul>
 <h3 id="red_1">Red: 効用関数のテスト<a class="headerlink" href="#red_1" title="Permanent link">&para;</a></h3>
@@ -9037,8 +9044,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">cobb_douglas_indifference_y</span><span class="p">(</span><span class="n">level</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">share</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">"""無差別曲線 x^a·y^(1−a) = U の上で、x のときの y = (U ÷ x^a)^(1 ÷ (1 − a))。"""</span>
     <span class="n">_check_share</span><span class="p">(</span><span class="n">share</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"x が 0 以下では、無差別曲線の y が決まりません"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">x</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">level</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"x が 0 以下か、効用水準が負では、無差別曲線が決まりません"</span><span class="p">)</span>
     <span class="k">return</span> <span class="nb">float</span><span class="p">((</span><span class="n">level</span> <span class="o">/</span> <span class="n">x</span><span class="o">**</span><span class="n">share</span><span class="p">)</span> <span class="o">**</span> <span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">share</span><span class="p">)))</span>
 </code></pre></div>
 <h3 id="_12">効用最大化: 解析解とラグランジュ乗数<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
@@ -9181,6 +9188,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">prices</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">income</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">weight</span><span class="p">:</span> <span class="nb">float</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">"""MRS = b ÷ (2√x) = p_x ÷ p_y の x。所得で買えなければ、y = 0 の端点解。"""</span>
+    <span class="k">if</span> <span class="n">weight</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"重み b は、正でなければなりません"</span><span class="p">)</span>
     <span class="n">x_max</span><span class="p">,</span> <span class="n">y_max</span> <span class="o">=</span> <span class="n">_two_good_intercepts</span><span class="p">(</span><span class="n">prices</span><span class="p">,</span> <span class="n">income</span><span class="p">)</span>
     <span class="n">x</span> <span class="o">=</span> <span class="p">(</span><span class="n">weight</span> <span class="o">*</span> <span class="n">prices</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">prices</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span> <span class="o">**</span> <span class="mi">2</span>
     <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="n">x_max</span><span class="p">:</span>
@@ -9357,7 +9366,7 @@ maximum
 <li><strong>5 つ目の問い</strong>（発展）: 1 次同次なので、x·U_x + y·U_y = U = √250 ≈ 15.81 です（最後から 2 行目の出力）。最後の行は、<code>euler_degree_of_homogeneity</code> が返す U との比 1 です。<code>functools.partial</code> は、<code>share=0.5</code> を固定した 2 変数の関数を作ります（<code>lambda</code> を変数に入れる書き方の代わり）</li>
 </ul>
 <h3 id="_18">境界のテスト<a class="headerlink" href="#_18" title="Permanent link">&para;</a></h3>
-<p>完成形には、本文に載せなかったテストがあります。係数が対称でない 2 次関数、2 階の偏微分が 0 &lt; |f_xx| &lt; 1、行列式が 0（判定できない・停留点が決まらない）、a = 0.3 の需要、数量 0、a が 0〜1 の外、負の数量、所得 0・負の所得・2 財でない予算・正でない価格、所得がちょうど足りる端点、2 点だけの格子です。テストの件数を合わせるため、ここに全件載せます。</p>
+<p>完成形には、本文に載せなかったテストがあります。係数が対称でない 2 次関数、2 階の偏微分が 0 &lt; |f_xx| &lt; 1、行列式が 0 か、数値でほぼ 0（判定できない・停留点が決まらない）、a = 0.3 の需要、数量 0、a が 0〜1 の外、負の数量、所得 0・負の所得・2 財でない予算・正でない価格、所得がちょうど足りる端点、2 点だけの格子、負の効用水準、正でない重みです。テストの件数を合わせるため、ここに全件載せます。</p>
 <details class="note">
 <summary>境界のテスト</summary>
 <p><code>test_partial.py</code> に足すテストです。</p>
@@ -9376,6 +9385,18 @@ maximum
 <span class="k">def</span><span class="w"> </span><span class="nf">test_ヘッセ行列の行列式が0なら判定できない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">classify_critical_point_2d</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"undetermined"</span>
     <span class="k">assert</span> <span class="n">classify_critical_point_2d</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"undetermined"</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_negative_square_of_sum</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">"""f = −(x + y)²。ヘッセ行列は (−2, −2, −2) で、行列式は 0。"""</span>
+    <span class="k">return</span> <span class="o">-</span><span class="p">((</span><span class="n">x</span> <span class="o">+</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_数値のヘッセ行列で行列式がほぼ0なら判定できない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># 差分の丸め誤差で、行列式は ちょうど 0 にならない（1e-15 ほど）</span>
+    <span class="n">hessian</span> <span class="o">=</span> <span class="n">numerical_hessian_2d</span><span class="p">(</span><span class="n">_negative_square_of_sum</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">classify_critical_point_2d</span><span class="p">(</span><span class="o">*</span><span class="n">hessian</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"undetermined"</span>
+    <span class="k">assert</span> <span class="n">classify_critical_point_2d</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">1e-12</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"undetermined"</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">test_行列式が0の2次関数には停留点が1つに決まらない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -9445,6 +9466,18 @@ maximum
     <span class="k">assert</span> <span class="n">budget_line_bundles</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">==</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span>
     <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
         <span class="n">budget_line_bundles</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_負の効用水準の無差別曲線は決まらない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">cobb_douglas_indifference_y</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
+    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+        <span class="n">cobb_douglas_indifference_y</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_準線形効用の重みが正でなければ需要は決まらない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">weight</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">]:</span>
+        <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+            <span class="n">quasilinear_demand</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="mi">10</span><span class="p">,</span> <span class="n">weight</span><span class="p">)</span>
 </code></pre></div>
 </details>
 <h3 id="_19">図<a class="headerlink" href="#_19" title="Permanent link">&para;</a></h3>
@@ -9684,7 +9717,7 @@ maximum
 <h3 id="_20">実行結果<a class="headerlink" href="#_20" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter08
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>54 passed
+<div class="highlight"><pre><span></span><code>57 passed
 </code></pre></div>
 <h2 id="86">8.6 規則で言うと<a class="headerlink" href="#86" title="Permanent link">&para;</a></h2>
 <ol>
@@ -9746,7 +9779,7 @@ maximum
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;">費用 C(q) = q² + 4q + 25 の企業が、価格 24 で売るときの、利潤を最大にする数量と利潤。平均費用が最小になる数量と、その平均費用（第 5 章の関数を使う。ヒント: 費用は <code>Polynomial</code> に<strong>次数の低い順</strong>（定数項、1 次、2 次）で係数を渡す。<code>profit_maximizing_quantity(price, cost)</code>・<code>competitive_profit(price, cost, quantity)</code>・<code>minimum_average_cost(cost)</code>（数量と平均費用の組を返す）・<code>marginal_cost(cost, quantity)</code>）</td>
+<td style="text-align: left;">費用 C(q) = q² + 4q + 25 の企業が、価格 24 で売るときの、利潤を最大にする数量と利潤。平均費用が最小になる数量と、その平均費用（第 5 章の関数を使う。この課題だけ、関数の名前のヒントがあります: <code>Polynomial</code>（係数は次数の低い順）・<code>profit_maximizing_quantity</code>・<code>competitive_profit</code>・<code>minimum_average_cost</code>・<code>marginal_cost</code>）</td>
 <td style="text-align: left;">10 分</td>
 </tr>
 <tr>
@@ -9876,7 +9909,7 @@ maximum
     <span class="k">assert</span> <span class="n">numerical_partial_x</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">cobb_douglas_demand</span><span class="p">([</span><span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span> <span class="mi">100</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">((</span><span class="mi">25</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 </code></pre></div>
-<p><strong>生成</strong>: 解析解を、効用関数に入れるだけです。置き場所は、どこでもかまいません（例: <code>practice/chapter08/exercises.py</code>）。コブ・ダグラス型は 1 次同次なので、所得を 2 倍にすると、x・y がともに 2 倍になり、最大の効用も 2 倍です。</p>
+<p><strong>生成</strong>: 解析解を、効用関数に入れるだけです。置き場所は、どこでもかまいません（例: 関数を <code>practice/chapter08/exercises.py</code> に、テストを <code>test_exercises.py</code> に書き、<code>from practice.chapter08.exercises import cobb_douglas_max_utility</code> で import する）。コブ・ダグラス型は 1 次同次なので、所得を 2 倍にすると、x・y がともに 2 倍になり、最大の効用も 2 倍です。</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">cobb_douglas_max_utility</span><span class="p">(</span><span class="n">prices</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">income</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">cobb_douglas_utility</span><span class="p">(</span><span class="o">*</span><span class="n">cobb_douglas_demand</span><span class="p">(</span><span class="n">prices</span><span class="p">,</span> <span class="n">income</span><span class="p">,</span> <span class="n">a</span><span class="p">),</span> <span class="n">a</span><span class="p">)</span>
 </code></pre></div>
@@ -9900,10 +9933,8 @@ maximum
 </details>
 <details class="note">
 <summary>解答: 第 2 部の到達チェック（先に自分で取り組んでから、開いてください）</summary>
-<p>関数（<code>checkpoint_point_elasticity</code>・<code>checkpoint_cobb_douglas_optimum</code>）は <code>practice/chapter08/checkpoint.py</code> に、テストは <code>practice/chapter08/test_checkpoint.py</code> に書きます。<code>checkpoint.py</code> の先頭には <code>from collections.abc import Callable</code> と、第 5 章の <code>numerical_derivative</code> の import を書きます。<code>test_checkpoint.py</code> の先頭の import は、次のとおりです（写したものを使うなら、<code>lib</code> を <code>practice</code> に書き換えます）。自分で書いた関数は、<code>from practice.chapter08.checkpoint import checkpoint_cobb_douglas_optimum, checkpoint_point_elasticity</code> で import します（この行は、記事の検査では実行しないので、コードブロックの外に書いています）。</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<p>関数（<code>checkpoint_point_elasticity</code>・<code>checkpoint_cobb_douglas_optimum</code>）は <code>practice/chapter08/checkpoint.py</code> に、テストは <code>practice/chapter08/test_checkpoint.py</code> に書きます。<code>checkpoint.py</code> の import は、弾力性の解答の直前に置きます。<code>test_checkpoint.py</code> の先頭の import は、次のとおりです（写したものを使うなら、<code>lib</code> を <code>practice</code> に書き換えます）。自分で書いた関数は、<code>from practice.chapter08.checkpoint import checkpoint_cobb_douglas_optimum, checkpoint_point_elasticity</code> で import します（この行は、記事の検査では実行しないので、コードブロックの外に書いています）。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter05.cost</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">competitive_profit</span><span class="p">,</span>
@@ -9911,11 +9942,7 @@ maximum
     <span class="n">minimum_average_cost</span><span class="p">,</span>
     <span class="n">profit_maximizing_quantity</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter05.derivative</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">Polynomial</span><span class="p">,</span>
-    <span class="n">classify_stationary_point</span><span class="p">,</span>
-    <span class="n">numerical_derivative</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter05.derivative</span><span class="w"> </span><span class="kn">import</span> <span class="n">Polynomial</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter07.budget</span><span class="w"> </span><span class="kn">import</span> <span class="n">budget_intercepts</span><span class="p">,</span> <span class="n">budget_status</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter07.vectors</span><span class="w"> </span><span class="kn">import</span> <span class="n">vector_dot</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter08.utility</span><span class="w"> </span><span class="kn">import</span> <span class="n">best_bundle_on_budget_line</span><span class="p">,</span> <span class="n">numerical_mrs</span>
@@ -9930,7 +9957,14 @@ maximum
     <span class="k">assert</span> <span class="n">marginal_cost</span><span class="p">(</span><span class="n">cost</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span>
 </code></pre></div>
 <p><strong>弾力性</strong>: 点弾力性は −(dq/dp)·(p ÷ q) です。価格 10 では 3 × 10 ÷ 60 = 0.5（非弾力的）、価格 20 では 3 × 20 ÷ 30 = 2（弾力的）です。弾力的な価格 20 で 1 下げると、収入は 600 から 19 × 33 = 627 に増えます。非弾力的な価格 10 で 1 下げると、600 から 9 × 63 = 567 に減ります。</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">checkpoint_point_elasticity</span><span class="p">(</span><span class="n">demand</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span> <span class="n">price</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<p><code>checkpoint.py</code> の import と関数です。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter05.derivative</span><span class="w"> </span><span class="kn">import</span> <span class="n">numerical_derivative</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">checkpoint_point_elasticity</span><span class="p">(</span>
+    <span class="n">demand</span><span class="p">:</span> <span class="n">Callable</span><span class="p">[[</span><span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">],</span> <span class="n">price</span><span class="p">:</span> <span class="nb">float</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
     <span class="k">return</span> <span class="o">-</span><span class="n">numerical_derivative</span><span class="p">(</span><span class="n">demand</span><span class="p">,</span> <span class="n">price</span><span class="p">)</span> <span class="o">*</span> <span class="n">price</span> <span class="o">/</span> <span class="n">demand</span><span class="p">(</span><span class="n">price</span><span class="p">)</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_到達チェックの弾力性</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
