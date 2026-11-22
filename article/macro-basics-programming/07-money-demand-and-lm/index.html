@@ -3561,6 +3561,17 @@
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -3586,7 +3597,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8351,7 +8362,11 @@ LM のシフト幅: 100.0
 </details>
 <p>LM 曲線の図（<code>plot_lm_curves</code>）は、通常の LM 曲線、実質貨幣供給が増えたあとの LM 曲線、わなのある LM 曲線の、3 本を描きます。テストと実装は、<code>test/chapter07/test_plot.py</code> と <code>lib/chapter07/plot.py</code> を見てください。</p>
 <p><img alt="LM 曲線。実質貨幣供給が 250 から 300 に増えると、LM 曲線は右にシフトする（破線は、利子率の下限 2.0 のある LM 曲線で、下限で水平になる）" src="../images/ch07-lm-curve.png" /></p>
-<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_11">動かして見る<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>実質貨幣供給 M/P を 250 から 400 へ増やします。LM 曲線が下へ動き、流動性のわなのある LM 曲線（破線）は、利子率の下限で、水平になります。</p>
+<p><img alt="実質貨幣供給が増えると、LM 曲線が下へ動き、わなの下限に行き当たる（アニメーション）" src="../images/ch07-lm-shift.gif" /></p>
+<p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
+<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter07
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>39 passed
@@ -8390,7 +8405,7 @@ LM のシフト幅: 100.0
 </tr>
 </tbody>
 </table>
-<h3 id="_12">このモデルが成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">このモデルが成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>貨幣需要は、線形とは限りません。</strong> L = k·Y − h·r は、近似です。実際の貨幣需要は、k と h が一定ではありません</li>
 <li><strong>LM 曲線は、物価 P を、一定と見ています。</strong> P が動くと、実質貨幣供給 M/P が動いて、LM 曲線がシフトします（第 10 章の AD-AS 分析）</li>

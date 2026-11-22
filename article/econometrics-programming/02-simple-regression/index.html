@@ -4729,6 +4729,17 @@
   <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -4754,7 +4765,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
+  <a href="#_13" class="md-nav__link">
     <span class="md-ellipsis">
       
         この推定が成り立たない場面
@@ -8264,7 +8275,11 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
-<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_11">動かして見る<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<p>x の端にある 1 点を、直線の上から、下へ動かします。最小二乗法の直線（橙）は、この 1 点に引きずられ、傾きが正から負へ変わります。残差の二乗を最小にするので、離れた点ほど、強く効きます。</p>
+<p><img alt="1 点を動かすと、回帰直線が引きずられる（アニメーション）" src="../images/ch02-outlier.gif" /></p>
+<p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
+<h3 id="_12">実行結果<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter02
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>21 passed
@@ -8298,7 +8313,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_12">この推定が成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
+<h3 id="_13">この推定が成り立たない場面<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>不偏性は、誤差項が x と無関係なときに成り立ちます。</strong> 欠落した変数が x と関係していると、平均しても、真の値に近づきません（第 11 章）</li>
 <li><strong>標準誤差の式は、誤差のばらつきが、x によらず一定であることを前提にします。</strong> ばらつきが x で変わると、この標準誤差は、不正確になります（第 8 章）</li>

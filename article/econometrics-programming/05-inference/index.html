@@ -4834,6 +4834,17 @@
   <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -4859,7 +4870,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
+  <a href="#_12" class="md-nav__link">
     <span class="md-ellipsis">
       
         この推論が成り立たない場面
@@ -8276,7 +8287,11 @@ x1     0.3745  4.0255
     <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fig</span>
 </code></pre></div>
-<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_10">動かして見る<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<p>標本を取り直して作った信頼区間を、1 本ずつ足します。多くは、真の値（破線）を含みます（青）。含まない区間（赤）は、95% の水準では、およそ 20 本に 1 本です。</p>
+<p><img alt="信頼区間を 1 本ずつ足す。真の値を外した区間は赤（アニメーション）" src="../images/ch05-confidence-intervals.gif" /></p>
+<p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
+<h3 id="_11">実行結果<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter05
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>23 passed
@@ -8310,7 +8325,7 @@ x1     0.3745  4.0255
 </tr>
 </tbody>
 </table>
-<h3 id="_11">この推論が成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
+<h3 id="_12">この推論が成り立たない場面<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>t 分布は、誤差が正規分布のときに、正確に成り立ちます。</strong> 標本が大きければ、近似として使えます（第 6 章）</li>
 <li><strong>標準誤差が不正確だと、すべてが崩れます。</strong> 誤差の分散が一定でないとき（第 8 章）、同じ個人を何度も調べたとき（第 10 章）は、標準誤差を直す必要があります</li>

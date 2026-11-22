@@ -2097,6 +2097,17 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -2122,7 +2133,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8203,7 +8214,11 @@ uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </sp
 </code></pre></div>
 <p>この記事の図は、<code>lib/</code> の関数から、コマンド 1 つでまとめて作り直せます（<code>article_tools/render_figures.py</code>）。モデルの係数や関数を変えて、図のデータが変わったときに、記事の図が古いまま残らないように、検査（<code>tox -e articles</code>）でも確かめています。</p>
 <p><img alt="需要曲線・供給曲線・均衡点" src="../images/ch07-market.png" /></p>
-<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_9">動かして見る<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>税額を 0 から 15 へ上げます。破線の供給曲線（供給 + 税）が上へ動き、税収（緑）と<strong>死荷重（赤）</strong>が現れます。税額を 2 倍にすると、死荷重は 4 倍になります（税額の 2 乗に比例します）。</p>
+<p><img alt="税額を上げると、税収と死荷重が現れる（アニメーション）" src="../images/ch07-tax-wedge.gif" /></p>
+<p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
+<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/economics-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter07
 </code></pre></div>
@@ -8239,7 +8254,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tbody>
 </table>
 <p>死荷重は、税額の 2 乗に比例して増えます。税額 5 のとき 15 ですが、税額を 2 倍の 10 にすると、取引量は 48 になり、死荷重は 60（4 倍）になります。</p>
-<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <p>この章の余剰は、需要曲線と供給曲線が直線であることを使った、三角形の面積です。曲線の形が直線でなければ、面積は積分で求めます。また、課税で買い手の行動が変わらない（需要が完全に非弾力的）なら、死荷重は 0 になります。需要が完全に非弾力的な場面では、この章の式（b &gt; 0）が成り立ちません。</p>
 <h2 id="76">7.6 練習問題<a class="headerlink" href="#76" title="Permanent link">&para;</a></h2>
 <table>

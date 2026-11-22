@@ -4393,6 +4393,17 @@
   <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
+        動かして見る
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
         実行結果
       
     </span>
@@ -4418,7 +4429,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
+  <a href="#_11" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -8447,7 +8458,11 @@ output focus
 <li>2 つ目の問い: 次の期のインフレ率の乖離は、ショックの期の <strong>0.8 倍</strong>（0.64 ÷ 0.8）です。これは、φ = 0.8 と一致します。乖離は、毎期、φ 倍になります。</li>
 <li>3 つ目の問い: 産出量を重視すると（c = 0.5、d = 1.5）、産出量の落ち込みは <strong>−0.19</strong>（99.8095）と<strong>小さく</strong>なります。その代わり、インフレ率の上昇は <strong>+0.95</strong>（2.9524）と<strong>大きく</strong>、次の期の乖離も 0.907（基本は 0.64）と、<strong>長く続きます</strong>。φ が 0.9524 と、1 に近くなるためです。</li>
 </ul>
-<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_9">動かして見る<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<p>MP 曲線の、インフレへの反応 c を、0 から 3 へ上げ、物価ショックへの反応を見ます。中央銀行がインフレに強く反応するほど（φ が小さいほど）、<strong>インフレ率は速く元に戻り</strong>ますが、産出量の落ち込みは深くなります。</p>
+<p><img alt="金融政策の反応を強めると、インフレは速く戻り、産出量の落ち込みは深くなる（アニメーション）" src="../images/ch15-impulse-policy.gif" /></p>
+<p>このアニメーションは、<code>lib/animations/</code> の関数で作っています（<code>uv run python -m tools.render_animations</code> で、GIF を書き出します）。<strong>写経は、不要</strong>です。動きを見て、式と図の対応を、確かめてください。</p>
+<h3 id="_10">実行結果<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>apps/macro-programming/python
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter15
 </code></pre></div>
@@ -8490,7 +8505,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 </tbody>
 </table>
-<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
+<h3 id="_11">このモデルが成り立たない場面<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
 <ul>
 <li><strong>期待が、後ろ向きです。</strong> 「2 期後に利下げする」と、中央銀行が予告しても、このモデルでは、今期の変数は動きません（係数が固定されている）。将来を見据えた行動（フォワード・ルッキング）が、入っていません</li>
 <li><strong>ルーカス批判に、対応できません。</strong> 係数を推定して、政策変更の効果を予測しても、政策が変われば、家計と企業の行動も変わり、係数が変わります。モデルが、最適化行動に基づいていないためです（次の章以降の RBC モデルは、最適化から出発します）</li>
