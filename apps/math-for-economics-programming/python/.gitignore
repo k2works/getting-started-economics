@@ -1,0 +1,14 @@
+.venv/
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# 読者が自分のコードを書く場所（README.md だけを管理する）
+practice/*
+!practice/README.md
+!practice/conftest.py
