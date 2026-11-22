@@ -24,13 +24,13 @@ def simple_regression_coefficients(
     """単回帰 y = β₀ + β₁x の係数。β₁ = x と y の共分散 ÷ x の分散、β₀ = ȳ − β₁x̄。"""
     if len(xs) < 2:
         raise ValueError("回帰には、2 点以上のデータが要ります")
+    # 平均の丸め誤差で、偏差の 2 乗和は 0 にならないことがあるので、値そのものを比べる
+    if max(xs) == min(xs):
+        raise ValueError("x がすべて同じ値では、傾きが決まりません")
     x_bar, y_bar = mean_by_dot(xs), mean_by_dot(ys)
     dx = [x - x_bar for x in xs]
     dy = [y - y_bar for y in ys]
-    sxx = vector_dot(dx, dx)
-    if sxx == 0:
-        raise ValueError("x がすべて同じ値では、傾きが決まりません")
-    slope = vector_dot(dx, dy) / sxx
+    slope = vector_dot(dx, dy) / vector_dot(dx, dx)
     return y_bar - slope * x_bar, slope
 
 
@@ -66,12 +66,11 @@ def coefficient_of_determination(
     ys: Sequence[float], residuals: Sequence[float]
 ) -> float:
     """決定係数 R² = 1 − e·e ÷ (y − ȳ)·(y − ȳ)。"""
+    if max(ys) == min(ys):
+        raise ValueError("y がすべて同じ値では、決定係数が決まりません")
     y_bar = mean_by_dot(ys)
     deviations = [y - y_bar for y in ys]
-    total = vector_dot(deviations, deviations)
-    if total == 0:
-        raise ValueError("y がすべて同じ値では、決定係数が決まりません")
-    return 1 - vector_dot(residuals, residuals) / total
+    return 1 - vector_dot(residuals, residuals) / vector_dot(deviations, deviations)
 
 
 def regression_projection_matrix(design: Matrix) -> list[list[float]]:

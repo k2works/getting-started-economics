@@ -79,6 +79,18 @@ def test_ヘッセ行列の行列式が0なら判定できない() -> None:
     assert classify_critical_point_2d(2, -2, 2) == "undetermined"
 
 
+def _negative_square_of_sum(x: float, y: float) -> float:
+    """f = −(x + y)²。ヘッセ行列は (−2, −2, −2) で、行列式は 0。"""
+    return -((x + y) ** 2)
+
+
+def test_数値のヘッセ行列で行列式がほぼ0なら判定できない() -> None:
+    # 差分の丸め誤差で、行列式は ちょうど 0 にならない（1e-15 ほど）
+    hessian = numerical_hessian_2d(_negative_square_of_sum, 1, -1)
+    assert classify_critical_point_2d(*hessian) == "undetermined"
+    assert classify_critical_point_2d(-2, -2 + 1e-12, -2) == "undetermined"
+
+
 def test_行列式が0の2次関数には停留点が1つに決まらない() -> None:
     with pytest.raises(ValueError):
         quadratic_2d_critical_point(1, 2, 1, -4, -4)

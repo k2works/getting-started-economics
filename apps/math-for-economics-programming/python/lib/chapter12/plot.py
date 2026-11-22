@@ -1,15 +1,33 @@
-"""資本の収束と、貯蓄率と定常状態の消費（黄金律）の図。"""
+"""1 次の漸化式の経路、資本の収束と、貯蓄率と定常状態の消費（黄金律）の図。"""
 
 from collections.abc import Sequence
 
 import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 
+from lib.chapter04.sequence import iterate_map
 from lib.chapter12.solow import (
     solow_capital_path,
     solow_steady_state_capital,
     solow_steady_state_consumption,
 )
+
+
+def plot_linear_recurrence_paths(
+    slopes: Sequence[float], b: float, start: float, periods: int
+) -> Figure:
+    """x(t + 1) = a·x(t) + b を、a ごとに、x(0) = start から反復した経路を描く。"""
+    if not slopes:
+        raise ValueError("a が 1 つ以上必要です")
+    fig, ax = plt.subplots()
+    for a in slopes:
+        path = iterate_map(a, b, start, periods)
+        ax.plot(range(periods + 1), path, label=f"a = {a:g}")
+    ax.set_xlabel("Period t")
+    ax.set_ylabel("x(t)")
+    ax.legend(fontsize="x-small")
+    plt.close(fig)
+    return fig
 
 
 def plot_solow_convergence(

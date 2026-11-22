@@ -3,7 +3,7 @@
 from collections.abc import Callable
 from fractions import Fraction
 
-from lib.chapter11.integral import midpoint_rule_integral
+from lib.chapter11.integral import DEFAULT_PIECES, midpoint_rule_integral
 
 
 def _require_interval(low: float, high: float) -> None:
@@ -28,14 +28,17 @@ def continuous_expectation(
     density: Callable[[float], float],
     low: float,
     high: float,
-    pieces: int = 10_000,
+    pieces: int = DEFAULT_PIECES,
 ) -> float:
     """E[g(X)] = ∫ g(x)·f(x) dx。離散の Σ g(x)·P(x) の、和を積分に替えたもの。"""
     return midpoint_rule_integral(lambda x: value(x) * density(x), low, high, pieces)
 
 
 def continuous_expected_value(
-    density: Callable[[float], float], low: float, high: float, pieces: int = 10_000
+    density: Callable[[float], float],
+    low: float,
+    high: float,
+    pieces: int = DEFAULT_PIECES,
 ) -> float:
     """連続確率変数の期待値 E[X] = ∫ x·f(x) dx。"""
     return continuous_expectation(lambda x: x, density, low, high, pieces)

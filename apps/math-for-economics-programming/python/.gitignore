@@ -12,3 +12,6 @@ htmlcov/
 practice/*
 !practice/README.md
 !practice/conftest.py
+
+# エージェントのメモリ（コミットしない。リポジトリ直下の .claude/agent-memory を使う）
+.claude/

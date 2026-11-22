@@ -69,6 +69,9 @@ def test_連続の流れは期末払いの年金より早く受け取るので�
 def test_割引率0なら流れの合計で期間は0以上で価格の区間は下から上() -> None:
     assert continuous_present_value(10, 0, 20) == 200
     assert continuous_present_value(10, 0.05, 0) == 0
+    # 割引率がごく小さくても、桁落ちせず、流れの合計に近い
+    for rate in (1e-13, 1e-17):
+        assert continuous_present_value(100, rate, 10) == pytest.approx(1000, rel=1e-9)
     with pytest.raises(ValueError):
         continuous_present_value(10, 0.05, -1)
     with pytest.raises(ValueError):

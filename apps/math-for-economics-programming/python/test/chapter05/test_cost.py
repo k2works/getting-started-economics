@@ -124,3 +124,13 @@ def test_平均費用の最小は固定費用と2乗の係数が正の2次の費
     for cost in [Polynomial((0, 10, 1)), Polynomial((100, 10, -1))]:
         with pytest.raises(ValueError, match="正でなければ"):
             minimum_average_cost(cost)
+
+
+def test_価格が上がると最適な数量が増える() -> None:
+    # 供給曲線は MC の右上がりの部分。MC = 2q + 10 なら q = (P − 10) ÷ 2
+    prices = [12, 20, 35, 50, 80]
+    quantities = [profit_maximizing_quantity(p, COST) for p in prices]
+    assert quantities == pytest.approx([(p - 10) / 2 for p in prices])
+    for cost in [COST_HALF, COST_CUBIC]:
+        supply = [profit_maximizing_quantity(p, cost) for p in prices]
+        assert all(q1 < q2 for q1, q2 in zip(supply, supply[1:], strict=False))

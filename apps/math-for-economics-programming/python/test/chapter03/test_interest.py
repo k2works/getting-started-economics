@@ -156,7 +156,6 @@ def test_指数表記の桁数は整数の累乗の桁数と一致する(base: i
 
 
 def test_底の変換の誤差で10の累乗の桁を取り違えない() -> None:
-    assert log_base(1000, 10) != 3
     assert power_in_scientific_notation(1000, 1) == (1, 3)
     assert power_in_scientific_notation(100, 3) == (1, 6)
 

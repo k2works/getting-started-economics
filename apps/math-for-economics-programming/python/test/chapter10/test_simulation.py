@@ -1,3 +1,5 @@
+import math
+
 import pytest
 
 from lib.chapter10.expectation import random_variable_distribution
@@ -27,16 +29,15 @@ def test_相対頻度はとりうる和ごとに並び合計は1() -> None:
     assert list(three) == list(range(3, 13))
 
 
-def test_回数を増やすほど相対頻度は確率に近づく() -> None:
+def test_回数を増やすほど相対頻度と確率のずれの許容幅が狭まる() -> None:
     exact = {7: 1 / 6, 2: 1 / 36, 12: 1 / 36}
-
-    def worst_error(trials: int) -> float:
+    for trials in (100, 10_000, 100_000):
         frequencies = simulate_dice_sum_frequencies(trials, seed=3)
-        return max(abs(frequencies[s] - p) for s, p in exact.items())
-
-    errors = [worst_error(n) for n in (100, 10_000, 100_000)]
-    assert errors[0] > errors[1] > errors[2]
-    assert errors[2] < 0.005
+        for total, p in exact.items():
+            # 標準誤差 √(p(1 − p) ÷ n) の 4 倍以内。回数を 100 倍にすると幅は 1/10
+            standard_error = math.sqrt(p * (1 - p) / trials)
+            assert abs(frequencies[total] - p) < 4 * standard_error
+    assert abs(frequencies[7] - 1 / 6) < 0.005
 
 
 def test_種が同じなら結果も同じ() -> None:

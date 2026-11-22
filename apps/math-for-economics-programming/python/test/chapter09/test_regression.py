@@ -212,3 +212,11 @@ def test_誤差は同じ種の正規乱数を式の値に足したもの() -> No
     noise = np.random.default_rng(5).normal(0, 2, size=5)
     errors = [y - f for y, f in zip(ys, fitted, strict=True)]
     assert errors == pytest.approx(noise.tolist())
+
+
+def test_丸め誤差で平均がずれてもxやyがすべて同じなら決まらない() -> None:
+    # 0.1 × 3 ÷ 3 は 0.10000000000000002 で、偏差の 2 乗和が 0 にならない
+    with pytest.raises(ValueError):
+        simple_regression_coefficients([0.1] * 3, [1, 2, 3])
+    with pytest.raises(ValueError):
+        coefficient_of_determination([0.1] * 3, [0, 0, 0])

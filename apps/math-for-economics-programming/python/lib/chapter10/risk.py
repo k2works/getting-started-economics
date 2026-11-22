@@ -56,13 +56,14 @@ def classify_risk_attitude[V: int | Fraction](
 
 
 def absolute_risk_aversion(utility: UtilityFunction, wealth: float) -> float:
-    """アロー・プラットの絶対的危険回避度 −u''(w) ÷ u'(w)（数値微分を 2 回使う）。"""
-    first = numerical_derivative(utility, wealth)
-    if math.isclose(first, 0, abs_tol=1e-12):
+    """アロー・プラットの絶対的危険回避度 −u''(w) ÷ u'(w)（数値微分で近似する）。"""
+    # 刻み幅は、富の大きさに合わせる（固定だと、富が大きいとき桁が落ちる）
+    step = 1e-4 * max(1.0, abs(wealth))
+    first = numerical_derivative(utility, wealth, step)
+    if first == 0:
         raise ValueError("限界効用が 0 の点では、危険回避度は決まりません")
-    second = numerical_derivative(
-        lambda w: numerical_derivative(utility, w), wealth, step=1e-3
-    )
+    around = utility(wealth + step) + utility(wealth - step)
+    second = (around - 2 * utility(wealth)) / step**2
     return -second / first
 
 

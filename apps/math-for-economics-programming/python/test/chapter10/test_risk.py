@@ -135,6 +135,16 @@ def test_相対的危険回避度は富かける絶対的危険回避度() -> No
     )
 
 
+def test_富が大きくても危険回避度は正しい() -> None:
+    # 刻み幅が固定だと、富 1 万で ln の相対的危険回避度が 0 になっていた
+    for wealth in (1e4, 1e6):
+        assert relative_risk_aversion(math.log, wealth) == pytest.approx(1, rel=1e-3)
+        expected = 1 / (2 * wealth)
+        assert absolute_risk_aversion(math.sqrt, wealth) == pytest.approx(
+            expected, rel=1e-3
+        )
+
+
 def test_小さなリスクの危険プレミアムは2分の1かける危険回避度かける分散() -> None:
     small = {90: HALF, 110: HALF}
     approximation = (

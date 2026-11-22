@@ -29,15 +29,19 @@ def quadratic_discriminant(a: float, b: float, c: float) -> float:
 
 
 def quadratic_roots(a: float, b: float, c: float) -> tuple[float, ...]:
-    """解の公式で、a·x² + b·x + c = 0 の実数解を、小さい順に返す。"""
+    """解の公式で、a·x² + b·x + c = 0 の実数解を、小さい順に返す。
+
+    −b と √D を、同じ符号どうしで足して 1 つ目の解を求め、もう 1 つは
+    解の積 c ÷ a から求める（近い数の引き算で、桁が落ちるのを避ける）。
+    """
     _require_quadratic(a)
     d = quadratic_discriminant(a, b, c)
     if d < 0:
         return ()
     if d == 0:
         return (-b / (2 * a),)
-    root = math.sqrt(d)
-    return tuple(sorted([(-b - root) / (2 * a), (-b + root) / (2 * a)]))
+    q = -(b + math.copysign(math.sqrt(d), b)) / 2
+    return tuple(sorted([q / a, c / q]))
 
 
 def argmax_on_grid(

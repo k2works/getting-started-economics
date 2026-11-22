@@ -93,15 +93,15 @@ def plot_integration_errors(
 ) -> Figure:
     """分割数と誤差を両対数で描く。傾き −2 の直線（誤差 ∝ 1/n²）と比べる。"""
     pieces = list(pieces)
+    midpoint = quadrature_errors(midpoint_rule_integral, func, exact, low, high, pieces)
+    trapezoid = quadrature_errors(
+        trapezoid_rule_integral, func, exact, low, high, pieces
+    )
+    # 台形法の最初の点を通る、傾き −2 の直線
+    reference = [trapezoid[0] * (pieces[0] / n) ** 2 for n in pieces]
     fig, ax = plt.subplots()
-    for label, rule in [
-        ("Midpoint rule", midpoint_rule_integral),
-        ("Trapezoid rule", trapezoid_rule_integral),
-    ]:
-        errors = quadrature_errors(rule, func, exact, low, high, pieces)
-        ax.plot(pieces, errors, "o-", label=label)
-    # 台形法（最後に描いた線）の、最初の点を通る、傾き −2 の直線
-    reference = [errors[0] * (pieces[0] / n) ** 2 for n in pieces]
+    ax.plot(pieces, midpoint, "o-", label="Midpoint rule")
+    ax.plot(pieces, trapezoid, "o-", label="Trapezoid rule")
     ax.plot(pieces, reference, "--", color="gray", label="Slope of 1/n^2")
     ax.set_xscale("log")
     ax.set_yscale("log")

@@ -9,6 +9,7 @@ from typing import Literal
 import numpy as np
 
 from lib.chapter11.distribution import continuous_expectation, continuous_expected_value
+from lib.chapter11.integral import DEFAULT_PIECES
 
 
 def _require_bidders(bidders: int) -> None:
@@ -24,6 +25,8 @@ def _require_rank(bidders: int, rank: int) -> None:
 def order_statistic_density(value: float, bidders: int, rank: int) -> float:
     """n 人で rank 番目に高い評価額の密度 n·C(n−1, k−1)·v^(n−k)·(1 − v)^(k−1)。"""
     _require_rank(bidders, rank)
+    if not 0 <= value <= 1:
+        return 0
     ways = bidders * math.comb(bidders - 1, rank - 1)
     return float(ways * value ** (bidders - rank) * (1 - value) ** (rank - 1))
 
@@ -42,7 +45,7 @@ def second_price_payoff(value: float, bid: float, rival_bids: Sequence[float]) -
     return value - highest_rival if bid > highest_rival else 0
 
 
-def second_price_expected_revenue(bidders: int, pieces: int = 1000) -> float:
+def second_price_expected_revenue(bidders: int, pieces: int = DEFAULT_PIECES) -> float:
     """セカンドプライスの期待収入 = 2 番目に高い評価額の期待値 ∫ v·f₍₂₎(v) dv。"""
     _require_bidders(bidders)
     second = functools.partial(order_statistic_density, bidders=bidders, rank=2)
@@ -55,7 +58,7 @@ def first_price_equilibrium_bid(value: float, bidders: int) -> float:
     return (bidders - 1) / bidders * value
 
 
-def first_price_expected_revenue(bidders: int, pieces: int = 1000) -> float:
+def first_price_expected_revenue(bidders: int, pieces: int = DEFAULT_PIECES) -> float:
     """ファーストプライスの期待収入 = 最高の評価額の人の入札 ∫ b(v)·f₍₁₎(v) dv。"""
     _require_bidders(bidders)
     bid = functools.partial(first_price_equilibrium_bid, bidders=bidders)
@@ -70,6 +73,8 @@ def simulate_auction_revenues(
     _require_bidders(bidders)
     if rounds < 1:
         raise ValueError("回数は、1 以上でなければなりません")
+    if rule not in ("first", "second"):
+        raise ValueError("方式は、first か second です")
     rng = np.random.default_rng(seed)
     values = np.sort(rng.random((rounds, bidders)), axis=1)
     if rule == "second":
@@ -85,5 +90,8 @@ def expected_order_statistic(bidders: int, rank: int) -> Fraction:
 
 def first_price_expected_payoff(value: float, bid: float, bidders: int) -> float:
     """相手が全員 b(v) で入札するとき、bid で入札する人の期待利得 (v − b)·P(勝つ)。"""
+    _require_bidders(bidders)
+    if bid < 0:
+        raise ValueError("入札額は、0 以上でなければなりません")
     rival_below = min(bid * bidders / (bidders - 1), 1)
     return (value - bid) * rival_below ** (bidders - 1)

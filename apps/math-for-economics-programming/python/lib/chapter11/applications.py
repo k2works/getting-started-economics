@@ -3,14 +3,14 @@
 import math
 from collections.abc import Callable
 
-from lib.chapter11.integral import midpoint_rule_integral
+from lib.chapter11.integral import DEFAULT_PIECES, midpoint_rule_integral
 
 
 def area_under_demand(
     demand: Callable[[float], float],
     low_price: float,
     high_price: float,
-    pieces: int = 1000,
+    pieces: int = DEFAULT_PIECES,
 ) -> float:
     """需要曲線の下、価格 low から high までの面積 ∫ q(p) dp。"""
     if low_price > high_price:
@@ -24,4 +24,5 @@ def continuous_present_value(flow: float, rate: float, horizon: float) -> float:
         raise ValueError("期間は、0 以上でなければなりません")
     if rate == 0:
         return flow * horizon
-    return flow * (1 - math.exp(-rate * horizon)) / rate
+    # 1 − e^(−rT) を expm1 で求める（r が小さいときの桁落ちを防ぐ）
+    return -flow * math.expm1(-rate * horizon) / rate

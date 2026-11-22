@@ -29,8 +29,8 @@ def cobb_douglas_utility(x: float, y: float, share: float) -> float:
 def cobb_douglas_indifference_y(level: float, x: float, share: float) -> float:
     """無差別曲線 x^a·y^(1−a) = U の上で、x のときの y = (U ÷ x^a)^(1 ÷ (1 − a))。"""
     _check_share(share)
-    if x <= 0:
-        raise ValueError("x が 0 以下では、無差別曲線の y が決まりません")
+    if x <= 0 or level < 0:
+        raise ValueError("x が 0 以下か、効用水準が負では、無差別曲線が決まりません")
     return float((level / x**share) ** (1 / (1 - share)))
 
 
@@ -103,6 +103,8 @@ def quasilinear_demand(
     prices: Sequence[float], income: float, weight: float
 ) -> tuple[float, float]:
     """MRS = b ÷ (2√x) = p_x ÷ p_y の x。所得で買えなければ、y = 0 の端点解。"""
+    if weight <= 0:
+        raise ValueError("重み b は、正でなければなりません")
     x_max, y_max = _two_good_intercepts(prices, income)
     x = (weight * prices[1] / (2 * prices[0])) ** 2
     if x >= x_max:

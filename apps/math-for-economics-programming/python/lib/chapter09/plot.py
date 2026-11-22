@@ -13,11 +13,11 @@ from lib.chapter09.regression import (
 )
 
 
-def _fit_line(
-    xs: Sequence[float], ys: Sequence[float]
+def _line_ends(
+    xs: Sequence[float], beta: Sequence[float]
 ) -> tuple[list[float], list[float]]:
-    """単回帰の直線を、x の最小から最大まで結ぶ 2 点。"""
-    intercept, slope = simple_regression_coefficients(xs, ys)
+    """直線 y = β₀ + β₁x を、x の最小から最大まで結ぶ 2 点。"""
+    intercept, slope = beta
     ends = [min(xs), max(xs)]
     return ends, [intercept + slope * x for x in ends]
 
@@ -28,7 +28,7 @@ def plot_regression_with_residuals(xs: Sequence[float], ys: Sequence[float]) -> 
     fitted = regression_fitted_values(regression_design_matrix([xs]), beta)
     fig, ax = plt.subplots()
     ax.plot(xs, ys, "o", color="C0", label="Data")
-    ax.plot(*_fit_line(xs, ys), color="C1", label="Regression line")
+    ax.plot(*_line_ends(xs, beta), color="C1", label="Regression line")
     for i, (x, y, f) in enumerate(zip(xs, ys, fitted, strict=True)):
         label = "Residual" if i == 0 else "_nolegend_"
         ax.plot([x, x], [y, f], ":", color="C3", label=label, gid="residual")
@@ -46,8 +46,11 @@ def plot_residuals_against_x(xs: Sequence[float], ys: Sequence[float]) -> Figure
     residuals = regression_residuals(design, ys, beta)
     fig, ax = plt.subplots()
     ax.plot(xs, residuals, "o", color="C3", label="Residuals")
+    residual_beta = simple_regression_coefficients(xs, residuals)
     ax.plot(
-        *_fit_line(xs, residuals), color="C1", label="Regression of residuals on price"
+        *_line_ends(xs, residual_beta),
+        color="C1",
+        label="Regression of residuals on price",
     )
     ax.set_xlabel("Price")
     ax.set_ylabel("Residual")

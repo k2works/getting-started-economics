@@ -47,6 +47,14 @@ def test_実数解の個数は判別式の符号で決まる() -> None:
     assert quadratic_roots(1, 2, 5) == ()  # D < 0: なし
 
 
+def test_bが大きくても小さいほうの解が桁落ちしない() -> None:
+    # x² + 10⁸x + 1 = 0 の解は、およそ −10⁸ と −10⁻⁸（2 つの解の積は c ÷ a = 1）
+    lower, upper = quadratic_roots(1, 1e8, 1)
+    assert lower == pytest.approx(-1e8, rel=1e-12)
+    assert upper == pytest.approx(-1e-8, rel=1e-12)
+    assert quadratic_roots(1, -1e8, 1)[0] == pytest.approx(1e-8, rel=1e-12)
+
+
 def test_解を代入すると0になる() -> None:
     for x in quadratic_roots(3, -5, -7):
         assert 3 * x**2 - 5 * x - 7 == pytest.approx(0)

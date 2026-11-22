@@ -177,3 +177,21 @@ def test_費用が0なら均衡がない() -> None:
 def test_費用も数量も1未満の均衡を求める() -> None:
     result = constant_cost_equilibrium(1, 1, 0.5)
     assert result == Equilibrium(price=0.5, quantity=0.5)
+
+
+def test_余剰の関数も傾きが正でなければエラー() -> None:
+    with pytest.raises(ValueError):
+        consumer_surplus(40, 120, 0)
+    with pytest.raises(ValueError):
+        consumer_surplus(40, 120, -2)
+    with pytest.raises(ValueError):
+        producer_surplus(40, 0, 0)
+    with pytest.raises(ValueError):
+        producer_surplus(40, 0, -1)
+
+
+def test_費用一定の均衡も需要の傾きが正でなければエラー() -> None:
+    with pytest.raises(ValueError):
+        constant_cost_equilibrium(120, 0, 20)
+    with pytest.raises(ValueError):
+        constant_cost_equilibrium(120, -2, 20)

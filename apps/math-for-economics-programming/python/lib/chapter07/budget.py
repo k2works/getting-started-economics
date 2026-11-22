@@ -13,7 +13,7 @@ def _as_vector(values: Sequence[float]) -> NDArray[np.float64]:
     return np.asarray(values, dtype=np.float64)
 
 
-def _check_prices(prices: Sequence[float]) -> None:
+def _require_positive_prices(prices: Sequence[float]) -> None:
     """価格は、すべて正でなければならない。"""
     if np.any(_as_vector(prices) <= 0):
         raise ValueError("価格は、すべて正でなければなりません")
@@ -28,7 +28,7 @@ def budget_status(
     prices: Sequence[float], bundle: Sequence[float], income: float
 ) -> Literal["inside", "on", "outside"]:
     """財の組合せが、予算線上（p·x = m）・予算内（<）・予算外（>）のどれか。"""
-    _check_prices(prices)
+    _require_positive_prices(prices)
     if np.any(_as_vector(bundle) < 0):
         raise ValueError("数量は 0 以上でなければなりません")
     spending = budget_expenditure(prices, bundle)
@@ -40,7 +40,7 @@ def budget_status(
 
 def budget_intercepts(prices: Sequence[float], income: float) -> list[float]:
     """所得をすべて 1 つの財に使ったときの数量 m ÷ pᵢ（予算線と各軸の交点）。"""
-    _check_prices(prices)
+    _require_positive_prices(prices)
     return [float(q) for q in income / _as_vector(prices)]
 
 
@@ -50,7 +50,7 @@ def budget_line_quantity(
     """2 財の予算線 p₁x₁ + p₂x₂ = m の上で、財 1 が first_quantity のときの財 2。"""
     if len(prices) != 2:
         raise ValueError("予算線の式は、2 財のときだけ使います")
-    _check_prices(prices)
+    _require_positive_prices(prices)
     second_quantity = (income - prices[0] * first_quantity) / prices[1]
     if first_quantity < 0 or second_quantity < 0:
         raise ValueError("予算線上で、数量が負になる点はありません")
@@ -71,7 +71,7 @@ def consumption_given_leisure(
     return wage * (total_hours - leisure) + nonlabor_income
 
 
-def _check_rate(rate: float) -> None:
+def _require_rate(rate: float) -> None:
     """利子率が −100% 以下では、割り引けない。"""
     if rate <= -1:
         raise ValueError("利子率が −100% 以下では、割り引けません")
@@ -81,7 +81,7 @@ def second_period_consumption(
     first_consumption: float, income1: float, income2: float, rate: float
 ) -> float:
     """2 期間の予算で、今期 c₁ 消費したときの来期の消費 (y₁ − c₁)(1 + r) + y₂。"""
-    _check_rate(rate)
+    _require_rate(rate)
     second = (income1 - first_consumption) * (1 + rate) + income2
     if second < 0:
         raise ValueError("来期に返せないほど、今期に借りることはできません")
@@ -90,7 +90,7 @@ def second_period_consumption(
 
 def lifetime_income_present_value(income1: float, income2: float, rate: float) -> float:
     """2 期間の所得の現在価値 y₁ + y₂ ÷ (1 + r)。"""
-    _check_rate(rate)
+    _require_rate(rate)
     return income1 + income2 / (1 + rate)
 
 

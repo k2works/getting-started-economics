@@ -119,6 +119,15 @@ def test_オークションは2人以上で順位は1から人数まで() -> Non
             order_statistic_density(0.5, bidders, rank)
     with pytest.raises(ValueError):
         second_price_payoff(0.5, 0.5, [])
+    # 評価額は 0 から 1 の間。その外の密度は 0（一様分布と同じ）
+    assert [order_statistic_density(v, 3, 2) for v in (-1, 1.5)] == [0, 0]
+    assert (order_statistic_density(1, 3, 1), order_statistic_density(0, 3, 3)) == (
+        3,
+        3,
+    )
+    for rule in ("Second", "third"):
+        with pytest.raises(ValueError):
+            simulate_auction_revenues(2, 10, seed=1, rule=rule)  # type: ignore[arg-type]
 
 
 def test_k番目に高い評価額の期待値は人数と順位で決まる() -> None:
@@ -143,6 +152,12 @@ def test_ファーストプライスで相手が均衡入札なら自分も均�
     assert first_price_expected_payoff(0.8, 0.3, 2) == pytest.approx(0.5 * 0.6)
     # 入札が高すぎて、相手の入札の上限を超えると、必ず勝つ
     assert first_price_expected_payoff(0.8, 0.6, 2) == pytest.approx(0.2)
+    # 入札は 0 以上で、相手が 1 人以上必要
+    with pytest.raises(ValueError):
+        first_price_expected_payoff(0.5, -0.1, 3)
+    with pytest.raises(ValueError):
+        first_price_expected_payoff(0.5, 0.2, 1)
+    assert first_price_expected_payoff(0.5, 0, 3) == 0
     for value, bidders in [(0.8, 2), (0.6, 3), (0.9, 5)]:
         payoff = functools.partial(first_price_expected_payoff, value, bidders=bidders)
         best = argmax_on_grid(payoff, 0, value, 10_001)

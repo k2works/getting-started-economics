@@ -38,9 +38,14 @@ class Equilibrium:
         return self.price * self.quantity
 
 
+def _require_positive_slope(slope: float, name: str) -> None:
+    if slope <= 0:
+        raise ValueError(f"{name}は、正でなければなりません")
+
+
 def _validate_slopes(b: float, d: float) -> None:
-    if b <= 0 or d <= 0:
-        raise ValueError("需要の傾き b と供給の傾き d は、正でなければなりません")
+    _require_positive_slope(b, "需要の傾き b")
+    _require_positive_slope(d, "供給の傾き d")
 
 
 def equilibrium(a: float, b: float, c: float, d: float) -> Equilibrium:
@@ -55,6 +60,7 @@ def equilibrium(a: float, b: float, c: float, d: float) -> Equilibrium:
 
 def consumer_surplus(price: float, a: float, b: float) -> float:
     """消費者余剰: 需要曲線の下で、価格の上の三角形の面積。"""
+    _require_positive_slope(b, "需要の傾き b")
     top = a / b
     if price >= top:
         return 0
@@ -63,6 +69,7 @@ def consumer_surplus(price: float, a: float, b: float) -> float:
 
 def producer_surplus(price: float, c: float, d: float) -> float:
     """生産者余剰: 価格の下で、供給曲線の上の面積（供給量を足す）。"""
+    _require_positive_slope(d, "供給の傾き d")
     low = max(-c / d, 0)
     if price <= low:
         return 0
@@ -82,6 +89,7 @@ def market_demand(price: float, individuals: Sequence[tuple[float, float]]) -> f
 
 def constant_cost_equilibrium(a: float, b: float, unit_cost: float) -> Equilibrium:
     """単位あたり費用が一定のとき、供給は水平で、価格は費用に等しい。"""
+    _require_positive_slope(b, "需要の傾き b")
     quantity = demand_quantity(unit_cost, a, b)
     if unit_cost <= 0 or quantity <= 0:
         raise ValueError("費用が正で、需要の上限より低いときだけ、均衡があります")

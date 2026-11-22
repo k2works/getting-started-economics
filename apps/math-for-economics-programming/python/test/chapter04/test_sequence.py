@@ -241,3 +241,26 @@ def test_成長率がわずかに利子率より小さいと株価は大きい()
 def test_差が許容誤差とちょうど等しければもう1項足す() -> None:
     # 7 項までの差は 2 × 0.5^7 = 0.015625（等しいので「小さい」ではない）
     assert terms_until_within(1, 0.5, 0.015625) == 8
+
+
+def test_負の公比でも差の大きさで項数を数える() -> None:
+    # 差は 2/3 × 0.5^n。0.01 より小さくなるのは n = 7（0.0052…。n = 6 では 0.0104…）
+    assert terms_until_within(1, -0.5, 0.01) == 7
+
+
+def test_負の初項でも差の大きさで項数を数える() -> None:
+    assert terms_until_within(-1, 0.5, 0.01) == 8
+
+
+@pytest.mark.parametrize("rate", [-1, -2])
+def test_利子率がマイナス100パーセント以下なら積み立てられない(rate: float) -> None:
+    with pytest.raises(ValueError):
+        savings_future_value(1, rate, 3)
+
+
+@pytest.mark.parametrize("n", [0, -1])
+def test_第n項のnは1以上(n: int) -> None:
+    with pytest.raises(ValueError):
+        geometric_term(1, 2, n)
+    with pytest.raises(ValueError):
+        geometric_term(1, 0, n)

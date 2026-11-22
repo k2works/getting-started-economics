@@ -219,3 +219,15 @@ def test_無差別曲線上の点は効用が同じ水準() -> None:
 def test_無差別曲線はxが正のときだけ描ける() -> None:
     with pytest.raises(ValueError):
         cobb_douglas_indifference_y(10, 0, 0.5)
+
+
+def test_負の効用水準の無差別曲線は決まらない() -> None:
+    assert cobb_douglas_indifference_y(0, 4, 0.5) == 0
+    with pytest.raises(ValueError):
+        cobb_douglas_indifference_y(-1, 4, 0.5)
+
+
+def test_準線形効用の重みが正でなければ需要は決まらない() -> None:
+    for weight in [0, -4]:
+        with pytest.raises(ValueError):
+            quasilinear_demand([1, 2], 10, weight)

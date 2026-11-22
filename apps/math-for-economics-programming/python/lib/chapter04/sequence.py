@@ -2,7 +2,9 @@
 
 
 def geometric_term(first: float, ratio: float, n: int) -> float:
-    """等比数列の第 n 項 = 初項 × 公比^(n − 1)。"""
+    """等比数列の第 n 項 = 初項 × 公比^(n − 1)。n は 1 から数える。"""
+    if n < 1:
+        raise ValueError("第 n 項の n は 1 以上でなければなりません")
     return first * ratio ** (n - 1)
 
 
@@ -38,10 +40,16 @@ def terms_until_within(first: float, ratio: float, tolerance: float) -> int:
     return n
 
 
+def _require_rate_above_minus_one(rate: float) -> None:
+    if rate <= -1:
+        raise ValueError(
+            "利子率が −100% 以下では、割り引くことも、積み立てることもできません"
+        )
+
+
 def annuity_present_value(payment: float, rate: float, periods: int) -> float:
     """毎期末に payment を periods 期受け取る年金の現在価値 C(1 − (1 + r)^−n) ÷ r。"""
-    if rate <= -1:
-        raise ValueError("利子率が −100% 以下では、割り引けません")
+    _require_rate_above_minus_one(rate)
     discount = 1 / (1 + rate)
     return geometric_partial_sum(payment * discount, discount, periods)
 
@@ -55,6 +63,7 @@ def perpetuity_present_value(payment: float, rate: float) -> float:
 
 def savings_future_value(payment: float, rate: float, periods: int) -> float:
     """毎期末に payment を積み立てたときの、periods 期末の残高 C((1 + r)^n − 1) ÷ r。"""
+    _require_rate_above_minus_one(rate)
     return geometric_partial_sum(payment, 1 + rate, periods)
 
 

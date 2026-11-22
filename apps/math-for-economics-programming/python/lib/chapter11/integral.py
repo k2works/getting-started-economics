@@ -6,6 +6,9 @@ from lib.chapter05.derivative import Polynomial
 
 IntegrationRule = Callable[[Callable[[float], float], float, float, int], float]
 
+# 分割数の既定値。端で傾きが急な関数（√x など）でも、誤差が 1e−6 程度になる数
+DEFAULT_PIECES = 10_000
+
 
 def _require_pieces(pieces: int) -> None:
     if pieces < 1:

@@ -71,23 +71,26 @@ def matrix_determinant(a: Matrix) -> float:
     return sum(a[0][j] * _cofactor(a, 0, j) for j in range(size))
 
 
-def is_singular_matrix(a: Matrix, tolerance: float = 1e-12) -> bool:
-    """行列式が、行の長さの積に比べて 0 とみなせるほど小さいか（相対的な判定）。
+_SINGULAR_TOLERANCE = 1e-12
 
-    |det A| は、行の長さの積を超えない（アダマールの不等式）。
-    その比が tolerance 以下なら、特異とみなす。
-    """
-    _square_size(a)
+
+def _is_negligible_determinant(a: Matrix, det: float, tolerance: float) -> bool:
+    """|det A| と行の長さの積（アダマールの不等式の上限）の比が、tolerance 以下か。"""
     scale = math.prod(vector_length(row) for row in a)
-    return abs(matrix_determinant(a)) <= tolerance * scale
+    return abs(det) <= tolerance * scale
+
+
+def is_singular_matrix(a: Matrix, tolerance: float = _SINGULAR_TOLERANCE) -> bool:
+    """行列式が、行の長さの積に比べて 0 とみなせるほど小さいか（相対的な判定）。"""
+    return _is_negligible_determinant(a, matrix_determinant(a), tolerance)
 
 
 def matrix_inverse(a: Matrix) -> list[list[float]]:
     """逆行列 A⁻¹ = 余因子行列の転置 ÷ 行列式。特異なら、エラー。"""
     size = _square_size(a)
-    if is_singular_matrix(a):
-        raise ValueError("特異な行列（行列式が 0）には、逆行列がありません")
     det = matrix_determinant(a)
+    if _is_negligible_determinant(a, det, _SINGULAR_TOLERANCE):
+        raise ValueError("特異な行列（行列式が 0）には、逆行列がありません")
     if size == 1:
         return [[1 / det]]
     # (i, j) 成分は、(j, i) の余因子（余因子行列の転置）

@@ -151,3 +151,16 @@ def test_凹の判定は区間と点の数が正しくなければ行わない()
     for low, high, points in [(1, 1, 11), (2, 1, 11), (0, 1, 1)]:
         with pytest.raises(ValueError):
             is_concave_on(line, low, high, points)
+
+
+def test_積と商と合成関数の公式は数値微分と一致する() -> None:
+    for x in [-1.5, 0.3, 2]:
+        # 積: (f·g)' = f'·g + f·g'。(x²·eˣ)' = 2x·eˣ + x²·eˣ
+        product = numerical_derivative(lambda t: t**2 * math.exp(t), x)
+        assert product == pytest.approx((2 * x + x**2) * math.exp(x))
+        # 商: (f ÷ g)' = (f'·g − f·g') ÷ g²。(1 ÷ x)' = −1 ÷ x²
+        quotient = numerical_derivative(lambda t: 1 / t, x)
+        assert quotient == pytest.approx(-1 / x**2)
+        # 合成: (f(g(x)))' = f'(g(x))·g'(x)。((x² + 1)³)' = 3(x² + 1)²·2x
+        chain = numerical_derivative(lambda t: (t**2 + 1) ** 3, x)
+        assert chain == pytest.approx(3 * (x**2 + 1) ** 2 * 2 * x)

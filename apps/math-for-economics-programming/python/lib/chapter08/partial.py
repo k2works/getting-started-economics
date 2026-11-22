@@ -35,13 +35,19 @@ def numerical_hessian_2d(
     return fxx, fxy, fyy
 
 
-def classify_critical_point_2d(fxx: float, fxy: float, fyy: float) -> str:
-    """ヘッセ行列の行列式 D = f_xx·f_yy − f_xy² と f_xx の符号で、停留点を分ける。"""
+def classify_critical_point_2d(
+    fxx: float, fxy: float, fyy: float, tolerance: float = 1e-9
+) -> str:
+    """ヘッセ行列の行列式 D = f_xx·f_yy − f_xy² と f_xx の符号で、停留点を分ける。
+
+    数値のヘッセ行列では D がちょうど 0 にならないので、成分の大きさに比べて
+    |D| が tolerance 倍以下なら、0 とみなす（判定できない）。
+    """
     determinant = fxx * fyy - fxy**2
+    if abs(determinant) <= tolerance * (fxx**2 + fxy**2 + fyy**2):
+        return "undetermined"
     if determinant < 0:
         return "saddle"
-    if determinant == 0:
-        return "undetermined"
     return "maximum" if fxx < 0 else "minimum"
 
 

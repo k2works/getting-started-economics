@@ -3,7 +3,12 @@ import numpy as np
 import pytest
 from matplotlib.axes import Axes
 
-from lib.chapter12.plot import plot_golden_rule, plot_solow_convergence
+from lib.chapter04.sequence import iterate_map
+from lib.chapter12.plot import (
+    plot_golden_rule,
+    plot_linear_recurrence_paths,
+    plot_solow_convergence,
+)
 from lib.chapter12.solow import (
     solow_capital_path,
     solow_steady_state_capital,
@@ -60,3 +65,17 @@ def test_図には初期値や貯蓄率が1つ以上必要() -> None:
         plot_solow_convergence([], 0.3, ALPHA, 0.1, 40)
     with pytest.raises(ValueError):
         plot_golden_rule(ALPHA, 0.1, [])
+
+
+def test_漸化式の経路の図はaごとの反復の列() -> None:
+    ax = plot_linear_recurrence_paths([0.9, 1, 1.1], 1, 0, 25).axes[0]
+    for a in (0.9, 1, 1.1):
+        xs, ys = _series(ax, f"a = {a:g}")
+        assert xs == list(range(26))
+        assert ys == pytest.approx(iterate_map(a, 1, 0, 25))
+    assert ax.get_xlabel() == "Period t"
+    assert ax.get_ylabel() == "x(t)"
+    assert ax.get_legend() is not None
+    with pytest.raises(ValueError):
+        plot_linear_recurrence_paths([], 1, 0, 25)
+    plt.close("all")

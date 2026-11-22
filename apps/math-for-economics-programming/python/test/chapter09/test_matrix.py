@@ -169,3 +169,10 @@ def test_特異の閾値は行の長さの積の1兆分の1() -> None:
     assert not is_singular_matrix([[1, 1], [1, 1 + 2.4e-12]])
     assert is_singular_matrix([[1, 1], [1, 1 + 1.6e-12]])
     assert not is_singular_matrix([[1, 1], [1, 1 + 1.6e-12]], tolerance=1e-13)
+
+
+def test_行列式が負の置換行列は特異でなく逆行列は自分自身() -> None:
+    swap = [[0, 1], [1, 0]]
+    assert matrix_determinant(swap) == -1
+    assert not is_singular_matrix(swap)
+    assert _array(matrix_inverse(swap)) == pytest.approx(_array(swap))
