@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="利得表から最適反応・支配戦略・ナッシュ均衡を求め、囚人のジレンマで均衡が非効率になることを確かめる。繰り返しゲームで協調が続く割引因子の閾値と、屈折需要曲線による価格の硬直性も関数にする。">
+        <meta name="description" content="利得表から最適反応・支配戦略・ナッシュ均衡を求め、囚人のジレンマで均衡が非効率になる（パレート劣位）ことを確かめる。協調ゲームと一致ゲームで、均衡が 2 つある場合と、純粋戦略の均衡がない場合も見る。">
       
       
         <meta name="author" content="Project Team">
@@ -16,7 +16,7 @@
         <link rel="prev" href="../11-monopoly-and-monopolistic-competition/">
       
       
-        <link rel="next" href="../13-externality-public-goods-and-natural-monopoly/">
+        <link rel="next" href="../13-repeated-games-and-kinked-demand/">
       
       
         
@@ -27,7 +27,7 @@
     
     
       
-        <title>第 12 章: 寡占とゲーム理論 - 経済学入門</title>
+        <title>第 12 章: 寡占とゲーム理論（1）: 利得表とナッシュ均衡 - 経済学入門</title>
       
     
     
@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#12" class="md-skip">
+        <a href="#12-1" class="md-skip">
           Skip to content
         </a>
       
@@ -112,7 +112,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              第 12 章: 寡占とゲーム理論
+              第 12 章: 寡占とゲーム理論（1）: 利得表とナッシュ均衡
             
           </span>
         </div>
@@ -1091,6 +1091,204 @@
   
 
       </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_8_2" id="__nav_8_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ミクロ経済学のためのプログラミング（初級）
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_8_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ミクロ経済学のためのプログラミング（初級）
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/micro-basics-programming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    一覧
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/micro-basics-programming/001-split-chapters-12-and-13/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-001 第 12・13 章の分割
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/micro-basics-programming/002-shared-tooling-improvements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-002 共通ツールの改善
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../adr/micro-basics-programming/003-pytest-timeout/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ADR-003 pytest-timeout
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
     </li>
   
 
@@ -2545,7 +2743,7 @@
   <span class="md-ellipsis">
     
   
-    第 12 章 寡占とゲーム理論
+    第 12 章 寡占とゲーム理論（1）利得表とナッシュ均衡
   
 
     
@@ -2570,7 +2768,7 @@
   <span class="md-ellipsis">
     
   
-    第 12 章 寡占とゲーム理論
+    第 12 章 寡占とゲーム理論（1）利得表とナッシュ均衡
   
 
     
@@ -2664,15 +2862,15 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#124" class="md-nav__link">
+  <a href="#124-1" class="md-nav__link">
     <span class="md-ellipsis">
       
-        12.4 寡占とゲーム理論の考え方
+        12.4 寡占とゲーム理論（1）の考え方
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="12.4 寡占とゲーム理論の考え方">
+    <nav class="md-nav" aria-label="12.4 寡占とゲーム理論（1）の考え方">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -2702,28 +2900,6 @@
     <span class="md-ellipsis">
       
         囚人のジレンマ
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_6" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        繰り返しゲーム
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_7" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        屈折需要曲線
       
     </span>
   </a>
@@ -2770,7 +2946,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_8" class="md-nav__link">
+  <a href="#_6" class="md-nav__link">
     <span class="md-ellipsis">
       
         最適反応・支配戦略
@@ -2781,7 +2957,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_9" class="md-nav__link">
+  <a href="#_7" class="md-nav__link">
     <span class="md-ellipsis">
       
         ナッシュ均衡とパレート劣位
@@ -2792,40 +2968,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_10" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        繰り返しゲーム
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_11" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        戦略を関数にする
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_12" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        屈折需要曲線
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_13" class="md-nav__link">
+  <a href="#_8" class="md-nav__link">
     <span class="md-ellipsis">
       
         予想の答え合わせ
@@ -2836,18 +2979,7 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#_14" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        図
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#_15" class="md-nav__link">
+  <a href="#_9" class="md-nav__link">
     <span class="md-ellipsis">
       
         実行結果
@@ -2875,7 +3007,7 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#_16" class="md-nav__link">
+  <a href="#_10" class="md-nav__link">
     <span class="md-ellipsis">
       
         このモデルが成り立たない場面
@@ -2939,14 +3071,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../13-externality-public-goods-and-natural-monopoly/" class="md-nav__link">
+      <a href="../13-repeated-games-and-kinked-demand/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    第 13 章 外部効果・公共財・費用逓減産業
+    第 13 章 寡占とゲーム理論（2）繰り返しゲームと屈折需要曲線
   
 
     
@@ -2974,14 +3106,84 @@
   
   
     <li class="md-nav__item">
-      <a href="../14-information-asymmetry/" class="md-nav__link">
+      <a href="../14-externality-and-coase/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    第 14 章 情報の非対称性
+    第 14 章 外部効果
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../15-public-goods-and-natural-monopoly/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第 15 章 公共財と自然独占
+  
+
+    
+  </span>
+  
+  
+    
+  
+  
+    <span class="md-status md-status--draft"></span>
+  
+
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../16-information-asymmetry/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    第 16 章 情報の非対称性
   
 
     
@@ -7574,16 +7776,37 @@
   
 
 
-<h1 id="12">第 12 章: 寡占とゲーム理論<a class="headerlink" href="#12" title="Permanent link">&para;</a></h1>
+<h1 id="12-1">第 12 章: 寡占とゲーム理論（1）: 利得表とナッシュ均衡<a class="headerlink" href="#12-1" title="Permanent link">&para;</a></h1>
 <h2 id="121">12.1 この章の地図<a class="headerlink" href="#121" title="Permanent link">&para;</a></h2>
 <p>売り手が<strong>少数</strong>の市場（<strong>寡占</strong>）では、自分の最善の行動が、<strong>相手の行動</strong>に依存します。相手の出方を読み合う状況を、<strong>ゲーム</strong>として扱います。この章では、次のことを関数にします。</p>
 <ul>
 <li><strong>利得表</strong>から、相手の戦略に対する<strong>最適反応</strong>、どんな相手にも最善の<strong>支配戦略</strong>、2 人とも最適反応になっている<strong>ナッシュ均衡</strong>を求める</li>
-<li><strong>囚人のジレンマ</strong>: 均衡（裏切り、裏切り）が、協調（協調、協調）より、<strong>2 人とも悪い</strong></li>
-<li><strong>繰り返しゲーム</strong>: トリガー戦略で、<strong>割引因子が閾値以上</strong>なら、協調が続く（しっぺ返しの条件は、別。12.4 を参照）</li>
-<li><strong>屈折需要曲線</strong>: 値上げに他社がついてこず、値下げにはついてくる。限界収入が途切れて、価格が<strong>硬直的</strong>になる</li>
+<li><strong>囚人のジレンマ</strong>: 均衡（裏切り、裏切り）が、協調（協調、協調）より、<strong>2 人とも悪い</strong>（パレート劣位）</li>
+<li><strong>協調ゲーム・一致ゲーム</strong>: 均衡が 2 つある場合と、純粋戦略の均衡がない場合</li>
 </ul>
-<p><img alt="協調が続く条件。割引因子が閾値 0.5 を超えると、協調を続ける価値（青）が、一度裏切る価値（橙）を上回る" src="../images/ch12-trigger.png" /></p>
+<p>次の章（第 13 章）では、同じゲームを<strong>繰り返し</strong>、協調が続く条件（割引因子の閾値）と、寡占の<strong>屈折需要曲線</strong>を扱います。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;"></th>
+<th style="text-align: center;">列: 協調</th>
+<th style="text-align: center;">列: 裏切り</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><strong>行: 協調</strong></td>
+<td style="text-align: center;">(3, 3)</td>
+<td style="text-align: center;">(0, 5)</td>
+</tr>
+<tr>
+<td style="text-align: center;"><strong>行: 裏切り</strong></td>
+<td style="text-align: center;">(5, 0)</td>
+<td style="text-align: center;">(1, 1)</td>
+</tr>
+</tbody>
+</table>
+<p>この章で扱う囚人のジレンマの利得表です（括弧の中は、(行の利得, 列の利得)）。</p>
 <table>
 <thead>
 <tr>
@@ -7594,11 +7817,11 @@
 <tbody>
 <tr>
 <td style="text-align: left;">経済学の題材</td>
-<td style="text-align: left;">利得表、最適反応、支配戦略、ナッシュ均衡、囚人のジレンマ、繰り返しゲーム（しっぺ返し・トリガー戦略）、屈折需要曲線</td>
+<td style="text-align: left;">利得表、最適反応、支配戦略、ナッシュ均衡、パレート劣位、囚人のジレンマ、協調ゲーム・一致ゲーム</td>
 </tr>
 <tr>
 <td style="text-align: left;">使う Python の機能</td>
-<td style="text-align: left;"><code>dataclass</code>、タプルの入れ子、関数を値として渡す（戦略）、内包表記、テスト（<code>pytest</code>）</td>
+<td style="text-align: left;"><code>dataclass</code>、タプルの入れ子、関数、内包表記、テスト（<code>pytest</code>）</td>
 </tr>
 <tr>
 <td style="text-align: left;">新しく導入するライブラリ</td>
@@ -7606,11 +7829,11 @@
 </tr>
 <tr>
 <td style="text-align: left;">完成形</td>
-<td style="text-align: left;"><code>Game</code>、<code>prisoners_dilemma</code>、<code>best_responses_for_row</code>、<code>best_responses_for_column</code>、<code>dominant_strategy_for_row</code>、<code>dominant_strategy_for_column</code>、<code>pure_nash_equilibria</code>、<code>is_pareto_dominated</code>、<code>is_prisoners_dilemma</code>、<code>discounted_sum</code>、<code>cooperation_value</code>、<code>deviation_value</code>、<code>cooperation_threshold</code>、<code>trigger_sustains_cooperation</code>、戦略（<code>tit_for_tat</code> など）、<code>play</code>、<code>total_payoffs</code>、<code>KinkedDemand</code>、<code>marginal_revenue_gap</code>、<code>price_stays</code>、<code>price_when_cost_shifts</code></td>
+<td style="text-align: left;"><code>Game</code>、<code>prisoners_dilemma</code>、<code>best_responses_for_row</code>、<code>best_responses_for_column</code>、<code>dominant_strategy_for_row</code>、<code>dominant_strategy_for_column</code>、<code>pure_nash_equilibria</code>、<code>is_pareto_dominated</code>、<code>is_prisoners_dilemma</code></td>
 </tr>
 <tr>
 <td style="text-align: left;">ファイル</td>
-<td style="text-align: left;">実装: <code>lib/chapter12/game.py</code>、<code>lib/chapter12/repeated.py</code>、<code>lib/chapter12/kinked.py</code>、<code>lib/chapter12/plot.py</code>（図）／テスト: <code>test/chapter12/</code> の同名のファイル（自分で書くときは、<code>practice/chapter12/</code> に、同じ名前で作ります）</td>
+<td style="text-align: left;">実装: <code>lib/chapter12/game.py</code>／テスト: <code>test/chapter12/test_game.py</code>（自分で書くときは、<code>practice/chapter12/</code> に、同じ名前で作ります）</td>
 </tr>
 <tr>
 <td style="text-align: left;">データ</td>
@@ -7653,30 +7876,10 @@
 <td style="text-align: left;">T &gt; R &gt; P &gt; S</td>
 <td style="text-align: left;"><code>prisoners_dilemma(T, R, P, S)</code></td>
 </tr>
-<tr>
-<td style="text-align: left;">協調の価値</td>
-<td style="text-align: left;">R ÷ (1 − δ)</td>
-<td style="text-align: left;"><code>cooperation_value(reward, delta)</code></td>
-</tr>
-<tr>
-<td style="text-align: left;">裏切りの価値</td>
-<td style="text-align: left;">T + δ·P ÷ (1 − δ)</td>
-<td style="text-align: left;"><code>deviation_value(T, P, delta)</code></td>
-</tr>
-<tr>
-<td style="text-align: left;">割引因子の閾値</td>
-<td style="text-align: left;">δ* = (T − R) ÷ (T − P)</td>
-<td style="text-align: left;"><code>cooperation_threshold(T, R, P)</code></td>
-</tr>
-<tr>
-<td style="text-align: left;">限界収入の途切れ</td>
-<td style="text-align: left;">(b₂ − b₁)·Q</td>
-<td style="text-align: left;"><code>marginal_revenue_gap(demand)</code></td>
-</tr>
 </tbody>
 </table>
 <blockquote>
-<p><strong>記号の注意</strong>: この章の T・R・P・S は、囚人のジレンマの利得（誘惑・報酬・罰・愚か者の利得）です。第 7・9・10 章の T（税額・関税）や、P（価格）とは、別の意味です。</p>
+<p><strong>記号の注意</strong>: この章の T・R・P・S は、囚人のジレンマの利得（誘惑・報酬・罰・愚か者）です。第 7・9・10 章の T（税額・関税）や、P（価格）とは、別の意味です。</p>
 </blockquote>
 <h3 id="_2">前提とする章<a class="headerlink" href="#_2" title="Permanent link">&para;</a></h3>
 <table>
@@ -7693,7 +7896,7 @@
 </tr>
 <tr>
 <td style="text-align: left;">関数・タプル・内包表記</td>
-<td style="text-align: left;"><a href="../../economics-programming/">第 1 シリーズ</a>の第 3 章。ゲーム理論は、第 15 章でも扱っています（この章は、関数にして、繰り返しゲームを加えます）</td>
+<td style="text-align: left;"><a href="../../economics-programming/">第 1 シリーズ</a>の第 3 章。ゲーム理論は、第 15 章でも扱っています（この連載は、関数にして、テストで確かめます）</td>
 </tr>
 </tbody>
 </table>
@@ -7702,19 +7905,16 @@
 uv<span class="w"> </span>sync
 uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter12
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>64 passed
+<div class="highlight"><pre><span></span><code>26 passed
 </code></pre></div>
-<p>自分でコードを書くときは、<code>practice/chapter12/</code> に、<code>game.py</code>・<code>repeated.py</code>・<code>kinked.py</code> と、それぞれのテストを作ります。</p>
+<p>自分でコードを書くときは、<code>practice/chapter12/</code> に、<code>game.py</code> と、そのテスト（<code>test_game.py</code>）を作ります。</p>
 <h2 id="123">12.3 予想する<a class="headerlink" href="#123" title="Permanent link">&para;</a></h2>
 <p>囚人のジレンマです。2 人が、協調（0）か裏切り（1）を選びます。利得は、誘惑 T = 5、報酬 R = 3、罰 P = 1、愚か者 S = 0（相手が裏切り、自分が協調したときの利得）です。<strong>紙で、手計算で</strong>答えてください。答えは、この節には書いてありません。「プログラミング」の節の「予想の答え合わせ」で、プログラムを動かして確かめます。</p>
 <ul>
 <li>相手が協調するとき・裏切るとき、自分の<strong>最適反応</strong>は、それぞれ、何ですか。<strong>支配戦略</strong>は、ありますか</li>
 <li><strong>ナッシュ均衡</strong>は、どの組ですか。それは、2 人にとって、<strong>最善の組</strong>ですか（パレート劣位か）</li>
-<li>同じゲームを<strong>無限に繰り返し</strong>、トリガー戦略（相手が一度でも裏切ったら、永久に裏切る）を使います。協調が続く<strong>割引因子の閾値</strong>は、いくつですか。割引因子が 0.4・0.5・0.6 のとき、協調を続ける価値と、一度裏切る価値は、いくつですか</li>
-<li>しっぺ返し（最初は協調し、以後は、相手の前の手をまねる）が、いつも裏切る相手と 4 回戦うと、合計の利得は、それぞれ、いくつですか</li>
-<li>屈折需要曲線で、屈折点が（数量 40、価格 50）、上の傾きが 0.5、下の傾きが 2 のとき、限界収入は、屈折点の上と下で、いくつですか。<strong>途切れ</strong>の大きさは、いくつですか。限界費用が 10・30・40 のとき、価格は動きますか</li>
 </ul>
-<h2 id="124">12.4 寡占とゲーム理論の考え方<a class="headerlink" href="#124" title="Permanent link">&para;</a></h2>
+<h2 id="124-1">12.4 寡占とゲーム理論（1）の考え方<a class="headerlink" href="#124-1" title="Permanent link">&para;</a></h2>
 <h3 id="_3">利得表<a class="headerlink" href="#_3" title="Permanent link">&para;</a></h3>
 <p>2 人の戦略と利得を、表にします。行の人が戦略 i、列の人が戦略 j を選んだときの利得を、(行の利得, 列の利得) と書きます。</p>
 <table>
@@ -7746,17 +7946,6 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </ul>
 <h3 id="_5">囚人のジレンマ<a class="headerlink" href="#_5" title="Permanent link">&para;</a></h3>
 <p>上の表では、相手が何をしても、<strong>裏切りが最適反応</strong>（支配戦略）です。だから、均衡は（裏切り、裏切り）で、利得は (1, 1)。（協調、協調）の (3, 3) の方が、<strong>2 人とも良い</strong>のに、そこへは行けません。個人の合理性が、全体の非効率を生みます。寡占企業の<strong>カルテル</strong>（価格を高く保つ約束）が、破られやすい理由です。</p>
-<h3 id="_6">繰り返しゲーム<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
-<p>同じゲームを繰り返すと、<strong>将来の報復</strong>があるので、協調が続くことがあります。将来の利得を<strong>割引因子 δ</strong>（0 以上 1 未満）で割り引くとき、トリガー戦略で協調が続く条件は、<strong>協調の価値 ≥ 裏切りの価値</strong>です。</p>
-<ul>
-<li>協調を続ける価値: R ÷ (1 − δ)</li>
-<li>今期だけ裏切り、以後は罰: T + δ·P ÷ (1 − δ)</li>
-<li>条件を解くと、<strong>δ ≥ (T − R) ÷ (T − P)</strong></li>
-</ul>
-<p>将来を重く見る（δ が大きい）ほど、協調が続きます。これが<strong>フォーク定理</strong>の核心で、δ が十分大きければ、罰より良い利得の組は、均衡で実現できる、というものです。無限回の繰り返しは、閉じた式（等比級数の和）で扱います。</p>
-<p><strong>しっぺ返しの条件は、別です。</strong> 相手が、交互に裏切るなど、しっぺ返しを利用するとき、協調が続くには、δ ≥ (T − R) ÷ (R − S)（この例では 2/3）が必要です。この章の閾値 0.5 は、<strong>トリガー戦略だけ</strong>のものです。</p>
-<h3 id="_7">屈折需要曲線<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
-<p>寡占企業が、値上げをしても、他社はついてこない（需要は<strong>弾力的</strong>で、曲線は緩やか）。値下げをすると、他社もついてくる（需要は<strong>非弾力的</strong>で、曲線は急）。需要曲線が、現在の価格で<strong>折れ</strong>ます。そのため、限界収入が、屈折点で<strong>途切れ</strong>、限界費用が、その途切れの中で動いても、<strong>価格は変わりません</strong>（価格の硬直性）。</p>
 <h2 id="125">12.5 プログラミング<a class="headerlink" href="#125" title="Permanent link">&para;</a></h2>
 <h3 id="red">Red: 囚人のジレンマの利得表<a class="headerlink" href="#red" title="Permanent link">&para;</a></h3>
 <p>最初のテストを書きます。戦略 0 が協調、戦略 1 が裏切りで、利得表は、上の表のとおりです。</p>
@@ -7872,48 +8061,8 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">top</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
     <span class="k">return</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="k">if</span> <span class="n">value</span> <span class="o">==</span> <span class="n">top</span><span class="p">]</span>
 </code></pre></div>
-<p><strong>lib/chapter12/kinked.py</strong></p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
-</code></pre></div>
-<p><strong>lib/chapter12/plot.py</strong></p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.figure</span><span class="w"> </span><span class="kn">import</span> <span class="n">Figure</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.kinked</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">KinkedDemand</span><span class="p">,</span>
-    <span class="n">marginal_revenue_above</span><span class="p">,</span>
-    <span class="n">marginal_revenue_below</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.repeated</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">cooperation_threshold</span><span class="p">,</span>
-    <span class="n">cooperation_value</span><span class="p">,</span>
-    <span class="n">deviation_value</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div>
-<p><strong>lib/chapter12/repeated.py</strong></p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Sequence</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.game</span><span class="w"> </span><span class="kn">import</span> <span class="n">Game</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="n">_TOLERANCE</span> <span class="o">=</span> <span class="mf">1e-9</span>  <span class="c1"># 閾値ちょうどの判定を、浮動小数点の誤差に左右させない</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_check_delta</span><span class="p">(</span><span class="n">delta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"割引因子は、0 以上 1 未満にする"</span><span class="p">)</span>
-</code></pre></div>
-<p><strong>test/chapter12/test_plot.py</strong></p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">collections.abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">Sequence</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.axes</span><span class="w"> </span><span class="kn">import</span> <span class="n">Axes</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">matplotlib.lines</span><span class="w"> </span><span class="kn">import</span> <span class="n">Line2D</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.kinked</span><span class="w"> </span><span class="kn">import</span> <span class="n">KinkedDemand</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.plot</span><span class="w"> </span><span class="kn">import</span> <span class="n">plot_kinked</span><span class="p">,</span> <span class="n">plot_trigger</span>
-</code></pre></div>
 </details>
-<h3 id="_8">最適反応・支配戦略<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
+<h3 id="_6">最適反応・支配戦略<a class="headerlink" href="#_6" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_相手の戦略に対する最適反応</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">best_responses_for_row</span><span class="p">(</span><span class="n">DILEMMA</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
     <span class="k">assert</span> <span class="n">best_responses_for_row</span><span class="p">(</span><span class="n">DILEMMA</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -8002,7 +8151,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="kc">None</span>
 </code></pre></div>
 <p>最適反応は、同点なら、<strong>すべて</strong>返します（利得が等しい戦略は、どれも最適）。支配戦略は、<strong>厳密に</strong>良い戦略だけで、なければ <code>None</code> です。</p>
-<h3 id="_9">ナッシュ均衡とパレート劣位<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
+<h3 id="_7">ナッシュ均衡とパレート劣位<a class="headerlink" href="#_7" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_囚人のジレンマのナッシュ均衡は裏切りと裏切りだけ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
     <span class="k">assert</span> <span class="n">pure_nash_equilibria</span><span class="p">(</span><span class="n">DILEMMA</span><span class="p">)</span> <span class="o">==</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
 
@@ -8087,333 +8236,7 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="k">return</span> <span class="n">row_ok</span> <span class="ow">and</span> <span class="n">column_ok</span>
 </code></pre></div>
 <p>協調ゲーム（同じ戦略をそろえると得）では、均衡が 2 つあり、一致ゲーム（行は手をそろえたく、列は違う手を出したい）では、<strong>純粋戦略の均衡がありません</strong>（混合戦略が必要ですが、この章は扱いません）。</p>
-<h3 id="_10">繰り返しゲーム<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
-<p>ここまでが、1 回限りのゲーム（<code>game.py</code>）です。ここで一度、休んでかまいません。</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.game</span><span class="w"> </span><span class="kn">import</span> <span class="n">prisoners_dilemma</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.repeated</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">always_cooperate</span><span class="p">,</span>
-    <span class="n">always_defect</span><span class="p">,</span>
-    <span class="n">cooperation_threshold</span><span class="p">,</span>
-    <span class="n">cooperation_value</span><span class="p">,</span>
-    <span class="n">deviation_value</span><span class="p">,</span>
-    <span class="n">discounted_sum</span><span class="p">,</span>
-    <span class="n">grim_trigger</span><span class="p">,</span>
-    <span class="n">play</span><span class="p">,</span>
-    <span class="n">tit_for_tat</span><span class="p">,</span>
-    <span class="n">total_payoffs</span><span class="p">,</span>
-    <span class="n">trigger_sustains_cooperation</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="n">GAME</span> <span class="o">=</span> <span class="n">prisoners_dilemma</span><span class="p">(</span><span class="n">temptation</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">reward</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">punishment</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sucker</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_割引現在価値の合計</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="n">discounted_sum</span><span class="p">([</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">3</span> <span class="o">+</span> <span class="mf">1.5</span> <span class="o">+</span> <span class="mf">0.75</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">discounted_sum</span><span class="p">([],</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
-    <span class="k">assert</span> <span class="n">discounted_sum</span><span class="p">([</span><span class="mi">10</span><span class="p">],</span> <span class="mf">0.9</span><span class="p">)</span> <span class="o">==</span> <span class="mi">10</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_割引因子は0以上1未満</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"割引因子"</span><span class="p">):</span>
-        <span class="n">discounted_sum</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="mf">0.1</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"割引因子"</span><span class="p">):</span>
-        <span class="n">discounted_sum</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_協調を続ける価値は報酬を割引因子で割った値</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="n">cooperation_value</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">cooperation_value</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">30</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">cooperation_value</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_裏切る価値は誘惑に以後の罰を足した値</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="n">deviation_value</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">5</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="mf">0.5</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">deviation_value</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="o">==</span> <span class="mi">5</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_協調が続く最低の割引因子</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="n">cooperation_threshold</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">cooperation_threshold</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">cooperation_threshold</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">7</span> <span class="o">/</span> <span class="mi">9</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_閾値の条件が崩れるとエラー</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"T &gt; R &gt; P"</span><span class="p">):</span>
-        <span class="n">cooperation_threshold</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"T &gt; R &gt; P"</span><span class="p">):</span>
-        <span class="n">cooperation_threshold</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_トリガー戦略は割引因子が閾値以上なら協調を保てる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="n">trigger_sustains_cooperation</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">trigger_sustains_cooperation</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="ow">not</span> <span class="n">trigger_sustains_cooperation</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_閾値の上下で協調と裏切りの価値が入れ替わる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">delta</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.49</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">):</span>
-        <span class="n">stays</span> <span class="o">=</span> <span class="n">cooperation_value</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="n">deviation_value</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span>
-        <span class="k">assert</span> <span class="n">stays</span> <span class="o">==</span> <span class="n">trigger_sustains_cooperation</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">cooperation_value</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">deviation_value</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="n">Strategy</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[[</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">]],</span> <span class="nb">int</span><span class="p">]</span>
-
-
-<span class="n">COOPERATE</span> <span class="o">=</span> <span class="mi">0</span>
-
-
-<span class="n">DEFECT</span> <span class="o">=</span> <span class="mi">1</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_check_delta</span><span class="p">(</span><span class="n">delta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="n">delta</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"割引因子は、0 以上 1 未満にする"</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">discounted_sum</span><span class="p">(</span><span class="n">payoffs</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">delta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""割引現在価値 Σ δ^t × 利得_t（t = 0, 1, …）。"""</span>
-    <span class="n">_check_delta</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">payoff</span> <span class="o">*</span> <span class="n">delta</span><span class="o">**</span><span class="n">t</span> <span class="k">for</span> <span class="n">t</span><span class="p">,</span> <span class="n">payoff</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">payoffs</span><span class="p">))</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">cooperation_value</span><span class="p">(</span><span class="n">reward</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""毎期、報酬 R を得続ける価値 R ÷ (1 − δ)（無限回）。"""</span>
-    <span class="n">_check_delta</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">reward</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">delta</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">deviation_value</span><span class="p">(</span><span class="n">temptation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">punishment</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""今期だけ裏切り、以後は罰 P を受け続ける価値 T + δ·P ÷ (1 − δ)。"""</span>
-    <span class="n">_check_delta</span><span class="p">(</span><span class="n">delta</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">temptation</span> <span class="o">+</span> <span class="n">delta</span> <span class="o">*</span> <span class="n">punishment</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">delta</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">cooperation_threshold</span><span class="p">(</span><span class="n">temptation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">reward</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">punishment</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""トリガー戦略で協調が続く、最低の割引因子 δ* = (T − R) ÷ (T − P)。"""</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">temptation</span> <span class="o">&gt;</span> <span class="n">reward</span> <span class="o">&gt;</span> <span class="n">punishment</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"T &gt; R &gt; P にする"</span><span class="p">)</span>
-    <span class="k">return</span> <span class="p">(</span><span class="n">temptation</span> <span class="o">-</span> <span class="n">reward</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">temptation</span> <span class="o">-</span> <span class="n">punishment</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">trigger_sustains_cooperation</span><span class="p">(</span>
-    <span class="n">temptation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">reward</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">punishment</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">delta</span><span class="p">:</span> <span class="nb">float</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""割引因子が閾値以上なら、トリガー戦略で、協調を保てる。"""</span>
-    <span class="n">threshold</span> <span class="o">=</span> <span class="n">cooperation_threshold</span><span class="p">(</span><span class="n">temptation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">punishment</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">delta</span> <span class="o">&gt;=</span> <span class="n">threshold</span> <span class="o">-</span> <span class="n">_TOLERANCE</span>
-</code></pre></div>
-<p>最後に <code>test_有限回で近似した価値は閾値の判定と同じ向き</code> が、無限の閉じた式を、<strong>200 回の合計で近似</strong>した値と、比べます（近似であることを、テストが示します）。</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_有限回で近似した価値は閾値の判定と同じ向き</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">delta</span> <span class="o">=</span> <span class="mf">0.6</span>
-    <span class="n">rounds</span> <span class="o">=</span> <span class="mi">200</span>
-    <span class="n">cooperate</span> <span class="o">=</span> <span class="n">discounted_sum</span><span class="p">([</span><span class="mi">3</span><span class="p">]</span> <span class="o">*</span> <span class="n">rounds</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span>
-    <span class="n">deviate</span> <span class="o">=</span> <span class="n">discounted_sum</span><span class="p">([</span><span class="mi">5</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">rounds</span> <span class="o">-</span> <span class="mi">1</span><span class="p">),</span> <span class="n">delta</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">cooperate</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">cooperation_value</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">delta</span><span class="p">),</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">deviate</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="n">deviation_value</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">delta</span><span class="p">),</span> <span class="n">rel</span><span class="o">=</span><span class="mf">1e-6</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">cooperate</span> <span class="o">&gt;</span> <span class="n">deviate</span>
-</code></pre></div>
-<h3 id="_11">戦略を関数にする<a class="headerlink" href="#_11" title="Permanent link">&para;</a></h3>
-<p>戦略は、<strong>自分と相手の過去の手</strong>から、次の手を決める関数です。関数を、値として、<code>play</code> に渡します。</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_戦略は過去の手から次の手を決める</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="n">always_cooperate</span><span class="p">([],</span> <span class="p">[])</span> <span class="o">==</span> <span class="mi">0</span>
-    <span class="k">assert</span> <span class="n">always_defect</span><span class="p">([],</span> <span class="p">[])</span> <span class="o">==</span> <span class="mi">1</span>
-    <span class="k">assert</span> <span class="n">tit_for_tat</span><span class="p">([],</span> <span class="p">[])</span> <span class="o">==</span> <span class="mi">0</span>
-    <span class="k">assert</span> <span class="n">tit_for_tat</span><span class="p">([</span><span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span>
-    <span class="k">assert</span> <span class="n">tit_for_tat</span><span class="p">([</span><span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span>
-    <span class="k">assert</span> <span class="n">grim_trigger</span><span class="p">([],</span> <span class="p">[])</span> <span class="o">==</span> <span class="mi">0</span>
-    <span class="k">assert</span> <span class="n">grim_trigger</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">0</span>
-    <span class="k">assert</span> <span class="n">grim_trigger</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span>
-    <span class="k">assert</span> <span class="n">grim_trigger</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_しっぺ返し同士は協調が続く</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">history</span> <span class="o">=</span> <span class="n">play</span><span class="p">(</span><span class="n">GAME</span><span class="p">,</span> <span class="n">tit_for_tat</span><span class="p">,</span> <span class="n">tit_for_tat</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">history</span> <span class="o">==</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">5</span>
-    <span class="k">assert</span> <span class="n">total_payoffs</span><span class="p">(</span><span class="n">GAME</span><span class="p">,</span> <span class="n">history</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_しっぺ返しは裏切りに裏切りで返す</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">history</span> <span class="o">=</span> <span class="n">play</span><span class="p">(</span><span class="n">GAME</span><span class="p">,</span> <span class="n">tit_for_tat</span><span class="p">,</span> <span class="n">always_defect</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">history</span> <span class="o">==</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
-    <span class="k">assert</span> <span class="n">total_payoffs</span><span class="p">(</span><span class="n">GAME</span><span class="p">,</span> <span class="n">history</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_裏切り同士は罰のまま</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">history</span> <span class="o">=</span> <span class="n">play</span><span class="p">(</span><span class="n">GAME</span><span class="p">,</span> <span class="n">always_defect</span><span class="p">,</span> <span class="n">always_defect</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">total_payoffs</span><span class="p">(</span><span class="n">GAME</span><span class="p">,</span> <span class="n">history</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_協調しつづけると裏切りに搾取される</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">history</span> <span class="o">=</span> <span class="n">play</span><span class="p">(</span><span class="n">GAME</span><span class="p">,</span> <span class="n">always_cooperate</span><span class="p">,</span> <span class="n">always_defect</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">total_payoffs</span><span class="p">(</span><span class="n">GAME</span><span class="p">,</span> <span class="n">history</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_トリガー戦略は一度の裏切りで永久に裏切る</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">history</span> <span class="o">=</span> <span class="n">play</span><span class="p">(</span><span class="n">GAME</span><span class="p">,</span> <span class="n">grim_trigger</span><span class="p">,</span> <span class="n">tit_for_tat</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">history</span> <span class="o">==</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)]</span> <span class="o">*</span> <span class="mi">4</span>
-    <span class="n">history</span> <span class="o">=</span> <span class="n">play</span><span class="p">(</span><span class="n">GAME</span><span class="p">,</span> <span class="n">grim_trigger</span><span class="p">,</span> <span class="n">always_defect</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">history</span> <span class="o">==</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_回数は1以上</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"回数"</span><span class="p">):</span>
-        <span class="n">play</span><span class="p">(</span><span class="n">GAME</span><span class="p">,</span> <span class="n">tit_for_tat</span><span class="p">,</span> <span class="n">tit_for_tat</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">always_cooperate</span><span class="p">(</span><span class="n">own</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">opponent</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""いつも協調する。"""</span>
-    <span class="k">return</span> <span class="n">COOPERATE</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">always_defect</span><span class="p">(</span><span class="n">own</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">opponent</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""いつも裏切る。"""</span>
-    <span class="k">return</span> <span class="n">DEFECT</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">tit_for_tat</span><span class="p">(</span><span class="n">own</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">opponent</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""しっぺ返し。最初は協調し、以後は、相手の前の手をまねる。"""</span>
-    <span class="k">return</span> <span class="n">opponent</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="k">if</span> <span class="n">opponent</span> <span class="k">else</span> <span class="n">COOPERATE</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">grim_trigger</span><span class="p">(</span><span class="n">own</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">],</span> <span class="n">opponent</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""トリガー戦略。相手が一度でも裏切ったら、永久に裏切る。"""</span>
-    <span class="k">return</span> <span class="n">DEFECT</span> <span class="k">if</span> <span class="n">DEFECT</span> <span class="ow">in</span> <span class="n">opponent</span> <span class="k">else</span> <span class="n">COOPERATE</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">play</span><span class="p">(</span>
-    <span class="n">game</span><span class="p">:</span> <span class="n">Game</span><span class="p">,</span> <span class="n">row_strategy</span><span class="p">:</span> <span class="n">Strategy</span><span class="p">,</span> <span class="n">column_strategy</span><span class="p">:</span> <span class="n">Strategy</span><span class="p">,</span> <span class="n">rounds</span><span class="p">:</span> <span class="nb">int</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]:</span>
-<span class="w">    </span><span class="sd">"""rounds 回、繰り返して、各期の（行の手、列の手）を返す。"""</span>
-    <span class="k">if</span> <span class="n">rounds</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"回数は、1 以上にする"</span><span class="p">)</span>
-    <span class="n">row_moves</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="n">column_moves</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
-    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">rounds</span><span class="p">):</span>
-        <span class="n">row</span> <span class="o">=</span> <span class="n">row_strategy</span><span class="p">(</span><span class="n">row_moves</span><span class="p">,</span> <span class="n">column_moves</span><span class="p">)</span>
-        <span class="n">column</span> <span class="o">=</span> <span class="n">column_strategy</span><span class="p">(</span><span class="n">column_moves</span><span class="p">,</span> <span class="n">row_moves</span><span class="p">)</span>
-        <span class="n">row_moves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
-        <span class="n">column_moves</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">column</span><span class="p">)</span>
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">row_moves</span><span class="p">,</span> <span class="n">column_moves</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">total_payoffs</span><span class="p">(</span>
-    <span class="n">game</span><span class="p">:</span> <span class="n">Game</span><span class="p">,</span> <span class="n">history</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">"""各期の利得の合計（割り引かない）。"""</span>
-    <span class="n">row_total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">payoffs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">history</span><span class="p">)</span>
-    <span class="n">column_total</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">payoffs</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="n">j</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">history</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">row_total</span><span class="p">,</span> <span class="n">column_total</span>
-</code></pre></div>
-<h3 id="_12">屈折需要曲線<a class="headerlink" href="#_12" title="Permanent link">&para;</a></h3>
-<p>次の <code>kinked.py</code> は、独立した話題です。</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.kinked</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">KinkedDemand</span><span class="p">,</span>
-    <span class="n">marginal_revenue_above</span><span class="p">,</span>
-    <span class="n">marginal_revenue_below</span><span class="p">,</span>
-    <span class="n">marginal_revenue_gap</span><span class="p">,</span>
-    <span class="n">price_stays</span><span class="p">,</span>
-    <span class="n">price_when_cost_shifts</span><span class="p">,</span>
-<span class="p">)</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="n">KINKED</span> <span class="o">=</span> <span class="n">KinkedDemand</span><span class="p">(</span><span class="n">kink_quantity</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">kink_price</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">upper_slope</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">lower_slope</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_屈折点で限界収入は上下に分かれる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="n">marginal_revenue_above</span><span class="p">(</span><span class="n">KINKED</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">50</span> <span class="o">-</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">marginal_revenue_below</span><span class="p">(</span><span class="n">KINKED</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">50</span> <span class="o">-</span> <span class="mi">2</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_限界収入の途切れの大きさ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="n">marginal_revenue_gap</span><span class="p">(</span><span class="n">KINKED</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">60</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">marginal_revenue_gap</span><span class="p">(</span><span class="n">KINKED</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span>
-        <span class="n">marginal_revenue_above</span><span class="p">(</span><span class="n">KINKED</span><span class="p">)</span> <span class="o">-</span> <span class="n">marginal_revenue_below</span><span class="p">(</span><span class="n">KINKED</span><span class="p">)</span>
-    <span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_限界費用が途切れの中なら価格は変わらない</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="n">price_stays</span><span class="p">(</span><span class="n">KINKED</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">price_stays</span><span class="p">(</span><span class="n">KINKED</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">price_stays</span><span class="p">(</span><span class="n">KINKED</span><span class="p">,</span> <span class="o">-</span><span class="mi">30</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="ow">not</span> <span class="n">price_stays</span><span class="p">(</span><span class="n">KINKED</span><span class="p">,</span> <span class="mi">31</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="ow">not</span> <span class="n">price_stays</span><span class="p">(</span><span class="n">KINKED</span><span class="p">,</span> <span class="o">-</span><span class="mi">31</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_限界費用が変わっても価格は同じ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="n">price_when_cost_shifts</span><span class="p">(</span><span class="n">KINKED</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span> <span class="o">==</span> <span class="mi">50</span>
-    <span class="k">assert</span> <span class="n">price_when_cost_shifts</span><span class="p">(</span><span class="n">KINKED</span><span class="p">,</span> <span class="mi">30</span><span class="p">)</span> <span class="o">==</span> <span class="mi">50</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_途切れを出る費用の上昇は価格を動かす</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"屈折"</span><span class="p">):</span>
-        <span class="n">price_when_cost_shifts</span><span class="p">(</span><span class="n">KINKED</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_屈折には上の傾きが下より小さいことが必要</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"傾き"</span><span class="p">):</span>
-        <span class="n">KinkedDemand</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"傾き"</span><span class="p">):</span>
-        <span class="n">KinkedDemand</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"屈折点"</span><span class="p">):</span>
-        <span class="n">KinkedDemand</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="k">with</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="n">match</span><span class="o">=</span><span class="s2">"屈折点"</span><span class="p">):</span>
-        <span class="n">KinkedDemand</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_傾きの差が大きいほど途切れが大きい</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">wide</span> <span class="o">=</span> <span class="n">KinkedDemand</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">marginal_revenue_gap</span><span class="p">(</span><span class="n">wide</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">marginal_revenue_gap</span><span class="p">(</span><span class="n">KINKED</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">marginal_revenue_gap</span><span class="p">(</span><span class="n">wide</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">((</span><span class="mi">4</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">KinkedDemand</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""屈折点 (数量, 価格) と、屈折点の上・下の需要曲線の傾き（大きさ）。"""</span>
-
-    <span class="n">kink_quantity</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">kink_price</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">upper_slope</span><span class="p">:</span> <span class="nb">float</span>
-    <span class="n">lower_slope</span><span class="p">:</span> <span class="nb">float</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">__post_init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kink_quantity</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">kink_price</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"屈折点の数量と価格は、正にする"</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">upper_slope</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">lower_slope</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"傾きは、0 &lt; 上の傾き &lt; 下の傾き にする"</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">marginal_revenue_above</span><span class="p">(</span><span class="n">demand</span><span class="p">:</span> <span class="n">KinkedDemand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""屈折点の、緩やかな側（上）の限界収入 P − b₁·Q。"""</span>
-    <span class="k">return</span> <span class="n">demand</span><span class="o">.</span><span class="n">kink_price</span> <span class="o">-</span> <span class="n">demand</span><span class="o">.</span><span class="n">upper_slope</span> <span class="o">*</span> <span class="n">demand</span><span class="o">.</span><span class="n">kink_quantity</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">marginal_revenue_below</span><span class="p">(</span><span class="n">demand</span><span class="p">:</span> <span class="n">KinkedDemand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""屈折点の、急な側（下）の限界収入 P − b₂·Q。"""</span>
-    <span class="k">return</span> <span class="n">demand</span><span class="o">.</span><span class="n">kink_price</span> <span class="o">-</span> <span class="n">demand</span><span class="o">.</span><span class="n">lower_slope</span> <span class="o">*</span> <span class="n">demand</span><span class="o">.</span><span class="n">kink_quantity</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">marginal_revenue_gap</span><span class="p">(</span><span class="n">demand</span><span class="p">:</span> <span class="n">KinkedDemand</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""限界収入の途切れの大きさ (b₂ − b₁)·Q。"""</span>
-    <span class="k">return</span> <span class="n">marginal_revenue_above</span><span class="p">(</span><span class="n">demand</span><span class="p">)</span> <span class="o">-</span> <span class="n">marginal_revenue_below</span><span class="p">(</span><span class="n">demand</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">price_stays</span><span class="p">(</span><span class="n">demand</span><span class="p">:</span> <span class="n">KinkedDemand</span><span class="p">,</span> <span class="n">marginal_cost</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""限界費用が、途切れの範囲の中なら、価格は、屈折点のまま。"""</span>
-    <span class="k">return</span> <span class="p">(</span>
-        <span class="n">marginal_revenue_below</span><span class="p">(</span><span class="n">demand</span><span class="p">)</span>
-        <span class="o">&lt;=</span> <span class="n">marginal_cost</span>
-        <span class="o">&lt;=</span> <span class="n">marginal_revenue_above</span><span class="p">(</span><span class="n">demand</span><span class="p">)</span>
-    <span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">price_when_cost_shifts</span><span class="p">(</span><span class="n">demand</span><span class="p">:</span> <span class="n">KinkedDemand</span><span class="p">,</span> <span class="n">marginal_cost</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""限界費用が変わったときの価格。途切れの中なら、屈折点の価格のまま。"""</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">price_stays</span><span class="p">(</span><span class="n">demand</span><span class="p">,</span> <span class="n">marginal_cost</span><span class="p">):</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"限界費用が、途切れの範囲を出ると、屈折点では決まらない"</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">demand</span><span class="o">.</span><span class="n">kink_price</span>
-</code></pre></div>
-<h3 id="_13">予想の答え合わせ<a class="headerlink" href="#_13" title="Permanent link">&para;</a></h3>
+<h3 id="_8">予想の答え合わせ<a class="headerlink" href="#_8" title="Permanent link">&para;</a></h3>
 <p>予想した答えを、プログラムで確かめます。</p>
 <blockquote>
 <p>このスクリプトは、<strong>完成形</strong>（<code>lib/</code>）を読みます。<strong>自分のコードで確かめる</strong>ときは、import を、<code>from practice.chapterNN...</code> に書き換えてください。</p>
@@ -8428,24 +8251,6 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">prisoners_dilemma</span><span class="p">,</span>
     <span class="n">pure_nash_equilibria</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.kinked</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">KinkedDemand</span><span class="p">,</span>
-    <span class="n">marginal_revenue_above</span><span class="p">,</span>
-    <span class="n">marginal_revenue_below</span><span class="p">,</span>
-    <span class="n">marginal_revenue_gap</span><span class="p">,</span>
-    <span class="n">price_stays</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">lib.chapter12.repeated</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">always_defect</span><span class="p">,</span>
-    <span class="n">cooperation_threshold</span><span class="p">,</span>
-    <span class="n">cooperation_value</span><span class="p">,</span>
-    <span class="n">deviation_value</span><span class="p">,</span>
-    <span class="n">grim_trigger</span><span class="p">,</span>
-    <span class="n">play</span><span class="p">,</span>
-    <span class="n">tit_for_tat</span><span class="p">,</span>
-    <span class="n">total_payoffs</span><span class="p">,</span>
-    <span class="n">trigger_sustains_cooperation</span><span class="p">,</span>
-<span class="p">)</span>
 
 <span class="n">game</span> <span class="o">=</span> <span class="n">prisoners_dilemma</span><span class="p">(</span><span class="n">temptation</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">reward</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">punishment</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">sucker</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"囚人のジレンマか:"</span><span class="p">,</span> <span class="n">is_prisoners_dilemma</span><span class="p">(</span><span class="n">game</span><span class="p">))</span>
@@ -8455,18 +8260,6 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <span class="nb">print</span><span class="p">(</span><span class="s2">"ナッシュ均衡:"</span><span class="p">,</span> <span class="n">pure_nash_equilibria</span><span class="p">(</span><span class="n">game</span><span class="p">),</span> <span class="s2">"パレート劣位 (裏切り, 裏切り):"</span><span class="p">,</span> <span class="n">is_pareto_dominated</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)))</span>
 <span class="n">coordination</span> <span class="o">=</span> <span class="n">Game</span><span class="p">((((</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span> <span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))))</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">"協調ゲームの均衡:"</span><span class="p">,</span> <span class="n">pure_nash_equilibria</span><span class="p">(</span><span class="n">coordination</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"割引因子の閾値:"</span><span class="p">,</span> <span class="n">cooperation_threshold</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-<span class="k">for</span> <span class="n">delta</span> <span class="ow">in</span> <span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"δ ="</span><span class="p">,</span> <span class="n">delta</span><span class="p">,</span> <span class="s2">"協調"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">cooperation_value</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">delta</span><span class="p">),</span> <span class="mi">4</span><span class="p">),</span> <span class="s2">"裏切り"</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="n">deviation_value</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">delta</span><span class="p">),</span> <span class="mi">4</span><span class="p">),</span> <span class="n">trigger_sustains_cooperation</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">delta</span><span class="p">))</span>
-<span class="n">h</span> <span class="o">=</span> <span class="n">play</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">tit_for_tat</span><span class="p">,</span> <span class="n">always_defect</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"しっぺ返し対いつも裏切り:"</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">total_payoffs</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span>
-<span class="n">h</span> <span class="o">=</span> <span class="n">play</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">tit_for_tat</span><span class="p">,</span> <span class="n">tit_for_tat</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"しっぺ返し同士:"</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">total_payoffs</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span>
-<span class="n">h</span> <span class="o">=</span> <span class="n">play</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">grim_trigger</span><span class="p">,</span> <span class="n">always_defect</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"トリガー対いつも裏切り:"</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">total_payoffs</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span>
-<span class="n">kinked</span> <span class="o">=</span> <span class="n">KinkedDemand</span><span class="p">(</span><span class="n">kink_quantity</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">kink_price</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">upper_slope</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">lower_slope</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"限界収入 上・下・途切れ:"</span><span class="p">,</span> <span class="n">marginal_revenue_above</span><span class="p">(</span><span class="n">kinked</span><span class="p">),</span> <span class="n">marginal_revenue_below</span><span class="p">(</span><span class="n">kinked</span><span class="p">),</span> <span class="n">marginal_revenue_gap</span><span class="p">(</span><span class="n">kinked</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"限界費用 10・30・40 で価格は動かないか:"</span><span class="p">,</span> <span class="p">[</span><span class="n">price_stays</span><span class="p">(</span><span class="n">kinked</span><span class="p">,</span> <span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">)])</span>
 </code></pre></div>
 <div class="highlight"><pre><span></span><code>囚人のジレンマか: True
 行の最適反応 列が協調・裏切り: [1] [1]
@@ -8474,224 +8267,21 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 行の支配戦略: 1
 ナッシュ均衡: [(1, 1)] パレート劣位 (裏切り, 裏切り): True
 協調ゲームの均衡: [(0, 0), (1, 1)]
-割引因子の閾値: 0.5
-δ = 0.4 協調 5.0 裏切り 5.6667 False
-δ = 0.5 協調 6.0 裏切り 6.0 True
-δ = 0.6 協調 7.5 裏切り 6.5 True
-しっぺ返し対いつも裏切り: [(0, 1), (1, 1), (1, 1), (1, 1)] (3, 8)
-しっぺ返し同士: [(0, 0), (0, 0), (0, 0), (0, 0)] (12, 12)
-トリガー対いつも裏切り: [(0, 1), (1, 1), (1, 1), (1, 1)] (3, 8)
-限界収入 上・下・途切れ: 30.0 -30 60.0
-限界費用 10・30・40 で価格は動かないか: [True, True, False]
 </code></pre></div>
 <ul>
 <li><strong>1 つ目の問い</strong>: 相手が協調でも裏切りでも、最適反応は<strong>裏切り</strong>（支配戦略）です</li>
 <li><strong>2 つ目の問い</strong>: ナッシュ均衡は（裏切り、裏切り）だけで、(1, 1) は、（協調、協調）の (3, 3) に、<strong>パレート劣位</strong>です</li>
-<li><strong>3 つ目の問い</strong>: 閾値は 0.5 です。δ = 0.4 では、協調 5.0 &lt; 裏切り 5.67 で、裏切ります。δ = 0.5 は、ちょうど等しく（6.0）、δ = 0.6 では、協調 7.5 &gt; 裏切り 6.5 で、協調が続きます</li>
-<li><strong>4 つ目の問い</strong>: しっぺ返しは、最初に 1 回だけ、搾取され（0 対 5）、あとは、お互いに裏切ります。合計は (3, 8)。しっぺ返し同士なら、協調が続いて (12, 12) です。トリガー戦略も、いつも裏切る相手には、同じ結果です</li>
-<li><strong>5 つ目の問い</strong>: 限界収入は、屈折点の上が 30、下が −30 で、途切れは 60 です。限界費用が 10 と 30 なら、価格は動かず、40 では、途切れの範囲を出るので、動きます</li>
+<li><strong>協調ゲーム</strong>（同じ戦略をそろえると得）では、均衡が 2 つあります（[(0, 0), (1, 1)]）</li>
 </ul>
-<h3 id="_14">図<a class="headerlink" href="#_14" title="Permanent link">&para;</a></h3>
-<p>屈折需要曲線の図です。需要は、屈折点で折れ、上側の限界収入（橙）と、下側の限界収入（緑）が、屈折点で途切れます（点線）。限界費用（2 本）が、途切れの中なら、価格は動きません。</p>
-<p><img alt="屈折需要曲線。屈折点（数量 40、価格 50）で、限界収入が 30 から −30 へ途切れる。限界費用が 10 でも 25 でも、価格は変わらない" src="../images/ch12-kinked.png" /></p>
-<details class="note">
-<summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
-<div class="highlight"><pre><span></span><code><span class="n">KINKED</span> <span class="o">=</span> <span class="n">KinkedDemand</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">xs</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Line2D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-    <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cast</span><span class="p">(</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">line</span><span class="o">.</span><span class="n">get_xdata</span><span class="p">())]</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">ys</span><span class="p">(</span><span class="n">line</span><span class="p">:</span> <span class="n">Line2D</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">float</span><span class="p">]:</span>
-    <span class="k">return</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">cast</span><span class="p">(</span><span class="n">Sequence</span><span class="p">[</span><span class="nb">float</span><span class="p">],</span> <span class="n">line</span><span class="o">.</span><span class="n">get_ydata</span><span class="p">())]</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">line</span><span class="p">(</span><span class="n">ax</span><span class="p">:</span> <span class="n">Axes</span><span class="p">,</span> <span class="n">label</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Line2D</span><span class="p">:</span>
-    <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">item</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">ax</span><span class="o">.</span><span class="n">lines</span> <span class="k">if</span> <span class="n">item</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span> <span class="o">==</span> <span class="n">label</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">kinked</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Axes</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">plot_kinked</span><span class="p">(</span><span class="n">KINKED</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">80</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">25</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_屈折需要曲線の図の線</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">kinked</span><span class="p">()</span><span class="o">.</span><span class="n">lines</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span>
-        <span class="s2">"Demand"</span><span class="p">,</span>
-        <span class="s2">"Marginal revenue (upper)"</span><span class="p">,</span>
-        <span class="s2">"Marginal revenue (lower)"</span><span class="p">,</span>
-        <span class="s2">"MR gap"</span><span class="p">,</span>
-        <span class="s2">"Marginal cost (low)"</span><span class="p">,</span>
-        <span class="s2">"Marginal cost (high)"</span><span class="p">,</span>
-    <span class="p">]</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_需要曲線は屈折点で傾きが変わる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">demand</span> <span class="o">=</span> <span class="n">line</span><span class="p">(</span><span class="n">kinked</span><span class="p">(),</span> <span class="s2">"Demand"</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">demand</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">40</span>
-    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">demand</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">50</span>
-    <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">demand</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
-    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">demand</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">50</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">demand</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">demand</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">40</span> <span class="o">+</span> <span class="mi">50</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_限界収入は屈折点で途切れる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">kinked</span><span class="p">()</span>
-    <span class="n">upper</span><span class="p">,</span> <span class="n">lower</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="s2">"Marginal revenue (upper)"</span><span class="p">),</span>
-        <span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="s2">"Marginal revenue (lower)"</span><span class="p">),</span>
-    <span class="p">)</span>
-    <span class="k">assert</span> <span class="p">(</span><span class="n">xs</span><span class="p">(</span><span class="n">upper</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">ys</span><span class="p">(</span><span class="n">upper</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">==</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">30</span><span class="p">))</span>
-    <span class="k">assert</span> <span class="p">(</span><span class="n">xs</span><span class="p">(</span><span class="n">lower</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="n">ys</span><span class="p">(</span><span class="n">lower</span><span class="p">)[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="p">))</span>
-    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">upper</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">70</span><span class="p">)</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_途切れの線は屈折点の上下を結ぶ</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">gap</span> <span class="o">=</span> <span class="n">line</span><span class="p">(</span><span class="n">kinked</span><span class="p">(),</span> <span class="s2">"MR gap"</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">gap</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">]</span>
-    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">gap</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="p">),</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">30</span><span class="p">)]</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_限界費用は水平線</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">kinked</span><span class="p">()</span>
-    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="s2">"Marginal cost (low)"</span><span class="p">))</span> <span class="o">==</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">]</span>
-    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="s2">"Marginal cost (high)"</span><span class="p">))</span> <span class="o">==</span> <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">]</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_屈折需要曲線の図の軸と凡例</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">kinked</span><span class="p">()</span>
-    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="o">-</span><span class="mi">70</span><span class="p">,</span> <span class="mi">80</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlabel</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"Quantity Q"</span>
-    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylabel</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"Price P"</span>
-    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_kinked</span><span class="p">(</span>
-    <span class="n">demand</span><span class="p">:</span> <span class="n">KinkedDemand</span><span class="p">,</span>
-    <span class="n">q_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">p_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">cost_low</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">cost_high</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""屈折需要曲線と、限界収入の途切れ。限界費用が途切れの中なら、価格は動かない。"""</span>
-    <span class="n">q</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">demand</span><span class="o">.</span><span class="n">kink_quantity</span><span class="p">,</span> <span class="n">demand</span><span class="o">.</span><span class="n">kink_price</span>
-    <span class="n">b1</span><span class="p">,</span> <span class="n">b2</span> <span class="o">=</span> <span class="n">demand</span><span class="o">.</span><span class="n">upper_slope</span><span class="p">,</span> <span class="n">demand</span><span class="o">.</span><span class="n">lower_slope</span>
-    <span class="n">above</span><span class="p">,</span> <span class="n">below</span> <span class="o">=</span> <span class="n">marginal_revenue_above</span><span class="p">(</span><span class="n">demand</span><span class="p">),</span> <span class="n">marginal_revenue_below</span><span class="p">(</span><span class="n">demand</span><span class="p">)</span>
-    <span class="n">y_min</span> <span class="o">=</span> <span class="n">below</span> <span class="o">-</span> <span class="mi">40</span>
-    <span class="n">a2</span> <span class="o">=</span> <span class="n">p</span> <span class="o">+</span> <span class="n">b2</span> <span class="o">*</span> <span class="n">q</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">q</span><span class="p">,</span> <span class="n">q</span> <span class="o">+</span> <span class="n">p</span> <span class="o">/</span> <span class="n">b2</span><span class="p">],</span> <span class="p">[</span><span class="n">p</span> <span class="o">+</span> <span class="n">b1</span> <span class="o">*</span> <span class="n">q</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Demand"</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">q</span><span class="p">],</span> <span class="p">[</span><span class="n">p</span> <span class="o">+</span> <span class="n">b1</span> <span class="o">*</span> <span class="n">q</span><span class="p">,</span> <span class="n">above</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Marginal revenue (upper)"</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">q</span><span class="p">,</span> <span class="p">(</span><span class="n">a2</span> <span class="o">-</span> <span class="n">y_min</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">b2</span><span class="p">)],</span> <span class="p">[</span><span class="n">below</span><span class="p">,</span> <span class="n">y_min</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Marginal revenue (lower)"</span>
-    <span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="n">q</span><span class="p">,</span> <span class="n">q</span><span class="p">],</span> <span class="p">[</span><span class="n">below</span><span class="p">,</span> <span class="n">above</span><span class="p">],</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">":"</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"MR gap"</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">q_max</span><span class="p">],</span> <span class="p">[</span><span class="n">cost_low</span><span class="p">,</span> <span class="n">cost_low</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Marginal cost (low)"</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">q_max</span><span class="p">],</span> <span class="p">[</span><span class="n">cost_high</span><span class="p">,</span> <span class="n">cost_high</span><span class="p">],</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Marginal cost (high)"</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Quantity Q"</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Price P"</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">q_max</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="n">y_min</span><span class="p">,</span> <span class="n">p_max</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">"x-small"</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">fig</span>
-</code></pre></div>
-</details>
-<p>協調が続く条件の図は、章の最初に載せました。</p>
-<details class="note">
-<summary>描画のテストと実装（後回しにしても、学習は成り立ちます）</summary>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">trigger</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Axes</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">plot_trigger</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.95</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span><span class="o">.</span><span class="n">axes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_協調が続く条件の図の線</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="p">[</span><span class="n">item</span><span class="o">.</span><span class="n">get_label</span><span class="p">()</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">trigger</span><span class="p">()</span><span class="o">.</span><span class="n">lines</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span>
-        <span class="s2">"Cooperate forever"</span><span class="p">,</span>
-        <span class="s2">"Defect once"</span><span class="p">,</span>
-        <span class="s2">"Threshold"</span><span class="p">,</span>
-    <span class="p">]</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_協調と裏切りの価値は閾値で交わる</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">trigger</span><span class="p">()</span>
-    <span class="n">cooperate</span><span class="p">,</span> <span class="n">defect</span> <span class="o">=</span> <span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="s2">"Cooperate forever"</span><span class="p">),</span> <span class="n">line</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="s2">"Defect once"</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">xs</span><span class="p">(</span><span class="n">cooperate</span><span class="p">))</span> <span class="o">==</span> <span class="mi">100</span>
-    <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">cooperate</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
-    <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">cooperate</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.95</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">delta</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">xs</span><span class="p">(</span><span class="n">cooperate</span><span class="p">),</span> <span class="n">ys</span><span class="p">(</span><span class="n">cooperate</span><span class="p">),</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="n">value</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">3</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">delta</span><span class="p">))</span>
-    <span class="k">for</span> <span class="n">delta</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">xs</span><span class="p">(</span><span class="n">defect</span><span class="p">),</span> <span class="n">ys</span><span class="p">(</span><span class="n">defect</span><span class="p">),</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-        <span class="k">assert</span> <span class="n">value</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">5</span> <span class="o">+</span> <span class="n">delta</span> <span class="o">*</span> <span class="mi">1</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">delta</span><span class="p">))</span>
-    <span class="n">below</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="n">d</span>
-        <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">xs</span><span class="p">(</span><span class="n">cooperate</span><span class="p">),</span> <span class="n">ys</span><span class="p">(</span><span class="n">cooperate</span><span class="p">),</span> <span class="n">ys</span><span class="p">(</span><span class="n">defect</span><span class="p">),</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">c</span> <span class="o">&lt;</span> <span class="n">f</span>
-    <span class="p">]</span>
-    <span class="k">assert</span> <span class="nb">max</span><span class="p">(</span><span class="n">below</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.5</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_閾値の点</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">point</span> <span class="o">=</span> <span class="n">line</span><span class="p">(</span><span class="n">trigger</span><span class="p">(),</span> <span class="s2">"Threshold"</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">xs</span><span class="p">(</span><span class="n">point</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)]</span>
-    <span class="k">assert</span> <span class="n">ys</span><span class="p">(</span><span class="n">point</span><span class="p">)</span> <span class="o">==</span> <span class="p">[</span><span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">6</span><span class="p">)]</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">test_協調が続く条件の図の軸と凡例</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">ax</span> <span class="o">=</span> <span class="n">trigger</span><span class="p">()</span>
-    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlim</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylim</span><span class="p">()</span> <span class="o">==</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">60</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_xlabel</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"Discount factor"</span>
-    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_ylabel</span><span class="p">()</span> <span class="o">==</span> <span class="s2">"Present value"</span>
-    <span class="k">assert</span> <span class="n">ax</span><span class="o">.</span><span class="n">get_legend</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-</code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">plot_trigger</span><span class="p">(</span>
-    <span class="n">temptation</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">reward</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">punishment</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">delta_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-    <span class="n">delta_points</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">y_max</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Figure</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">"""協調を続ける価値と、一度裏切る価値。割引因子が閾値を超えると、協調が上回る。"""</span>
-    <span class="n">deltas</span> <span class="o">=</span> <span class="p">[</span><span class="n">delta_max</span> <span class="o">*</span> <span class="n">i</span> <span class="o">/</span> <span class="p">(</span><span class="n">delta_points</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">delta_points</span><span class="p">)]</span>
-    <span class="n">threshold</span> <span class="o">=</span> <span class="n">cooperation_threshold</span><span class="p">(</span><span class="n">temptation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">punishment</span><span class="p">)</span>
-    <span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">()</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">deltas</span><span class="p">,</span>
-        <span class="p">[</span><span class="n">cooperation_value</span><span class="p">(</span><span class="n">reward</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">deltas</span><span class="p">],</span>
-        <span class="n">label</span><span class="o">=</span><span class="s2">"Cooperate forever"</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="n">deltas</span><span class="p">,</span>
-        <span class="p">[</span><span class="n">deviation_value</span><span class="p">(</span><span class="n">temptation</span><span class="p">,</span> <span class="n">punishment</span><span class="p">,</span> <span class="n">d</span><span class="p">)</span> <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">deltas</span><span class="p">],</span>
-        <span class="n">label</span><span class="o">=</span><span class="s2">"Defect once"</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span>
-        <span class="p">[</span><span class="n">threshold</span><span class="p">],</span>
-        <span class="p">[</span><span class="n">cooperation_value</span><span class="p">(</span><span class="n">reward</span><span class="p">,</span> <span class="n">threshold</span><span class="p">)],</span>
-        <span class="s2">"o"</span><span class="p">,</span>
-        <span class="n">label</span><span class="o">=</span><span class="s2">"Threshold"</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">"Discount factor"</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s2">"Present value"</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">y_max</span><span class="p">)</span>
-    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">fontsize</span><span class="o">=</span><span class="s2">"x-small"</span><span class="p">)</span>
-    <span class="n">plt</span><span class="o">.</span><span class="n">close</span><span class="p">(</span><span class="n">fig</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">fig</span>
-</code></pre></div>
-</details>
-<h3 id="_15">実行結果<a class="headerlink" href="#_15" title="Permanent link">&para;</a></h3>
+<h3 id="_9">実行結果<a class="headerlink" href="#_9" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>test/chapter12
 </code></pre></div>
-<div class="highlight"><pre><span></span><code>64 passed
+<div class="highlight"><pre><span></span><code>26 passed
 </code></pre></div>
 <h2 id="126">12.6 規則で言うと<a class="headerlink" href="#126" title="Permanent link">&para;</a></h2>
 <ol>
 <li><strong>相手の戦略を所与として、最適反応を選ぶ。</strong> 2 人とも最適反応の組が、ナッシュ均衡</li>
 <li><strong>囚人のジレンマでは、支配戦略の均衡が、パレート劣位になる。</strong> 個人の合理性が、全体の非効率を生む</li>
-<li><strong>トリガー戦略の繰り返しゲームでは、δ ≥ (T − R) ÷ (T − P) なら、協調が続く。</strong> 将来を重く見るほど、協調が続く</li>
 </ol>
 <p>混同しやすい点を、表にまとめます。</p>
 <table>
@@ -8711,25 +8301,16 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <td style="text-align: left;">均衡は、一人で変えたくない組であって、<strong>全体で最善</strong>とは限らない（囚人のジレンマ）</td>
 </tr>
 <tr>
-<td style="text-align: left;">トリガー戦略としっぺ返し</td>
-<td style="text-align: left;">閾値 (T − R) ÷ (T − P) は、トリガー戦略のもの。しっぺ返しは、利用されることがあり、必要な δ が違う（δ ≥ (T − R) ÷ (R − S)）</td>
-</tr>
-<tr>
-<td style="text-align: left;">割引因子の大小</td>
-<td style="text-align: left;">δ が大きいほど、将来を重く見る（辛抱強い）。協調が続きやすい</td>
-</tr>
-<tr>
-<td style="text-align: left;">屈折需要の価格</td>
-<td style="text-align: left;">価格が硬直的なのは、限界費用が<strong>途切れの範囲内</strong>で動くとき。範囲を出れば、価格は動く。また、<strong>屈折点の価格が、なぜ決まったか</strong>は、説明しない</td>
+<td style="text-align: left;">最適反応が複数</td>
+<td style="text-align: left;">利得が同点なら、最適反応は<strong>すべて</strong>。支配戦略は、<strong>厳密に</strong>良いものだけ</td>
 </tr>
 </tbody>
 </table>
-<h3 id="_16">このモデルが成り立たない場面<a class="headerlink" href="#_16" title="Permanent link">&para;</a></h3>
+<h3 id="_10">このモデルが成り立たない場面<a class="headerlink" href="#_10" title="Permanent link">&para;</a></h3>
 <ul>
-<li><strong>純粋戦略だけを扱いました。</strong> 混合戦略（確率的に選ぶ）の均衡は、扱っていません</li>
+<li><strong>純粋戦略だけを扱いました。</strong> 混合戦略（確率的に選ぶ）の均衡は、扱っていません。一致ゲームの均衡は、混合戦略にあります</li>
 <li><strong>2 人・同時手番だけです。</strong> 順番に選ぶゲーム（先手・後手）や、3 人以上は、扱っていません</li>
-<li><strong>無限に繰り返すことを、閉じた式で近似しました。</strong> 実際の取引は、有限回で、終わりが分かっていれば、最後の期から順に協調が崩れ、全期で崩れることがあります（後ろ向き帰納法）</li>
-<li><strong>屈折需要曲線は、価格の硬直性を、仮定として置くだけで、説明しません。</strong> 実証的にも、支持は限定的です</li>
+<li><strong>利得は、すべて分かっている（完備情報）と仮定しました。</strong> 相手の利得を知らない場合は、扱っていません</li>
 </ul>
 <h2 id="127">12.7 練習問題<a class="headerlink" href="#127" title="Permanent link">&para;</a></h2>
 <table>
@@ -8746,15 +8327,15 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 </tr>
 <tr>
 <td style="text-align: left;">生成</td>
-<td style="text-align: left;">解説を見る前に、<strong>一度裏切る価値から協調を続ける価値を引いた値</strong>を返す <code>deviation_gain(temptation, reward, punishment, delta)</code> を、テストから書いてください。δ = 0.5 で 0、δ = 0.4 で正になります</td>
+<td style="text-align: left;">解説を見る前に、組 (i, j) が<strong>ナッシュ均衡かどうか</strong>を返す <code>is_nash_equilibrium(game, cell)</code> を、テストから書いてください。囚人のジレンマで (1, 1) は真、(0, 0) は偽です</td>
 </tr>
 <tr>
 <td style="text-align: left;">多様</td>
-<td style="text-align: left;">誘惑 T を 5 から 4 に下げると、割引因子の閾値は、どうなりますか。先に予想してから、確かめてください</td>
+<td style="text-align: left;">誘惑 T を 5 から 7 に上げても、ナッシュ均衡は、変わりますか。先に予想してから、確かめてください</td>
 </tr>
 <tr>
 <td style="text-align: left;">交互</td>
-<td style="text-align: left;"><a href="../../economics-programming/">第 1 シリーズ</a>の第 3 章のリスト内包表記で、T = 4〜10 の閾値を、一度に求めてください（R = 3、P = 1）。T が大きいと、閾値は、どうなりますか</td>
+<td style="text-align: left;"><a href="../../economics-programming/">第 1 シリーズ</a>の第 3 章のリスト内包表記で、T = 4〜10 のナッシュ均衡を、一度に求めてください（R = 3、P = 1、S = 0）。T が大きいと、均衡は、どうなりますか</td>
 </tr>
 </tbody>
 </table>
@@ -8765,24 +8346,24 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
     <span class="n">game</span> <span class="o">=</span> <span class="n">prisoners_dilemma</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">pure_nash_equilibria</span><span class="p">(</span><span class="n">game</span><span class="p">)</span> <span class="o">==</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
 </code></pre></div>
-<p><strong>生成</strong>: 裏切りの価値から、協調の価値を引きます。</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">deviation_gain</span><span class="p">(</span><span class="n">temptation</span><span class="p">,</span> <span class="n">reward</span><span class="p">,</span> <span class="n">punishment</span><span class="p">,</span> <span class="n">delta</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">deviation_value</span><span class="p">(</span><span class="n">temptation</span><span class="p">,</span> <span class="n">punishment</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span> <span class="o">-</span> <span class="n">cooperation_value</span><span class="p">(</span><span class="n">reward</span><span class="p">,</span> <span class="n">delta</span><span class="p">)</span>
+<p><strong>生成</strong>: 行も列も、最適反応になっているかを、調べます。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">is_nash_equilibrium</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">cell</span><span class="p">):</span>
+    <span class="n">row</span><span class="p">,</span> <span class="n">column</span> <span class="o">=</span> <span class="n">cell</span>
+    <span class="k">return</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">best_responses_for_row</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">column</span><span class="p">)</span> <span class="ow">and</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">best_responses_for_column</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="n">row</span><span class="p">)</span>
 </code></pre></div>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_練習問題の裏切りの得</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="n">deviation_gain</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">deviation_gain</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span>
-    <span class="k">assert</span> <span class="n">deviation_gain</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_練習問題のナッシュ均衡の判定</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">game</span> <span class="o">=</span> <span class="n">prisoners_dilemma</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">is_nash_equilibrium</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+    <span class="k">assert</span> <span class="ow">not</span> <span class="n">is_nash_equilibrium</span><span class="p">(</span><span class="n">game</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 </code></pre></div>
-<p><strong>多様</strong>: T = 4 では、閾値は (4 − 3) ÷ (4 − 1) = 1/3 です。誘惑が小さいほど、辛抱が少なくても、協調が続きます。</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_練習問題の誘惑が小さい場合の閾値</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="k">assert</span> <span class="n">cooperation_threshold</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">(</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">)</span>
+<p><strong>多様</strong>: T = 7 でも、裏切りは、相手が何をしても最適反応のままで、均衡は（裏切り、裏切り）だけです。T &gt; R &gt; P &gt; S が成り立つ限り、均衡は変わりません。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_練習問題の誘惑が大きい場合</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">pure_nash_equilibria</span><span class="p">(</span><span class="n">prisoners_dilemma</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">==</span> <span class="p">[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]</span>
 </code></pre></div>
-<p><strong>交互</strong>:</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_練習問題の誘惑と閾値</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-    <span class="n">thresholds</span> <span class="o">=</span> <span class="p">[</span><span class="n">cooperation_threshold</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">11</span><span class="p">)]</span>
-    <span class="k">assert</span> <span class="n">thresholds</span> <span class="o">==</span> <span class="n">pytest</span><span class="o">.</span><span class="n">approx</span><span class="p">([</span><span class="mi">1</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span> <span class="o">/</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">5</span> <span class="o">/</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">3</span> <span class="o">/</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">7</span> <span class="o">/</span> <span class="mi">9</span><span class="p">])</span>
-    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">a</span> <span class="o">&lt;</span> <span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">thresholds</span><span class="p">,</span> <span class="n">thresholds</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
+<p><strong>交互</strong>: T = 4〜10 のどれでも、均衡は同じです。</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">test_練習問題の誘惑とナッシュ均衡</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">results</span> <span class="o">=</span> <span class="p">[</span><span class="n">pure_nash_equilibria</span><span class="p">(</span><span class="n">prisoners_dilemma</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">11</span><span class="p">)]</span>
+    <span class="k">assert</span> <span class="n">results</span> <span class="o">==</span> <span class="p">[[(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)]]</span> <span class="o">*</span> <span class="mi">7</span>
 </code></pre></div>
 </details>
 <h2 id="128">12.8 振り返り<a class="headerlink" href="#128" title="Permanent link">&para;</a></h2>
@@ -8794,10 +8375,9 @@ uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </sp
 <h2 id="129">12.9 まとめ<a class="headerlink" href="#129" title="Permanent link">&para;</a></h2>
 <ul>
 <li>利得表から、最適反応・支配戦略・ナッシュ均衡を求められる。囚人のジレンマでは、均衡（裏切り、裏切り）が、協調よりパレート劣位になる</li>
-<li>繰り返しゲームでは、割引因子が閾値 (T − R) ÷ (T − P) 以上なら、トリガー戦略で協調が続く。しっぺ返しは、搾取されるのは、最初の 1 回だけ</li>
-<li>屈折需要曲線では、限界収入が途切れ、限界費用がその範囲内なら、価格は硬直的になる</li>
+<li>協調ゲームでは、均衡が 2 つあり、一致ゲームでは、純粋戦略の均衡がない</li>
 </ul>
-<p>次の章では、市場が<strong>価格を通して</strong>伝えない影響（<strong>外部効果</strong>）と、市場が供給しにくい<strong>公共財</strong>、費用逓減で規制が必要になる<strong>自然独占</strong>を調べます。ピグー税・コースの定理・排出権取引で、外部効果を是正する方法も、確かめます。</p>
+<p>次の章では、同じゲームを<strong>繰り返し</strong>ます。将来の報復があると、協調が続くことがあります。トリガー戦略で協調が続く<strong>割引因子の閾値</strong>と、しっぺ返し、寡占の<strong>屈折需要曲線</strong>（価格の硬直性）を、確かめます。</p>
 
 
 
