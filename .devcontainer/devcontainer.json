@@ -20,16 +20,20 @@
 	},
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [8000],
+	"forwardPorts": [8000, 8888],
 	"portsAttributes": {
 		"8000": {
 			"label": "MkDocs",
 			"onAutoForward": "openBrowser"
+		},
+		"8888": {
+			"label": "JupyterLab",
+			"onAutoForward": "notify"
 		}
 	},
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "npm install",
+	"postCreateCommand": "npm install && npm run setup:all",
 
 	// コンテナの起動のたびに、ドキュメントのサーバー（MkDocs + PlantUML）を起動する。
 	// mkdocs は plantuml に依存するので、両方が上がる。http://localhost:8000
@@ -37,6 +41,12 @@
 
 	// Configure tool-specific properties.
   "customizations" : {
+    "vscode" : {
+      "extensions" : [
+        "ms-python.python",
+        "ms-toolsai.jupyter"
+      ]
+    },
     "jetbrains" : {
       "backend" : "IntelliJ"
     }

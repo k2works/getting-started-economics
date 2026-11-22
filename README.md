@@ -137,6 +137,8 @@ Skills 一覧は [CLAUDE.md の Skills 体系](CLAUDE.md#skills-体系) を参�
   npm run notebook:math
   ```
 
+`setup:*` は、依存関係に加えて、Jupyter のカーネル（連載のディレクトリ名）を登録します。Codespaces では、作成時に `setup:all` が実行され、VS Code の Jupyter 拡張でカーネルを選んで開けます。`notebook:*` はポート 8888 で起動します（ブラウザは自動では開きません。転送されたポートの URL を開き、表示されたトークンを使います）。
+
 ##### MkDocsタスク
 
 - MkDocsサーバーの起動:
