@@ -10,8 +10,8 @@ from typing import cast
 import nbformat
 from nbformat.notebooknode import NotebookNode
 
-# カーネル名は、連載のディレクトリ名（npm run setup:* が、連載の .venv を指す形で登録する）。
-# これで、JupyterLab で開くと、numpy などの入った連載の .venv で動く。
+# カーネル名は、連載のディレクトリ名（npm run setup:* が登録する）。
+# JupyterLab で開くと、連載の .venv（numpy など入り）で動く。
 KERNEL_NAME = Path(__file__).resolve().parents[2].name
 
 BOOTSTRAP = """
