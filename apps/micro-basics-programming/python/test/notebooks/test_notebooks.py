@@ -7,6 +7,9 @@
 """
 
 import glob
+import os
+import subprocess
+import sys
 from pathlib import Path
 from typing import cast
 
@@ -15,6 +18,7 @@ import pytest
 from nbclient import NotebookClient
 
 from tools.build_notebooks import NOTEBOOKS, NOTEBOOKS_DIR
+from tools.notebook_builder import BOOTSTRAP
 
 APP_DIR = NOTEBOOKS_DIR.parent
 ARTICLES_DIR = APP_DIR.parents[2] / "docs" / "article" / "micro-basics-programming"
@@ -71,3 +75,26 @@ def test_Parametersの次は準備のセル(path: Path) -> None:
     """`jupyter lab notebooks/` で開いても、lib を読めるようにする準備のセル。"""
     codes = [c for c in _read(path).cells if c.cell_type == "code"]
     assert "sys.path" in codes[1].source
+
+
+@pytest.mark.parametrize("source", ["builder", "notebook"])
+@pytest.mark.parametrize("path", PATHS, ids=lambda p: p.stem)
+@pytest.mark.parametrize("cwd", [APP_DIR, NOTEBOOKS_DIR], ids=["app", "notebooks"])
+@pytest.mark.parametrize("preloaded", [False, True], ids=["fresh", "preloaded"])
+def test_競合するlibより自分のlibを優先する(source: str, path: Path, cwd: Path, preloaded: bool) -> None:
+    codes = [c for c in _read(path).cells if c.cell_type == "code"]
+    bootstrap = BOOTSTRAP if source == "builder" else codes[1].source
+    other = APP_DIR.parents[1] / "econometrics-programming" / "python"
+    env = {**os.environ, "PYTHONPATH": os.pathsep.join([str(other), str(APP_DIR)])}
+    preload = f"import sys\nsys.path.insert(0, {str(other)!r})\nimport lib.chapter01\nforeign = lib.chapter01\n" if preloaded else ""
+    check = (
+        f"\nimport lib\nassert Path(lib.__file__).resolve().parent == Path({str(APP_DIR / 'lib')!r}).resolve()"
+        "\nfrom lib.chapter01.utility import cobb_douglas_utility"
+        + ("\nassert sys.modules['lib.chapter01'] is not foreign" if preloaded else "")
+        + "\noriginal = lib\n" + bootstrap + "\nassert sys.modules['lib'] is original"
+    )
+    result = subprocess.run(
+        [sys.executable, "-c", preload + bootstrap + check],
+        cwd=cwd, env=env, capture_output=True, text=True,
+    )
+    assert result.returncode == 0, result.stderr

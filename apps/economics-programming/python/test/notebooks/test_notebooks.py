@@ -7,6 +7,9 @@
 """
 
 import glob
+import os
+import subprocess
+import sys
 from pathlib import Path
 from typing import cast
 
@@ -15,6 +18,7 @@ import pytest
 from nbclient import NotebookClient
 
 from tools.build_notebooks import NOTEBOOKS, NOTEBOOKS_DIR
+from tools.notebook_builder import BOOTSTRAP
 
 APP_DIR = NOTEBOOKS_DIR.parent
 ARTICLES_DIR = APP_DIR.parents[2] / "docs" / "article" / "economics-programming"
@@ -74,3 +78,21 @@ def test_Parametersの次は準備のセル(path: Path) -> None:
     """`jupyter lab notebooks/` で開いても、lib を読めるようにする準備のセル。"""
     codes = [c for c in _read(path).cells if c.cell_type == "code"]
     assert "sys.path" in codes[1].source
+
+
+@pytest.mark.parametrize("path", PATHS, ids=lambda p: p.stem)
+@pytest.mark.parametrize("source", ["builder", "notebook"])
+def test_競合するlibより経済学のlibを優先する(source: str, path: Path) -> None:
+    notebook = _read(path)
+    bootstrap = BOOTSTRAP if source == "builder" else notebook.cells[2].source
+    other = APP_DIR.parents[1] / "econometrics-programming" / "python"
+    env = {**os.environ, "PYTHONPATH": os.pathsep.join([str(other), str(APP_DIR)])}
+    result = subprocess.run(
+        [sys.executable, "-c", "import lib.chapter01.plot\n" + bootstrap + "\nfrom lib.chapter01.demand import quantity_demanded\nprint(quantity_demanded(10, 100, 2))"],
+        cwd=NOTEBOOKS_DIR,
+        env=env,
+        capture_output=True,
+        text=True,
+    )
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == "80"
