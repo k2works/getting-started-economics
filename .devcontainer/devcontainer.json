@@ -33,15 +33,12 @@
 		}
 	},
 
-	// Use 'postCreateCommand' to run commands after the container is created.
-	// 重い処理（連載の .venv と kernel の登録、docker compose）は、JupyterLab / VS Code の起動を
-	// 待たせて deadline exceeded にならないよう、postStartCommand でバックグラウンド実行する。
-	"postCreateCommand": "npm install",
-
-	// コンテナの起動のたびに、バックグラウンドで次を実行する（進捗: tail -f /tmp/setup-all.log /tmp/mkdocs-up.log）。
-	// - 連載の .venv と kernel の登録（2 回目以降は uv sync が速い）
+	// 重い処理は、JupyterLab / VS Code の起動を待たせて deadline exceeded にならないよう、
+	// postStartCommand でバックグラウンド実行する（postCreateCommand は使わない）。
+	// コンテナの起動のたびに、次を実行する（進捗: tail -f /tmp/setup-all.log /tmp/mkdocs-up.log）。
+	// - npm install、続けて setup:all（連載の .venv と kernel の登録。2 回目以降は速い）
 	// - ドキュメントのサーバー（MkDocs + PlantUML）の起動。http://localhost:8000
-	"postStartCommand": "nohup bash -c 'npm run setup:all > /tmp/setup-all.log 2>&1 & docker compose up -d mkdocs > /tmp/mkdocs-up.log 2>&1 & wait' > /dev/null 2>&1 &",
+	"postStartCommand": "nohup bash -c '(npm install && npm run setup:all) > /tmp/setup-all.log 2>&1 & docker compose up -d mkdocs > /tmp/mkdocs-up.log 2>&1 & wait' > /dev/null 2>&1 &",
 
 	// Configure tool-specific properties.
   "customizations" : {
