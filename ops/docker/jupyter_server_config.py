@@ -9,3 +9,13 @@ if os.environ.get("CODESPACES") == "true":
     c.IdentityProvider.token = ""  # noqa: F821
     c.ServerApp.password = ""  # noqa: F821
     c.ServerApp.allow_remote_access = True  # noqa: F821
+    # 「Open in JupyterLab」は、GitHub のページが JupyterLab を iframe で埋め込む。
+    # Jupyter の既定（frame-ancestors 'self'）だと、埋め込みがブロックされる。
+    c.ServerApp.tornado_settings = {  # noqa: F821
+        "headers": {
+            "Content-Security-Policy": (
+                "frame-ancestors 'self' https://*.github.dev https://*.github.com "
+                "https://github.com https://*.githubpreview.dev"
+            )
+        }
+    }
