@@ -14,7 +14,7 @@ if (!series) {
 }
 
 const args = [
-  'run', '--directory', `apps/${series}/python`, '--with', 'jupyterlab',
+  'run', '--directory', `apps/${series}/python`, '--with', 'jupyterlab', '--with', 'jupyterlab-vim',
   'jupyter', 'lab', '--notebook-dir', 'notebooks', '--no-browser',
   '--ServerApp.port=8888',
 ];

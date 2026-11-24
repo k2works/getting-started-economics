@@ -294,6 +294,48 @@ Nix を使用して、再現可能な開発環境を構築できます。
 nix flake update
 ```
 
+#### GitHub Codespaces で JupyterLab を使う
+
+##### 設定済みの内容
+
+| 設定 | 場所 | 内容 |
+| :--- | :--- | :--- |
+| JupyterLab の導入 | `Dockerfile` | システムの Python に `jupyterlab` と `ipykernel` を入れる |
+| トークンなし・iframe 許可 | `ops/docker/jupyter_server_config.py` | `CODESPACES=true` のときだけ有効。`/etc/jupyter/` に置かれる |
+| 起動時の初期化 | `.devcontainer/devcontainer.json` | `postStartCommand` で `npm install`、`setup:all`、MkDocs の起動をバックグラウンド実行 |
+| kernel 名 | 各連載の `tools/notebook_builder.py` | ノートブックの kernelspec は連載のディレクトリ名 |
+
+##### 手順
+
+1. 上の「Open in GitHub Codespaces」バッジから Codespace を作ります。設定を変えた後は、コマンドパレットの「Codespaces: Rebuild Container」で再ビルドします。
+2. 起動後、バックグラウンドで `npm install` と `setup:all` が走ります（初回は数分）。完了を待ちます。
+
+   ```bash
+   tail -f /tmp/setup-all.log
+   ```
+
+3. 連載ごとの kernel が 6 つ出ていることを確認します。
+
+   ```bash
+   jupyter kernelspec list
+   ```
+
+4. 次のどちらかで JupyterLab を開きます。
+   - Codespaces の「Open in JupyterLab」
+   - 連載を指定して起動します（例: `npm run notebook:econometrics`）。ポート 8888 の転送 URL を開きます
+5. ノートブックの kernel が連載名（例: `econometrics-programming`）になっていることを確認して実行します。
+
+> **注意**: ポート 8888 を Public にしないでください。トークン認証を無効にしているので、公開すると誰でもコードを実行できます。
+
+##### トラブルシューティング
+
+| 症状 | 原因と対処 |
+| :--- | :--- |
+| `Failed to load the JupyterLab workbench: deadline exceeded` | 起動時の重い処理が起動を待たせていた。`postStartCommand` のバックグラウンド実行にして対処済み。再ビルドして試す |
+| トークンを求められる | 設定の反映前、または起動側がトークンを指定している。再ビルド後も出る場合は、`jupyter server list` のトークンを使う |
+| `ModuleNotFoundError: No module named 'numpy'` | システムの `Python 3` kernel で動いている。連載の kernel を選ぶ。`setup:all` が未完了なら `/tmp/setup-all.log` を確認する |
+| 「このコンテンツはブロックされています」 | iframe の埋め込みが拒否されている。`frame-ancestors` で GitHub のドメインを許可済み |
+
 #### GitHub Codespaces に SSH 接続
 
 外部ターミナルアプリから GitHub Codespaces に SSH 接続することで、VS Code のエディタスペースを広く使いながら別ウィンドウのターミナルで作業できます。

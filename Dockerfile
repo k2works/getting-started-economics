@@ -103,7 +103,7 @@ RUN curl -LsSf https://astral.sh/uv/install.sh     | env UV_INSTALL_DIR=/usr/loc
 # 連載のカーネルは、npm run setup:* が、連載の .venv を指す形で登録する
 # root で uv tool を使うと、Python が /root 以下に入り、一般ユーザーが起動できないので、
 # システムの Python（/usr/bin/python3）に入れる。jupyter-lab も python3 -m jupyterlab も使える
-RUN uv pip install --system --break-system-packages --python /usr/bin/python3 jupyterlab ipykernel     && jupyter-lab --version
+RUN uv pip install --system --break-system-packages --python /usr/bin/python3 jupyterlab jupyterlab-vim ipykernel     && jupyter-lab --version
 
 # Codespaces（CODESPACES=true）の JupyterLab は、トークン認証を無効にする。
 # ポートの転送が GitHub のログインで守られるため。ポート 8888 を Public にしてはいけない。
