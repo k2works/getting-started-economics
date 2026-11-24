@@ -143,6 +143,7 @@ AI-DLC で守ること：
 | スキル | 用途 |
 | :--- | :--- |
 | `practicing-getting-start-tdd` | TDD プログラミング入門の対話式チュートリアル |
+| `practicing-getting-start-economics` | 経済学のためのプログラミング（6 連載）の対話式チュートリアル。メンタルモデル構築ガイドの 5 フェーズで学習効率を高める |
 
 ### 共通
 
