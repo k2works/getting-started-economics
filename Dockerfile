@@ -105,6 +105,11 @@ RUN curl -LsSf https://astral.sh/uv/install.sh     | env UV_INSTALL_DIR=/usr/loc
 # システムの Python（/usr/bin/python3）に入れる。jupyter-lab も python3 -m jupyterlab も使える
 RUN uv pip install --system --break-system-packages --python /usr/bin/python3 jupyterlab ipykernel     && jupyter-lab --version
 
+# Codespaces（CODESPACES=true）の JupyterLab は、トークン認証を無効にする。
+# ポートの転送が GitHub のログインで守られるため。ポート 8888 を Public にしてはいけない。
+# ローカルでは従来どおりトークン付き。ops/scripts/notebook.js と同じ方針
+COPY ops/docker/jupyter_server_config.py /etc/jupyter/jupyter_server_config.py
+
 # Gemini CLIのインストール
 RUN npm install -g @google/gemini-cli
 
