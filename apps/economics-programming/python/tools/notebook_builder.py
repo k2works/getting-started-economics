@@ -24,8 +24,10 @@ if str(_root) in sys.path:
     sys.path.remove(str(_root))
 sys.path.insert(0, str(_root))
 _lib = sys.modules.get("lib")
-if _lib is not None and Path(getattr(_lib, "__file__", "") or "").resolve().parent \
-!= _root / "lib":
+if _lib is not None and (
+    Path(getattr(_lib, "__file__", "") or "").resolve().parent
+    != _root / "lib"
+):
     for _name in list(sys.modules):
         if _name == "lib" or _name.startswith("lib."):
             del sys.modules[_name]

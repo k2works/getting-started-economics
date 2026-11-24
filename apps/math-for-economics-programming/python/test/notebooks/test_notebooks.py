@@ -87,8 +87,17 @@ def test_競合するlibより自分のlibを優先する(source: str, path: Pat
     other = APP_DIR.parents[1] / "econometrics-programming" / "python"
     env = {**os.environ, "PYTHONPATH": os.pathsep.join([str(other), str(APP_DIR)])}
     result = subprocess.run(
-        [sys.executable, "-c", "import lib.chapter01\n" + bootstrap + "\nfrom lib.chapter01.market import equilibrium"],
-        cwd=NOTEBOOKS_DIR, env=env, capture_output=True, text=True,
+        [
+            sys.executable,
+            "-c",
+            "import lib.chapter01\n"
+            + bootstrap
+            + "\nfrom lib.chapter01.market import equilibrium",
+        ],
+        cwd=NOTEBOOKS_DIR,
+        env=env,
+        capture_output=True,
+        text=True,
     )
     assert result.returncode == 0, result.stderr
 

@@ -81,20 +81,31 @@ def test_Parametersの次は準備のセル(path: Path) -> None:
 @pytest.mark.parametrize("path", PATHS, ids=lambda p: p.stem)
 @pytest.mark.parametrize("cwd", [APP_DIR, NOTEBOOKS_DIR], ids=["app", "notebooks"])
 @pytest.mark.parametrize("preloaded", [False, True], ids=["fresh", "preloaded"])
-def test_競合するlibより自分のlibを優先する(source: str, path: Path, cwd: Path, preloaded: bool) -> None:
+def test_競合するlibより自分のlibを優先する(
+    source: str, path: Path, cwd: Path, preloaded: bool
+) -> None:
     codes = [c for c in _read(path).cells if c.cell_type == "code"]
     bootstrap = BOOTSTRAP if source == "builder" else codes[1].source
     other = APP_DIR.parents[1] / "econometrics-programming" / "python"
     env = {**os.environ, "PYTHONPATH": os.pathsep.join([str(other), str(APP_DIR)])}
-    preload = f"import sys\nsys.path.insert(0, {str(other)!r})\nimport lib.chapter01\nforeign = lib.chapter01\n" if preloaded else ""
+    preload = (
+        f"import sys\nsys.path.insert(0, {str(other)!r})\nimport lib.chapter01\nforeign = lib.chapter01\n"
+        if preloaded
+        else ""
+    )
     check = (
         f"\nimport lib\nassert Path(lib.__file__).resolve().parent == Path({str(APP_DIR / 'lib')!r}).resolve()"
         "\nfrom lib.chapter01.gdp import value_added"
         + ("\nassert sys.modules['lib.chapter01'] is not foreign" if preloaded else "")
-        + "\noriginal = lib\n" + bootstrap + "\nassert sys.modules['lib'] is original"
+        + "\noriginal = lib\n"
+        + bootstrap
+        + "\nassert sys.modules['lib'] is original"
     )
     result = subprocess.run(
         [sys.executable, "-c", preload + bootstrap + check],
-        cwd=cwd, env=env, capture_output=True, text=True,
+        cwd=cwd,
+        env=env,
+        capture_output=True,
+        text=True,
     )
     assert result.returncode == 0, result.stderr

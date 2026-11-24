@@ -80,7 +80,7 @@ def test_Parametersの次は準備のセル(path: Path) -> None:
 def test_準備セルは競合するlibより自分のlibを優先する(path: Path) -> None:
     source = [c for c in _read(path).cells if c.cell_type == "code"][1].source
     assert source == BOOTSTRAP.strip("\n")
-    script = f'''import sys, types
+    script = f"""import sys, types
 sys.path.append({str(APP_DIR)!r})
 foreign = types.ModuleType("lib")
 foreign.__file__ = "foreign/lib/__init__.py"
@@ -93,5 +93,5 @@ from pathlib import Path
 assert Path(lib.__file__).resolve() == Path({str(APP_DIR / "lib" / "__init__.py")!r}).resolve()
 assert "lib.chapter01" not in sys.modules
 assert sys.path[0] == {str(APP_DIR)!r}
-'''
+"""
     subprocess.run([sys.executable, "-c", script], cwd=NOTEBOOKS_DIR, check=True)

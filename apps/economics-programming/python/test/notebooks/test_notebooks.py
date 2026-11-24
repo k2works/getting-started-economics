@@ -88,7 +88,13 @@ def test_競合するlibより経済学のlibを優先する(source: str, path: 
     other = APP_DIR.parents[1] / "econometrics-programming" / "python"
     env = {**os.environ, "PYTHONPATH": os.pathsep.join([str(other), str(APP_DIR)])}
     result = subprocess.run(
-        [sys.executable, "-c", "import lib.chapter01.plot\n" + bootstrap + "\nfrom lib.chapter01.demand import quantity_demanded\nprint(quantity_demanded(10, 100, 2))"],
+        [
+            sys.executable,
+            "-c",
+            "import lib.chapter01.plot\n"
+            + bootstrap
+            + "\nfrom lib.chapter01.demand import quantity_demanded\nprint(quantity_demanded(10, 100, 2))",
+        ],
         cwd=NOTEBOOKS_DIR,
         env=env,
         capture_output=True,

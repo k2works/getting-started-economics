@@ -23,7 +23,10 @@ _root = next(p for p in (Path.cwd(), *Path.cwd().parents) if (p / "lib").is_dir(
 sys.path[:] = [p for p in sys.path if p != str(_root)]
 sys.path.insert(0, str(_root))
 _lib = sys.modules.get("lib")
-if _lib is not None and Path(getattr(_lib, "__file__", "") or "").resolve() != (_root / "lib" / "__init__.py").resolve():
+if _lib is not None and (
+    Path(getattr(_lib, "__file__", "") or "").resolve()
+    != (_root / "lib" / "__init__.py").resolve()
+):
     for _name in list(sys.modules):
         if _name == "lib" or _name.startswith("lib."):
             del sys.modules[_name]
