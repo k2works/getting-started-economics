@@ -10,6 +10,10 @@ from typing import cast
 import nbformat
 from nbformat.notebooknode import NotebookNode
 
+# カーネル名は、連載のディレクトリ名（npm run setup:* が、連載の .venv を指す形で登録する）。
+# これで、JupyterLab で開くと、numpy などの入った連載の .venv で動く。
+KERNEL_NAME = Path(__file__).resolve().parents[2].name
+
 BOOTSTRAP = """
 # --- 準備（変更しません）: lib を読み込めるようにします ---
 import sys
@@ -48,9 +52,9 @@ def write(path: Path, cells: list[NotebookNode]) -> None:
         cells=cells,
         metadata={
             "kernelspec": {
-                "display_name": "Python 3",
+                "display_name": KERNEL_NAME,
                 "language": "python",
-                "name": "python3",
+                "name": KERNEL_NAME,
             },
             "language_info": {"name": "python"},
         },
